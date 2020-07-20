@@ -1,7 +1,7 @@
 ---
 title: "PANCHANGE_data_preprocessing"
 author: "Katie Thompson, Topher Huebel, Molly Davies, Kirstin Purves"
-date: "03/07/2020"
+date: Sys.Date()
 output:  
   html_document:
     df_print: paged
