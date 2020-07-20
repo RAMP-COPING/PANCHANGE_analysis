@@ -1,0 +1,226 @@
+---
+title: "PANCHANGE_data_preprocessing"
+author: "Katie Thompson, Topher Huebel, Molly Davies, Kirstin Purves"
+date: "14/07/2020"
+output:  
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: false
+    number_sections: false
+    highlight: monochrome
+    theme: cerulean
+code_folding: show
+
+html_notebook:
+  theme: cerulean
+toc: yes
+---
+
+This will be the master script to run all analyses for the project "Anxiety, depression and trauma symptom change during the COVID-19 pandemic: retrospective versus objective assessment" - Young et al (2020)
+
+Script written by K Purves, K Thompson, C Huebel and M Davies.
+Email: kirstin.purves@kcl.ac.uk, katie.thompson@kcl.ac.uk, christopher.1.huebel@kcl.ac.uk, molly.davies@kcl.ac.uk
+
+#Set up
+Set up the Rmarkdown
++++CH: Add packages for the setup
+```{r Setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      comment=NA,
+                      prompt=FALSE,
+                      cache=FALSE)
+
+
+options(bitmapType = 'quartz') # to render fonts better
+```
+
+Clear global environment
+```{r Clear global environment}
+remove(list = ls())
+```
+
+Retrieve the current date
+to use it for file endings to not overwrite files when one exports files
+```{r Recent date}
+date = Sys.Date()
+```
+
+#Packages
+Install packages (if they are not available in your version of R)
+```{r Installing packages}
+#install.packages("summarytools")
+#install.packages("tidyverse")
+#install.packages("psych")
+```
+
+Load packages
+```{r Load packages}
+library(knitr)
+library(summarytools)
+library(tidyverse)
+library(psych)
+```
+
+# Colour palettes
+Define colours for plotting this are the standard coping colours
++++CH: Is there a document in which these colours are defined?
+```{r Colour palettes: COPING}
+COPINGpalette2 <- c("#78D9C5",
+                    "#F5BE5E")
+
+COPINGpalette3 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9")
+
+COPINGpalette4 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73")
+
+COPINGpalette5 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73", 
+                    "#FFED98")
+
+COPINGpalette6 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73",
+                    "#FFED98",
+                    "#BFD2EB")
+
+COPINGpalette7 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73", 
+                    "#FFED98",
+                    "#BFD2EB", 
+                    "#808080")
+
+COPINGpaletteGRAD <- c("#F5BE5E",
+                       "#FFD284",
+                       "#FFEED1",
+                       "#B5B5B5",
+                       "#DEFFF8",
+                       "#94F6E1",
+                       "#78D9C5")
+
+COPINGNeuCenterpalette <- c("#78D9C5",
+                            "#808080",
+                            "#F5BE5E")
+
+RAMPworseGRADpalette <- c("#78D9C5",
+                          "#FFEED1",
+                          "#F5BE5E",
+                          "#FFB1B5")
+GLADpalette = c("#efc00b", 
+                "#b7dee8")  
+```
+
+Choose in this chunk which palette to use
+04.07.2020 - Default to 2 colour COPING palette
+```{r Choose colour palette}
+palette=COPINGpalette2
+```
+
+
+
+#Stratify descriptives by mental health diagnosis
+ *convert diagnostic columns from wide to long format*
+ +++CH: May not be necessary if the data is already in long form
+```{r COVID change to long format}
+###ADAPT TO CORRECT VARIABLE NAMES
+dat.long <- dat.wide %>%
+  gather(key = "time", value = "score", all_of(PHQ.variables)) %>% #this will be all diagnostic variables
+  convert_as_factor(ID, time)
+```
+
+## Disorders - Frequencies *use this as example to convert chunk above*
+```{r Disorders - Frequencies}
+#0 = No to disorder; 1 = Yes to disorder
+PMAD_na_drop_Dx %>%
+  select(ID, #need to add columns for which you want summaries for - ASK GB & KY what they want in descriptives table
+         dem.sex,
+         starts_with("mhd.") & ends_with("numeric")) %>%
+  gather(
+    key = "Disorder",
+    value = "Diagnosis",
+    mhd.MDD_numeric:mhd.ADHD_numeric #all the columns that we want to be gathered
+  ) %>%
+  group_by(Disorder) %>%
+  count(Diagnosis) #count for diagnoses
+```
+
+
+
+Calculate the time difference between the sign up month (GLAD) and pandemic measures (COPING)
+***KT: NEED TO HAVE START DATE IN DATASET TO RUN THESE
+```{r time difference between GLAD and COPING completion KATIE}
+##IGNORE - only for testing if the date formats work 
+dat <- ramp.dem.raw #start date has been removed so had to test it this way
+dat$test.date <- as.POSIXct("2020-05-15") 
+
+#change naming of variables here based on what we decide for "startDate"
+dat$date.diff.glad <- round( 
+                      difftime(           #this function does time1 - time2 as difftime(time1, time2...)
+                        dat$test.date,    #should be start date for COPING (time1)
+                        dat$startDate,    #should be start date for GLAD (time2)
+                        units = c("days"  #can also be "secs", "mins", "hours", "weeks"
+                                  ))) 
+freq(dat$date_diff.glad)        
+```
+
+Calculate the time difference between the sign up month (EDGI) and pandemic measures (COPING)
+```{r time difference between EDGI and COPING completion KATIE}
+#change naming of variables here based on what we decide for "startDate"
+dat$date.diff.edgi <- round( 
+                      difftime(           #this function does time1 - time2 as difftime(time1, time2...)
+                        dat$test.date,    #should be start date for COPING (time1)
+                        dat$startDate,    #should be start date for EDGI (time2)
+                        units = c("days"  #can also be "secs", "mins", "hours", "weeks"
+                                  ))) 
+freq(dat$date_diff.edgi)      
+```
+
+
+Compare the GLAD/EDGI and COPING cohorts as a whole
++++CH: Diagnosis, ethnicity, gender, 
++++MD: May not be possible for NBR; potentially send them code to run it for us
+```{r}
+
+```
+
+
+
+Descriptives for reporting: "How different are these feelings to how you felt before the pandemic?’ on a 5-point scale (much worse, a little worse, no different, a little better, much better)."
++++KLP: Discuss during the meeting if we use 3 or 5 categories
+```{r}
+
+```
+
+##Calculate difference pre and baseline
+For individuals who have objective scores for GAD, PHQ and PCL. Subtract the baseline from the pre pandemic. Plot this distribution. If they have a higher score at baseline than pre-pandemic, the difference would be positive and would indicate that the participant got worse. 
+
+```{r COVID calculate the difference between pre and post}
+
+```
+
+Replicate chunk above for retrospective reports. This will only be for people who say that have reported that there is a change in their scores. 
+*Discuss if we should include people who reported "no change" as repition of their current GAD, PHQ, PCL report*
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
