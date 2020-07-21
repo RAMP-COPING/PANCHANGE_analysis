@@ -1,15 +1,43 @@
-# PANCHANGE - analysis scripts
+# PANCHANGE - factors influencing perceived and objective change in symptoms of anxiety, depression and PTSD during 2020 pandemic in the UK
+
+## Summary
+
 Code repository for Young et al 2020 manuscript "Anxiety, depression and trauma symptom change during the COVID-19 pandemic: Retrospective versus objective assessment"
 
+The project uses data from the Repeated Assessment of Mental health during a Pandemic (RAMP), C O P I N Genetics (COPING), Genetic links to Anxiety and Depression (GLAD) and Eating Disorder Genetics Initiative (EDGI) studies.
 
+***Aims***
+1) Assess current symptoms among individuals with and without a prior diagnosis of an anxious or depressive disorder.  
+2) Assess objective and retrospective symptom change in the GLAD sample.   
+3) If 2. considered sufficiently valid, report on whole RAMP and COPING sample current v retrospective change
 
-# For analysts:
+***Sensitivity checks / stratifications***
+* perceived change in symptoms
+* Pre-existing mental health diagnosis
+* Chronicity of pre-existing diagnosis 
+* Severity of objective baseline symptoms (GLAD & EDGI)
+* Gender
+* Age
+* Ethnicity (if sufficiently powered to do so)
+* Keyworker / vulnerable individual status
+* COVID-19 status (did they become ill, are they at the time or response)
 
-## branch naming conventions
+## Project details
 
-activity_block_initials
+***Authors***   
+Katherine Young, Kirstin purves, Christopher Hübel, Molly Davies, Katie Thompson, Shannon Bristow, Thalia Eley, Gerome Breen
 
-e.g. 
-cleaning_demographics_klp 
+***Analysts***     
+Kirstin Purves, Topher Hübel, Molly Davies, Katie Thompson
 
-visualisation_gad_mrd
+***Data processing team***     
+Leo Lin, Kirstin Purves, Topher Hübel
+
+***Principal investigators*** 
+Katherine Young, Gerome Breen
+
+***Work flow details***  
+Work flow and details for collaborataive process (including naming conventions) can be found within this folder (PANCHANGE_workflow_2020-07-20.txt).
+
+***data access***   
+Data stored on secuer server. Anonymised data specific to this proejct available on request after publication, and may be made opensource if anonymity and data security can be assured.
