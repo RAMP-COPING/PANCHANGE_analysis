@@ -4,7 +4,7 @@
 
 Code repository for Young et al 2020 manuscript "Anxiety, depression and trauma symptom change during the COVID-19 pandemic: Retrospective versus objective assessment"
 
-The project uses data from the Repeated Assessment of Mental health during a Pandemic (RAMP), C O P I N Genetics (COPING), Genetic links to Anxiety and Depression (GLAD) and Eating Disorder Genetics Initiative (EDGI) studies.
+The project uses data from the [Repeated Assessment of Mental health during a Pandemic (RAMP)](https://rampstudy.co.uk/), COVID-19 Psychiatry and Neurological Genetics (COPING), [Genetic links to Anxiety and Depression](https://gladstudy.org.uk/) (GLAD) and [Eating Disorder Genetics Initiative](https://edgiuk.org/) (EDGI) studies.
 
 ***Aims***
 1) Assess current symptoms among individuals with and without a prior diagnosis of an anxious or depressive disorder.  
