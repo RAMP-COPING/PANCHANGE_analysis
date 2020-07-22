@@ -1469,7 +1469,7 @@ coping.glad.pcl.raw.id <- coping.glad.pcl.raw %>%
     pcl.feeling_irritable_or_having_angry_outbursts_retro_numeric = pcl6.feeling_irritable_or_having_angry_outbursts.1_numeric,
     pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl6.feeling_irritable_or_having_angry_outbursts.1,
     pcl.difficulty_concentrating_retro_numeric = pcl6.difficulty_concentrating.1_numeric,
-    pcl.difficulty_concentratin_retro = pcl6.difficulty_concentrating.1
+    pcl.difficulty_concentrating_retro = pcl6.difficulty_concentrating.1
   ) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
@@ -1491,7 +1491,7 @@ colnames(coping.glad.pcl.raw.id)
 dim(coping.glad.pcl.raw)[1]-dim(coping.glad.pcl.raw.id)[1]
 ```
 
-Calculate sum score for PHQ-9 retro
+Calculate sum score for PCL-6 retro
 ```{r coping pcl sum score retro}
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
@@ -1525,9 +1525,8 @@ coping.glad.pcl.raw.id %>%
   )
 ```
 
-Maximum is fine with 3 x 7.
 
-Calculate sum score for PHQ-9 base
+Calculate sum score for PCL-6 base
 ```{r coping pcl sum score base}
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
