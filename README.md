@@ -25,7 +25,7 @@ The project uses data from the [Repeated Assessment of Mental health during a Pa
 ## Project details
 
 ***Authors***   
-Katherine Young, Kirstin purves, Christopher Hübel, Molly Davies, Katie Thompson, Shannon Bristow, Thalia Eley, Gerome Breen
+Katherine Young, Kirstin purves, Christopher Hübel, Molly Davies, Katie Thompson, Shannon Bristow, ..., Thalia Eley, Gerome Breen
 
 ***Analysts***     
 Kirstin Purves, Topher Hübel, Molly Davies, Katie Thompson
@@ -33,7 +33,7 @@ Kirstin Purves, Topher Hübel, Molly Davies, Katie Thompson
 ***Data processing team***     
 Leo Lin, Kirstin Purves, Topher Hübel
 
-***Principal investigators*** 
+***Principal investigators***  
 Katherine Young, Gerome Breen
 
 ***Work flow details***  
