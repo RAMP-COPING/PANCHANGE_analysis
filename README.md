@@ -40,4 +40,4 @@ Katherine Young, Gerome Breen
 Work flow and details for collaborataive process (including naming conventions) can be found within this folder (PANCHANGE_workflow_2020-07-20.txt).
 
 ***data access***   
-Data stored on secuer server. Anonymised data specific to this proejct available on request after publication, and may be made opensource if anonymity and data security can be assured.
+Data stored on secure server. Anonymised data specific to this project available on request after publication, and may be made opensource if anonymity and data security can be assured.
