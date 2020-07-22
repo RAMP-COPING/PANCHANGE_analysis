@@ -124,7 +124,7 @@ GLADpalette = c("#efc00b",
 Choose in this chunk which palette to use
 04.07.2020 - Default to 2 colour COPING palette
 ```{r Choose colour palette}
-palette=COPINGpalette2
+palette = COPINGpalette2
 ```
 
 # Data import and merging
@@ -132,11 +132,18 @@ palette=COPINGpalette2
 Note: GLAD only receives current measures and RAMP questionnaire
 Note: All COPING surveys are separate surveys
 
+# Source data file paths 
+
+```{r source file path}
+#source raw data directory: data.raw_path
+source("../PANCHANGE_raw_path.R")
+```
+
 
 ## GLAD demographics
 # Read in data
 ```{r glad dem cols}
-glad.dem.raw <- readRDS(file = "../data_raw/glad/dem_glad.rds")
+glad.dem.raw <- readRDS(file = paste0(data.raw_path, "/glad/dem_glad.rds"))
 dim(glad.dem.raw)
 colnames(glad.dem.raw)
 ```
@@ -331,7 +338,7 @@ summarytools::dfSummary(
 # glad gad
 
 ```{r glad gad cols}
-glad.gad.raw <- readRDS(file = "../data_raw/glad/gad_glad.rds")
+glad.gad.raw <- readRDS(file = paste0(data.raw_path, "/glad/gad_glad.rds"))
 dim(glad.gad.raw)
 colnames(glad.gad.raw)
 ```
@@ -433,7 +440,7 @@ summarytools::dfSummary(
 # glad mhq
 
 ```{r glad mhq cols}
-glad.mhq.raw <- readRDS(file = "../data_raw/glad/mhq_glad.rds")
+glad.mhq.raw <- readRDS(file = paste0(data.raw_path,"/glad/mhq_glad.rds"))
 dim(glad.mhq.raw)
 colnames(glad.mhq.raw)
 ```
@@ -1036,7 +1043,7 @@ glad.mhq.raw.categories <- glad.mhq.raw.id %>%
 # glad pcl
 
 ```{r glad pcl cols}
-glad.pcl.raw <- readRDS(file = "../data_raw/glad/pcl_glad.rds")
+glad.pcl.raw <- readRDS(file = paste0(data.raw_path,"/glad/pcl_glad.rds"))
 dim(glad.pcl.raw)
 colnames(glad.pcl.raw)
 ```
@@ -1134,7 +1141,7 @@ summarytools::dfSummary(
 # glad phq
 
 ```{r glad phq cols}
-glad.phq.raw <- readRDS(file = "../data_raw/glad/phq_glad.rds")
+glad.phq.raw <- readRDS(file = paste0(data.raw_path, "/glad/phq_glad.rds"))
 dim(glad.phq.raw)
 colnames(glad.phq.raw)
 ```
@@ -1241,7 +1248,7 @@ summarytools::dfSummary(
 ## COPING GLAD: GAD-7
 
 ```{r coping glad gad cols}
-coping.glad.gad.raw <- readRDS(file = "../data_raw/coping_glad/gad_coping_glad.rds")
+coping.glad.gad.raw <- readRDS(file = paste0(data.raw_path,"/coping_glad/gad_coping_glad.rds"))
 dim(coping.glad.gad.raw)
 colnames(coping.glad.gad.raw)
 ```
@@ -1413,7 +1420,7 @@ summarytools::dfSummary(
 # COPING GLAD: PCL-6
 
 ```{r coping glad pcl cols}
-coping.glad.pcl.raw <- readRDS(file = "../data_raw/coping_glad/pcl_coping_glad.rds")
+coping.glad.pcl.raw <- readRDS(file = paste0(data.raw_path,"/coping_glad/pcl_coping_glad.rds"))
 dim(coping.glad.pcl.raw)
 colnames(coping.glad.pcl.raw)
 ```
@@ -1569,7 +1576,7 @@ summarytools::dfSummary(
 # glad COPING phq
 
 ```{r coping glad phq cols}
-coping.glad.phq.raw <- readRDS(file = "../data_raw/coping_glad/phq_coping_glad.rds")
+coping.glad.phq.raw <- readRDS(file = paste0(data.raw_path, "/coping_glad/phq_coping_glad.rds"))
 dim(coping.glad.phq.raw)
 colnames(coping.glad.phq.raw)
 ```
