@@ -23,7 +23,7 @@ params:
    
 ---
 
-This will be the master script to run all analyses for the project "Anxiety, depression and trauma symptom change during the COVID-19 pandemic: retrospective versus objective assessment" - Young et al (2020)
+This is the preprocessing script to prepare the data to run analyses for the project "Anxiety, depression and trauma symptom change during the COVID-19 pandemic: retrospective versus objective assessment" - Young et al (2020)
 
 Script written by K Purves, K Thompson, C Huebel and M Davies.
 Email: kirstin.purves@kcl.ac.uk, katie.thompson@kcl.ac.uk, christopher.1.huebel@kcl.ac.uk, molly.davies@kcl.ac.uk
@@ -44,8 +44,7 @@ Clear global environment
 remove(list = ls())
 ```
 
-Retrieve the current date
-to use it for file endings to not overwrite files when one exports files
+Retrieve the current date to use it for file endings to not overwrite files when one exports files
 ```{r Recent date}
 date = Sys.Date()
 ```
@@ -68,7 +67,6 @@ library(psych)
 
 # Colour palettes
 Define colours for plotting this are the standard coping colours
-+++CH: Is there a document in which these colours are defined?
 ```{r Colour palettes: COPING}
 COPINGpalette2 <- c("#78D9C5",
                     "#F5BE5E")
@@ -130,17 +128,10 @@ palette=COPINGpalette2
 ```
 
 # Data import and merging
-+++CH04-07-20: I have added all read-ins of the data. How will the coping data be stored? -> Question for Yuhao
-+++CH04-07-20: We need to discuss the naming of the variables PHQ9 vs phq
-+++CH04-07-20: We need to discuss the naming of the variables .0 vs .retro
 
-GLAD only receives current measures and RAMP questionnaire
+Note: GLAD only receives current measures and RAMP questionnaire
+Note: All COPING surveys are separate surveys
 
-All COPING surveys are separate surveys
-+++TOPHER
-***
-++KT: Need to make sure that the startDate's for each survey are coded accordingly, e.g. startDate.glad, startDate.coping, startDate.RAMP. Otherwise people who are in both GLAD and COPING will have two dates.
-+++CH: I have added this
 
 ## GLAD demographics
 # Read in data
@@ -193,7 +184,7 @@ colnames(glad.dem.raw.id.unclean)
 dim(glad.dem.raw)[1]-dim(glad.dem.raw.id.unclean)[1]
 ```
 
-Clean Age variable
+#Clean Age variable
 Age outlier
 ```{r age outlier}
 # define age limits 
@@ -327,7 +318,8 @@ glad.dem.raw.id %>%
 ```{r glad dem head}
 head(glad.dem.raw.id)
 ```
-++KT: The age variable here needs to be cleaned - have added a chunk above (before age grouping) for this. Before: min = -55 and max = 290. 
+
+
 ```{r glad dem summary}
 summarytools::dfSummary(
   glad.dem.raw.id,
@@ -481,7 +473,7 @@ dim(glad.mhq.raw)[1]-dim(glad.mhq.raw.id)[1]
 
 # Grouping mental health disorders
 *#Disorder groupings - from COPING/RAMP analysis minutes*
-1. Depressive disorder group: major depression, antenatal/postnatal depression, premenstrual depression.
+1. Depressive disorder group: major depression, antenatal/postnatal depression, premenstrual depression. The logic for this has been double checked for males - KT/MD. 
 2. Anxiety group: generalised anxiety, social anxiety, specific phobia, agoraphobia, panic_disorder, panic_attacks. 
 3. Agoraphobia and panic_disorder group: panic_disorder, agoraphobia, panic_attacks.
 4. Eating disorders group: anorexianervosa, atypical anorexia nervosa, bulimia nervosa, overeating or bingeeating.
@@ -508,9 +500,6 @@ No-diagnosis group
 2. Specific: breakdown by type of prior anxiety (& related) disorder diagnosis
 3. Breakdown by COVID or not (using COVIDENCE/Zoe algorithm)
 
-Depressive disorders group
-+++CH: NEEDS BETTER LOGIC FOR MALES!!!!
-++KT: Sex issue fixed - code has been checked. 407 people with no MDD but have either postnatal/pmdd.
 ```{r glad mhq depressive_disorders}
 glad.mhq.raw.id <- glad.mhq.raw.id %>%
   mutate(
@@ -648,8 +637,6 @@ glad.mhq.raw.id %>%
     mhq.panic_attacks
   )
 ```
-+++CH: Why are there so many NAs in mhq.panic_disorder?
-++KT: Added late to questionnaire. 
 
 Eating disorders group
 ```{r glad mhq eating_disorders}
@@ -768,7 +755,6 @@ glad.mhq.raw.id %>%
   freq(psychotic_disorders)
 ```
 
-+++CH: Lots of NAs in schizoaffective_disorder 
 ```{r Check psychotic_disorders}
 glad.mhq.raw.id %>%
   select(
@@ -992,9 +978,6 @@ glad.mhq.raw.id %>%
   freq(control)
 ```
 
-Create new dataframe with the derived categories
-
-
 
 ```{r glad mhq head}
 head(glad.mhq.raw.id)
@@ -1101,7 +1084,6 @@ colnames(glad.pcl.raw.id)
 #Differences
 dim(glad.pcl.raw)[1]-dim(glad.pcl.raw.id)[1]
 ```
-
 
 Calculate sum score for PCL-6
 ```{r pcl sum score prepan}
@@ -1242,8 +1224,6 @@ glad.phq.raw.id %>%
         stats = "common"
         )
 ```
-
-
 
 ```{r glad phq head}
 head(glad.phq.raw.id)
@@ -1422,21 +1402,13 @@ summarytools::dfSummary(
 ++KT LEFT OFF HERE
 **********************
 
-+++ ADD 3 CHUNKs for phq, gad for each comparison
-1) prepandemic - retro -> most interesting (in analysis needs to be adjusted for time difference between prepandemic and coping sign up)
-2) prepandemic - base
-3) retro - base
+```{r pre, base, retro comparison for phq, pcl and gad}
 
+```
 
-+++ ADD a case_when CHUNKs - who has what data - to get accurate Ns. 
-1) binary coded has only prepandemic == 0
-2) prepandemic and baseline == 1
-3) prepandemic, baseline, and retrospective == 2
+```{r data level groups}
 
-+++ chunks for missingness
-1) per individual
-2) per questionnaire item/total questionnaire
-
+```
 
 # COPING GLAD: PCL-6
 
@@ -1455,8 +1427,8 @@ summarytools::dfSummary(
 )
 ```
 
+Note: Retro for the PCL does not mean retrospective
 
-Retro for the PCL does not mean retrospective
 ```{r coping glad pcl cleaning}
 coping.glad.pcl.raw.id <- coping.glad.pcl.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
@@ -1607,7 +1579,7 @@ summarytools::dfSummary(
   coping.glad.phq.raw,
   graph.col = F,
   valid.col = F,
-  #  labels.col = F
+  labels.col = F
 )
 ```
 
@@ -1773,8 +1745,6 @@ summarytools::dfSummary(
   labels.col = F)
 ```
 
-
-
 # Join tibbles together
 
 glad data frame list
@@ -1842,9 +1812,6 @@ dim(dat.no.sex)[1]-dim(dat.no.sex.no.age)[1]
 `r dim(dat.no.sex)[1]-dim(dat.no.sex.no.age)[1]` were excluded because they did not report their age
 
 Exclusion of inflammatory bowel disease (IBD) BioResource (BR) cohort
-+++CH: or alternatively sample according to IBD prevalence in UK population
-+++CH: What is the IBD prevalence in the UK population? -> Literature search
-+++CH: This chunk needs to be included when we have the data available from the NBR
 ```{r COVID exclusion of IBD}
 #dim(dat.no.sex.no.age)
 #
@@ -1860,10 +1827,10 @@ dat.no.sex.no.age.no.ibd <- dat.no.sex.no.age
 
 #Missigness of questionnaire items
 +++CH: We need to discuss how we want to exclude these participants that are missing answers to the questionnaires
-GAD7 ?
-PHQ9 ? 
-PCL-6?
-+++CH: Check for literature
+```{r missingness}
+
+```
+
 ```{r Exclusion of participants because of missing questionnaire items}
 #dim(dat.no.sex.no.age.no.ibd)
 #dat.no.sex.no.age.no.ibd.incomplete.questionnaire <- dat.no.sex.no.age.no.ibd %>%
@@ -1875,7 +1842,6 @@ PCL-6?
 dat.no.sex.no.age.no.ibd.incomplete.questionnaire <- dat.no.sex.no.age.no.ibd
 ```
 
-
 Create tidy data on which the exclusionc criteria have been applied
 ```{r Tidy data}
 dat.glad <- dat.no.sex.no.age.no.ibd.incomplete.questionnaire
@@ -1886,21 +1852,16 @@ The complete rate for age and sex should be 1 now
 
 
 # Definition of prepandemic and baseline 
-Exlcude people who have joined GLAD/EDGI after the pandemic began (i.e., cut off that we choose)
+Exlcude people who have joined GLAD/EDGI after the pandemic began, sensitivity analyses done on the cut off's we have chosen. 
 Potentially GLAD/EDGI particiapnts between January to April. EDGI launched on February 24th. 
-
-These participants with sign ups later than these dates could  potentially be counted as COPING baseline.
 
 Prepandemic GLAD/EDGI = Prepandemic (GLAD/EDGI sign-up questionnaire)
 
-Retrospective = COPING/RAMP sign up questionnaire; !only of those participants who have reported a change in symptoms!
+Retrospective = COPING/RAMP sign up questionnaire; *only of those participants who have reported a change in symptoms*
 
 Baseline = COPING/RAMP sign up questionnaire
 
-+++CH: Create a column based on the the startDate if the participant can be counted as "prepandemic"
-+++CH: Create three columns for all the definitions of "pre-pandemic" for sensitivy analysis
-
-Potential dates for the definition of prepandemic
+Dates for the definition of prepandemic
 ```{r Potential dates for prepandemic definition}
 # Date of the first COVID-19 case in the United Kingdom (UK)
 date_first_case_uk_january_31 <- as.POSIXct("2020-01-31")
@@ -1993,8 +1954,6 @@ dat.glad %>%
 ```
 
 
-
-
 Calculate the time difference between time difference between sign up questionnaire and COPING questionnaire
 ```{r time difference between sign up questionnaire and COPING questionnaire}
 dat.glad <- dat.glad %>%
@@ -2014,7 +1973,6 @@ dat.glad %>%
     stats = "common"
     )
 ```
-
 
 
 What proportion is over a year?
@@ -2111,13 +2069,6 @@ covid_odds_ratio_50 <- "COVID-19 probability >= 50%" #Need to rename variable pr
 ## looking at the created variable
 table(dat.respirotry.coping$covid_odds_ratio_50) #same as before - not sure why this is needed? 
 ```
-
-
-Gerome: We can get actual test data from PHE -> Cambridge
-We need to move our data to Cambridge cluster
-That's only for non-RAMP; EDGI, GLAD; NBR
-KY: Longer term or for this paper?
-Sanity check with Cambridge about the validity of the mysterious formula (Spector magic)
 
 
 
