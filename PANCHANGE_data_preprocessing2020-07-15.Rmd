@@ -1585,18 +1585,13 @@ colnames(coping.glad.phq.raw)
 summarytools::dfSummary(
   coping.glad.phq.raw,
   graph.col = F,
-  valid.col = F,
-  labels.col = F
+  valid.col = F
+  #labels.col = F
 )
 ```
 
-```{r select phq little}
-coping.glad.phq.raw %>%
-  select(contains("little")) %>%
-  colnames
-```
 
-
+Will need to double check these namings once we have the new cleaned data -- KT. 
 ```{r coping glad phq cleaning}
 coping.glad.phq.raw.id <- coping.glad.phq.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
@@ -1701,8 +1696,6 @@ coping.glad.phq.raw.id %>%
   )
 ```
 
-Maximum is fine with 3 x 7.
-
 Calculate sum score for PHQ-9 base
 ```{r coping phq sum score base}
 # Create vector with scoring key: If the item is reversed coded use -1. 
@@ -1780,8 +1773,9 @@ dat.glad.raw <- plyr::join_all(
 skimr::skim(dat.glad.raw)
 ```
 
-Check duplicates again to be save
+Check duplicates again to be saved
 +++KLP: RAMP: More than one column: Age, Sex, Login ID; if they match on all 3 then we treat them as a duplicate; otherwise we are going to rename the Login ID
++++KT: No duplicates identified by ID in GLAD. 
 ```{r glad Check duplicates}
 dat.glad.raw$ID.dup <- duplicated(dat.glad.raw$ID)
 
@@ -1795,12 +1789,12 @@ dat.glad.raw.no.dup <- dat.glad.raw %>%
 ```
 
 #Exclusion
-Exclude those without sex, age and incomplete PHQ/GAD items
-Create a new new object for each exclusion step, e.g., data.no_sex and data.no_sex.no_age
+Exclude those without sex, gender, age and incomplete PHQ/GAD items
+Create a new new object for each exclusion step, e.g., data.no_sex, data.no_gender and data.no_sex.no_age
 ```{r Exclude participants that do not report sex}
 dim(dat.glad.raw)
 dat.no.sex <- dat.glad.raw %>%
-  drop_na(Gender)
+  drop_na(Sex)
 dim(dat.no.sex)
 
 dim(dat.glad.raw)[1]-dim(dat.no.sex)[1]
@@ -1808,15 +1802,26 @@ dim(dat.glad.raw)[1]-dim(dat.no.sex)[1]
 `r dim(dat.glad.raw)[1]-dim(dat.no.sex)[1]` were excluded because they did not report their sex
 
 
-```{r Exclude participants that do not report age}
+```{r Exclude participants that do not report gender}
 dim(dat.no.sex)
-dat.no.sex.no.age <- dat.no.sex %>%
-  drop_na(age_category)
-dim(dat.no.sex.no.age)
+dat.no.sex.no.gender <- dat.no.sex %>%
+  drop_na(Gender)
+dim(dat.no.sex.no.gender)
 
-dim(dat.no.sex)[1]-dim(dat.no.sex.no.age)[1]
+dim(dat.no.sex)[1]-dim(dat.no.sex.no.gender)[1]
 ```
-`r dim(dat.no.sex)[1]-dim(dat.no.sex.no.age)[1]` were excluded because they did not report their age
+`r dim(dat.no.sex)[1]-dim(dat.no.sex.no.gender)[1]` were excluded because they did not report their sex
+
+
+```{r Exclude participants that do not report age}
+dim(dat.no.sex.no.gender)
+dat.no.sex.no.gender.no.age <- dat.no.sex.no.gender %>%
+  drop_na(age_category)
+dim(dat.no.sex.no.gender.no.age)
+
+dim(dat.no.sex.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]
+```
+`r dim(dat.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]` were excluded because they did not report their age
 
 Exclusion of inflammatory bowel disease (IBD) BioResource (BR) cohort
 ```{r COVID exclusion of IBD}
