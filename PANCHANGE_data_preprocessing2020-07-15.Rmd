@@ -1469,7 +1469,7 @@ coping.glad.pcl.raw.id <- coping.glad.pcl.raw %>%
     pcl.feeling_irritable_or_having_angry_outbursts_retro_numeric = pcl6.feeling_irritable_or_having_angry_outbursts.1_numeric,
     pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl6.feeling_irritable_or_having_angry_outbursts.1,
     pcl.difficulty_concentrating_retro_numeric = pcl6.difficulty_concentrating.1_numeric,
-    pcl.difficulty_concentratin_retro = pcl6.difficulty_concentrating.1
+    pcl.difficulty_concentrating_retro = pcl6.difficulty_concentrating.1
   ) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
@@ -1491,7 +1491,7 @@ colnames(coping.glad.pcl.raw.id)
 dim(coping.glad.pcl.raw)[1]-dim(coping.glad.pcl.raw.id)[1]
 ```
 
-Calculate sum score for PHQ-9 retro
+Calculate sum score for PCL-6 retro
 ```{r coping pcl sum score retro}
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
@@ -1525,9 +1525,9 @@ coping.glad.pcl.raw.id %>%
   )
 ```
 
-Maximum is fine with 3 x 7.
 
-Calculate sum score for PHQ-9 base
+Calculate sum score for PCL-6 base
+The sum scores here will not be accurate if we are using complete cases. Only use sum scores here for complete cases, otherwise the minimum will be 0 where it should be 6. 
 ```{r coping pcl sum score base}
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
@@ -1548,7 +1548,7 @@ pcl.scored_items_base <- scoreItems(keys = pcl.items_key_base,
                                     items = coping.glad.pcl.raw.id[pcl.items_base],
                                     totals = TRUE, 
                                     missing = TRUE, 
-                                    impute = 'none', 
+                                    impute = "none", 
                                     min = 1, 
                                     max = 5)
 # Add in column to tibble
@@ -1585,18 +1585,13 @@ colnames(coping.glad.phq.raw)
 summarytools::dfSummary(
   coping.glad.phq.raw,
   graph.col = F,
-  valid.col = F,
-  labels.col = F
+  valid.col = F
+  #labels.col = F
 )
 ```
 
-```{r}
-coping.glad.phq.raw %>%
-  select(contains("little")) %>%
-  colnames
-```
 
-
+Will need to double check these namings once we have the new cleaned data -- KT. 
 ```{r coping glad phq cleaning}
 coping.glad.phq.raw.id <- coping.glad.phq.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
@@ -1701,8 +1696,6 @@ coping.glad.phq.raw.id %>%
   )
 ```
 
-Maximum is fine with 3 x 7.
-
 Calculate sum score for PHQ-9 base
 ```{r coping phq sum score base}
 # Create vector with scoring key: If the item is reversed coded use -1. 
@@ -1780,8 +1773,9 @@ dat.glad.raw <- plyr::join_all(
 skimr::skim(dat.glad.raw)
 ```
 
-Check duplicates again to be save
+Check duplicates again to be saved
 +++KLP: RAMP: More than one column: Age, Sex, Login ID; if they match on all 3 then we treat them as a duplicate; otherwise we are going to rename the Login ID
++++KT: No duplicates identified by ID in GLAD. 
 ```{r glad Check duplicates}
 dat.glad.raw$ID.dup <- duplicated(dat.glad.raw$ID)
 
@@ -1795,12 +1789,12 @@ dat.glad.raw.no.dup <- dat.glad.raw %>%
 ```
 
 #Exclusion
-Exclude those without sex, age and incomplete PHQ/GAD items
-Create a new new object for each exclusion step, e.g., data.no_sex and data.no_sex.no_age
+Exclude those without sex, gender, age and incomplete PHQ/GAD items
+Create a new new object for each exclusion step, e.g., data.no_sex, data.no_gender and data.no_sex.no_age
 ```{r Exclude participants that do not report sex}
 dim(dat.glad.raw)
 dat.no.sex <- dat.glad.raw %>%
-  drop_na(Gender)
+  drop_na(Sex)
 dim(dat.no.sex)
 
 dim(dat.glad.raw)[1]-dim(dat.no.sex)[1]
@@ -1808,15 +1802,26 @@ dim(dat.glad.raw)[1]-dim(dat.no.sex)[1]
 `r dim(dat.glad.raw)[1]-dim(dat.no.sex)[1]` were excluded because they did not report their sex
 
 
-```{r Exclude participants that do not report age}
+```{r Exclude participants that do not report gender}
 dim(dat.no.sex)
-dat.no.sex.no.age <- dat.no.sex %>%
-  drop_na(age_category)
-dim(dat.no.sex.no.age)
+dat.no.sex.no.gender <- dat.no.sex %>%
+  drop_na(Gender)
+dim(dat.no.sex.no.gender)
 
-dim(dat.no.sex)[1]-dim(dat.no.sex.no.age)[1]
+dim(dat.no.sex)[1]-dim(dat.no.sex.no.gender)[1]
 ```
-`r dim(dat.no.sex)[1]-dim(dat.no.sex.no.age)[1]` were excluded because they did not report their age
+`r dim(dat.no.sex)[1]-dim(dat.no.sex.no.gender)[1]` were excluded because they did not report their sex
+
+
+```{r Exclude participants that do not report age}
+dim(dat.no.sex.no.gender)
+dat.no.sex.no.gender.no.age <- dat.no.sex.no.gender %>%
+  drop_na(age_category)
+dim(dat.no.sex.no.gender.no.age)
+
+dim(dat.no.sex.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]
+```
+`r dim(dat.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]` were excluded because they did not report their age
 
 Exclusion of inflammatory bowel disease (IBD) BioResource (BR) cohort
 ```{r COVID exclusion of IBD}
@@ -1829,7 +1834,7 @@ Exclusion of inflammatory bowel disease (IBD) BioResource (BR) cohort
 #
 #dim(dat.no.sex.no.age)[1]-dim(dat.no.sex.no.age.no.ibd)[1]
 
-dat.no.sex.no.age.no.ibd <- dat.no.sex.no.age
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age
 ```
 
 #Missigness of questionnaire items
@@ -1846,16 +1851,16 @@ dat.no.sex.no.age.no.ibd <- dat.no.sex.no.age
 #
 #dim(dat.no.sex.no.age.no.ibd)[1]-dim(dat.no.sex.no.age.no.ibd.incomplete.questionnaire)[1]
 
-dat.no.sex.no.age.no.ibd.incomplete.questionnaire <- dat.no.sex.no.age.no.ibd
+dat.no.sex.no.gender.no.age.no.ibd.incomplete.questionnaire <- dat.no.sex.no.gender.no.age.no.ibd
 ```
 
-Create tidy data on which the exclusionc criteria have been applied
+Create tidy data on which the exclusion criteria have been applied
 ```{r Tidy data}
-dat.glad <- dat.no.sex.no.age.no.ibd.incomplete.questionnaire
+dat.glad <- dat.no.sex.no.gender.no.age.no.ibd.incomplete.questionnaire
 
 skimr::skim(dat.glad)
 ```
-The complete rate for age and sex should be 1 now
+The complete rate for sex, gender and age should be 1 now. 
 
 
 # Definition of prepandemic and baseline 
@@ -1982,9 +1987,28 @@ dat.glad %>%
 ```
 
 
-What proportion is over a year?
+Proportion of people signed up over one year ago
 ```{r eval=FALSE, include=FALSE}
+dat.glad <- dat.glad %>%
+  mutate(
+    over_one_year_time_diff_sign_up_coping_numeric =
+      as.numeric(
+        if_else(time_diff_sign_up_coping > 365, 1, 0
+                )
+      )
+  )
 
+dat.glad <- dat.glad %>%
+  mutate(
+    over_one_year_time_diff_sign_up_coping =
+      recode_factor(
+        over_one_year_time_diff_sign_up_coping_numeric,
+        "0" = "Sign up under one year before COPING",
+        "1" = "Sign up over one year before COPING"
+      )
+  )
+
+table(dat.glad$over_one_year_time_diff_sign_up_coping)
 ```
 
 # Probable COVID-19 case identification
@@ -1997,9 +2021,10 @@ Variables required:
 - "sfatigue": Severe fatigue
 - "smeals": Skipped meals
 
+The below chunk needs to be re-thought - not as simple as categorising gender. 
 ```{r eval=FALSE, include=FALSE}
 # Recode Gender to be binary for the model in RAMP
-dat.respirotry.ramp <- dat.respirtaory.ramp %>%
+dat.respiratory.ramp <- dat.respiratory.ramp %>%
 		  mutate(
 		    gender_binary_ramp =
 		      case_when(
@@ -2010,12 +2035,12 @@ dat.respirotry.ramp <- dat.respirtaory.ramp %>%
 		  )
 ```
 
-++KT: Need help identifying cut offs for COVID probability
+++KT: Needs to be developed further for RAMP dataset
 ```{r eval=FALSE, include=FALSE}
 ## COVID prediction model for COPING
 
 ## Formula to calculate probability 
-dat.respirotry.coping <- dat.respirtaory.coping %>%
+dat.respiratory.coping <- dat.respiratory.coping %>%
 		  mutate(
 		    covid_probability = 
 		      (-1.32) - 
@@ -2028,34 +2053,29 @@ dat.respirotry.coping <- dat.respirtaory.coping %>%
 		         )
 
 ## Calcualte the odds ratios 
-dat.respirotry.coping <- dat.respirtaory.coping %>%
+dat.respiratory.coping <- dat.respiratory.coping %>%
 		  mutate(
 		    covid_odds_ratio = 
 		      exp(covid_probability) / (1 + exp(covid_probability)
 		                              )
 
-## label the variable
-covid_odds_ratio <- "COVID-19 probability" #IGNORE NEED TO EDIT TO LABEL THE ABOVE VARIABLE
-
 ## generate variable covid_odds_ratio_50 -> 0, 0,5 and 1 = 0, 1, 2 (that's a column). Previous code: egen covid_odds_ratio_50 = cut(covid_odds_ratio), at(0,0.5,1) icode
-dat.respirotry.coping <- dat.respirtaory.coping %>%
+dat.respiratory.coping <- dat.respiratory.coping %>%
 		  mutate(
 		    covid_odds_ratio_50_numeric = 
 		      case_when(
-		        covid_odds_ratio >= 0 & covid_odds_ratio <= 0.4 ~ "0", #I don't know how to categorise these - how does the previous function know when to cut?
-		        covid_odds_ratio >= 0.4 & covid_odds_ratio <= 0.6 ~ "1",
-		        covid_odds_ratio >= 0.7 & covid_odds_ratio <= 1 ~ "2"
+		        covid_odds_ratio >= 0 & covid_odds_ratio < 0.5 ~ "0", #cut off at 0.5 
+		        covid_odds_ratio >= 0.5 & covid_odds_ratio <= 1 ~ "1"
 		      )
 		      
 #create factor with labels
-dat.respirotry.coping <- dat.respirtaory.coping %>%
+dat.respiratory.coping <- dat.respiratory.coping %>%
   mutate(
     covid_odds_ratio_50 =
       recode_factor(
         covid_odds_ratio_50_numeric,
         "0" = "No COVID",
-        "1" = "Probable COVID",
-        "2" = "COVID case"
+        "1" = "Probable COVID"
       )
   )
 
@@ -2066,15 +2086,12 @@ covid_variables <- c(
                       "covid_probability"
                     )
 
-descr(x = dat.respirotry.coping[,covid_variables],
+descr(x = dat.respiratory.coping[,covid_variables],
       round.digits = 2,
       transpose = TRUE)
 
-## create a new label for the variable (50%)
-covid_odds_ratio_50 <- "COVID-19 probability >= 50%" #Need to rename variable properly
-
-## looking at the created variable
-table(dat.respirotry.coping$covid_odds_ratio_50) #same as before - not sure why this is needed? 
+## looking at cases over 0.5
+table(dat.respiratory.coping$covid_odds_ratio_50) 
 ```
 
 
