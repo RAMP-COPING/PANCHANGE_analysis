@@ -1987,9 +1987,28 @@ dat.glad %>%
 ```
 
 
-What proportion is over a year?
+Proportion of people signed up over one year ago
 ```{r eval=FALSE, include=FALSE}
+dat.glad <- dat.glad %>%
+  mutate(
+    over_one_year_time_diff_sign_up_coping_numeric =
+      as.numeric(
+        if_else(time_diff_sign_up_coping > 365, 1, 0
+                )
+      )
+  )
 
+dat.glad <- dat.glad %>%
+  mutate(
+    over_one_year_time_diff_sign_up_coping =
+      recode_factor(
+        over_one_year_time_diff_sign_up_coping_numeric,
+        "0" = "Sign up under one year before COPING",
+        "1" = "Sign up over one year before COPING"
+      )
+  )
+
+table(dat.glad$over_one_year_time_diff_sign_up_coping)
 ```
 
 # Probable COVID-19 case identification
