@@ -2021,9 +2021,10 @@ Variables required:
 - "sfatigue": Severe fatigue
 - "smeals": Skipped meals
 
+The below chunk needs to be re-thought - not as simple as categorising gender. 
 ```{r eval=FALSE, include=FALSE}
 # Recode Gender to be binary for the model in RAMP
-dat.respirotry.ramp <- dat.respirtaory.ramp %>%
+dat.respiratory.ramp <- dat.respiratory.ramp %>%
 		  mutate(
 		    gender_binary_ramp =
 		      case_when(
@@ -2034,12 +2035,12 @@ dat.respirotry.ramp <- dat.respirtaory.ramp %>%
 		  )
 ```
 
-++KT: Need help identifying cut offs for COVID probability
+++KT: Needs to be developed further for RAMP dataset
 ```{r eval=FALSE, include=FALSE}
 ## COVID prediction model for COPING
 
 ## Formula to calculate probability 
-dat.respirotry.coping <- dat.respirtaory.coping %>%
+dat.respiratory.coping <- dat.respiratory.coping %>%
 		  mutate(
 		    covid_probability = 
 		      (-1.32) - 
@@ -2052,34 +2053,29 @@ dat.respirotry.coping <- dat.respirtaory.coping %>%
 		         )
 
 ## Calcualte the odds ratios 
-dat.respirotry.coping <- dat.respirtaory.coping %>%
+dat.respiratory.coping <- dat.respiratory.coping %>%
 		  mutate(
 		    covid_odds_ratio = 
 		      exp(covid_probability) / (1 + exp(covid_probability)
 		                              )
 
-## label the variable
-covid_odds_ratio <- "COVID-19 probability" #IGNORE NEED TO EDIT TO LABEL THE ABOVE VARIABLE
-
 ## generate variable covid_odds_ratio_50 -> 0, 0,5 and 1 = 0, 1, 2 (that's a column). Previous code: egen covid_odds_ratio_50 = cut(covid_odds_ratio), at(0,0.5,1) icode
-dat.respirotry.coping <- dat.respirtaory.coping %>%
+dat.respiratory.coping <- dat.respiratory.coping %>%
 		  mutate(
 		    covid_odds_ratio_50_numeric = 
 		      case_when(
-		        covid_odds_ratio >= 0 & covid_odds_ratio <= 0.4 ~ "0", #I don't know how to categorise these - how does the previous function know when to cut?
-		        covid_odds_ratio >= 0.4 & covid_odds_ratio <= 0.6 ~ "1",
-		        covid_odds_ratio >= 0.7 & covid_odds_ratio <= 1 ~ "2"
+		        covid_odds_ratio >= 0 & covid_odds_ratio < 0.5 ~ "0", #cut off at 0.5 
+		        covid_odds_ratio >= 0.5 & covid_odds_ratio <= 1 ~ "1"
 		      )
 		      
 #create factor with labels
-dat.respirotry.coping <- dat.respirtaory.coping %>%
+dat.respiratory.coping <- dat.respiratory.coping %>%
   mutate(
     covid_odds_ratio_50 =
       recode_factor(
         covid_odds_ratio_50_numeric,
         "0" = "No COVID",
-        "1" = "Probable COVID",
-        "2" = "COVID case"
+        "1" = "Probable COVID"
       )
   )
 
@@ -2090,15 +2086,12 @@ covid_variables <- c(
                       "covid_probability"
                     )
 
-descr(x = dat.respirotry.coping[,covid_variables],
+descr(x = dat.respiratory.coping[,covid_variables],
       round.digits = 2,
       transpose = TRUE)
 
-## create a new label for the variable (50%)
-covid_odds_ratio_50 <- "COVID-19 probability >= 50%" #Need to rename variable properly
-
-## looking at the created variable
-table(dat.respirotry.coping$covid_odds_ratio_50) #same as before - not sure why this is needed? 
+## looking at cases over 0.5
+table(dat.respiratory.coping$covid_odds_ratio_50) 
 ```
 
 
