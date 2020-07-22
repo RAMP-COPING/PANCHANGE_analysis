@@ -1834,7 +1834,7 @@ Exclusion of inflammatory bowel disease (IBD) BioResource (BR) cohort
 #
 #dim(dat.no.sex.no.age)[1]-dim(dat.no.sex.no.age.no.ibd)[1]
 
-dat.no.sex.no.age.no.ibd <- dat.no.sex.no.age
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age
 ```
 
 #Missigness of questionnaire items
@@ -1851,16 +1851,16 @@ dat.no.sex.no.age.no.ibd <- dat.no.sex.no.age
 #
 #dim(dat.no.sex.no.age.no.ibd)[1]-dim(dat.no.sex.no.age.no.ibd.incomplete.questionnaire)[1]
 
-dat.no.sex.no.age.no.ibd.incomplete.questionnaire <- dat.no.sex.no.age.no.ibd
+dat.no.sex.no.gender.no.age.no.ibd.incomplete.questionnaire <- dat.no.sex.no.gender.no.age.no.ibd
 ```
 
-Create tidy data on which the exclusionc criteria have been applied
+Create tidy data on which the exclusion criteria have been applied
 ```{r Tidy data}
-dat.glad <- dat.no.sex.no.age.no.ibd.incomplete.questionnaire
+dat.glad <- dat.no.sex.no.gender.no.age.no.ibd.incomplete.questionnaire
 
 skimr::skim(dat.glad)
 ```
-The complete rate for age and sex should be 1 now
+The complete rate for sex, gender and age should be 1 now. 
 
 
 # Definition of prepandemic and baseline 
