@@ -1527,6 +1527,7 @@ coping.glad.pcl.raw.id %>%
 
 
 Calculate sum score for PCL-6 base
+The sum scores here will not be accurate if we are using complete cases. Only use sum scores here for complete cases, otherwise the minimum will be 0 where it should be 6. 
 ```{r coping pcl sum score base}
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
@@ -1547,7 +1548,7 @@ pcl.scored_items_base <- scoreItems(keys = pcl.items_key_base,
                                     items = coping.glad.pcl.raw.id[pcl.items_base],
                                     totals = TRUE, 
                                     missing = TRUE, 
-                                    impute = 'none', 
+                                    impute = "none", 
                                     min = 1, 
                                     max = 5)
 # Add in column to tibble
@@ -1589,7 +1590,7 @@ summarytools::dfSummary(
 )
 ```
 
-```{r}
+```{r select phq little}
 coping.glad.phq.raw %>%
   select(contains("little")) %>%
   colnames
