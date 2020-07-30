@@ -1837,7 +1837,7 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age
 ##Missigness of questionnaire items
 #PHQ - baseline
 PHQ Missingness NAs per person - count and percentages
-```{r Missingness}
+```{r PHQ basline missingness}
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
   mutate(
     na_per_person_phq_base =         # variable for NA per person
@@ -1861,20 +1861,57 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA
 freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_base)
 ```
 
+#PHQ - retrospective
+PHQ Missingness NAs per person - count and percentages
+```{r PHQ retrospective missingness}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    na_per_person_phq_retro =         # variable for NA per person
+      rowSums(                       
+        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
+          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the PHQ items at retroline
+           %in%
+             phq.items_retro]
+        )
+    )
+  )
 
+freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_retro) #have a look at the frequency 
 
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
+  mutate(
+    miss_pc_total_phq_retro = 
+      na_per_person_phq_retro/9 # NA per person divided by the amount of items
+  )
 
+freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_retro)
+```
 
+#PHQ - prepanspective
+PHQ Missingness NAs per person - count and percentages
+```{r PHQ prepanspective missingness}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    na_per_person_phq_prepan =         # variable for NA per person
+      rowSums(                       
+        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
+          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the PHQ items at prepanline
+           %in%
+             phq.items_prepan]
+        )
+    )
+  )
 
+freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_prepan) #have a look at the frequency 
 
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
+  mutate(
+    miss_pc_total_phq_prepan = 
+      na_per_person_phq_prepan/9 # NA per person divided by the amount of items
+  )
 
-
-
-
-
-
-
-
+freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_prepan)
+```
 
 
 
