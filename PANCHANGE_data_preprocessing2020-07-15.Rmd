@@ -1887,9 +1887,9 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA
 freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_retro)
 ```
 
-#PHQ - prepanspective
+#PHQ - prepandemic
 PHQ Missingness NAs per person - count and percentages
-```{r PHQ prepanspective missingness}
+```{r PHQ prepan missingness}
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
   mutate(
     na_per_person_phq_prepan =         # variable for NA per person
@@ -1913,41 +1913,104 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA
 freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_prepan)
 ```
 
-
-
-
-Missingness per item
-```{r Missingness per item}
-dat.no.sex.no.gender.no.age.no.ibd.miss <- as.data.frame(colnames(dat.no.sex.no.gender.no.age.no.ibd[,PHQ.items]))
-colnames(dat.no.sex.no.gender.no.age.no.ibd.miss) <- "Items"
-dat.no.sex.no.gender.no.age.no.ibd.miss$item.miss <- colSums(is.na(dat.no.sex.no.gender.no.age.no.ibd[,PHQ.items]))
-dat.no.sex.no.gender.no.age.no.ibd.miss$item.miss.pc <- dat.no.sex.no.gender.no.age.no.ibd.miss$item.miss/nrow(dat.no.sex.no.gender.no.age.no.ibd[,PHQ.items])
-table(dat.no.sex.no.gender.no.age.no.ibd.miss$Items, dat.no.sex.no.gender.no.age.no.ibd.miss$item.miss.pc)
-summary(dat.no.sex.no.gender.no.age.no.ibd.miss$item.miss.pc)
-
-
-ggplot(data = dat.no.sex.no.gender.no.age.no.ibd.miss,
-       aes(x = Items, y = item.miss.pc)) +
-  geom_point() +
-  labs(title = "GLAD: PHQ",
-    y ="Missingness per item") +
-  theme_minimal() +
-  coord_flip()
-```
-
-```{r count of people missing a number of items}
-table(dat.no.sex.no.gender.no.age.no.ibd$na.per.person.phq)
+Count for PHQ baseline, retrospective, and prepandemic missingness per person
+```{r count of people missing a number of items for PHQ}
+#baseline
+table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_base)
+#retrospective
+table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_retro)
+#pre-pandemic
+table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_prepan)
 ```
 
 
+#GAD - baseline
+GAD Missingness NAs per person - count and percentages
+```{r gad basline missingness}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    na_per_person_gad_base =         # variable for NA per person
+      rowSums(                       
+        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
+          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the gad items at baseline
+           %in%
+             gad.items_base]
+        )
+    )
+  )
 
+freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_base) #have a look at the frequency 
 
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
+  mutate(
+    miss_pc_total_gad_base = 
+      na_per_person_gad_base/7 # NA per person divided by the amount of items
+  )
 
+freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_gad_base)
+```
 
+#gad - retrospective
+gad Missingness NAs per person - count and percentages
+```{r gad retrospective missingness}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    na_per_person_gad_retro =         # variable for NA per person
+      rowSums(                       
+        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
+          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the gad items at retroline
+           %in%
+             gad.items_retro]
+        )
+    )
+  )
 
+freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_retro) #have a look at the frequency 
 
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
+  mutate(
+    miss_pc_total_gad_retro = 
+      na_per_person_gad_retro/7 # NA per person divided by the amount of items
+  )
 
+freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_gad_retro)
+```
 
+#gad - prepandemic
+gad Missingness NAs per person - count and percentages
+```{r gad prepan missingness}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    na_per_person_gad_prepan =         # variable for NA per person
+      rowSums(                       
+        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
+          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the gad items at prepanline
+           %in%
+             gad.items_prepan]
+        )
+    )
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_prepan) #have a look at the frequency 
+
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
+  mutate(
+    miss_pc_total_gad_prepan = 
+      na_per_person_gad_prepan/7 # NA per person divided by the amount of items
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_gad_prepan)
+```
+
+Count for gad baseline, retrospective, and prepandemic missingness per person
+```{r count of people missing a number of items for gad}
+#baseline
+table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_base)
+#retrospective
+table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_retro)
+#pre-pandemic
+table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_prepan)
+```
 
 
 
