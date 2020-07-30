@@ -1834,7 +1834,91 @@ Exclusion of inflammatory bowel disease (IBD) BioResource (BR) cohort
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age
 ```
 
-#Missigness of questionnaire items
+##Missigness of questionnaire items
+#PHQ - baseline
+PHQ Missingness NAs per person - count and percentages
+```{r Missingness}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    na_per_person_phq_base =         # variable for NA per person
+      rowSums(                       
+        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
+          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the PHQ items at baseline
+           %in%
+             phq.items_base]
+        )
+    )
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_base) #have a look at the frequency 
+
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
+  mutate(
+    miss_pc_total_phq_base = 
+      na_per_person_phq_base/9 # NA per person divided by the amount of items
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_base)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Missingness per item
+```{r Missingness per item}
+dat.no.sex.no.gender.no.age.no.ibd.miss <- as.data.frame(colnames(dat.no.sex.no.gender.no.age.no.ibd[,PHQ.items]))
+colnames(dat.no.sex.no.gender.no.age.no.ibd.miss) <- "Items"
+dat.no.sex.no.gender.no.age.no.ibd.miss$item.miss <- colSums(is.na(dat.no.sex.no.gender.no.age.no.ibd[,PHQ.items]))
+dat.no.sex.no.gender.no.age.no.ibd.miss$item.miss.pc <- dat.no.sex.no.gender.no.age.no.ibd.miss$item.miss/nrow(dat.no.sex.no.gender.no.age.no.ibd[,PHQ.items])
+table(dat.no.sex.no.gender.no.age.no.ibd.miss$Items, dat.no.sex.no.gender.no.age.no.ibd.miss$item.miss.pc)
+summary(dat.no.sex.no.gender.no.age.no.ibd.miss$item.miss.pc)
+
+
+ggplot(data = dat.no.sex.no.gender.no.age.no.ibd.miss,
+       aes(x = Items, y = item.miss.pc)) +
+  geom_point() +
+  labs(title = "GLAD: PHQ",
+    y ="Missingness per item") +
+  theme_minimal() +
+  coord_flip()
+```
+
+```{r count of people missing a number of items}
+table(dat.no.sex.no.gender.no.age.no.ibd$na.per.person.phq)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Complete case data for PHQ, GAD and PCL - 3345 remaining, drop 35,036.
 ```{r complete cases only}
 all.items <- c(phq.items_prepan,
@@ -1852,6 +1936,7 @@ dat.no.sex.no.gender.no.age.no.ibd.complete.cases <- dat.no.sex.no.gender.no.age
 dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases)
 dim(dat.no.sex.no.gender.no.age.no.ibd)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases)[1]
 ```
+
 
 PHQ
 Complete case data for PHQ baseline (COPING) - 9,260 remaining
@@ -1877,6 +1962,7 @@ dat.no.sex.no.gender.no.age.no.ibd.complete.cases.phq.retro <- dat.no.sex.no.gen
 dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.phq.retro)
 dim(dat.no.sex.no.gender.no.age.no.ibd)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.phq.retro)[1]
 ```
+
 
 GAD
 Complete case data for GAD baseline (COPING) - 12,457 remaining
@@ -1929,22 +2015,15 @@ dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.pcl.retro)
 dim(dat.no.sex.no.gender.no.age.no.ibd)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.pcl.retro)[1]
 ```
 
+Missingness NAs per person - count and percentages
+```{r DEM Missingness}
+dat.no.sex.no.gender.no.age.no.ibd$na.per.person.phq <- rowSums(is.na(dat.no.sex.no.gender.no.age.no.ibd[,colnames(dat.no.sex.no.gender.no.age.no.ibd) %in% all.items]))
+freq(dat.no.sex.no.gender.no.age.no.ibd$na.per.person.phq)
 
 
-
-```{r Exclusion of participants because of missing questionnaire items}
-dim(dat.no.sex.no.age.no.ibd)
-dat.no.sex.no.age.no.ibd.incomplete.phq.questionnaire <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  filter(!is.na(phq.items_prepan))
-
-
-dim(dat.no.sex.no.age.no.ibd.incomplete.questionnaire)
-
-dim(dat.no.sex.no.age.no.ibd)[1]-dim(dat.no.sex.no.age.no.ibd.incomplete.questionnaire)[1]
-
-dat.no.sex.no.gender.no.age.no.ibd.incomplete.questionnaire <- dat.no.sex.no.gender.no.age.no.ibd
+PHQ.cc$miss_pc_total.phq <- PHQ.cc$na.per.person.phq/PHQ.n.items
+freq(PHQ.cc$miss_pc_total.phq)
 ```
-
 
 
 Create tidy data on which the exclusion criteria have been applied
@@ -1953,10 +2032,6 @@ dat.glad <- dat.no.sex.no.gender.no.age.no.ibd.incomplete.questionnaire
 
 skimr::skim(dat.glad)
 ```
-
-
-
-
 
 
 
