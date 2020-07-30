@@ -1950,8 +1950,8 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA
 freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_gad_base)
 ```
 
-#gad - retrospective
-gad Missingness NAs per person - count and percentages
+#GAD - retrospective
+GAD Missingness NAs per person - count and percentages
 ```{r gad retrospective missingness}
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
   mutate(
@@ -1976,8 +1976,8 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA
 freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_gad_retro)
 ```
 
-#gad - prepandemic
-gad Missingness NAs per person - count and percentages
+#GAD - prepandemic
+GAD Missingness NAs per person - count and percentages
 ```{r gad prepan missingness}
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
   mutate(
@@ -2011,6 +2011,104 @@ table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_retro)
 #pre-pandemic
 table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_prepan)
 ```
+
+
+#PCL - baseline
+PCL Missingness NAs per person - count and percentages
+```{r pcl basline missingness}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    na_per_person_pcl_base =         # variable for NA per person
+      rowSums(                       
+        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
+          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the pcl items at baseline
+           %in%
+             pcl.items_base]
+        )
+    )
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_base) #have a look at the frequency 
+
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
+  mutate(
+    miss_pc_total_pcl_base = 
+      na_per_person_pcl_base/6 # NA per person divided by the amount of items
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_pcl_base)
+```
+
+#PCL - retrospective
+PCL Missingness NAs per person - count and percentages
+```{r pcl retrospective missingness}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    na_per_person_pcl_retro =         # variable for NA per person
+      rowSums(                       
+        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
+          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the pcl items at retroline
+           %in%
+             pcl.items_retro]
+        )
+    )
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_retro) #have a look at the frequency 
+
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
+  mutate(
+    miss_pc_total_pcl_retro = 
+      na_per_person_pcl_retro/6 # NA per person divided by the amount of items
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_pcl_retro)
+```
+
+#PCL - prepandemic
+pcl Missingness NAs per person - count and percentages
+```{r pcl prepan missingness}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    na_per_person_pcl_prepan =         # variable for NA per person
+      rowSums(                       
+        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
+          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the pcl items at prepanline
+           %in%
+             pcl.items_prepan]
+        )
+    )
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_prepan) #have a look at the frequency 
+
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
+  mutate(
+    miss_pc_total_pcl_prepan = 
+      na_per_person_pcl_prepan/6 # NA per person divided by the amount of items
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_pcl_prepan)
+```
+
+Count for pcl baseline, retrospective, and prepandemic missingness per person
+```{r count of people missing a number of items for pcl}
+#baseline
+table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_base)
+#retrospective
+table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_retro)
+#pre-pandemic
+table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_prepan)
+```
+
+
+
+
+
+
+
+
+
 
 
 
