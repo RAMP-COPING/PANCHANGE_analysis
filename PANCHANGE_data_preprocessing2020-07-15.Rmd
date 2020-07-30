@@ -2201,7 +2201,6 @@ dat.glad <- dat.no.sex.no.gender.no.age.no.ibd.missingness
 skimr::skim(dat.glad)
 ```
 
-
 # Definition of prepandemic and baseline 
 Exlcude people who have joined GLAD/EDGI after the pandemic began, sensitivity analyses done on the cut off's we have chosen. 
 Potentially GLAD/EDGI particiapnts between January to April. EDGI launched on February 24th. 
@@ -2304,7 +2303,6 @@ dat.glad %>%
   freq(prepandemic_march_23)
 ```
 
-
 Calculate the time difference between time difference between sign up questionnaire and COPING questionnaire
 ```{r time difference between sign up questionnaire and COPING questionnaire}
 dat.glad <- dat.glad %>%
@@ -2324,7 +2322,6 @@ dat.glad %>%
     stats = "common"
     )
 ```
-
 
 Proportion of people signed up over one year ago
 ```{r eval=FALSE, include=FALSE}
@@ -2349,7 +2346,6 @@ dat.glad <- dat.glad %>%
 
 table(dat.glad$over_one_year_time_diff_sign_up_coping)
 ```
-
 
 #Total score comparison between PHQ, PCL and GAD, prepandemic, retrospecive and baseline
 PHQ difference scores
@@ -2441,12 +2437,8 @@ dat.glad <- dat.glad %>%
 summary(dat.glad$pcl.diff_score_prepan_base)
 ```
 
-
 #Data level groups
-Identify which data (prepan, retro and baseline) each participant has
-Has only prepandemic == 0
-prepandemic and baseline == 1
-prepandemic, baseline, and retrospective == 2
+Identify which data (prepan, retro and baseline) each participant has.
 ++KT: not sure how best to categorise here so this may need some revision. 
 ```{r data level groups}
 dat.glad <- dat.glad %>%
@@ -2478,7 +2470,6 @@ dat.glad <- dat.glad %>%
 
 table(dat.glad$data_group_full)
 ```
-
 
 
 #READ IN RESPIRATORY DATA 
