@@ -2389,7 +2389,6 @@ summary(dat.glad$phq.diff_score_base_retro)
 
 ```
 
-
 GAD difference scores
 ```{r gad difference scores}
 # Difference score for prepandemic and retrospective gad sum scores
@@ -2427,8 +2426,20 @@ summary(dat.glad$gad.diff_score_base_retro)
 
 ```
 
+PCL difference scores
+NOTE: Only computed baseline and prepandemic differences as the retro account here isn't actually retrospective, but whether the reported baseline scores are due to the pandemic. 
+```{r pcl difference scores}
+# Difference score for prepandemic and baseline pcl sum scores
+dat.glad <- dat.glad %>%
+  mutate(
+    pcl.diff_score_prepan_base =
+      as.numeric(
+        pcl.sum_score_prepan - pcl.sum_score_base  # prepandemic sum score MINUS baseline sum score 
+      )
+  )
 
-
+summary(dat.glad$pcl.diff_score_prepan_base)
+```
 
 
 #Data level groups
