@@ -2351,10 +2351,85 @@ table(dat.glad$over_one_year_time_diff_sign_up_coping)
 ```
 
 
-#Total score comparison between PHQ, PCL and GAD
-```{r pre, base, retro comparison for phq, pcl and gad}
-#see Issue for more details here
+#Total score comparison between PHQ, PCL and GAD, prepandemic, retrospecive and baseline
+PHQ difference scores
+```{r phq difference scores}
+# Difference score for prepandemic and retrospective phq sum scores
+dat.glad <- dat.glad %>%
+  mutate(
+    phq.diff_score_prepan_retro =
+      as.numeric(
+        phq.sum_score_prepan - phq.sum_score_retro  # retrospective sum score MINUS prepandemic sum score 
+      )
+  )
+
+summary(dat.glad$phq.diff_score_prepan_retro)
+
+# Difference score for prepandemic and baseline phq sum scores
+dat.glad <- dat.glad %>%
+  mutate(
+    phq.diff_score_prepan_base =
+      as.numeric(
+        phq.sum_score_prepan - phq.sum_score_base  # prepandemic sum score MINUS baseline sum score 
+      )
+  )
+
+summary(dat.glad$phq.diff_score_prepan_base)
+
+# Difference score for retrospective and baseline phq sum scores
+dat.glad <- dat.glad %>%
+  mutate(
+    phq.diff_score_base_retro =
+      as.numeric(
+        phq.sum_score_base - phq.sum_score_retro  # baseline sum score MINUS retrospective sum score 
+      )
+  )
+
+summary(dat.glad$phq.diff_score_base_retro)
+
 ```
+
+
+GAD difference scores
+```{r gad difference scores}
+# Difference score for prepandemic and retrospective gad sum scores
+dat.glad <- dat.glad %>%
+  mutate(
+    gad.diff_score_prepan_retro =
+      as.numeric(
+        gad.sum_score_prepan - gad.sum_score_retro  # retrospective sum score MINUS prepandemic sum score 
+      )
+  )
+
+summary(dat.glad$gad.diff_score_prepan_retro)
+
+# Difference score for prepandemic and baseline gad sum scores
+dat.glad <- dat.glad %>%
+  mutate(
+    gad.diff_score_prepan_base =
+      as.numeric(
+        gad.sum_score_prepan - gad.sum_score_base  # prepandemic sum score MINUS baseline sum score 
+      )
+  )
+
+summary(dat.glad$gad.diff_score_prepan_base)
+
+# Difference score for retrospective and baseline gad sum scores
+dat.glad <- dat.glad %>%
+  mutate(
+    gad.diff_score_base_retro =
+      as.numeric(
+        gad.sum_score_base - gad.sum_score_retro  # baseline sum score MINUS retrospective sum score 
+      )
+  )
+
+summary(dat.glad$gad.diff_score_base_retro)
+
+```
+
+
+
+
 
 #Data level groups
 Identify which data (prepan, retro and baseline) each participant has
@@ -2368,9 +2443,9 @@ dat.glad <- dat.glad %>%
     data_group_full_numeric =
       case_when(
         !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_phq_retro == 0  & na_per_person_gad_retro == 0 & na_per_person_pcl_retro == 0 ~ 5,
-        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_pcl_retro == 0 ~ 4,
-        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_gad_retro == 0 ~ 3,
-        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_phq_retro == 0 ~ 2, #in GLAD, in COPING and have no missing PCL-retro items
+        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_pcl_retro == 0 ~ 4, #in GLAD, in COPING and have no missing PCL-retro items
+        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_gad_retro == 0 ~ 3, #in GLAD, in COPING and have no missing GAD-retro items
+        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_phq_retro == 0 ~ 2, #in GLAD, in COPING and have no missing PHQ-retro items
         !is.na(startDate.glad) & !is.na(startDate.coping.glad) ~ 1,
         !is.na(startDate.glad) & is.na(startDate.coping.glad) ~ 0
       )
@@ -2392,18 +2467,6 @@ dat.glad <- dat.glad %>%
 
 table(dat.glad$data_group_full)
 ```
-
-
-
-```{r}
-rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the pcl items at prepanline
-           %in%
-             pcl.items_prepan]
-```
-
-
 
 
 
