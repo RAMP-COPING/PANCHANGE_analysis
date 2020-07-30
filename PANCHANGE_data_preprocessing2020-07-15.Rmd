@@ -1405,15 +1405,6 @@ summarytools::dfSummary(
   labels.col = F)
 ```
 
-
-```{r pre, base, retro comparison for phq, pcl and gad}
-#see Issue for more details here
-```
-
-```{r data level groups}
-
-```
-
 # COPING GLAD: PCL-6
 
 ```{r coping glad pcl cols}
@@ -2358,6 +2349,63 @@ dat.glad <- dat.glad %>%
 
 table(dat.glad$over_one_year_time_diff_sign_up_coping)
 ```
+
+
+#Total score comparison between PHQ, PCL and GAD
+```{r pre, base, retro comparison for phq, pcl and gad}
+#see Issue for more details here
+```
+
+#Data level groups
+Identify which data (prepan, retro and baseline) each participant has
+Has only prepandemic == 0
+prepandemic and baseline == 1
+prepandemic, baseline, and retrospective == 2
+++KT: not sure how best to categorise here so this may need some revision. 
+```{r data level groups}
+dat.glad <- dat.glad %>%
+  mutate(
+    data_group_full_numeric =
+      case_when(
+        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_phq_retro == 0  & na_per_person_gad_retro == 0 & na_per_person_pcl_retro == 0 ~ 5,
+        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_pcl_retro == 0 ~ 4,
+        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_gad_retro == 0 ~ 3,
+        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_phq_retro == 0 ~ 2, #in GLAD, in COPING and have no missing PCL-retro items
+        !is.na(startDate.glad) & !is.na(startDate.coping.glad) ~ 1,
+        !is.na(startDate.glad) & is.na(startDate.coping.glad) ~ 0
+      )
+  )
+
+dat.glad <- dat.glad %>%
+  mutate(
+    data_group_full = 
+      recode_factor(
+        data_group_full_numeric,
+        "0" = "Only prepandemic data",
+        "1" = "Prepandemic and baseline data",
+        "2" = "Prepandemic, baseline and retrospective PHQ data",
+        "3" = "Prepandemic, baseline and retrospective GAD data",
+        "4" = "Prepandemic, baseline and retrospective PCL data",
+        "5" = "All prepandemic, baseline and retrospective data"
+      )
+  )
+
+table(dat.glad$data_group_full)
+```
+
+
+
+```{r}
+rowSums(                       
+        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
+          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the pcl items at prepanline
+           %in%
+             pcl.items_prepan]
+```
+
+
+
+
 
 #READ IN RESPIRATORY DATA 
 ```{r read in respiratory data}
