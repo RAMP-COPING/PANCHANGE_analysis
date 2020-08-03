@@ -11,7 +11,9 @@ Workflow:
 - Make sure to attach each issue with the appropriate label. If there is an Issue that you think warrants discussion in a weekly meeting then make sure to add the tag "Meeting topic" and this will be discussed in the next meeting.  
 - Create a new branch when starting a new task and never edit the master script. 
 - Each team member can work simultaneously on the scripts using different branches, however make sure there is no task overlap.
-- All code will be reviewed by another member of the team before pushing to the master script. Therefore, make sure to assign a member of the team on Github to review your push. 
+- All code will be reviewed by another member of the team before pushing to the master script. Therefore, make sure to assign a member of the team on Github to review your push (pull request). 
+- Pull requests should be reviewed daily to avoid any clashing of work. If you have been assigned a review - please review this at the end of that day. 
+- When reviewing the pull requests, please delete the branch so that there are not random branches still open.
 
 Current labels: Administrative, Meeting topic, Analyses, Data cleaning, Data visualisation, Data merging, Sensitivity, Help needed, RAMP specific query, COPING specific query, GLAD specific query. 
 
