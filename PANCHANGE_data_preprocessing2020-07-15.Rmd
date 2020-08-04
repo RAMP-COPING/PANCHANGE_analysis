@@ -2442,7 +2442,7 @@ dat.glad <- dat.glad %>%
   mutate(
     phq.diff_score_prepan_base =
       as.numeric(
-        phq.sum_score_prepan - phq.sum_score_base  # prepandemic sum score MINUS baseline sum score 
+        phq.sum_score_base - phq.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
       )
   )
 
@@ -2479,7 +2479,7 @@ dat.glad <- dat.glad %>%
   mutate(
     gad.diff_score_prepan_base =
       as.numeric(
-        gad.sum_score_prepan - gad.sum_score_base  # prepandemic sum score MINUS baseline sum score 
+        gad.sum_score_base - gad.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
       )
   )
 
@@ -2506,7 +2506,7 @@ dat.glad <- dat.glad %>%
   mutate(
     pcl.diff_score_prepan_base =
       as.numeric(
-        pcl.sum_score_prepan - pcl.sum_score_base  # prepandemic sum score MINUS baseline sum score 
+        pcl.sum_score_base - pcl.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
       )
   )
 
