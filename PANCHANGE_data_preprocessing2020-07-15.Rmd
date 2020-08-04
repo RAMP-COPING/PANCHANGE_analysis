@@ -1316,8 +1316,24 @@ ocir.items_key_prepan <- c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
 
 # Create vector with items that are included in sum score
 ocir.items_prepan = c(
-  "ocir.all_variables_listed_here",
-  ##add variables to include in sum score
+  "ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan",
+  "ocir.arranged_things_change_upset_prepan",
+  "ocir.repeat_feel_numbers_prepan",
+  "ocir.clean_simply_wash_feel_prepan",
+  "ocir.mind_upset_unpleasant_thoughts_prepan",
+  "ocir.afraid_avoid_throwing_things_prepan",
+  "ocir.light_switches_water_taps_prepan",
+  "ocir.arranged_things_prepan",
+  "ocir.good_feel_bad_numbers_prepan",
+  "ocir.hands_longer_wash_prepan",
+  "ocir.saved_things_prepan",
+  "ocir.frequently_difficulty_rid_nasty_prepan",
+  "ocir.i_check_things_more_often_than_necessary_prepan",
+  "ocir.arranged_properly_objects_upset_prepan",
+  "ocir.feel_compelled_count_things_prepan",
+  "ocir.strangers_touch_touched_difficult_prepan",
+  "ocir.control_difficult_find_thoughts_prepan",
+  "ocir.i_collect_things_i_dont_need_prepan"
   )
 
 # Calulate sum score
@@ -1327,7 +1343,7 @@ ocir.scored_items_prepan <- scoreItems(keys = ocir.items_key_prepan,
                                         missing = TRUE, 
                                         impute = 'none', 
                                         min = 0, 
-                                        max = 3)
+                                        max = 4)
 # Add in column to tibble
 glad.ocir.raw.id$ocir.sum_score_prepan <- ocir.scored_items_prepan$scores
 
