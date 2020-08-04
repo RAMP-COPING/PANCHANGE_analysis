@@ -2743,7 +2743,7 @@ coping.glad.respiratory.raw.numeric %>%
 
 Choosing cut-offs for the likert scale symptoms of "no symptoms", "mild symptoms", "moderate symptoms" and "severe symptoms" for the fatigue, persistent cough and skipped meals variables. 
 Fatigue: "Severe symptoms" as cut off
-Persistent cought: "Mild symptoms" as cut off
+Persistent cough: "Mild symptoms" as cut off
 Skipped meals: "Moderate symptoms" as cut off
 ```{r proportion of people who report COVID symptoms in Menni et al}
 #fatigue
