@@ -129,6 +129,18 @@ Choose in this chunk which palette to use
 palette = COPINGpalette2
 ```
 
+#Add_numeric function
+Function used to convert character variables into numeric variables. 
+```{r add_numeric function}
+add_numeric <- function(dat, exclude = NULL) {
+  dat_fct <- sjlabelled::as_label(dat)
+
+  dat <- dat[!colnames(dat) %in% exclude]
+  colnames(dat) <- paste(colnames(dat), "numeric", sep = "_")
+  return(bind_cols(dat_fct, dat))
+}
+```
+
 # Data import and merging
 
 Note: GLAD only receives current measures and RAMP questionnaire
@@ -1656,7 +1668,7 @@ Calculate sum score for PHQ-9 retro
 phq.items_key_retro <- c(1,1,1,1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
-phq.items_retro = c(
+phq.items_retro <- c(
   "phq.little_interest_or_pleasure_in_doing_things_retro_numeric",
 "phq.feeling_down_depressed_or_hopeless_retro_numeric",
 "phq.staying_asleep_sleeping_trouble_retro_numeric",
@@ -1693,7 +1705,7 @@ Calculate sum score for PHQ-9 base
 phq.items_key_base <- c(1,1,1,1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
-phq.items_base = c(
+phq.items_base <- c(
   "phq.little_interest_or_pleasure_in_doing_things_base_numeric",
 "phq.feeling_down_depressed_or_hopeless_base_numeric",
 "phq.staying_asleep_sleeping_trouble_base_numeric",
@@ -2625,20 +2637,136 @@ table(dat.glad$data_group_pcl)
 ```
 
 
+#Read in respiratory data
+```{r coping resp cols}
+coping.glad.respiratory.raw <- readRDS(file = paste0(data.raw_path, "/2020-08-03/glad/respiratory_coping_glad.rds"))
+dim(coping.glad.respiratory.raw)
+colnames(coping.glad.respiratory.raw)
+```
 
 
-
-
-
-
-
-
-#READ IN RESPIRATORY DATA 
+Select respiratory variables
 ```{r read in respiratory data}
+coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID),
+         startDate.glad = startDate) %>% # Rename startDate
+  select(
+    Sample, # Sample
+    ID,
+    respiratory.breath_diarrhoea_fatigue_fever,
+    respiratory.worst_ill_feel,
+    respiratory.persistent_cough,
+    respiratory.skipping_meals_because_you_felt_unwell,
+    respiratory.was_your_sense_of_smell_impaired,
+    respiratory.was_your_sense_of_taste_impaired,
+    respiratory.feeling_tiredfatigued,
+    respiratory.throat_swab_coronavirus_nose,
+    respiratory.throat_swab_test_nose,
+    respiratory.coronavirus_antibody_test,
+    respiratory.results_antibody_test
+    # ID
+  ) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
 
+# Inspect dimensions
+dim(coping.glad.respiratory.raw.id)
+# Inspect colnames
+colnames(coping.glad.respiratory.raw.id)
+#Differences
+dim(coping.glad.respiratory.raw)[1]-dim(coping.glad.respiratory.raw.id)[1]
 
 ```
 
+```{r create respiratory numeric variables}
+exclude_cols <- c("ID",
+                  "Sample")
+
+coping.glad.respiratory.raw.numeric <- add_numeric(coping.glad.respiratory.raw.id, exclude = exclude_cols)
+
+colnames(coping.glad.respiratory.raw.numeric)
+dim(coping.glad.respiratory.raw.numeric)
+dim(coping.glad.respiratory.raw.id)
+```
+
+
+```{r distribution of COVID symptoms}
+#persistent cough
+coping.glad.respiratory.raw.numeric %>%
+  ggplot(
+    mapping = aes(
+      y = respiratory.persistent_cough_numeric 
+    )
+  ) +
+  geom_bar() +
+  labs(
+    title = "Persistant cough"
+  )
+
+#severe fatigue
+coping.glad.respiratory.raw.numeric %>%
+  ggplot(
+    mapping = aes(
+        y = respiratory.feeling_tiredfatigued_numeric 
+    )
+  ) +
+  geom_bar() +
+  labs(
+    title = "Severe fatigue"
+  )
+
+#skipped meals
+coping.glad.respiratory.raw.numeric %>%
+  ggplot(
+    mapping = aes(
+        y = respiratory.skipping_meals_because_you_felt_unwell_numeric
+    )
+  ) +
+  geom_bar() +
+  labs(
+    title = "Skipped meals"
+  )
+
+```
+
+Choosing cut-offs for the likert scale symptoms of "no symptoms", "mild symptoms", "moderate symptoms" and "severe symptoms" for the fatigue, persistent cough and skipped meals variables. 
+Fatigue: "Severe symptoms" as cut off
+Persistent cought: "Mild symptoms" as cut off
+Skipped meals: "Moderate symptoms" as cut off
+```{r proportion of people who report COVID symptoms in Menni et al}
+#fatigue
+percentage_fatigue <- ((0.298*6452) + (0.1556*9186) + (0.0871*2434931))/(6452+9186+2434931) 
+percentage_fatigue   # 0.08791204% of Menni et al(2020) have fatigue
+quantile(x = coping.glad.respiratory.raw.numeric$respiratory.feeling_tiredfatigued_numeric, 
+         na.rm = TRUE, 
+         probs = 1-percentage_fatigue) #this gives 8% of the sample reporting fatigue when using the "severe symptoms" fatigue response
+
+#persistent cough
+percentage_pcough <- ((0.5673*6452) + (0.4556*9186) + (0.3017*2434931))/(6452+9186+2434931)
+percentage_pcough    # 0.3029762% of Menni et al(2020) have fatigue
+quantile(x = coping.glad.respiratory.raw.numeric$respiratory.persistent_cough_numeric, 
+         na.rm = TRUE, 
+         probs = 1-percentage_pcough) # this gives 0.3029762% of the sample reporting fatigue when using the "mild symptoms" persistent cough response
+
+#skipped meals 
+percentage_skipped_meals <- ((0.4203*6452) + (0.2493*9186) + (0.1912*2434931))/(6452+9186+2434931) 
+percentage_skipped_meals    # 0.192021% of Menni et al(2020) have fatigue
+quantile(x = coping.glad.respiratory.raw.numeric$respiratory.skipping_meals_because_you_felt_unwell_numeric, 
+         na.rm = TRUE, 
+         probs = 1-percentage_skipped_meals) # this gives 0.192021% of the sample reporting fatigue when using the "moderate symptoms" persistent cough response
+```
 
 # Probable COVID-19 case identification
 Algorithm from Menni et al. to identify probable COVID-19
@@ -2649,7 +2777,6 @@ Variables required:
 - "pcough":	Persistent cough
 - "sfatigue": Severe fatigue
 - "smeals": Skipped meals
-
 The below chunk needs to be re-thought - not as simple as categorising gender. 
 ```{r eval=FALSE, include=FALSE}
 # Recode Gender to be binary for the model in RAMP
