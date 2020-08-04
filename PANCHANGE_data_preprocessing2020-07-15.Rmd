@@ -392,7 +392,7 @@ dim(glad.gad.raw)[1]-dim(glad.gad.raw.id)[1]
 Calculate sum score for GAD-7
 Max should be 21.
 
-*** MD - need to adapt for participants with missing data (should be NA)
+*Note that scores with missingness will be changed to NA later in the script
 ```{r gad sum score prepan}
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
@@ -1095,6 +1095,8 @@ dim(glad.pcl.raw)[1]-dim(glad.pcl.raw.id)[1]
 ```
 
 Calculate sum score for PCL-6
+
+*Note that scores with missingness will be changed to NA later in the script
 ```{r pcl sum score prepan}
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
@@ -1148,6 +1150,7 @@ dim(glad.phq.raw)
 colnames(glad.phq.raw)
 ```
 
+
 ```{r glad phq cleaning}
 glad.phq.raw.id <- glad.phq.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
@@ -1199,7 +1202,7 @@ dim(glad.phq.raw)[1]-dim(glad.phq.raw.id)[1]
 
 Calculate sum score for PHQ-9
 
-*** MD - need to adapt for participants with missing data (should be NA)
+*Note that scores with missingness will be changed to NA later in the script
 ```{r phq sum score prepan}
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
@@ -1308,7 +1311,7 @@ dim(glad.ocir.raw)[1]-dim(glad.ocir.raw.id)[1]
 
 Calculate sum score for OCI-R
 
-*** MD - need to adapt for participants with missing data (should be NA)
+*Note that scores with missingness will be changed to NA later in the script
 ```{r ocir sum score prepan}
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
@@ -1871,8 +1874,7 @@ summarytools::dfSummary(
 )
 ```
 
-
-Will need to double check these namings once we have the new cleaned data -- KT. 
+*Note that the COPING GLAD OCI-R ID numbers are stored under recipientFirstName (rather than ExternalDataReference)
 ```{r coping glad ocir cleaning}
 coping.glad.ocir.raw.id <- coping.glad.ocir.raw %>%
   drop_na(recipientFirstName) %>% # Drop NAs
