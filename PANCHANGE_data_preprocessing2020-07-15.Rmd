@@ -2515,37 +2515,108 @@ summary(dat.glad$pcl.diff_score_prepan_base)
 
 #Data level groups
 Identify which data (prepan, retro and baseline) each participant has.
-++KT: not sure how best to categorise here so this may need some revision. 
-```{r data level groups}
+```{r data level groups PHQ}
 dat.glad <- dat.glad %>%
   mutate(
-    data_group_full_numeric =
+    data_group_phq_numeric =
       case_when(
-        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_phq_retro == 0  & na_per_person_gad_retro == 0 & na_per_person_pcl_retro == 0 ~ 5,
-        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_pcl_retro == 0 ~ 4, #in GLAD, in COPING and have no missing PCL-retro items
-        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_gad_retro == 0 ~ 3, #in GLAD, in COPING and have no missing GAD-retro items
-        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_phq_retro == 0 ~ 2, #in GLAD, in COPING and have no missing PHQ-retro items
-        !is.na(startDate.glad) & !is.na(startDate.coping.glad) ~ 1,
-        !is.na(startDate.glad) & is.na(startDate.coping.glad) ~ 0
+        na_per_person_phq_base == 0 & na_per_person_phq_prepan == 0 & na_per_person_phq_retro == 0 ~ 5, #all complete baseline, prepan and retro
+        na_per_person_phq_base != 0 & na_per_person_phq_prepan != 0 & na_per_person_phq_retro == 0  ~ 4, #retro data only
+        na_per_person_phq_base == 0 & na_per_person_phq_prepan != 0 & na_per_person_phq_retro != 0  ~ 3, #baseline data only
+        na_per_person_phq_base == 0 & na_per_person_phq_prepan == 0 & na_per_person_phq_retro != 0  ~ 2, #prepan and baseline data only
+        na_per_person_phq_base == 0 & na_per_person_phq_prepan != 0 & na_per_person_phq_retro == 0 ~ 1,  #baseline and retro data only
+        na_per_person_phq_base != 0 & na_per_person_phq_prepan == 0 & na_per_person_phq_retro != 0  ~ 0  #prepan data only
       )
   )
 
 dat.glad <- dat.glad %>%
   mutate(
-    data_group_full = 
+    data_group_phq = 
       recode_factor(
-        data_group_full_numeric,
+        data_group_phq_numeric,
         "0" = "Only prepandemic data",
-        "1" = "Prepandemic and baseline data",
-        "2" = "Prepandemic, baseline and retrospective PHQ data",
-        "3" = "Prepandemic, baseline and retrospective GAD data",
-        "4" = "Prepandemic, baseline and retrospective PCL data",
+        "1" = "Baseline and retrospective data",
+        "2" = "Prepandemic and baseline data",
+        "3" = "Baseline data only",
+        "4" = "Retrospective data only",
         "5" = "All prepandemic, baseline and retrospective data"
       )
   )
 
-table(dat.glad$data_group_full)
+table(dat.glad$data_group_phq)
 ```
+
+GAD
+```{r data level groups GAD}
+dat.glad <- dat.glad %>%
+  mutate(
+    data_group_gad_numeric =
+      case_when(
+        na_per_person_gad_base == 0 & na_per_person_gad_prepan == 0 & na_per_person_gad_retro == 0 ~ 5, #all complete baseline, prepan and retro
+        na_per_person_gad_base != 0 & na_per_person_gad_prepan != 0 & na_per_person_gad_retro == 0  ~ 4, #retro data only
+        na_per_person_gad_base == 0 & na_per_person_gad_prepan != 0 & na_per_person_gad_retro != 0  ~ 3, #baseline data only
+        na_per_person_gad_base == 0 & na_per_person_gad_prepan == 0 & na_per_person_gad_retro != 0  ~ 2, #prepan and baseline data only
+        na_per_person_gad_base == 0 & na_per_person_gad_prepan != 0 & na_per_person_gad_retro == 0 ~ 1,  #baseline and retro data only
+        na_per_person_gad_base != 0 & na_per_person_gad_prepan == 0 & na_per_person_gad_retro != 0  ~ 0  #prepan data only
+      )
+  )
+
+dat.glad <- dat.glad %>%
+  mutate(
+    data_group_gad = 
+      recode_factor(
+        data_group_gad_numeric,
+        "0" = "Only prepandemic data",
+        "1" = "Baseline and retrospective data",
+        "2" = "Prepandemic and baseline data",
+        "3" = "Baseline data only",
+        "4" = "Retrospective data only",
+        "5" = "All prepandemic, baseline and retrospective data"
+      )
+  )
+
+table(dat.glad$data_group_gad)
+```
+
+PCL
+```{r data level groups PCL}
+dat.glad <- dat.glad %>%
+  mutate(
+    data_group_pcl_numeric =
+      case_when(
+        na_per_person_pcl_base == 0 & na_per_person_pcl_prepan == 0 & na_per_person_pcl_retro == 0 ~ 5, #all complete baseline, prepan and retro
+        na_per_person_pcl_base != 0 & na_per_person_pcl_prepan != 0 & na_per_person_pcl_retro == 0  ~ 4, #retro data only
+        na_per_person_pcl_base == 0 & na_per_person_pcl_prepan != 0 & na_per_person_pcl_retro != 0  ~ 3, #baseline data only
+        na_per_person_pcl_base == 0 & na_per_person_pcl_prepan == 0 & na_per_person_pcl_retro != 0  ~ 2, #prepan and baseline data only
+        na_per_person_pcl_base == 0 & na_per_person_pcl_prepan != 0 & na_per_person_pcl_retro == 0 ~ 1,  #baseline and retro data only
+        na_per_person_pcl_base != 0 & na_per_person_pcl_prepan == 0 & na_per_person_pcl_retro != 0  ~ 0  #prepan data only
+      )
+  )
+
+dat.glad <- dat.glad %>%
+  mutate(
+    data_group_pcl = 
+      recode_factor(
+        data_group_pcl_numeric,
+        "0" = "Only prepandemic data",
+        "1" = "Baseline and retrospective data",
+        "2" = "Prepandemic and baseline data",
+        "3" = "Baseline data only",
+        "4" = "Retrospective data only",
+        "5" = "All prepandemic, baseline and retrospective data"
+      )
+  )
+
+table(dat.glad$data_group_pcl)
+```
+
+
+
+
+
+
+
+
 
 
 #READ IN RESPIRATORY DATA 
