@@ -62,10 +62,9 @@ Load packages
 ```{r Load packages}
 library(knitr)
 library(summarytools)
-library(tidyverse)
 library(psych)
 library(dplyr)
-library(data.table)
+library(tidyverse)
 ```
 
 # Colour palettes
