@@ -1252,7 +1252,7 @@ summarytools::dfSummary(
 # glad ocir
 
 ```{r glad ocir cols}
-glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/glad/ocir_glad.rds")) #File doesn't exist yet
+glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/2020-08-03/glad/ocir_glad.rds"))
 dim(glad.ocir.raw)
 colnames(glad.ocir.raw)
 ```
@@ -1267,8 +1267,24 @@ glad.ocir.raw.id <- glad.ocir.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    ocir.variables_original_name = ocir.variables_new_name,
-    ... ##Add variables to select and rename here
+    ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan = ocir.i_repeatedly_check_doors_windows_drawers_etc.,
+    ocir.arranged_things_change_upset_prepan = ocir.arranged_things_change_upset,
+    ocir.repeat_feel_numbers_prepan = ocir.repeat_feel_numbers,
+    ocir.clean_simply_wash_feel_prepan = ocir.clean_simply_wash_feel,
+    ocir.mind_upset_unpleasant_thoughts_prepan = ocir.mind_upset_unpleasant_thoughts,
+    ocir.afraid_avoid_throwing_things_prepan = ocir.afraid_avoid_throwing_things,
+    ocir.light_switches_water_taps_prepan = ocir.light_switches_water_taps,
+    ocir.arranged_things_prepan = ocir.arranged_things,
+    ocir.good_feel_bad_numbers_prepan = ocir.good_feel_bad_numbers,
+    ocir.hands_longer_wash_prepan = ocir.hands_longer_wash,
+    ocir.saved_things_prepan = ocir.saved_things,
+    ocir.frequently_difficulty_rid_nasty_prepan = ocir.frequently_difficulty_rid_nasty,
+    ocir.i_check_things_more_often_than_necessary_prepan = ocir.i_check_things_more_often_than_necessary.,
+    ocir.arranged_properly_objects_upset_prepan = ocir.arranged_properly_objects_upset,
+    ocir.feel_compelled_count_things_prepan = ocir.feel_compelled_count_things,
+    ocir.strangers_touch_touched_difficult_prepan = ocir.strangers_touch_touched_difficult,
+    ocir.control_difficult_find_thoughts_prepan = ocir.control_difficult_find_thoughts,
+    ocir.i_collect_things_i_dont_need_prepan = ocir.i_collect_things_i_dont_need
   ) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
