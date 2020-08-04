@@ -2837,6 +2837,43 @@ dat.glad <- dat.glad %>%
 summary(dat.glad$pcl.diff_score_prepan_base)
 ```
 
+OCI-R difference scores
+```{r ocir difference scores}
+# Difference score for prepandemic and retrospective oci-r sum scores
+dat.glad <- dat.glad %>%
+  mutate(
+    ocir.diff_score_prepan_retro =
+      as.numeric(
+        ocir.sum_score_prepan - ocir.sum_score_retro  # retrospective sum score MINUS prepandemic sum score 
+      )
+  )
+
+summary(dat.glad$ocir.diff_score_prepan_retro)
+
+# Difference score for prepandemic and baseline ocir sum scores
+dat.glad <- dat.glad %>%
+  mutate(
+    ocir.diff_score_prepan_base =
+      as.numeric(
+        ocir.sum_score_prepan - ocir.sum_score_base  # prepandemic sum score MINUS baseline sum score 
+      )
+  )
+
+summary(dat.glad$ocir.diff_score_prepan_base)
+
+# Difference score for retrospective and baseline ocir sum scores
+dat.glad <- dat.glad %>%
+  mutate(
+    ocir.diff_score_base_retro =
+      as.numeric(
+        ocir.sum_score_base - ocir.sum_score_retro  # baseline sum score MINUS retrospective sum score 
+      )
+  )
+
+summary(dat.glad$ocir.diff_score_base_retro)
+
+```
+
 #Data level groups
 Identify which data (prepan, retro and baseline) each participant has.
 ++KT: not sure how best to categorise here so this may need some revision. 
