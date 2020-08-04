@@ -2137,7 +2137,7 @@ Exclusion of inflammatory bowel disease (IBD) BioResource (BR) cohort
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age
 ```
 
-##Missigness of questionnaire items
+##Missingness of questionnaire items
 #PHQ - baseline
 PHQ Missingness NAs per person - count and percentages
 ```{r PHQ baseline missingness}
@@ -2427,7 +2427,7 @@ freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_base) #have a look at
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
   mutate(
     miss_pc_total_ocir_base = 
-      na_per_person_ocir_base/9 # NA per person divided by the amount of items
+      na_per_person_ocir_base/18 # NA per person divided by the amount of items
   )
 
 freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_ocir_base)
@@ -2453,7 +2453,7 @@ freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_retro) #have a look a
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
   mutate(
     miss_pc_total_ocir_retro = 
-      na_per_person_ocir_retro/9 # NA per person divided by the amount of items
+      na_per_person_ocir_retro/18 # NA per person divided by the amount of items
   )
 
 freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_ocir_retro)
@@ -2479,7 +2479,7 @@ freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_prepan) #have a look 
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
   mutate(
     miss_pc_total_ocir_prepan = 
-      na_per_person_ocir_prepan/9 # NA per person divided by the amount of items
+      na_per_person_ocir_prepan/18 # NA per person divided by the amount of items
   )
 
 freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_ocir_prepan)
