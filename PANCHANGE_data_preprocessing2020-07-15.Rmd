@@ -1857,7 +1857,7 @@ summarytools::dfSummary(
 # glad COPING ocir
 
 ```{r coping glad ocir cols}
-coping.glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/2020-08-03/glad/ocir_coping_glad.rds"))
+coping.glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/2020-08-04/glad/ocir_coping_glad.rds"))
 dim(coping.glad.ocir.raw)
 colnames(coping.glad.ocir.raw)
 ```
@@ -1875,9 +1875,9 @@ summarytools::dfSummary(
 Will need to double check these namings once we have the new cleaned data -- KT. 
 ```{r coping glad ocir cleaning}
 coping.glad.ocir.raw.id <- coping.glad.ocir.raw %>%
-  drop_na(externalDataReference) %>% # Drop NAs
-  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  drop_na(recipientFirstName) %>% # Drop NAs
+  distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(recipientFirstName, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID),
          startDate.glad = startDate) %>% # Rename startDate
   select(
