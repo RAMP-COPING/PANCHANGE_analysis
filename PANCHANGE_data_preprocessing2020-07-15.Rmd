@@ -1852,6 +1852,23 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA
 freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_base)
 ```
 
+```{r PHQ baseline missingness 8 items}
+#We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    phq.base_cut_off = 
+      if_else(
+        na_per_person_phq_base == 1 & 
+          is.na(phq.dead_hurting_thoughts_base_numeric), 
+        1,
+        0
+      )
+  )
+
+table(dat.no.sex.no.gender.no.age.no.ibd$phq.base_cut_off)
+```
+
+
 #PHQ - retrospective
 PHQ Missingness NAs per person - count and percentages
 ```{r PHQ retrospective missingness}
@@ -1876,6 +1893,23 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA
   )
 
 freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_retro)
+```
+
+
+```{r PHQ retro missingness 8 items}
+#We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    phq.retro_cut_off = 
+      if_else(
+        na_per_person_phq_retro == 1 & 
+          is.na(phq.dead_hurting_thoughts_retro_numeric), 
+        1,
+        0
+      )
+  )
+
+table(dat.no.sex.no.gender.no.age.no.ibd$phq.retro_cut_off)
 ```
 
 #PHQ - prepandemic
@@ -1903,6 +1937,25 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA
 
 freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_prepan)
 ```
+
+
+```{r PHQ prepan missingness 8 items}
+#We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    phq.prepan_cut_off = 
+      if_else(
+        na_per_person_phq_prepan == 1 & 
+          is.na(phq.dead_hurting_thoughts_prepan_numeric), 
+        1,
+        0
+      )
+  )
+
+table(dat.no.sex.no.gender.no.age.no.ibd$phq.prepan_cut_off)
+```
+
+
 
 Count for PHQ baseline, retrospective, and prepandemic missingness per person
 ```{r count of people missing a number of items for PHQ}
