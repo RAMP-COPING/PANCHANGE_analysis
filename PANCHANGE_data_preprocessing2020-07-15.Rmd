@@ -1955,8 +1955,6 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
 table(dat.no.sex.no.gender.no.age.no.ibd$phq.prepan_cut_off)
 ```
 
-
-
 Count for PHQ baseline, retrospective, and prepandemic missingness per person
 ```{r count of people missing a number of items for PHQ}
 #baseline
@@ -2146,6 +2144,127 @@ table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_prepan)
 
 # rename dataset
 dat.no.sex.no.gender.no.age.no.ibd.missingness <- dat.no.sex.no.gender.no.age.no.ibd
+```
+
+#Sum scores missingness cut offs
+KT: This series of chunks creates a "full" sum score for the PHQ, GAD and PCL. 
+
+PHQ
+The PHQ sum score is set to NA if they have more than one missing item, and it is not the last suicide ideation item (they do not meet the cut off criteria - phq.base_cut_off)
+```{r sum score cut offs PHQ base}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    phq.sum_score_base_full =
+      if_else(na_per_person_phq_base > 1 & phq.base_cut_off == 0,
+              NA_real_,
+              phq.sum_score_base
+              )
+  )
+
+summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_base)
+summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_base_full)
+```
+
+```{r sum score cut offs PHQ prepan}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    phq.sum_score_prepan_full =
+      if_else(na_per_person_phq_prepan > 1 & phq.prepan_cut_off == 0,
+              NA_real_,
+              phq.sum_score_prepan
+              )
+  )
+
+summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_prepan)
+summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_prepan_full)
+```
+
+```{r sum score cut offs PHQ retro}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    phq.sum_score_retro_full =
+      if_else(na_per_person_phq_retro > 1 & phq.retro_cut_off == 0,
+              NA_real_,
+              phq.sum_score_retro
+              )
+  )
+
+summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_retro)
+summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_retro_full)
+```
+
+GAD
+The GAD sum score is set to NA if they have any missing items
+```{r sum score cut offs GAD base}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    gad.sum_score_base_full =
+      if_else(na_per_person_gad_base > 0,
+              NA_real_,
+              gad.sum_score_base
+              )
+  )
+
+summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_base)
+summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_base_full)
+```
+
+```{r sum score cut offs GAD prepan}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    gad.sum_score_prepan_full =
+      if_else(na_per_person_gad_prepan > 0,
+              NA_real_,
+              gad.sum_score_prepan
+              )
+  )
+
+summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_prepan)
+summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_prepan_full)
+```
+
+```{r sum score cut offs GAD retro}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    gad.sum_score_retro_full =
+      if_else(na_per_person_gad_retro > 0,
+              NA_real_,
+              gad.sum_score_retro
+              )
+  )
+
+summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_retro)
+summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_retro_full)
+```
+
+PCL
+The PCL sum score is set to NA if they have any missing items - only for basline and prepan.
+```{r sum score cut offs PCL base}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    pcl.sum_score_base_full =
+      if_else(na_per_person_pcl_base > 0,
+              NA_real_,
+              pcl.sum_score_base
+              )
+  )
+
+summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_base)
+summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_base_full)
+```
+
+```{r sum score cut offs PCL prepan}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    pcl.sum_score_prepan_full =
+      if_else(na_per_person_pcl_prepan > 0,
+              NA_real_,
+              pcl.sum_score_prepan
+              )
+  )
+
+summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_prepan)
+summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_prepan_full)
 ```
 
 
