@@ -2701,7 +2701,7 @@ dim(coping.glad.respiratory.raw.numeric)
 dim(coping.glad.respiratory.raw.id)
 ```
 
-
+#Distribution of likert scale COVID-19 symptoms in COPING
 ```{r distribution of COVID symptoms}
 #persistent cough
 coping.glad.respiratory.raw.numeric %>%
@@ -2741,24 +2741,31 @@ coping.glad.respiratory.raw.numeric %>%
 
 ```
 
-Choosing cut-offs for the likert scale symptoms of "no symptoms", "mild symptoms", "moderate symptoms" and "severe symptoms" for the fatigue, persistent cough and skipped meals variables. 
-Fatigue: "Severe symptoms" as cut off
+#Choosing cut-offs for the likert scale symptoms of "no symptoms", "mild symptoms", "moderate symptoms" and "severe symptoms" for the fatigue, persistent cough and skipped meals variables. 
+Coding:
+0 = No symptoms
+1 = Mild symptoms
+2 = Moderate symptoms
+3 = Severe symptoms
+
+Results:
 Persistent cough: "Mild symptoms" as cut off
+Fatigue: "Severe symptoms" as cut off
 Skipped meals: "Moderate symptoms" as cut off
 ```{r proportion of people who report COVID symptoms in Menni et al}
-#fatigue
-percentage_fatigue <- ((0.298*6452) + (0.1556*9186) + (0.0871*2434931))/(6452+9186+2434931) 
-percentage_fatigue   # 0.08791204% of Menni et al(2020) have fatigue
-quantile(x = coping.glad.respiratory.raw.numeric$respiratory.feeling_tiredfatigued_numeric, 
-         na.rm = TRUE, 
-         probs = 1-percentage_fatigue) #this gives 8% of the sample reporting fatigue when using the "severe symptoms" fatigue response
-
 #persistent cough
 percentage_pcough <- ((0.5673*6452) + (0.4556*9186) + (0.3017*2434931))/(6452+9186+2434931)
 percentage_pcough    # 0.3029762% of Menni et al(2020) have fatigue
 quantile(x = coping.glad.respiratory.raw.numeric$respiratory.persistent_cough_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_pcough) # this gives 0.3029762% of the sample reporting fatigue when using the "mild symptoms" persistent cough response
+
+#fatigue
+percentage_fatigue <- ((0.298*6452) + (0.1556*9186) + (0.0871*2434931))/(6452+9186+2434931) 
+percentage_fatigue   # 0.08791204% of Menni et al(2020) have fatigue
+quantile(x = coping.glad.respiratory.raw.numeric$respiratory.feeling_tiredfatigued_numeric, 
+         na.rm = TRUE, 
+         probs = 1-percentage_fatigue) #this gives 8% of the sample reporting fatigue when using the "severe symptoms" fatigue response
 
 #skipped meals 
 percentage_skipped_meals <- ((0.4203*6452) + (0.2493*9186) + (0.1912*2434931))/(6452+9186+2434931) 
@@ -2767,6 +2774,60 @@ quantile(x = coping.glad.respiratory.raw.numeric$respiratory.skipping_meals_beca
          na.rm = TRUE, 
          probs = 1-percentage_skipped_meals) # this gives 0.192021% of the sample reporting fatigue when using the "moderate symptoms" persistent cough response
 ```
+
+Creating binary groups for COVID symptoms
+```{r creating binary groups for COVID symptoms}
+#loss or smell or taste
+coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+  mutate(
+    respiratory.anosmia_binary =
+      if_else(
+        respiratory.was_your_sense_of_smell_impaired_numeric == 1 | respiratory.was_your_sense_of_taste_impaired_numeric == 1, 
+        1,
+        0
+      )
+  )
+
+freq(coping.glad.respiratory.raw.numeric$respiratory.anosmia.binary)
+
+#persistent cough
+coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+  mutate(
+    respiratory.pcough_binary =
+      if_else(
+        respiratory.persistent_cough_numeric >= 1, #those who score 1 or above (mild or above)
+        1,
+        0
+      )
+  )
+
+#fatigue
+coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+  mutate(
+    respiratory.fatigue_binary =
+      if_else(
+        respiratory.feeling_tiredfatigued_numeric >= 3, #those who score 3 (severe symptoms)
+        1,
+        0
+      )
+  )
+
+#skipped meals
+coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+  mutate(
+    respiratory.skipped_meals_binary =
+      if_else(
+        respiratory.skipping_meals_because_you_felt_unwell_numeric >= 2,
+        1,
+        0
+      )
+  )
+```
+
+
+
+
+
 
 # Probable COVID-19 case identification
 Algorithm from Menni et al. to identify probable COVID-19
