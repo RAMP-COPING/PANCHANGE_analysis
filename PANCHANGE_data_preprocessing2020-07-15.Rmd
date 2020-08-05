@@ -2853,14 +2853,45 @@ Variables required:
 
 ++KT: Needs to be developed further for RAMP dataset
 COVID prediction model for COPING
-```{r eval=FALSE, include=FALSE}
-# Formula to calculate probability 
+
+```{r create numeric sex variable with male=1}
+dat.glad.coping <- dat.glad.coping %>%
+  mutate(
+    Sex_respiratory =
+      if_else(
+        Sex == "Male",
+        1,
+        0
+      )
+  )
+```
+
+```{r how many people expereinced all symptoms}
+dat.glad.coping <- dat.glad.coping %>%
+  mutate(
+    people_with_symptoms =
+      if_else(
+          !is.na(respiratory.anosmia_binary) &
+          !is.na(respiratory.pcough_binary) &
+          !is.na(respiratory.fatigue_binary) &
+          !is.na(respiratory.skipped_meals_binary),
+        1,
+        0
+       )
+  )
+
+table(dat.glad.coping$people_with_symptoms)
+```
+
+
+```{r COVID prediction model}
+# linear model of covid symptoms
 dat.glad.coping <- dat.glad.coping %>%
 		  mutate(
 		    covid_probability = 
 		      (-1.32) - 
 		      (0.01*Age) + 
-		      (0.44*Sex) + 
+		      (0.44*Sex_respiratory) + 
 		      (1.75*respiratory.anosmia_binary) + 
 		      (0.31*respiratory.pcough_binary) +  
 		      (0.49*respiratory.fatigue_binary) +  
@@ -2869,12 +2900,12 @@ dat.glad.coping <- dat.glad.coping %>%
 
 # Calcualte the odds ratios 
 dat.glad.coping <- dat.glad.coping %>%
-		  mutate(
-		    covid_odds_ratio = 
-		      exp(covid_probability) / (1 + exp(covid_probability))
-		                              
+  mutate(
+    covid_odds_ratio = 
+      (exp(covid_probability) / (1 + exp(covid_probability)))
+  )
 
-# generate variable covid_odds_ratio_50 -> 0, 0,5 and 1 = 0, 1, 2 (that's a column)
+# generate binary cutt off variable for risk of COVID 
 dat.glad.coping <- dat.glad.coping %>%
 		  mutate(
 		    covid_odds_ratio_50_numeric = 
@@ -2882,6 +2913,7 @@ dat.glad.coping <- dat.glad.coping %>%
 		        covid_odds_ratio >= 0 & covid_odds_ratio < 0.5 ~ "0", #cut off at 0.5 
 		        covid_odds_ratio >= 0.5 & covid_odds_ratio <= 1 ~ "1"
 		      )
+		  )
 		      
 #create factor with labels
 dat.glad.coping <- dat.glad.coping %>%
@@ -2894,10 +2926,8 @@ dat.glad.coping <- dat.glad.coping %>%
       )
   )
 
-## creating a frequency table. Previous code: table covid_odds_ratio_50, c(min covid_odds_ratio max covid_odds_ratio)
-covid_variables <- c(
-                      "covid_odds_ratio_50",
-                      "covid_odds_ratio",
+#frequency table for covid variables 
+covid_variables <- c("covid_odds_ratio",
                       "covid_probability"
                     )
 
