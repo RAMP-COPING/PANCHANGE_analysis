@@ -2788,8 +2788,6 @@ coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
       )
   )
 
-freq(coping.glad.respiratory.raw.numeric$respiratory.anosmia.binary)
-
 #persistent cough
 coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
   mutate(
@@ -2824,60 +2822,60 @@ coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
   )
 ```
 
+Frequencies of binary COVID symptoms
+```{r frequencies of COVID binary symptoms}
+freq(coping.glad.respiratory.raw.numeric$respiratory.anosmia_binary)
+freq(coping.glad.respiratory.raw.numeric$respiratory.pcough_binary)
+freq(coping.glad.respiratory.raw.numeric$respiratory.fatigue_binary)
+freq(coping.glad.respiratory.raw.numeric$respiratory.skipped_meals_binary)
+```
 
+Rename respiratory dataset joined to main dataset
+```{r clean respiratory dataset}
+coping.glad.respiratory <- coping.glad.respiratory.raw.numeric
 
-
-
+dat.glad.coping <- left_join(
+  x = dat.glad,
+  y = coping.glad.respiratory,
+  by = "ID"
+)
+```
 
 # Probable COVID-19 case identification
 Algorithm from Menni et al. to identify probable COVID-19
 Variables required:
 - Sex: 	0 Female, 1 Male
-- Other binary variables: 0 No, 1 Yes       #THESE NAMES WILL CHANGE WHEN IMPORTING DATA - FIND AND REPLACE
-- "anosmia": loss of smell or taste  
-- "pcough":	Persistent cough
-- "sfatigue": Severe fatigue
-- "smeals": Skipped meals
-The below chunk needs to be re-thought - not as simple as categorising gender. 
-```{r eval=FALSE, include=FALSE}
-# Recode Gender to be binary for the model in RAMP
-dat.respiratory.ramp <- dat.respiratory.ramp %>%
-		  mutate(
-		    gender_binary_ramp =
-		      case_when(
-		        Gender == "Male" ~ "Male",
-		        Gender == "Female" ~ "Female",
-		        Gender == !("Male" | "Female") ~ NA_real_
-		      )
-		  )
-```
+- Other binary variables: 0 No, 1 Yes       
+- "respiratory.anosmia_binary": loss of smell or taste  
+- "respiratory.pcough_binary":	Persistent cough
+- "respiratory.fatigue_binary": Severe fatigue
+- "respiratory.skipped_meals_binary": Skipped meals
 
 ++KT: Needs to be developed further for RAMP dataset
+COVID prediction model for COPING
 ```{r eval=FALSE, include=FALSE}
-## COVID prediction model for COPING
-
-## Formula to calculate probability 
-dat.respiratory.coping <- dat.respiratory.coping %>%
+# Formula to calculate probability 
+dat.glad.coping <- dat.glad.coping %>%
 		  mutate(
 		    covid_probability = 
 		      (-1.32) - 
 		      (0.01*Age) + 
-		      (0.44*Sex) + #we have sex here in COPING - use binary Gender variable in RAMP
-		      (1.75*anosmia) + #will be renamed
-		      (0.31*pcough) +  #will be renamed
-		      (0.49*sfatigue) +  #will be renamed
-		      (0.39*smeals) #will be renamed
+		      (0.44*Sex) + 
+		      (1.75*respiratory.anosmia_binary) + 
+		      (0.31*respiratory.pcough_binary) +  
+		      (0.49*respiratory.fatigue_binary) +  
+		      (0.39*respiratory.skipped_meals_binary) 
 		         )
 
-## Calcualte the odds ratios 
-dat.respiratory.coping <- dat.respiratory.coping %>%
+# Calcualte the odds ratios 
+dat.glad.coping <- dat.glad.coping %>%
 		  mutate(
 		    covid_odds_ratio = 
-		      exp(covid_probability) / (1 + exp(covid_probability)
-		                              )
+		      exp(covid_probability) / (1 + exp(covid_probability))
+		                              
 
-## generate variable covid_odds_ratio_50 -> 0, 0,5 and 1 = 0, 1, 2 (that's a column). Previous code: egen covid_odds_ratio_50 = cut(covid_odds_ratio), at(0,0.5,1) icode
-dat.respiratory.coping <- dat.respiratory.coping %>%
+# generate variable covid_odds_ratio_50 -> 0, 0,5 and 1 = 0, 1, 2 (that's a column)
+dat.glad.coping <- dat.glad.coping %>%
 		  mutate(
 		    covid_odds_ratio_50_numeric = 
 		      case_when(
@@ -2886,7 +2884,7 @@ dat.respiratory.coping <- dat.respiratory.coping %>%
 		      )
 		      
 #create factor with labels
-dat.respiratory.coping <- dat.respiratory.coping %>%
+dat.glad.coping <- dat.glad.coping %>%
   mutate(
     covid_odds_ratio_50 =
       recode_factor(
@@ -2903,12 +2901,12 @@ covid_variables <- c(
                       "covid_probability"
                     )
 
-descr(x = dat.respiratory.coping[,covid_variables],
+descr(x = dat.glad.coping[,covid_variables],
       round.digits = 2,
       transpose = TRUE)
 
 ## looking at cases over 0.5
-table(dat.respiratory.coping$covid_odds_ratio_50) 
+table(dat.glad.coping$covid_odds_ratio_50) 
 ```
 
 
