@@ -405,6 +405,8 @@ dim(glad.gad.raw)[1]-dim(glad.gad.raw.id)[1]
 
 Calculate sum score for GAD-7
 Max should be 21.
+
+*Note that scores with missingness will be changed to NA later in the script
 ```{r gad sum score prepan}
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
@@ -1107,6 +1109,8 @@ dim(glad.pcl.raw)[1]-dim(glad.pcl.raw.id)[1]
 ```
 
 Calculate sum score for PCL-6
+
+*Note that scores with missingness will be changed to NA later in the script
 ```{r pcl sum score prepan}
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
@@ -1160,6 +1164,7 @@ dim(glad.phq.raw)
 colnames(glad.phq.raw)
 ```
 
+
 ```{r glad phq cleaning}
 glad.phq.raw.id <- glad.phq.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
@@ -1210,6 +1215,8 @@ dim(glad.phq.raw)[1]-dim(glad.phq.raw.id)[1]
 ```
 
 Calculate sum score for PHQ-9
+
+*Note that scores with missingness will be changed to NA later in the script
 ```{r phq sum score prepan}
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
@@ -1259,7 +1266,124 @@ summarytools::dfSummary(
 ```
 
 
-## COPING GLAD: GAD-7
+# glad ocir
+
+```{r glad ocir cols}
+glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/2020-08-03/glad/ocir_glad.rds"))
+dim(glad.ocir.raw)
+colnames(glad.ocir.raw)
+```
+
+```{r glad ocir cleaning}
+glad.ocir.raw.id <- glad.ocir.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID),
+         startDate.glad = startDate) %>% # Rename startDate
+  select(
+    Sample, # Sample
+    ID, # ID
+    ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan = ocir.i_repeatedly_check_doors_windows_drawers_etc.,
+    ocir.arranged_things_change_upset_prepan = ocir.arranged_things_change_upset,
+    ocir.repeat_feel_numbers_prepan = ocir.repeat_feel_numbers,
+    ocir.clean_simply_wash_feel_prepan = ocir.clean_simply_wash_feel,
+    ocir.mind_upset_unpleasant_thoughts_prepan = ocir.mind_upset_unpleasant_thoughts,
+    ocir.afraid_avoid_throwing_things_prepan = ocir.afraid_avoid_throwing_things,
+    ocir.light_switches_water_taps_prepan = ocir.light_switches_water_taps,
+    ocir.arranged_things_prepan = ocir.arranged_things,
+    ocir.good_feel_bad_numbers_prepan = ocir.good_feel_bad_numbers,
+    ocir.hands_longer_wash_prepan = ocir.hands_longer_wash,
+    ocir.saved_things_prepan = ocir.saved_things,
+    ocir.frequently_difficulty_rid_nasty_prepan = ocir.frequently_difficulty_rid_nasty,
+    ocir.i_check_things_more_often_than_necessary_prepan = ocir.i_check_things_more_often_than_necessary.,
+    ocir.arranged_properly_objects_upset_prepan = ocir.arranged_properly_objects_upset,
+    ocir.feel_compelled_count_things_prepan = ocir.feel_compelled_count_things,
+    ocir.strangers_touch_touched_difficult_prepan = ocir.strangers_touch_touched_difficult,
+    ocir.control_difficult_find_thoughts_prepan = ocir.control_difficult_find_thoughts,
+    ocir.i_collect_things_i_dont_need_prepan = ocir.i_collect_things_i_dont_need
+  ) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(glad.ocir.raw.id)
+# Inspect colnames
+colnames(glad.ocir.raw.id)
+#Differences
+dim(glad.ocir.raw)[1]-dim(glad.ocir.raw.id)[1]
+```
+
+Calculate sum score for OCI-R
+
+*Note that scores with missingness will be changed to NA later in the script
+```{r ocir sum score prepan}
+# Create vector with scoring key: If the item is reversed coded use -1. 
+# There needs to be the correct number of values for each item in the questionnaire. 
+ocir.items_key_prepan <- c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
+
+# Create vector with items that are included in sum score
+ocir.items_prepan = c(
+  "ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan",
+  "ocir.arranged_things_change_upset_prepan",
+  "ocir.repeat_feel_numbers_prepan",
+  "ocir.clean_simply_wash_feel_prepan",
+  "ocir.mind_upset_unpleasant_thoughts_prepan",
+  "ocir.afraid_avoid_throwing_things_prepan",
+  "ocir.light_switches_water_taps_prepan",
+  "ocir.arranged_things_prepan",
+  "ocir.good_feel_bad_numbers_prepan",
+  "ocir.hands_longer_wash_prepan",
+  "ocir.saved_things_prepan",
+  "ocir.frequently_difficulty_rid_nasty_prepan",
+  "ocir.i_check_things_more_often_than_necessary_prepan",
+  "ocir.arranged_properly_objects_upset_prepan",
+  "ocir.feel_compelled_count_things_prepan",
+  "ocir.strangers_touch_touched_difficult_prepan",
+  "ocir.control_difficult_find_thoughts_prepan",
+  "ocir.i_collect_things_i_dont_need_prepan"
+  )
+
+# Calulate sum score
+ocir.scored_items_prepan <- scoreItems(keys = ocir.items_key_prepan,
+                                        items = glad.ocir.raw.id[ocir.items_prepan],
+                                        totals = TRUE, 
+                                        missing = TRUE, 
+                                        impute = 'none', 
+                                        min = 0, 
+                                        max = 4)
+# Add in column to tibble
+glad.ocir.raw.id$ocir.sum_score_prepan <- ocir.scored_items_prepan$scores
+
+# Look at values
+glad.ocir.raw.id %>%
+  descr(ocir.sum_score_prepan,
+        stats = "common"
+        )
+```
+
+```{r glad ocir head}
+head(glad.ocir.raw.id)
+```
+
+```{r glad ocir summary}
+summarytools::dfSummary(
+  glad.ocir.raw.id,
+  graph.col = F,
+  valid.col = F
+  )
+```
+
+# COPING GLAD: GAD-7
 
 ```{r coping glad gad cols}
 coping.glad.gad.raw <- readRDS(file = paste0(data.raw_path,"/coping_glad/gad_coping_glad.rds"))
@@ -1747,6 +1871,195 @@ summarytools::dfSummary(
   labels.col = F)
 ```
 
+# glad COPING ocir
+
+```{r coping glad ocir cols}
+coping.glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/2020-08-04/glad/ocir_coping_glad.rds"))
+dim(coping.glad.ocir.raw)
+colnames(coping.glad.ocir.raw)
+```
+
+```{r coping glad ocir summary labels}
+summarytools::dfSummary(
+  coping.glad.ocir.raw,
+  graph.col = F,
+  valid.col = F
+  #labels.col = F
+)
+```
+
+*Note that the COPING GLAD OCI-R ID numbers are stored under recipientFirstName (rather than ExternalDataReference)
+```{r coping glad ocir cleaning}
+coping.glad.ocir.raw.id <- coping.glad.ocir.raw %>%
+  drop_na(recipientFirstName) %>% # Drop NAs
+  distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(recipientFirstName, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID),
+         startDate.glad = startDate) %>% # Rename startDate
+  select(
+    Sample, # Sample
+    ID, # ID
+    ocir.i_repeatedly_check_doors_windows_drawers_etc_retro = ocir.i_repeatedly_check_doors_windows_drawers_etc.,
+    ocir.arranged_things_change_upset_retro = ocir.arranged_things_change_upset,
+    ocir.repeat_feel_numbers_retro = ocir.numbers_repeat_feel, ## Different from GLAD prepandemic
+    ocir.clean_simply_wash_feel_retro = ocir.feel_contaminated_clean_simply, ## Different from GLAD prepandemic
+    ocir.mind_upset_unpleasant_thoughts_retro = ocir.mind_upset_unpleasant_thoughts,
+    ocir.afraid_avoid_throwing_things_retro = ocir.afraid_avoid_throwing_things,
+    ocir.light_switches_water_taps_retro = ocir.light_switches_water_taps,
+    ocir.arranged_things_retro = ocir.arranged_things,
+    ocir.good_feel_bad_numbers_retro = ocir.bad_numbers_good_feel, ## Different from GLAD prepandemic
+    ocir.hands_longer_wash_retro = ocir.longer_hands_wash, ## Different from GLAD prepandemic
+    ocir.saved_things_retro = ocir.saved_things,
+    ocir.frequently_difficulty_rid_nasty_retro = ocir.frequently_rid_difficulty_nasty, ## Different from GLAD prepandemic
+    ocir.i_check_things_more_often_than_necessary_retro = ocir.i_check_things_more_often_than_necessary.,
+    ocir.arranged_properly_objects_upset_retro = ocir.arranged_properly_objects_upset,
+    ocir.feel_compelled_count_things_retro = ocir.feel_compelled_count_things,
+    ocir.strangers_touch_touched_difficult_retro = ocir.strangers_touch_touched_object, ## Different from GLAD prepandemic
+    ocir.control_difficult_find_thoughts_retro = ocir.control_find_difficult_thoughts, ## Different from GLAD prepandemic
+    ocir.i_collect_things_i_dont_need_retro = ocir.i_collect_things_i_dont_need., ## Different from GLAD prepandemic
+    ocir.i_repeatedly_check_doors_windows_drawers_etc_base = ocir.i_repeatedly_check_doors_windows_drawers_etc..1,
+    ocir.arranged_things_change_upset_base = ocir.arranged_things_change_upset.1,
+    ocir.repeat_feel_numbers_base = ocir.numbers_repeat_feel.1, ## Different from GLAD prepandemic
+    ocir.clean_simply_wash_feel_base = ocir.feel_contaminated_clean_simply.1, ## Different from GLAD prepandemic
+    ocir.mind_upset_unpleasant_thoughts_base = ocir.mind_upset_unpleasant_thoughts.1,
+    ocir.afraid_avoid_throwing_things_base = ocir.afraid_avoid_throwing_things.1,
+    ocir.light_switches_water_taps_base = ocir.light_switches_water_taps.1,
+    ocir.arranged_things_base = ocir.arranged_things.1,
+    ocir.good_feel_bad_numbers_base = ocir.bad_numbers_good_feel.1, ## Different from GLAD prepandemic
+    ocir.hands_longer_wash_base = ocir.longer_hands_wash.1, ## Different from GLAD prepandemic
+    ocir.saved_things_base = ocir.saved_things.1,
+    ocir.frequently_difficulty_rid_nasty_base = ocir.frequently_rid_difficulty_nasty.1, ## Different from GLAD prepandemic
+    ocir.i_check_things_more_often_than_necessary_base = ocir.i_check_things_more_often_than_necessary..1,
+    ocir.arranged_properly_objects_upset_base = ocir.arranged_properly_objects_upset.1,
+    ocir.feel_compelled_count_things_base = ocir.feel_compelled_count_things.1,
+    ocir.strangers_touch_touched_difficult_base = ocir.strangers_touch_touched_object.1, ## Different from GLAD prepandemic
+    ocir.control_difficult_find_thoughts_base = ocir.control_find_difficult_thoughts.1, ## Different from GLAD prepandemic
+    ocir.i_collect_things_i_dont_need_base = ocir.i_collect_things_i_dont_need..1
+  ) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(coping.glad.ocir.raw.id)
+# Inspect colnames
+colnames(coping.glad.ocir.raw.id)
+#Differences
+dim(coping.glad.ocir.raw)[1]-dim(coping.glad.ocir.raw.id)[1]
+```
+
+Calculate sum score for OCI-R retro
+```{r coping ocir sum score retro}
+# Create vector with scoring key: If the item is reversed coded use -1. 
+# There needs to be the correct number of values for each item in the questionnaire. 
+ocir.items_key_retro <- c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
+
+# Create vector with items that are included in total score
+ocir.items_retro = c(
+  "ocir.i_repeatedly_check_doors_windows_drawers_etc_retro",
+  "ocir.arranged_things_change_upset_retro",
+  "ocir.repeat_feel_numbers_retro",
+  "ocir.clean_simply_wash_feel_retro",
+  "ocir.mind_upset_unpleasant_thoughts_retro",
+  "ocir.afraid_avoid_throwing_things_retro",
+  "ocir.light_switches_water_taps_retro",
+  "ocir.arranged_things_retro",
+  "ocir.good_feel_bad_numbers_retro",
+  "ocir.hands_longer_wash_retro",
+  "ocir.saved_things_retro",
+  "ocir.frequently_difficulty_rid_nasty_retro",
+  "ocir.i_check_things_more_often_than_necessary_retro",
+  "ocir.arranged_properly_objects_upset_retro",
+  "ocir.feel_compelled_count_things_retro",
+  "ocir.strangers_touch_touched_difficult_retro",
+  "ocir.control_difficult_find_thoughts_retro",
+  "ocir.i_collect_things_i_dont_need_retro"
+)
+
+# Calulate total score
+ocir.scored_items_retro <- scoreItems(keys = ocir.items_key_retro,
+                                     items = coping.glad.ocir.raw.id[ocir.items_retro],
+                                     totals = TRUE, 
+                                     missing = TRUE, 
+                                     impute = 'none', 
+                                     min = 0, 
+                                     max = 4)
+# Add in column to tibble
+coping.glad.ocir.raw.id$ocir.sum_score_retro <- ocir.scored_items_retro$scores
+
+# Look at values
+coping.glad.ocir.raw.id %>%
+  descr(ocir.sum_score_retro,
+        stats = "common"
+  )
+```
+
+Calculate sum score for OCI-R base
+```{r coping ocir sum score base}
+# Create vector with scoring key: If the item is reversed coded use -1. 
+# There needs to be the correct number of values for each item in the questionnaire. 
+ocir.items_key_base <- c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
+
+# Create vector with items that are included in total score
+ocir.items_base = c(
+  "ocir.i_repeatedly_check_doors_windows_drawers_etc_base",
+  "ocir.arranged_things_change_upset_base",
+  "ocir.repeat_feel_numbers_base",
+  "ocir.clean_simply_wash_feel_base",
+  "ocir.mind_upset_unpleasant_thoughts_base",
+  "ocir.afraid_avoid_throwing_things_base",
+  "ocir.light_switches_water_taps_base",
+  "ocir.arranged_things_base",
+  "ocir.good_feel_bad_numbers_base",
+  "ocir.hands_longer_wash_base",
+  "ocir.saved_things_base",
+  "ocir.frequently_difficulty_rid_nasty_base",
+  "ocir.i_check_things_more_often_than_necessary_base",
+  "ocir.arranged_properly_objects_upset_base",
+  "ocir.feel_compelled_count_things_base",
+  "ocir.strangers_touch_touched_difficult_base",
+  "ocir.control_difficult_find_thoughts_base",
+  "ocir.i_collect_things_i_dont_need_base"
+)
+
+# Calulate total score
+ocir.scored_items_base <- scoreItems(keys = ocir.items_key_base,
+                                    items = coping.glad.ocir.raw.id[ocir.items_base],
+                                    totals = TRUE, 
+                                    missing = TRUE, 
+                                    impute = 'none', 
+                                    min = 0, 
+                                    max = 4)
+# Add in column to tibble
+coping.glad.ocir.raw.id$ocir.sum_score_base <- ocir.scored_items_base$scores
+
+# Look at values
+coping.glad.ocir.raw.id %>%
+  descr(ocir.sum_score_base,
+        stats = "common"
+  )
+```
+
+```{r coping glad ocir head}
+head(coping.glad.ocir.raw.id)
+```
+
+```{r coping glad ocir summary}
+summarytools::dfSummary(
+  coping.glad.ocir.raw.id,
+  graph.col = F,
+  valid.col = F,
+  labels.col = F)
+```
+
 # Join tibbles together
 
 glad data frame list
@@ -1755,12 +2068,13 @@ glad.dfs.list <- list(
   glad.dem.raw.id,
   glad.gad.raw.id,
   glad.mhq.raw.categories,
-#  glad.ocir.raw.id,
+  glad.ocir.raw.id,
   glad.pcl.raw.id,
   glad.phq.raw.id,
   coping.glad.gad.raw.id,
   coping.glad.pcl.raw.id,
-  coping.glad.phq.raw.id
+  coping.glad.phq.raw.id,
+  coping.glad.ocir.raw.id
 )
 ```
 
@@ -1839,10 +2153,10 @@ Exclusion of inflammatory bowel disease (IBD) BioResource (BR) cohort
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age
 ```
 
-##Missigness of questionnaire items
+##Missingness of questionnaire items
 #PHQ - baseline
 PHQ Missingness NAs per person - count and percentages
-```{r PHQ basline missingness}
+```{r PHQ baseline missingness}
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
   mutate(
     na_per_person_phq_base =         # variable for NA per person
@@ -1982,7 +2296,7 @@ table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_prepan)
 
 #GAD - baseline
 GAD Missingness NAs per person - count and percentages
-```{r gad basline missingness}
+```{r gad baseline missingness}
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
   mutate(
     na_per_person_gad_base =         # variable for NA per person
@@ -2071,7 +2385,7 @@ table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_prepan)
 
 #PCL - baseline
 PCL Missingness NAs per person - count and percentages
-```{r pcl basline missingness}
+```{r pcl baseline missingness}
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
   mutate(
     na_per_person_pcl_base =         # variable for NA per person
@@ -2158,6 +2472,95 @@ table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_prepan)
 
 # rename dataset
 dat.no.sex.no.gender.no.age.no.ibd.missingness <- dat.no.sex.no.gender.no.age.no.ibd
+```
+
+
+#OCI-R - baseline
+OCI-R Missingness NAs per person - count and percentages
+```{r OCI-R baseline missingness}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    na_per_person_ocir_base =         # variable for NA per person
+      rowSums(                       
+        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
+          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the OCI-R items at baseline
+           %in%
+             ocir.items_base]
+        )
+    )
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_base) #have a look at the frequency 
+
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
+  mutate(
+    miss_pc_total_ocir_base = 
+      na_per_person_ocir_base/18 # NA per person divided by the amount of items
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_ocir_base)
+```
+
+#OCI-R - retrospective
+OCI-R Missingness NAs per person - count and percentages
+```{r OCI-R retrospective missingness}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    na_per_person_ocir_retro =         # variable for NA per person
+      rowSums(                       
+        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
+          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the OCI-R items at retroline
+           %in%
+             ocir.items_retro]
+        )
+    )
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_retro) #have a look at the frequency 
+
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
+  mutate(
+    miss_pc_total_ocir_retro = 
+      na_per_person_ocir_retro/18 # NA per person divided by the amount of items
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_ocir_retro)
+```
+
+#OCI-R - prepandemic
+OCI-R Missingness NAs per person - count and percentages
+```{r OCI-R prepan missingness}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    na_per_person_ocir_prepan =         # variable for NA per person
+      rowSums(                       
+        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
+          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the OCI-R items at prepanline
+           %in%
+             ocir.items_prepan]
+        )
+    )
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_prepan) #have a look at the frequency 
+
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
+  mutate(
+    miss_pc_total_ocir_prepan = 
+      na_per_person_ocir_prepan/18 # NA per person divided by the amount of items
+  )
+
+freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_ocir_prepan)
+```
+
+Count for OCI-R baseline, retrospective, and prepandemic missingness per person
+```{r count of people missing a number of items for OCI-R}
+#baseline
+table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_base)
+#retrospective
+table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_retro)
+#pre-pandemic
+table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_prepan)
 ```
 
 #Sum scores missingness cut offs
@@ -2538,6 +2941,42 @@ freq(dat.glad$pcl.cut_people_feeling_distant_retro)
 freq(dat.glad$pcl.difficulty_concentrating_retro)
 ```
 
+OCI-R difference scores
+```{r ocir difference scores}
+# Difference score for prepandemic and retrospective oci-r sum scores
+dat.glad <- dat.glad %>%
+  mutate(
+    ocir.diff_score_prepan_retro =
+      as.numeric(
+        ocir.sum_score_prepan - ocir.sum_score_retro  # retrospective sum score MINUS prepandemic sum score 
+      )
+  )
+
+summary(dat.glad$ocir.diff_score_prepan_retro)
+
+# Difference score for prepandemic and baseline ocir sum scores
+dat.glad <- dat.glad %>%
+  mutate(
+    ocir.diff_score_prepan_base =
+      as.numeric(
+        ocir.sum_score_prepan - ocir.sum_score_base  # prepandemic sum score MINUS baseline sum score 
+      )
+  )
+
+summary(dat.glad$ocir.diff_score_prepan_base)
+
+# Difference score for retrospective and baseline ocir sum scores
+dat.glad <- dat.glad %>%
+  mutate(
+    ocir.diff_score_base_retro =
+      as.numeric(
+        ocir.sum_score_base - ocir.sum_score_retro  # baseline sum score MINUS retrospective sum score 
+      )
+  )
+
+summary(dat.glad$ocir.diff_score_base_retro)
+
+```
 
 #Data level groups
 Identify which data (prepan, retro and baseline) each participant has.
