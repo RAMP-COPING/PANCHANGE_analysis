@@ -55,14 +55,16 @@ Install packages (if they are not available in your version of R)
 #install.packages("summarytools")
 #install.packages("tidyverse")
 #install.packages("psych")
+#install.packages("dplyr")
 ```
 
 Load packages
 ```{r Load packages}
 library(knitr)
 library(summarytools)
-library(tidyverse)
 library(psych)
+library(dplyr)
+library(tidyverse)
 ```
 
 # Colour palettes
@@ -125,6 +127,18 @@ Choose in this chunk which palette to use
 04.07.2020 - Default to 2 colour COPING palette
 ```{r Choose colour palette}
 palette = COPINGpalette2
+```
+
+#Add_numeric function
+Function used to convert character variables into numeric variables. 
+```{r add_numeric function}
+add_numeric <- function(dat, exclude = NULL) {
+  dat_fct <- sjlabelled::as_label(dat)
+
+  dat <- dat[!colnames(dat) %in% exclude]
+  colnames(dat) <- paste(colnames(dat), "numeric", sep = "_")
+  return(bind_cols(dat_fct, dat))
+}
 ```
 
 # Data import and merging
@@ -397,7 +411,7 @@ Max should be 21.
 gad.items_key_prepan <- c(1,1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
-gad.items_prepan = c(
+gad.items_prepan <- c(
   "gad.feeling_nervous_anxious_or_on_edge_prepan_numeric",
   "gad.control_worrying_stop_prepan_numeric",
   "gad.worrying_too_much_about_different_things_prepan_numeric",
@@ -1099,7 +1113,7 @@ Calculate sum score for PCL-6
 pcl.items_key_prepan <- c(1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
-pcl.items_prepan = c(
+pcl.items_prepan <- c(
   "pcl.stressful_experience_repeated_images_prepan_numeric",
   "pcl.stressful_experience_upset_reminded_prepan_numeric",
   "pcl.stressful_situation_avoiding_activities_prepan_numeric",
@@ -1202,7 +1216,7 @@ Calculate sum score for PHQ-9
 phq.items_key_prepan <- c(1,1,1,1,1,1,1,1,1)
 
 # Create vector with items that are included in sum score
-phq.items_prepan = c(
+phq.items_prepan <- c(
   "phq.little_interest_or_pleasure_in_doing_things_prepan_numeric",
   "phq.feeling_down_depressed_or_hopeless_prepan_numeric",
   "phq.staying_asleep_sleeping_trouble_prepan_numeric",
@@ -1330,7 +1344,7 @@ Calculate sum score for GAD-7 retrospective
 gad.items_key_retro <- c(1,1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
-gad.items_retro = c(
+gad.items_retro <- c(
   "gad.feeling_nervous_anxious_or_on_edge_retro_numeric",
   "gad.control_worrying_stop_retro_numeric",
   "gad.worrying_too_much_about_different_things_retro_numeric",
@@ -1365,7 +1379,7 @@ Calculate sum score for GAD-7 baseline
 gad.items_key_base <- c(1,1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
-gad.items_base = c(
+gad.items_base <- c(
   "gad.feeling_nervous_anxious_or_on_edge_base_numeric",
   "gad.control_worrying_stop_base_numeric",
   "gad.worrying_too_much_about_different_things_base_numeric",
@@ -1486,7 +1500,7 @@ Calculate sum score for PCL-6 retro
 pcl.items_key_retro <- c(1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
-pcl.items_retro = c(
+pcl.items_retro <- c(
   "pcl.stressful_experience_repeated_images_retro_numeric",
   "pcl.stressful_experience_upset_reminded_retro_numeric",
   "pcl.stressful_situation_avoiding_activities_retro_numeric",
@@ -1522,7 +1536,7 @@ The sum scores here will not be accurate if we are using complete cases. Only us
 pcl.items_key_base <- c(1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
-pcl.items_base = c(
+pcl.items_base <- c(
   "pcl.stressful_experience_repeated_images_base_numeric",
   "pcl.stressful_experience_upset_reminded_base_numeric",
   "pcl.stressful_situation_avoiding_activities_base_numeric",
@@ -1654,7 +1668,7 @@ Calculate sum score for PHQ-9 retro
 phq.items_key_retro <- c(1,1,1,1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
-phq.items_retro = c(
+phq.items_retro <- c(
   "phq.little_interest_or_pleasure_in_doing_things_retro_numeric",
 "phq.feeling_down_depressed_or_hopeless_retro_numeric",
 "phq.staying_asleep_sleeping_trouble_retro_numeric",
@@ -1691,7 +1705,7 @@ Calculate sum score for PHQ-9 base
 phq.items_key_base <- c(1,1,1,1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
-phq.items_base = c(
+phq.items_base <- c(
   "phq.little_interest_or_pleasure_in_doing_things_base_numeric",
 "phq.feeling_down_depressed_or_hopeless_base_numeric",
 "phq.staying_asleep_sleeping_trouble_base_numeric",
@@ -1852,6 +1866,23 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA
 freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_base)
 ```
 
+```{r PHQ baseline missingness 8 items}
+#We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    phq.base_cut_off = 
+      if_else(
+        na_per_person_phq_base == 1 & 
+          is.na(phq.dead_hurting_thoughts_base_numeric), 
+        1,
+        0
+      )
+  )
+
+table(dat.no.sex.no.gender.no.age.no.ibd$phq.base_cut_off)
+```
+
+
 #PHQ - retrospective
 PHQ Missingness NAs per person - count and percentages
 ```{r PHQ retrospective missingness}
@@ -1878,6 +1909,23 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA
 freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_retro)
 ```
 
+
+```{r PHQ retro missingness 8 items}
+#We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    phq.retro_cut_off = 
+      if_else(
+        na_per_person_phq_retro == 1 & 
+          is.na(phq.dead_hurting_thoughts_retro_numeric), 
+        1,
+        0
+      )
+  )
+
+table(dat.no.sex.no.gender.no.age.no.ibd$phq.retro_cut_off)
+```
+
 #PHQ - prepandemic
 PHQ Missingness NAs per person - count and percentages
 ```{r PHQ prepan missingness}
@@ -1902,6 +1950,23 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA
   )
 
 freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_prepan)
+```
+
+
+```{r PHQ prepan missingness 8 items}
+#We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    phq.prepan_cut_off = 
+      if_else(
+        na_per_person_phq_prepan == 1 & 
+          is.na(phq.dead_hurting_thoughts_prepan_numeric), 
+        1,
+        0
+      )
+  )
+
+table(dat.no.sex.no.gender.no.age.no.ibd$phq.prepan_cut_off)
 ```
 
 Count for PHQ baseline, retrospective, and prepandemic missingness per person
@@ -2095,102 +2160,127 @@ table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_prepan)
 dat.no.sex.no.gender.no.age.no.ibd.missingness <- dat.no.sex.no.gender.no.age.no.ibd
 ```
 
-#Creating "complete cases" datasets  - NOTE THIS PROBABLY WONT BE USED BUT JUST TO GIVE AN IDEA OF COMPLETE CASES NUMBERS. KT. 
-Complete case data for PHQ, GAD and PCL - 3345 remaining, drop 35,036.
-```{r complete cases only}
-all.items <- c(phq.items_prepan,
-                phq.items_base,
-                phq.items_retro,
-                gad.items_prepan,
-                gad.items_base,
-                gad.items_retro,
-                pcl.items_prepan,
-                pcl.items_base,
-                pcl.items_retro)
-
-dat.no.sex.no.gender.no.age.no.ibd.complete.cases <- dat.no.sex.no.gender.no.age.no.ibd[complete.cases(dat.no.sex.no.gender.no.age.no.ibd[, all.items ]),]
-
-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases)
-dim(dat.no.sex.no.gender.no.age.no.ibd)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases)[1]
-```
-
+#Sum scores missingness cut offs
+KT: This series of chunks creates a "full" sum score for the PHQ, GAD and PCL. 
 
 PHQ
-Complete case data for PHQ baseline (COPING) - 9,260 remaining
-```{r complete cases phq base}
-dat.no.sex.no.gender.no.age.no.ibd.complete.cases.phq.base <- dat.no.sex.no.gender.no.age.no.ibd[complete.cases(dat.no.sex.no.gender.no.age.no.ibd[, phq.items_base ]),]
+The PHQ sum score is set to NA if they have more than one missing item, and it is not the last suicide ideation item (they do not meet the cut off criteria - phq.base_cut_off)
+```{r sum score cut offs PHQ base}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    phq.sum_score_base_full =
+      if_else(na_per_person_phq_base > 1 & phq.base_cut_off == 0,
+              NA_real_,
+              phq.sum_score_base
+              )
+  )
 
-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.phq.base)
-dim(dat.no.sex.no.gender.no.age.no.ibd)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.phq.base)[1]
+summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_base)
+summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_base_full)
 ```
 
-Complete case data for PHQ pre-pandemic (GLAD) - 37,308 remaining
-```{r complete cases phq prepan}
-dat.no.sex.no.gender.no.age.no.ibd.complete.cases.phq.prepan <- dat.no.sex.no.gender.no.age.no.ibd[complete.cases(dat.no.sex.no.gender.no.age.no.ibd[, phq.items_prepan ]),]
+```{r sum score cut offs PHQ prepan}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    phq.sum_score_prepan_full =
+      if_else(na_per_person_phq_prepan > 1 & phq.prepan_cut_off == 0,
+              NA_real_,
+              phq.sum_score_prepan
+              )
+  )
 
-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.phq.prepan)
-dim(dat.no.sex.no.gender.no.age.no.ibd)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.phq.prepan)[1]
+summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_prepan)
+summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_prepan_full)
 ```
 
-Complete case data for PHQ retrospective (COPING) - 9,262 remaining
-```{r complete cases phq retro}
-dat.no.sex.no.gender.no.age.no.ibd.complete.cases.phq.retro <- dat.no.sex.no.gender.no.age.no.ibd[complete.cases(dat.no.sex.no.gender.no.age.no.ibd[, phq.items_retro ]),]
+```{r sum score cut offs PHQ retro}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    phq.sum_score_retro_full =
+      if_else(na_per_person_phq_retro > 1 & phq.retro_cut_off == 0,
+              NA_real_,
+              phq.sum_score_retro
+              )
+  )
 
-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.phq.retro)
-dim(dat.no.sex.no.gender.no.age.no.ibd)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.phq.retro)[1]
+summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_retro)
+summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_retro_full)
 ```
-
 
 GAD
-Complete case data for GAD baseline (COPING) - 12,457 remaining
-```{r complete cases gad base}
-dat.no.sex.no.gender.no.age.no.ibd.complete.cases.gad.base <- dat.no.sex.no.gender.no.age.no.ibd[complete.cases(dat.no.sex.no.gender.no.age.no.ibd[, gad.items_base ]),]
+The GAD sum score is set to NA if they have any missing items
+```{r sum score cut offs GAD base}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    gad.sum_score_base_full =
+      if_else(na_per_person_gad_base > 0,
+              NA_real_,
+              gad.sum_score_base
+              )
+  )
 
-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.gad.base)
-dim(dat.no.sex.no.gender.no.age.no.ibd)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.gad.base)[1]
+summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_base)
+summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_base_full)
 ```
 
-Complete case data for gad pre-pandemic (GLAD) - 36,149 remaining
-```{r complete cases gad prepan}
-dat.no.sex.no.gender.no.age.no.ibd.complete.cases.gad.prepan <- dat.no.sex.no.gender.no.age.no.ibd[complete.cases(dat.no.sex.no.gender.no.age.no.ibd[, gad.items_prepan ]),]
+```{r sum score cut offs GAD prepan}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    gad.sum_score_prepan_full =
+      if_else(na_per_person_gad_prepan > 0,
+              NA_real_,
+              gad.sum_score_prepan
+              )
+  )
 
-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.gad.prepan)
-dim(dat.no.sex.no.gender.no.age.no.ibd)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.gad.prepan)[1]
+summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_prepan)
+summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_prepan_full)
 ```
 
-Complete case data for gad retrospective (COPING) - 8,930 remaining
-```{r complete cases gad retro}
-dat.no.sex.no.gender.no.age.no.ibd.complete.cases.gad.retro <- dat.no.sex.no.gender.no.age.no.ibd[complete.cases(dat.no.sex.no.gender.no.age.no.ibd[, gad.items_retro ]),]
+```{r sum score cut offs GAD retro}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    gad.sum_score_retro_full =
+      if_else(na_per_person_gad_retro > 0,
+              NA_real_,
+              gad.sum_score_retro
+              )
+  )
 
-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.gad.retro)
-dim(dat.no.sex.no.gender.no.age.no.ibd)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.gad.retro)[1]
+summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_retro)
+summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_retro_full)
 ```
-
 
 PCL
-Complete case data for PCL baseline (COPING) - 12,376 remaining
-```{r complete cases pcl base}
-dat.no.sex.no.gender.no.age.no.ibd.complete.cases.pcl.base <- dat.no.sex.no.gender.no.age.no.ibd[complete.cases(dat.no.sex.no.gender.no.age.no.ibd[, pcl.items_base ]),]
+The PCL sum score is set to NA if they have any missing items - only for basline and prepan.
+```{r sum score cut offs PCL base}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    pcl.sum_score_base_full =
+      if_else(na_per_person_pcl_base > 0,
+              NA_real_,
+              pcl.sum_score_base
+              )
+  )
 
-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.pcl.base)
-dim(dat.no.sex.no.gender.no.age.no.ibd)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.pcl.base)[1]
+summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_base)
+summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_base_full)
 ```
 
-Complete case data for PCL pre-pandemic (GLAD) - 35,176 remaining
-```{r complete cases pcl prepan}
-dat.no.sex.no.gender.no.age.no.ibd.complete.cases.pcl.prepan <- dat.no.sex.no.gender.no.age.no.ibd[complete.cases(dat.no.sex.no.gender.no.age.no.ibd[, pcl.items_prepan ]),]
+```{r sum score cut offs PCL prepan}
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+  mutate(
+    pcl.sum_score_prepan_full =
+      if_else(na_per_person_pcl_prepan > 0,
+              NA_real_,
+              pcl.sum_score_prepan
+              )
+  )
 
-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.pcl.prepan)
-dim(dat.no.sex.no.gender.no.age.no.ibd)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.pcl.prepan)[1]
+summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_prepan)
+summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_prepan_full)
 ```
 
-Complete case data for PCL retrospective (COPING) - 4,618 remaining
-```{r complete cases pcl retro}
-dat.no.sex.no.gender.no.age.no.ibd.complete.cases.pcl.retro <- dat.no.sex.no.gender.no.age.no.ibd[complete.cases(dat.no.sex.no.gender.no.age.no.ibd[, pcl.items_retro ]),]
-
-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.pcl.retro)
-dim(dat.no.sex.no.gender.no.age.no.ibd)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd.complete.cases.pcl.retro)[1]
-```
 
 
 ##Create tidy data on which the exclusion criteria have been applied
@@ -2366,7 +2456,7 @@ dat.glad <- dat.glad %>%
   mutate(
     phq.diff_score_prepan_base =
       as.numeric(
-        phq.sum_score_prepan - phq.sum_score_base  # prepandemic sum score MINUS baseline sum score 
+        phq.sum_score_base - phq.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
       )
   )
 
@@ -2403,7 +2493,7 @@ dat.glad <- dat.glad %>%
   mutate(
     gad.diff_score_prepan_base =
       as.numeric(
-        gad.sum_score_prepan - gad.sum_score_base  # prepandemic sum score MINUS baseline sum score 
+        gad.sum_score_base - gad.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
       )
   )
 
@@ -2430,114 +2520,403 @@ dat.glad <- dat.glad %>%
   mutate(
     pcl.diff_score_prepan_base =
       as.numeric(
-        pcl.sum_score_prepan - pcl.sum_score_base  # prepandemic sum score MINUS baseline sum score 
+        pcl.sum_score_base - pcl.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
       )
   )
 
 summary(dat.glad$pcl.diff_score_prepan_base)
 ```
 
+```{r frequency of those who reported "due to pandemic" in retro PCL}
+summary(dat.glad$pcl.sum_score_retro)
+
+freq(dat.glad$pcl.stressful_experience_repeated_images_retro)
+freq(dat.glad$pcl.stressful_situation_avoiding_activities_retro)
+freq(dat.glad$pcl.feeling_irritable_or_having_angry_outbursts_retro)
+freq(dat.glad$pcl.stressful_experience_upset_reminded_retro)
+freq(dat.glad$pcl.cut_people_feeling_distant_retro)
+freq(dat.glad$pcl.difficulty_concentrating_retro)
+```
+
+
 #Data level groups
 Identify which data (prepan, retro and baseline) each participant has.
-++KT: not sure how best to categorise here so this may need some revision. 
-```{r data level groups}
+```{r data level groups PHQ}
 dat.glad <- dat.glad %>%
   mutate(
-    data_group_full_numeric =
+    data_group_phq_numeric =
       case_when(
-        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_phq_retro == 0  & na_per_person_gad_retro == 0 & na_per_person_pcl_retro == 0 ~ 5,
-        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_pcl_retro == 0 ~ 4, #in GLAD, in COPING and have no missing PCL-retro items
-        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_gad_retro == 0 ~ 3, #in GLAD, in COPING and have no missing GAD-retro items
-        !is.na(startDate.glad) & !is.na(startDate.coping.glad) & na_per_person_phq_retro == 0 ~ 2, #in GLAD, in COPING and have no missing PHQ-retro items
-        !is.na(startDate.glad) & !is.na(startDate.coping.glad) ~ 1,
-        !is.na(startDate.glad) & is.na(startDate.coping.glad) ~ 0
+        na_per_person_phq_base == 0 & na_per_person_phq_prepan == 0 & na_per_person_phq_retro == 0 ~ 5, #all complete baseline, prepan and retro
+        na_per_person_phq_base != 0 & na_per_person_phq_prepan != 0 & na_per_person_phq_retro == 0  ~ 4, #retro data only
+        na_per_person_phq_base == 0 & na_per_person_phq_prepan != 0 & na_per_person_phq_retro != 0  ~ 3, #baseline data only
+        na_per_person_phq_base == 0 & na_per_person_phq_prepan == 0 & na_per_person_phq_retro != 0  ~ 2, #prepan and baseline data only
+        na_per_person_phq_base == 0 & na_per_person_phq_prepan != 0 & na_per_person_phq_retro == 0 ~ 1,  #baseline and retro data only
+        na_per_person_phq_base != 0 & na_per_person_phq_prepan == 0 & na_per_person_phq_retro != 0  ~ 0  #prepan data only
       )
   )
 
 dat.glad <- dat.glad %>%
   mutate(
-    data_group_full = 
+    data_group_phq = 
       recode_factor(
-        data_group_full_numeric,
+        data_group_phq_numeric,
         "0" = "Only prepandemic data",
-        "1" = "Prepandemic and baseline data",
-        "2" = "Prepandemic, baseline and retrospective PHQ data",
-        "3" = "Prepandemic, baseline and retrospective GAD data",
-        "4" = "Prepandemic, baseline and retrospective PCL data",
+        "1" = "Baseline and retrospective data",
+        "2" = "Prepandemic and baseline data",
+        "3" = "Baseline data only",
+        "4" = "Retrospective data only",
         "5" = "All prepandemic, baseline and retrospective data"
       )
   )
 
-table(dat.glad$data_group_full)
+table(dat.glad$data_group_phq)
+```
+
+GAD
+```{r data level groups GAD}
+dat.glad <- dat.glad %>%
+  mutate(
+    data_group_gad_numeric =
+      case_when(
+        na_per_person_gad_base == 0 & na_per_person_gad_prepan == 0 & na_per_person_gad_retro == 0 ~ 5, #all complete baseline, prepan and retro
+        na_per_person_gad_base != 0 & na_per_person_gad_prepan != 0 & na_per_person_gad_retro == 0  ~ 4, #retro data only
+        na_per_person_gad_base == 0 & na_per_person_gad_prepan != 0 & na_per_person_gad_retro != 0  ~ 3, #baseline data only
+        na_per_person_gad_base == 0 & na_per_person_gad_prepan == 0 & na_per_person_gad_retro != 0  ~ 2, #prepan and baseline data only
+        na_per_person_gad_base == 0 & na_per_person_gad_prepan != 0 & na_per_person_gad_retro == 0 ~ 1,  #baseline and retro data only
+        na_per_person_gad_base != 0 & na_per_person_gad_prepan == 0 & na_per_person_gad_retro != 0  ~ 0  #prepan data only
+      )
+  )
+
+dat.glad <- dat.glad %>%
+  mutate(
+    data_group_gad = 
+      recode_factor(
+        data_group_gad_numeric,
+        "0" = "Only prepandemic data",
+        "1" = "Baseline and retrospective data",
+        "2" = "Prepandemic and baseline data",
+        "3" = "Baseline data only",
+        "4" = "Retrospective data only",
+        "5" = "All prepandemic, baseline and retrospective data"
+      )
+  )
+
+table(dat.glad$data_group_gad)
+```
+
+PCL
+```{r data level groups PCL}
+dat.glad <- dat.glad %>%
+  mutate(
+    data_group_pcl_numeric =
+      case_when(
+        na_per_person_pcl_base == 0 & na_per_person_pcl_prepan == 0 & na_per_person_pcl_retro == 0 ~ 5, #all complete baseline, prepan and retro
+        na_per_person_pcl_base != 0 & na_per_person_pcl_prepan != 0 & na_per_person_pcl_retro == 0  ~ 4, #retro data only
+        na_per_person_pcl_base == 0 & na_per_person_pcl_prepan != 0 & na_per_person_pcl_retro != 0  ~ 3, #baseline data only
+        na_per_person_pcl_base == 0 & na_per_person_pcl_prepan == 0 & na_per_person_pcl_retro != 0  ~ 2, #prepan and baseline data only
+        na_per_person_pcl_base == 0 & na_per_person_pcl_prepan != 0 & na_per_person_pcl_retro == 0 ~ 1,  #baseline and retro data only
+        na_per_person_pcl_base != 0 & na_per_person_pcl_prepan == 0 & na_per_person_pcl_retro != 0  ~ 0  #prepan data only
+      )
+  )
+
+dat.glad <- dat.glad %>%
+  mutate(
+    data_group_pcl = 
+      recode_factor(
+        data_group_pcl_numeric,
+        "0" = "Only prepandemic data",
+        "1" = "Baseline and retrospective data",
+        "2" = "Prepandemic and baseline data",
+        "3" = "Baseline data only",
+        "4" = "Retrospective data only",
+        "5" = "All prepandemic, baseline and retrospective data"
+      )
+  )
+
+table(dat.glad$data_group_pcl)
 ```
 
 
-#READ IN RESPIRATORY DATA 
+#Read in respiratory data
+```{r coping resp cols}
+coping.glad.respiratory.raw <- readRDS(file = paste0(data.raw_path, "/2020-08-03/glad/respiratory_coping_glad.rds"))
+dim(coping.glad.respiratory.raw)
+colnames(coping.glad.respiratory.raw)
+```
+
+
+Select respiratory variables
 ```{r read in respiratory data}
+coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID),
+         startDate.glad = startDate) %>% # Rename startDate
+  select(
+    Sample, # Sample
+    ID,
+    respiratory.breath_diarrhoea_fatigue_fever,
+    respiratory.worst_ill_feel,
+    respiratory.persistent_cough,
+    respiratory.skipping_meals_because_you_felt_unwell,
+    respiratory.was_your_sense_of_smell_impaired,
+    respiratory.was_your_sense_of_taste_impaired,
+    respiratory.feeling_tiredfatigued,
+    respiratory.throat_swab_coronavirus_nose,
+    respiratory.throat_swab_test_nose,
+    respiratory.coronavirus_antibody_test,
+    respiratory.results_antibody_test
+    # ID
+  ) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
 
+# Inspect dimensions
+dim(coping.glad.respiratory.raw.id)
+# Inspect colnames
+colnames(coping.glad.respiratory.raw.id)
+#Differences
+dim(coping.glad.respiratory.raw)[1]-dim(coping.glad.respiratory.raw.id)[1]
 
 ```
 
+```{r create respiratory numeric variables}
+exclude_cols <- c("ID",
+                  "Sample")
+
+coping.glad.respiratory.raw.numeric <- add_numeric(coping.glad.respiratory.raw.id, exclude = exclude_cols)
+
+colnames(coping.glad.respiratory.raw.numeric)
+dim(coping.glad.respiratory.raw.numeric)
+dim(coping.glad.respiratory.raw.id)
+```
+
+#Distribution of likert scale COVID-19 symptoms in COPING
+```{r distribution of COVID symptoms}
+#persistent cough
+coping.glad.respiratory.raw.numeric %>%
+  ggplot(
+    mapping = aes(
+      y = respiratory.persistent_cough_numeric 
+    )
+  ) +
+  geom_bar() +
+  labs(
+    title = "Persistant cough"
+  )
+
+#severe fatigue
+coping.glad.respiratory.raw.numeric %>%
+  ggplot(
+    mapping = aes(
+        y = respiratory.feeling_tiredfatigued_numeric 
+    )
+  ) +
+  geom_bar() +
+  labs(
+    title = "Severe fatigue"
+  )
+
+#skipped meals
+coping.glad.respiratory.raw.numeric %>%
+  ggplot(
+    mapping = aes(
+        y = respiratory.skipping_meals_because_you_felt_unwell_numeric
+    )
+  ) +
+  geom_bar() +
+  labs(
+    title = "Skipped meals"
+  )
+
+```
+
+#Choosing cut-offs for the likert scale symptoms of "no symptoms", "mild symptoms", "moderate symptoms" and "severe symptoms" for the fatigue, persistent cough and skipped meals variables. 
+Coding:
+0 = No symptoms
+1 = Mild symptoms
+2 = Moderate symptoms
+3 = Severe symptoms
+
+Results:
+Persistent cough: "Mild symptoms" as cut off
+Fatigue: "Severe symptoms" as cut off
+Skipped meals: "Moderate symptoms" as cut off
+```{r proportion of people who report COVID symptoms in Menni et al}
+#persistent cough
+percentage_pcough <- ((0.5673*6452) + (0.4556*9186) + (0.3017*2434931))/(6452+9186+2434931)
+percentage_pcough    # 0.3029762% of Menni et al(2020) have fatigue
+quantile(x = coping.glad.respiratory.raw.numeric$respiratory.persistent_cough_numeric, 
+         na.rm = TRUE, 
+         probs = 1-percentage_pcough) # this gives 0.3029762% of the sample reporting fatigue when using the "mild symptoms" persistent cough response
+
+#fatigue
+percentage_fatigue <- ((0.298*6452) + (0.1556*9186) + (0.0871*2434931))/(6452+9186+2434931) 
+percentage_fatigue   # 0.08791204% of Menni et al(2020) have fatigue
+quantile(x = coping.glad.respiratory.raw.numeric$respiratory.feeling_tiredfatigued_numeric, 
+         na.rm = TRUE, 
+         probs = 1-percentage_fatigue) #this gives 8% of the sample reporting fatigue when using the "severe symptoms" fatigue response
+
+#skipped meals 
+percentage_skipped_meals <- ((0.4203*6452) + (0.2493*9186) + (0.1912*2434931))/(6452+9186+2434931) 
+percentage_skipped_meals    # 0.192021% of Menni et al(2020) have fatigue
+quantile(x = coping.glad.respiratory.raw.numeric$respiratory.skipping_meals_because_you_felt_unwell_numeric, 
+         na.rm = TRUE, 
+         probs = 1-percentage_skipped_meals) # this gives 0.192021% of the sample reporting fatigue when using the "moderate symptoms" persistent cough response
+```
+
+Creating binary groups for COVID symptoms
+```{r creating binary groups for COVID symptoms}
+#loss or smell or taste
+coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+  mutate(
+    respiratory.anosmia_binary =
+      if_else(
+        respiratory.was_your_sense_of_smell_impaired_numeric == 1 | respiratory.was_your_sense_of_taste_impaired_numeric == 1, 
+        1,
+        0
+      )
+  )
+
+#persistent cough
+coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+  mutate(
+    respiratory.pcough_binary =
+      if_else(
+        respiratory.persistent_cough_numeric >= 1, #those who score 1 or above (mild or above)
+        1,
+        0
+      )
+  )
+
+#fatigue
+coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+  mutate(
+    respiratory.fatigue_binary =
+      if_else(
+        respiratory.feeling_tiredfatigued_numeric >= 3, #those who score 3 (severe symptoms)
+        1,
+        0
+      )
+  )
+
+#skipped meals
+coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+  mutate(
+    respiratory.skipped_meals_binary =
+      if_else(
+        respiratory.skipping_meals_because_you_felt_unwell_numeric >= 2,
+        1,
+        0
+      )
+  )
+```
+
+Frequencies of binary COVID symptoms
+```{r frequencies of COVID binary symptoms}
+freq(coping.glad.respiratory.raw.numeric$respiratory.anosmia_binary)
+freq(coping.glad.respiratory.raw.numeric$respiratory.pcough_binary)
+freq(coping.glad.respiratory.raw.numeric$respiratory.fatigue_binary)
+freq(coping.glad.respiratory.raw.numeric$respiratory.skipped_meals_binary)
+```
+
+Rename respiratory dataset joined to main dataset
+```{r clean respiratory dataset}
+coping.glad.respiratory <- coping.glad.respiratory.raw.numeric
+
+dat.glad.coping <- left_join(
+  x = dat.glad,
+  y = coping.glad.respiratory,
+  by = "ID"
+)
+```
 
 # Probable COVID-19 case identification
 Algorithm from Menni et al. to identify probable COVID-19
 Variables required:
 - Sex: 	0 Female, 1 Male
-- Other binary variables: 0 No, 1 Yes       #THESE NAMES WILL CHANGE WHEN IMPORTING DATA - FIND AND REPLACE
-- "anosmia": loss of smell or taste  
-- "pcough":	Persistent cough
-- "sfatigue": Severe fatigue
-- "smeals": Skipped meals
-
-The below chunk needs to be re-thought - not as simple as categorising gender. 
-```{r eval=FALSE, include=FALSE}
-# Recode Gender to be binary for the model in RAMP
-dat.respiratory.ramp <- dat.respiratory.ramp %>%
-		  mutate(
-		    gender_binary_ramp =
-		      case_when(
-		        Gender == "Male" ~ "Male",
-		        Gender == "Female" ~ "Female",
-		        Gender == !("Male" | "Female") ~ NA_real_
-		      )
-		  )
-```
+- Other binary variables: 0 No, 1 Yes       
+- "respiratory.anosmia_binary": loss of smell or taste  
+- "respiratory.pcough_binary":	Persistent cough
+- "respiratory.fatigue_binary": Severe fatigue
+- "respiratory.skipped_meals_binary": Skipped meals
 
 ++KT: Needs to be developed further for RAMP dataset
-```{r eval=FALSE, include=FALSE}
-## COVID prediction model for COPING
+COVID prediction model for COPING
 
-## Formula to calculate probability 
-dat.respiratory.coping <- dat.respiratory.coping %>%
+```{r create numeric sex variable with male=1}
+dat.glad.coping <- dat.glad.coping %>%
+  mutate(
+    Sex_respiratory =
+      if_else(
+        Sex == "Male",
+        1,
+        0
+      )
+  )
+```
+
+```{r how many people expereinced all symptoms}
+dat.glad.coping <- dat.glad.coping %>%
+  mutate(
+    people_with_symptoms =
+      if_else(
+          !is.na(respiratory.anosmia_binary) &
+          !is.na(respiratory.pcough_binary) &
+          !is.na(respiratory.fatigue_binary) &
+          !is.na(respiratory.skipped_meals_binary),
+        1,
+        0
+       )
+  )
+
+table(dat.glad.coping$people_with_symptoms)
+```
+
+
+```{r COVID prediction model}
+# linear model of covid symptoms
+dat.glad.coping <- dat.glad.coping %>%
 		  mutate(
 		    covid_probability = 
 		      (-1.32) - 
 		      (0.01*Age) + 
-		      (0.44*Sex) + #we have sex here in COPING - use binary Gender variable in RAMP
-		      (1.75*anosmia) + #will be renamed
-		      (0.31*pcough) +  #will be renamed
-		      (0.49*sfatigue) +  #will be renamed
-		      (0.39*smeals) #will be renamed
+		      (0.44*Sex_respiratory) + 
+		      (1.75*respiratory.anosmia_binary) + 
+		      (0.31*respiratory.pcough_binary) +  
+		      (0.49*respiratory.fatigue_binary) +  
+		      (0.39*respiratory.skipped_meals_binary) 
 		         )
 
-## Calcualte the odds ratios 
-dat.respiratory.coping <- dat.respiratory.coping %>%
-		  mutate(
-		    covid_odds_ratio = 
-		      exp(covid_probability) / (1 + exp(covid_probability)
-		                              )
+# Calcualte the odds ratios 
+dat.glad.coping <- dat.glad.coping %>%
+  mutate(
+    covid_odds_ratio = 
+      (exp(covid_probability) / (1 + exp(covid_probability)))
+  )
 
-## generate variable covid_odds_ratio_50 -> 0, 0,5 and 1 = 0, 1, 2 (that's a column). Previous code: egen covid_odds_ratio_50 = cut(covid_odds_ratio), at(0,0.5,1) icode
-dat.respiratory.coping <- dat.respiratory.coping %>%
+# generate binary cutt off variable for risk of COVID 
+dat.glad.coping <- dat.glad.coping %>%
 		  mutate(
 		    covid_odds_ratio_50_numeric = 
 		      case_when(
 		        covid_odds_ratio >= 0 & covid_odds_ratio < 0.5 ~ "0", #cut off at 0.5 
 		        covid_odds_ratio >= 0.5 & covid_odds_ratio <= 1 ~ "1"
 		      )
+		  )
 		      
 #create factor with labels
-dat.respiratory.coping <- dat.respiratory.coping %>%
+dat.glad.coping <- dat.glad.coping %>%
   mutate(
     covid_odds_ratio_50 =
       recode_factor(
@@ -2547,19 +2926,17 @@ dat.respiratory.coping <- dat.respiratory.coping %>%
       )
   )
 
-## creating a frequency table. Previous code: table covid_odds_ratio_50, c(min covid_odds_ratio max covid_odds_ratio)
-covid_variables <- c(
-                      "covid_odds_ratio_50",
-                      "covid_odds_ratio",
+#frequency table for covid variables 
+covid_variables <- c("covid_odds_ratio",
                       "covid_probability"
                     )
 
-descr(x = dat.respiratory.coping[,covid_variables],
+descr(x = dat.glad.coping[,covid_variables],
       round.digits = 2,
       transpose = TRUE)
 
 ## looking at cases over 0.5
-table(dat.respiratory.coping$covid_odds_ratio_50) 
+table(dat.glad.coping$covid_odds_ratio_50) 
 ```
 
 
