@@ -1367,6 +1367,8 @@ glad.phq.raw.id <- glad.phq.raw %>%
   select(
     Sample, # Sample
     ID, # ID
+    phq.problems_made_difficult_care, # Impairment
+    phq.pandemic_felt_feelings, # Comparison to before the pandemic (retro)
     phq.little_interest_or_pleasure_in_doing_things_prepan = phq.little_interest_or_pleasure_in_doing_things,
     phq.feeling_down_depressed_or_hopeless_prepan = phq.feeling_down_depressed_or_hopeless,
     phq.staying_asleep_sleeping_trouble_prepan = phq.staying_asleep_sleeping_trouble,
@@ -1571,7 +1573,7 @@ summarytools::dfSummary(
 # COPING GLAD: GAD-7
 
 ```{r coping glad gad cols}
-coping.glad.gad.raw <- readRDS(file = paste0(data.raw_path,"/coping_glad/gad_coping_glad.rds"))
+coping.glad.gad.raw <- readRDS(file = paste0(data.raw_path,"/glad/gad_coping_glad.rds"))
 dim(coping.glad.gad.raw)
 colnames(coping.glad.gad.raw)
 ```
@@ -1597,35 +1599,24 @@ coping.glad.gad.raw.id <- coping.glad.gad.raw %>%
     Sample, # Sample
     ID, # ID
     startDate.coping.glad = startDate,
-    gad.feeling_nervous_anxious_or_on_edge_retro = gad7.feeling_nervous_anxious_or_on_edge,
-    gad.control_worrying_stop_retro = gad7.control_worrying_stop,
-    gad.worrying_too_much_about_different_things_retro = gad7.worrying_too_much_about_different_things,
-    gad.trouble_relaxing_retro = gad7.trouble_relaxing,
-    gad.sit_restless_hard_retro = gad7.sit_restless_hard,
-    gad.becoming_easily_annoyed_or_irritable_retro = gad7.becoming_easily_annoyed_or_irritable,
-    gad.awful_feeling_afraid_happen_retro = gad7.awful_feeling_afraid_happen,
-    gad.feeling_nervous_anxious_or_on_edge_base = gad7.feeling_nervous_anxious_or_on_edge.1,
-    gad.control_worrying_stop_base = gad7.control_worrying_stop.1,
-    gad.worrying_too_much_about_different_things_base = gad7.worrying_too_much_about_different_things.1,
-    gad.trouble_relaxing_base = gad7.trouble_relaxing.1,
-    gad.sit_restless_hard_base = gad7.sit_restless_hard.1,
-    gad.becoming_easily_annoyed_or_irritable_base = gad7.becoming_easily_annoyed_or_irritable.1,
-    gad.awful_feeling_afraid_happen_base = gad7.awful_feeling_afraid_happen.1,
-    gad.feeling_nervous_anxious_or_on_edge_retro_numeric = gad7.feeling_nervous_anxious_or_on_edge_numeric,
-    gad.control_worrying_stop_retro_numeric = gad7.control_worrying_stop_numeric,
-    gad.worrying_too_much_about_different_things_retro_numeric = gad7.worrying_too_much_about_different_things_numeric,
-    gad.trouble_relaxing_retro_numeric = gad7.trouble_relaxing_numeric,
-    gad.sit_restless_hard_retro_numeric = gad7.sit_restless_hard_numeric,
-    gad.becoming_easily_annoyed_or_irritable_retro_numeric = gad7.becoming_easily_annoyed_or_irritable_numeric,
-    gad.awful_feeling_afraid_happen_retro_numeric = gad7.awful_feeling_afraid_happen_numeric,
-    gad.feeling_nervous_anxious_or_on_edge_base_numeric = gad7.feeling_nervous_anxious_or_on_edge.1_numeric,
-    gad.control_worrying_stop_base_numeric = gad7.control_worrying_stop.1_numeric,
-    gad.worrying_too_much_about_different_things_base_numeric = gad7.worrying_too_much_about_different_things.1_numeric,
-    gad.trouble_relaxing_base_numeric = gad7.trouble_relaxing.1_numeric,
-    gad.sit_restless_hard_base_numeric = gad7.sit_restless_hard.1_numeric,
-    gad.becoming_easily_annoyed_or_irritable_base_numeric = gad7.becoming_easily_annoyed_or_irritable.1_numeric,
-    gad.awful_feeling_afraid_happen_base_numeric = gad7.awful_feeling_afraid_happen.1_numeric
+    gad.problems_made_difficult_care, # Impairment
+    gad.pandemic_felt_feelings, # Comparison to before the pandemic (retro)
+    gad.feeling_nervous_anxious_or_on_edge_retro = gad.feeling_nervous_anxious_or_on_edge,
+    gad.control_worrying_stop_retro = gad.control_worrying_stop,
+    gad.worrying_too_much_about_different_things_retro = gad.worrying_too_much_about_different_things,
+    gad.trouble_relaxing_retro = gad.trouble_relaxing,
+    gad.sit_restless_hard_retro = gad.sit_restless_hard,
+    gad.becoming_easily_annoyed_or_irritable_retro = gad.becoming_easily_annoyed_or_irritable,
+    gad.awful_feeling_afraid_happen_retro = gad.awful_feeling_afraid_happen,
+    gad.feeling_nervous_anxious_or_on_edge_base = gad.feeling_nervous_anxious_or_on_edge.1,
+    gad.control_worrying_stop_base = gad.control_worrying_stop.1,
+    gad.worrying_too_much_about_different_things_base = gad.worrying_too_much_about_different_things.1,
+    gad.trouble_relaxing_base = gad.trouble_relaxing.1,
+    gad.sit_restless_hard_base = gad.sit_restless_hard.1,
+    gad.becoming_easily_annoyed_or_irritable_base = gad.becoming_easily_annoyed_or_irritable.1,
+    gad.awful_feeling_afraid_happen_base = gad.awful_feeling_afraid_happen.1
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -1731,7 +1722,7 @@ summarytools::dfSummary(
 # COPING GLAD: PCL-6
 
 ```{r coping glad pcl cols}
-coping.glad.pcl.raw <- readRDS(file = paste0(data.raw_path,"/coping_glad/pcl_coping_glad.rds"))
+coping.glad.pcl.raw <- readRDS(file = paste0(data.raw_path,"/glad/pcl_coping_glad.rds"))
 dim(coping.glad.pcl.raw)
 colnames(coping.glad.pcl.raw)
 ```
@@ -1887,7 +1878,7 @@ summarytools::dfSummary(
 # glad COPING phq
 
 ```{r coping glad phq cols}
-coping.glad.phq.raw <- readRDS(file = paste0(data.raw_path, "/coping_glad/phq_coping_glad.rds"))
+coping.glad.phq.raw <- readRDS(file = paste0(data.raw_path, "/glad/phq_coping_glad.rds"))
 dim(coping.glad.phq.raw)
 colnames(coping.glad.phq.raw)
 ```
