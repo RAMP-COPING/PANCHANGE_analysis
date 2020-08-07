@@ -1131,10 +1131,9 @@ disorder_columns <- c(
 
 
 glad.mhd.raw.id <- glad.mhd.raw.id %>%
-  select(all_of(disorder_columns)) %>%
   mutate(
     disorders_total_count =
-      rowSums(.)
+      rowSums(.[disorder_columns])
   )
 
 glad.mhd.raw.id %>%
@@ -1143,10 +1142,10 @@ glad.mhd.raw.id %>%
 ```
 
 Comorbidity count
-```{r}
+```{r cormorbidity_total_count}
 glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
-    comorbidity_total_count = 
+    comorbidity_total_count_numeric = 
       case_when(
         disorders_total_count == 1 ~ 0,
         disorders_total_count > 1 ~ disorders_total_count - 1
@@ -1154,10 +1153,39 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
   )
 
 glad.mhd.raw.id %>%
-  freq(comorbidity_total_count,
+  freq(comorbidity_total_count_numeric,
        cumul = F)
 ```
 
+```{r}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
+  mutate(
+    comorbidity_total_count_factor_numeric =
+      case_when(
+    comorbidity_total_count_numeric == "0" ~ 0,
+    comorbidity_total_count_numeric == "1" ~ 1,
+    comorbidity_total_count_numeric == "2" ~ 2,
+    comorbidity_total_count_numeric > 2 ~ 3
+    )
+  )
+
+
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
+  mutate(
+    comorbidity_total_count_factor =
+      recode_factor(comorbidity_total_count_factor_numeric,
+                    "0" = "No comorbidity",
+                    "1" = "1 comorbid disoder",
+                    "2" = "2 comorbid disoders",
+                    "3" = "3+ comorbid disoder",
+                    missing = NA_character_
+                    )
+  )
+
+glad.mhd.raw.id %>%
+  freq(comorbidity_total_count_factor,
+       cumul = F)
+```
 
 ```{r glad mhd head}
 head(glad.mhd.raw.id)
@@ -1209,7 +1237,19 @@ glad.mhd.raw.categories <- glad.mhd.raw.id %>%
     personality_cluster_b_numeric,
     personality_cluster_b,
     personality_cluster_c_numeric,
-    personality_cluster_c
+    personality_cluster_c,
+    depression_and_anxiety_numeric,
+    depression_and_anxiety,
+    restricting_vs_binge_eating_eating_disorders_numeric,
+    restricting_vs_binge_eating_eating_disorders,
+    bipolar_and_schizophrenia_numeric,
+    bipolar_and_schizophrenia,
+    control_numeric,
+    control,
+    disorders_total_count,
+    comorbidity_total_count_numeric,
+    comorbidity_total_count_factor_numeric,
+    comorbidity_total_count_factor
     )
 ```
 
