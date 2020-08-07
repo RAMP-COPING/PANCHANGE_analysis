@@ -232,13 +232,13 @@ age_lower_limit = 16
 # identify number of outliers
 length(
   which(
-  glad.dem.raw.id.numeric$Age_uncleaned > age_upper_limit |
-    glad.dem.raw.id.numeric$Age_uncleaned < age_lower_limit
+  glad.dem.raw.id$Age_uncleaned > age_upper_limit |
+    glad.dem.raw.id$Age_uncleaned < age_lower_limit
      )
 )
 
 # remove age outliers
-glad.dem.raw.id.numeric <- glad.dem.raw.id.numeric %>%
+glad.dem.raw.id <- glad.dem.raw.id %>%
   mutate(
     Age = 
       if_else(
@@ -251,7 +251,7 @@ glad.dem.raw.id.numeric <- glad.dem.raw.id.numeric %>%
   )
 
 # Inspect colnames
-colnames(glad.dem.raw.id.numeric)
+colnames(glad.dem.raw.id)
 ```
 
 # Categorise age into groups 
@@ -261,7 +261,7 @@ Age categories in GLAD, EDGI and NBR have been created to reflect this
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
 
 # Create categorical age groups per 10 years
-glad.dem.raw.id.numeric <- glad.dem.raw.id.numeric %>%
+glad.dem.raw.id <- glad.dem.raw.id %>%
   mutate(
     age_category_numeric =
       case_when(
@@ -281,7 +281,7 @@ glad.dem.raw.id.numeric <- glad.dem.raw.id.numeric %>%
                 )
       )
 
-glad.dem.raw.id.numeric <- glad.dem.raw.id.numeric %>%
+glad.dem.raw.id <- glad.dem.raw.id %>%
     mutate(
       age_category =
         recode_factor(
@@ -302,7 +302,7 @@ glad.dem.raw.id.numeric <- glad.dem.raw.id.numeric %>%
           )
     )
 
-glad.dem.raw.id.numeric %>%
+glad.dem.raw.id %>%
   freq(age_category)
 
 }
@@ -313,7 +313,7 @@ Proceed along qualifications fields. If field is not blank, take that as highest
 Assumes University degree > A level > NVQ > GCSE/O Level/CSE
 ```{r Highest education}
 #create numeric version of the highest education variable
-glad.dem.raw.id.numeric <- glad.dem.raw.id.numeric %>%
+glad.dem.raw.id <- glad.dem.raw.id %>%
   mutate(
     highest_education_numeric =
       case_when(
@@ -325,7 +325,7 @@ glad.dem.raw.id.numeric <- glad.dem.raw.id.numeric %>%
     )
 
 #recode the numeric version into a factor
-glad.dem.raw.id.numeric <- glad.dem.raw.id.numeric %>%
+glad.dem.raw.id <- glad.dem.raw.id %>%
   mutate(
     highest_education =
       recode_factor(
@@ -336,13 +336,13 @@ glad.dem.raw.id.numeric <- glad.dem.raw.id.numeric %>%
         `4` = "University")
     )
 
-glad.dem.raw.id.numeric %>%
+glad.dem.raw.id %>%
   freq(highest_education)
 ```
 
 Check highest education coding
 ```{r Highest education check}
-glad.dem.raw.id.numeric %>%
+glad.dem.raw.id %>%
   select(highest_education,
         demographics.college_or_university_degree_numeric,
         demographics.a_levelsas_levels_or_equivalent_numeric,
@@ -354,13 +354,13 @@ glad.dem.raw.id.numeric %>%
 
 
 ```{r glad dem head}
-head(glad.dem.raw.id.numeric)
+head(glad.dem.raw.id)
 ```
 
 
 ```{r glad dem summary}
 summarytools::dfSummary(
-  glad.dem.raw.id.numeric,
+  glad.dem.raw.id,
   graph.col = F,
   valid.col = F,
   labels.col = F)
@@ -376,6 +376,9 @@ colnames(glad.gad.raw)
 
 
 ```{r glad gad cleaning}
+exclude_cols <- c("Sample",
+                  "ID")
+
 glad.gad.raw.id <- glad.gad.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -391,15 +394,9 @@ glad.gad.raw.id <- glad.gad.raw %>%
     gad.trouble_relaxing_prepan = gad.trouble_relaxing,
     gad.sit_restless_hard_prepan = gad.sit_restless_hard,
     gad.becoming_easily_annoyed_or_irritable_prepan = gad.becoming_easily_annoyed_or_irritable,
-    gad.awful_feeling_afraid_happen_prepan = gad.awful_feeling_afraid_happen,
-    gad.feeling_nervous_anxious_or_on_edge_prepan_numeric = gad.feeling_nervous_anxious_or_on_edge_numeric,
-    gad.control_worrying_stop_prepan_numeric = gad.control_worrying_stop_numeric,
-    gad.worrying_too_much_about_different_things_prepan_numeric = gad.worrying_too_much_about_different_things_numeric,
-    gad.trouble_relaxing_prepan_numeric = gad.trouble_relaxing_numeric,
-    gad.sit_restless_hard_prepan_numeric = gad.sit_restless_hard_numeric,
-    gad.becoming_easily_annoyed_or_irritable_prepan_numeric = gad.becoming_easily_annoyed_or_irritable_numeric,
-    gad.awful_feeling_afraid_happen_prepan_numeric = gad.awful_feeling_afraid_happen_numeric
+    gad.awful_feeling_afraid_happen_prepan = gad.awful_feeling_afraid_happen
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -470,17 +467,17 @@ summarytools::dfSummary(
   labels.col = F)
 ```
 
-# glad mhq
+# glad mhd
 
-```{r glad mhq cols}
-glad.mhq.raw <- readRDS(file = paste0(data.raw_path,"/glad/mhq_glad.rds"))
-dim(glad.mhq.raw)
-colnames(glad.mhq.raw)
+```{r glad mhd cols}
+glad.mhd.raw <- readRDS(file = paste0(data.raw_path,"/glad/mhd_glad.rds"))
+dim(glad.mhd.raw)
+colnames(glad.mhd.raw)
 ```
 
 
-```{r glad mhq cleaning}
-glad.mhq.raw.id <- glad.mhq.raw %>%
+```{r glad mhd cleaning}
+glad.mhd.raw.id <- glad.mhd.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
@@ -489,8 +486,9 @@ glad.mhq.raw.id <- glad.mhq.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    starts_with("mhq.")
+    starts_with("mhd.")
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -504,11 +502,11 @@ glad.mhq.raw.id <- glad.mhq.raw %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
 
 # Inspect dimensions
-dim(glad.mhq.raw.id)
+dim(glad.mhd.raw.id)
 # Inspect colnames
-colnames(glad.mhq.raw.id)
+colnames(glad.mhd.raw.id)
 #Differences
-dim(glad.mhq.raw)[1]-dim(glad.mhq.raw.id)[1]
+dim(glad.mhd.raw)[1]-dim(glad.mhd.raw.id)[1]
 ```
 
 # Grouping mental health disorders
@@ -540,19 +538,19 @@ No-diagnosis group
 2. Specific: breakdown by type of prior anxiety (& related) disorder diagnosis
 3. Breakdown by COVID or not (using COVIDENCE/Zoe algorithm)
 
-```{r glad mhq depressive_disorders}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd depressive_disorders}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     depressive_disorders_numeric =
       case_when(
-        (mhq.depression_numeric == "0" &
-        (mhq.pregnancy_depression_numeric == "0" | is.na(mhq.pregnancy_depression_numeric)) & 
-        (mhq.premenstrual_dysphoric_disorder_pmdd_numeric == "0" | is.na(mhq.premenstrual_dysphoric_disorder_pmdd_numeric))) ~ 0,
-        mhq.depression_numeric == "1" ~ 1,
-        mhq.pregnancy_depression_numeric == "1" ~ 1,
-        mhq.premenstrual_dysphoric_disorder_pmdd_numeric == "1" ~ 1))
+        (mhd.depression_numeric == "0" &
+        (mhd.pregnancy_depression_numeric == "0" | is.na(mhd.pregnancy_depression_numeric)) & 
+        (mhd.premenstrual_dysphoric_disorder_pmdd_numeric == "0" | is.na(mhd.premenstrual_dysphoric_disorder_pmdd_numeric))) ~ 0,
+        mhd.depression_numeric == "1" ~ 1,
+        mhd.pregnancy_depression_numeric == "1" ~ 1,
+        mhd.premenstrual_dysphoric_disorder_pmdd_numeric == "1" ~ 1))
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     depressive_disorders =
       recode_factor(depressive_disorders_numeric,
@@ -562,46 +560,46 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   freq(depressive_disorders)
 ```
 
 ```{r Check depressive_disorders}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     depressive_disorders,
     depressive_disorders_numeric,
-    mhq.depression_numeric,
-    mhq.pregnancy_depression_numeric,
-    mhq.premenstrual_dysphoric_disorder_pmdd_numeric,
-    mhq.depression,
-    mhq.pregnancy_depression,
-    mhq.premenstrual_dysphoric_disorder_pmdd
+    mhd.depression_numeric,
+    mhd.pregnancy_depression_numeric,
+    mhd.premenstrual_dysphoric_disorder_pmdd_numeric,
+    mhd.depression,
+    mhd.pregnancy_depression,
+    mhd.premenstrual_dysphoric_disorder_pmdd
   )
 ```
 
 Anxiety disorders group
-```{r glad mhq anxiety_disorders}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd anxiety_disorders}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     anxiety_disorders_numeric =
       case_when(
-        mhq.anxiety_nerves_or_generalised_anxiety_disorder_numeric == "1" ~ 1,
-        mhq.social_anxiety_or_social_phobia_numeric == "1" ~ 1,
-        mhq.specific_phobia_e.g._phobia_of_flying_numeric == "1" ~ 1,
-        mhq.agoraphobia_numeric == "1" ~ 1,
-        mhq.panic_disorder_numeric == "1" ~ 1,
-        mhq.panic_attacks_numeric == "1" ~ 1,
-        (mhq.anxiety_nerves_or_generalised_anxiety_disorder_numeric == "0" &
-        mhq.social_anxiety_or_social_phobia_numeric == "0" &
-        mhq.specific_phobia_e.g._phobia_of_flying_numeric == "0" &
-        mhq.agoraphobia_numeric == "0" &
-        mhq.panic_disorder_numeric == "0" &
-        mhq.panic_attacks_numeric == "0") ~ 0
+        mhd.anxiety_nerves_or_generalised_anxiety_disorder_numeric == "1" ~ 1,
+        mhd.social_anxiety_or_social_phobia_numeric == "1" ~ 1,
+        mhd.specific_phobia_e.g._phobia_of_flying_numeric == "1" ~ 1,
+        mhd.agoraphobia_numeric == "1" ~ 1,
+        mhd.panic_disorder_numeric == "1" ~ 1,
+        mhd.panic_attacks_numeric == "1" ~ 1,
+        (mhd.anxiety_nerves_or_generalised_anxiety_disorder_numeric == "0" &
+        mhd.social_anxiety_or_social_phobia_numeric == "0" &
+        mhd.specific_phobia_e.g._phobia_of_flying_numeric == "0" &
+        mhd.agoraphobia_numeric == "0" &
+        mhd.panic_disorder_numeric == "0" &
+        mhd.panic_attacks_numeric == "0") ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     anxiety_disorders =
       recode_factor(anxiety_disorders_numeric,
@@ -611,46 +609,46 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   freq(anxiety_disorders)
 ```
 
 ```{r Check anxiety_disorders}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     anxiety_disorders,
     anxiety_disorders_numeric,
-    mhq.anxiety_nerves_or_generalised_anxiety_disorder_numeric,
-    mhq.social_anxiety_or_social_phobia_numeric,
-    mhq.specific_phobia_e.g._phobia_of_flying_numeric,
-    mhq.agoraphobia_numeric,
-    mhq.panic_disorder_numeric,
-    mhq.panic_attacks_numeric,
-    mhq.anxiety_nerves_or_generalised_anxiety_disorder,
-    mhq.social_anxiety_or_social_phobia,
-    mhq.specific_phobia_e.g._phobia_of_flying,
-    mhq.agoraphobia,
-    mhq.panic_disorder,
-    mhq.panic_attacks
+    mhd.anxiety_nerves_or_generalised_anxiety_disorder_numeric,
+    mhd.social_anxiety_or_social_phobia_numeric,
+    mhd.specific_phobia_e.g._phobia_of_flying_numeric,
+    mhd.agoraphobia_numeric,
+    mhd.panic_disorder_numeric,
+    mhd.panic_attacks_numeric,
+    mhd.anxiety_nerves_or_generalised_anxiety_disorder,
+    mhd.social_anxiety_or_social_phobia,
+    mhd.specific_phobia_e.g._phobia_of_flying,
+    mhd.agoraphobia,
+    mhd.panic_disorder,
+    mhd.panic_attacks
   )
 ```
 
 Agoraphonia and panic disorder group
-```{r glad mhq agoraphobia_panic_disorder}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd agoraphobia_panic_disorder}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     agoraphobia_panic_disorder_numeric =
       case_when(
-        mhq.agoraphobia_numeric == "1" ~ 1,
-        mhq.panic_disorder_numeric == "1" ~ 1,
-        mhq.panic_attacks_numeric == "1" ~ 1,
-        (mhq.agoraphobia_numeric == "0" &
-        mhq.panic_disorder_numeric == "0" &
-        mhq.panic_attacks_numeric == "0") ~ 0
+        mhd.agoraphobia_numeric == "1" ~ 1,
+        mhd.panic_disorder_numeric == "1" ~ 1,
+        mhd.panic_attacks_numeric == "1" ~ 1,
+        (mhd.agoraphobia_numeric == "0" &
+        mhd.panic_disorder_numeric == "0" &
+        mhd.panic_attacks_numeric == "0") ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     agoraphobia_panic_disorder =
       recode_factor(agoraphobia_panic_disorder_numeric,
@@ -660,42 +658,42 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   freq(agoraphobia_panic_disorder)
 ```
 
 ```{r Check agoraphobia_panic_disorder}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     agoraphobia_panic_disorder,
     agoraphobia_panic_disorder_numeric,
-    mhq.agoraphobia_numeric,
-    mhq.panic_disorder_numeric,
-    mhq.panic_attacks_numeric,
-    mhq.agoraphobia,
-    mhq.panic_disorder,
-    mhq.panic_attacks
+    mhd.agoraphobia_numeric,
+    mhd.panic_disorder_numeric,
+    mhd.panic_attacks_numeric,
+    mhd.agoraphobia,
+    mhd.panic_disorder,
+    mhd.panic_attacks
   )
 ```
 
 Eating disorders group
-```{r glad mhq eating_disorders}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd eating_disorders}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     eating_disorders_numeric =
       case_when(
-        mhq.anorexia_nervosa_numeric == "1" ~ 1,
-        mhq.atypical_anorexia_nervosa_numeric == "1" ~ 1,
-        mhq.bulimia_nervosa_numeric == "1" ~ 1,
-        mhq.psychological_overeating_or_bingeeating_numeric == "1" ~ 1,
-        (mhq.anorexia_nervosa_numeric == "0" &
-        mhq.atypical_anorexia_nervosa_numeric == "0" &
-        mhq.bulimia_nervosa_numeric == "0" &
-        mhq.psychological_overeating_or_bingeeating_numeric == "0") ~ 0
+        mhd.anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.bulimia_nervosa_numeric == "1" ~ 1,
+        mhd.psychological_overeating_or_bingeeating_numeric == "1" ~ 1,
+        (mhd.anorexia_nervosa_numeric == "0" &
+        mhd.atypical_anorexia_nervosa_numeric == "0" &
+        mhd.bulimia_nervosa_numeric == "0" &
+        mhd.psychological_overeating_or_bingeeating_numeric == "0") ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     eating_disorders =
       recode_factor(eating_disorders_numeric,
@@ -705,42 +703,42 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   freq(eating_disorders)
 ```
 
 ```{r Check eating_disorders}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     eating_disorders,
     eating_disorders_numeric,
-    mhq.anorexia_nervosa_numeric,
-    mhq.atypical_anorexia_nervosa_numeric,
-    mhq.bulimia_nervosa_numeric,
-    mhq.psychological_overeating_or_bingeeating_numeric,
-    mhq.anorexia_nervosa,
-    mhq.atypical_anorexia_nervosa,
-    mhq.bulimia_nervosa,
-    mhq.psychological_overeating_or_bingeeating
+    mhd.anorexia_nervosa_numeric,
+    mhd.atypical_anorexia_nervosa_numeric,
+    mhd.bulimia_nervosa_numeric,
+    mhd.psychological_overeating_or_bingeeating_numeric,
+    mhd.anorexia_nervosa,
+    mhd.atypical_anorexia_nervosa,
+    mhd.bulimia_nervosa,
+    mhd.psychological_overeating_or_bingeeating
   )
 ```
 
 Obsessive compulsive disorders
-```{r glad mhq obsessive_compulsive_disorders}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd obsessive_compulsive_disorders}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     obsessive_compulsive_disorders_numeric =
       case_when(
-        mhq.obsessivecompulsive_disorder_ocd_numeric == "1" ~ 1,
-        mhq.obsessive_compulsive_related_disorders_numeric == "1" ~ 1,
-        mhq.body_dysmorphic_disorder_bdd_numeric == "1" ~ 1,
-        (mhq.obsessivecompulsive_disorder_ocd_numeric == "0" &
-        mhq.obsessive_compulsive_related_disorders_numeric == "0" &
-        mhq.body_dysmorphic_disorder_bdd_numeric == "0") ~ 0
+        mhd.obsessivecompulsive_disorder_ocd_numeric == "1" ~ 1,
+        mhd.obsessive_compulsive_related_disorders_numeric == "1" ~ 1,
+        mhd.body_dysmorphic_disorder_bdd_numeric == "1" ~ 1,
+        (mhd.obsessivecompulsive_disorder_ocd_numeric == "0" &
+        mhd.obsessive_compulsive_related_disorders_numeric == "0" &
+        mhd.body_dysmorphic_disorder_bdd_numeric == "0") ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     obsessive_compulsive_disorders =
       recode_factor(obsessive_compulsive_disorders_numeric,
@@ -750,38 +748,38 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   freq(obsessive_compulsive_disorders)
 ```
 
 ```{r Check obsessive_compulsive_disorders}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     obsessive_compulsive_disorders,
     obsessive_compulsive_disorders_numeric,
-    mhq.obsessivecompulsive_disorder_ocd,
-    mhq.obsessivecompulsive_disorder_ocd_numeric,
-    mhq.obsessive_compulsive_related_disorders,
-    mhq.obsessive_compulsive_related_disorders_numeric
+    mhd.obsessivecompulsive_disorder_ocd,
+    mhd.obsessivecompulsive_disorder_ocd_numeric,
+    mhd.obsessive_compulsive_related_disorders,
+    mhd.obsessive_compulsive_related_disorders_numeric
   )
 ```
 
 Psychotic disorders group
-```{r glad mhq psychotic_disorders}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd psychotic_disorders}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     psychotic_disorders_numeric =
       case_when(
-        mhq.schizophrenia_numeric == "1" ~ 1,
-        mhq.schizoaffective_disorder_numeric == "1" ~ 1,
-        mhq.type_psychosis_psychotic_illness_numeric == "1" ~ 1,
-        (mhq.schizophrenia_numeric == "0" &
-        mhq.schizoaffective_disorder_numeric == "0" &
-        mhq.type_psychosis_psychotic_illness_numeric == "0") ~ 0
+        mhd.schizophrenia_numeric == "1" ~ 1,
+        mhd.schizoaffective_disorder_numeric == "1" ~ 1,
+        mhd.type_psychosis_psychotic_illness_numeric == "1" ~ 1,
+        (mhd.schizophrenia_numeric == "0" &
+        mhd.schizoaffective_disorder_numeric == "0" &
+        mhd.type_psychosis_psychotic_illness_numeric == "0") ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     psychotic_disorders =
       recode_factor(psychotic_disorders_numeric,
@@ -791,21 +789,21 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   freq(psychotic_disorders)
 ```
 
 ```{r Check psychotic_disorders}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     psychotic_disorders,
     psychotic_disorders_numeric,
-    mhq.schizophrenia_numeric,
-    mhq.schizoaffective_disorder_numeric,
-    mhq.type_psychosis_psychotic_illness_numeric,
-    mhq.schizophrenia,
-    mhq.schizoaffective_disorder,
-    mhq.type_psychosis_psychotic_illness
+    mhd.schizophrenia_numeric,
+    mhd.schizoaffective_disorder_numeric,
+    mhd.type_psychosis_psychotic_illness_numeric,
+    mhd.schizophrenia,
+    mhd.schizoaffective_disorder,
+    mhd.type_psychosis_psychotic_illness
   )
 ```
 
@@ -813,16 +811,16 @@ Overlap between self-report schizphrenia and bipolar
 +++CH: Check overlap between schizophrenia group and bipolar disorder
 ++KT: Only 63 with comorbid sel-report bipolar and schizophrenia. More likely to have shared symptoms, less likely to have confirmed diagnoses of both. Could be too severe to be in GLAD?
 ```{r check bipolar overlap with schizophrenia}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     bipolar_and_schizophrenia_numeric =
       if_else(
-        mhq.schizophrenia_numeric == "1" &
-          mhq.mania_hypomania_bipolar_or_manicdepression_numeric == "1", 1, 0
+        mhd.schizophrenia_numeric == "1" &
+          mhd.mania_hypomania_bipolar_or_manicdepression_numeric == "1", 1, 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     bipolar_and_schizophrenia =
       recode_factor(bipolar_and_schizophrenia_numeric,
@@ -832,7 +830,7 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   freq(bipolar_and_schizophrenia)
 ```
 
@@ -842,26 +840,26 @@ Cluster A
 1. Paranoid                         28 ( 1.0%)
 2. Schizoid                         15 ( 0.5%)
 3. Schizotypal                      14 ( 0.5%)
-```{r glad mhq personality_cluster_a}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd personality_cluster_a}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     personality_cluster_a_numeric =
       case_when(
-        mhq.personality_disorder_diagnosed_numeric == "1" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "2" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "3" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "4" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "5" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "6" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "7" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "8" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "9" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "10" ~ 0,
-        mhq.personality_disorder_numeric == "0" ~ 0
+        mhd.personality_disorder_diagnosed_numeric == "1" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "2" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "3" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "4" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "5" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "6" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "7" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "8" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "9" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "10" ~ 0,
+        mhd.personality_disorder_numeric == "0" ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     personality_cluster_a =
       recode_factor(personality_cluster_a_numeric,
@@ -871,17 +869,17 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   freq(personality_cluster_a)
 ```
 
 ```{r Check personality_cluster_a}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     personality_cluster_a,
     personality_cluster_a_numeric,
-    mhq.personality_disorder_diagnosed,
-    mhq.personality_disorder_diagnosed_numeric
+    mhd.personality_disorder_diagnosed,
+    mhd.personality_disorder_diagnosed_numeric
   )
 ```
 
@@ -891,26 +889,26 @@ Cluster B
 6. Histrionic                        7 ( 0.2%)
 7. Narcissistic                      8 ( 0.3%)
 
-```{r glad mhq personality_cluster_b}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd personality_cluster_b}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     personality_cluster_b_numeric =
       case_when(
-        mhq.personality_disorder_diagnosed_numeric == "1" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "2" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "3" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "4" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "5" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "6" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "7" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "8" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "9" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "10" ~ 0,
-        mhq.personality_disorder_numeric == "0" ~ 0
+        mhd.personality_disorder_diagnosed_numeric == "1" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "2" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "3" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "4" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "5" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "6" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "7" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "8" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "9" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "10" ~ 0,
+        mhd.personality_disorder_numeric == "0" ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     personality_cluster_b =
       recode_factor(personality_cluster_b_numeric,
@@ -920,17 +918,17 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   freq(personality_cluster_b)
 ```
 
 ```{r Check personality_cluster_b}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     personality_cluster_b,
     personality_cluster_b_numeric,
-    mhq.personality_disorder_diagnosed,
-    mhq.personality_disorder_diagnosed_numeric
+    mhd.personality_disorder_diagnosed,
+    mhd.personality_disorder_diagnosed_numeric
   )
 ```
 
@@ -938,26 +936,26 @@ Cluster C
 8. Avoidant/anxious                133 ( 4.7%)
 9. Dependent                        29 ( 1.0%)
 10. Obsessive-compulsive
-```{r glad mhq personality_cluster_c}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd personality_cluster_c}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     personality_cluster_c_numeric =
       case_when(
-        mhq.personality_disorder_diagnosed_numeric == "1" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "2" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "3" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "4" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "5" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "6" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "7" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "8" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "9" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "10" ~ 1,
-        mhq.personality_disorder_numeric == "0" ~ 0
+        mhd.personality_disorder_diagnosed_numeric == "1" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "2" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "3" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "4" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "5" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "6" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "7" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "8" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "9" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "10" ~ 1,
+        mhd.personality_disorder_numeric == "0" ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     personality_cluster_c =
       recode_factor(personality_cluster_c_numeric,
@@ -967,25 +965,25 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   freq(personality_cluster_c)
 ```
 
 ```{r Check personality_cluster_c}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     personality_cluster_c,
     personality_cluster_c_numeric,
-    mhq.personality_disorder_diagnosed,
-    mhq.personality_disorder_diagnosed_numeric
+    mhd.personality_disorder_diagnosed,
+    mhd.personality_disorder_diagnosed_numeric
   )
 ```
 
 Control grouping
 These individuals have no self report diagnosis of any kind that we measure. 
 Controls = 784
-```{r glad mhq control}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd control}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     control_numeric =
       if_else(
@@ -994,17 +992,17 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
     eating_disorders_numeric == "0" &
     obsessive_compulsive_disorders_numeric == "0" &
     psychotic_disorders_numeric == "0" &
-    mhq.mania_hypomania_bipolar_or_manicdepression_numeric == "0" &
-    mhq.posttraumatic_stress_disorder_ptsd_numeric == "0" &
-    mhq.autism_aspergers_or_autistic_spectrum_disorder_numeric == "0" &
-    mhq.attention_deficit_hyperactivity_disorder_numeric == "0" &
-    mhq.personality_disorder_numeric == "0", 
+    mhd.mania_hypomania_bipolar_or_manicdepression_numeric == "0" &
+    mhd.posttraumatic_stress_disorder_ptsd_numeric == "0" &
+    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == "0" &
+    mhd.attention_deficit_hyperactivity_disorder_numeric == "0" &
+    mhd.personality_disorder_numeric == "0", 
     true = 1, 
     false = 0, 
     NA_real_)
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     control =
       recode_factor(control_numeric,
@@ -1014,18 +1012,18 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   freq(control)
 ```
 
 
-```{r glad mhq head}
-head(glad.mhq.raw.id)
+```{r glad mhd head}
+head(glad.mhd.raw.id)
 ```
 
-```{r glad mhq summary}
+```{r glad mhd summary}
 summarytools::dfSummary(
-  glad.mhq.raw.id,
+  glad.mhd.raw.id,
   graph.col = F,
   valid.col = F,
   labels.col = F)
@@ -1033,17 +1031,17 @@ summarytools::dfSummary(
 
 Create new dataframe with the derived categories
 ++KT: do we want to keep individual diagnoses here as well?? 
-```{r glad mhq categories}
-glad.mhq.raw.categories <- glad.mhq.raw.id %>%
+```{r glad mhd categories}
+glad.mhd.raw.categories <- glad.mhd.raw.id %>%
   select(
     Sample,
     ID,
     anxiety_disorders_numeric,
     anxiety_disorders,
-    mhq.specific_phobia_e.g._phobia_of_flying_numeric,
-    mhq.specific_phobia_e.g._phobia_of_flying,
-    mhq.social_anxiety_or_social_phobia_numeric,
-    mhq.social_anxiety_or_social_phobia,
+    mhd.specific_phobia_e.g._phobia_of_flying_numeric,
+    mhd.specific_phobia_e.g._phobia_of_flying,
+    mhd.social_anxiety_or_social_phobia_numeric,
+    mhd.social_anxiety_or_social_phobia,
     agoraphobia_panic_disorder_numeric,
     agoraphobia_panic_disorder,
     depressive_disorders_numeric,
@@ -1054,16 +1052,16 @@ glad.mhq.raw.categories <- glad.mhq.raw.id %>%
     obsessive_compulsive_disorders,
     psychotic_disorders_numeric,
     psychotic_disorders,
-    mhq.mania_hypomania_bipolar_or_manicdepression_numeric,
-    mhq.mania_hypomania_bipolar_or_manicdepression,
-    mhq.posttraumatic_stress_disorder_ptsd_numeric,
-    mhq.posttraumatic_stress_disorder_ptsd,
-    mhq.autism_aspergers_or_autistic_spectrum_disorder_numeric,
-    mhq.autism_aspergers_or_autistic_spectrum_disorder,
-    mhq.attention_deficit_hyperactivity_disorder_numeric,
-    mhq.attention_deficit_hyperactivity_disorder,
-    mhq.personality_disorder_numeric,
-    mhq.personality_disorder,
+    mhd.mania_hypomania_bipolar_or_manicdepression_numeric,
+    mhd.mania_hypomania_bipolar_or_manicdepression,
+    mhd.posttraumatic_stress_disorder_ptsd_numeric,
+    mhd.posttraumatic_stress_disorder_ptsd,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder,
+    mhd.attention_deficit_hyperactivity_disorder_numeric,
+    mhd.attention_deficit_hyperactivity_disorder,
+    mhd.personality_disorder_numeric,
+    mhd.personality_disorder,
     personality_cluster_a_numeric,
     personality_cluster_a,
     personality_cluster_b_numeric,
@@ -2084,7 +2082,7 @@ glad data frame list
 glad.dfs.list <- list(
   glad.dem.raw.id,
   glad.gad.raw.id,
-  glad.mhq.raw.categories,
+  glad.mhd.raw.categories,
   glad.ocir.raw.id,
   glad.pcl.raw.id,
   glad.phq.raw.id,
