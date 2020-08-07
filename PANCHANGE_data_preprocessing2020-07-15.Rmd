@@ -2311,30 +2311,24 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age
 
 ##Missingness of questionnaire items
 #PHQ - baseline
-PHQ Missingness NAs per person - count and percentages
+PHQ Missingness NAs per person - count
 ```{r PHQ baseline missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
   mutate(
     na_per_person_phq_base =         # variable for NA per person
       rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the PHQ items at baseline
-           %in%
-             phq.items_base]
+        is.na(.[phq.items_base])
         )
     )
-  )
 
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_base) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_phq_base = 
-      na_per_person_phq_base/9 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_base)
+coping.glad.phq.raw.id %>%
+freq(na_per_person_phq_base, cumul = F) #have a look at the frequency
 ```
+
+
+
+
+
 
 ```{r PHQ baseline missingness 8 items}
 #We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
