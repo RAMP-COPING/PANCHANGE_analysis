@@ -173,7 +173,7 @@ colnames(glad.dem.raw)
 
 # Select variables
 ```{r glad dem cleaning}
-glad.dem.raw.id.unclean <- glad.dem.raw %>%
+glad.dem.raw.id <- glad.dem.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
@@ -207,11 +207,11 @@ glad.dem.raw.id.unclean <- glad.dem.raw %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
 
 # Inspect dimensions
-dim(glad.dem.raw.id.unclean)
+dim(glad.dem.raw.id)
 # Inspect colnames
-colnames(glad.dem.raw.id.unclean)
+colnames(glad.dem.raw.id)
 #Differences
-dim(glad.dem.raw)[1]-dim(glad.dem.raw.id.unclean)[1]
+dim(glad.dem.raw)[1]-dim(glad.dem.raw.id)[1]
 ```
 
 Create dem numeric variables
@@ -222,15 +222,15 @@ exclude_cols <- c("ID",
                   "Age_uncleaned",
                   "EduYrs")
 
-glad.dem.raw.id.unclean.numeric <- add_numeric(glad.dem.raw.id.unclean, exclude = exclude_cols)
+glad.dem.raw.id.numeric <- add_numeric(glad.dem.raw.id, exclude = exclude_cols)
 
 # Check if factor columns have been added
-colnames(glad.dem.raw.id.unclean.numeric)
+colnames(glad.dem.raw.id.numeric)
 
 # Dimensions before adding factor columns
-dim(glad.dem.raw.id.unclean)
+dim(glad.dem.raw.id)
 # Dimensions after adding factor columns
-dim(glad.dem.raw.id.unclean.numeric)
+dim(glad.dem.raw.id.numeric)
 ```
 
 
@@ -245,13 +245,13 @@ age_lower_limit = 16
 # identify number of outliers
 length(
   which(
-  glad.dem.raw.id.unclean$Age_uncleaned > age_upper_limit |
-    glad.dem.raw.id.unclean$Age_uncleaned < age_lower_limit
+  glad.dem.raw.id$Age_uncleaned > age_upper_limit |
+    glad.dem.raw.id$Age_uncleaned < age_lower_limit
      )
 )
 
 # remove age outliers
-glad.dem.raw.id <- glad.dem.raw.id.unclean %>%
+glad.dem.raw.id <- glad.dem.raw.id %>%
   mutate(
     Age = 
       if_else(
@@ -271,7 +271,7 @@ colnames(glad.dem.raw.id)
 In RAMP, age is indicated categorically: 16-18, 19-25, 26-35, 36-45, 46-55, 56-65, 66-70, 71-75, 76-80, 81-85, 86-90, 91-100, 100+
 Age categories in GLAD, EDGI and NBR have been created to reflect this
 ```{r Age groups}
-#if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
 
 # Create categorical age groups per 10 years
 glad.dem.raw.id <- glad.dem.raw.id %>%
@@ -318,7 +318,7 @@ glad.dem.raw.id <- glad.dem.raw.id %>%
 glad.dem.raw.id %>%
   freq(age_category)
 
-#}
+}
 ```
 
 # Highest education
