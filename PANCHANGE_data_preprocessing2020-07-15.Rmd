@@ -842,6 +842,9 @@ glad.mhd.raw.id %>%
 ```
 
 Psychotic disorders group
+[63] "mhd.schizophrenia_numeric"                                 
+[64] "mhd.schizoaffective_disorder_numeric"                      
+[65] "mhd.type_psychosis_psychotic_illness_numeric" 
 ```{r glad mhd psychotic_disorders}
 glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
@@ -870,19 +873,6 @@ glad.mhd.raw.id %>%
   freq(psychotic_disorders)
 ```
 
-```{r Check psychotic_disorders}
-glad.mhd.raw.id %>%
-  select(
-    psychotic_disorders,
-    psychotic_disorders_numeric,
-    mhd.schizophrenia_numeric,
-    mhd.schizoaffective_disorder_numeric,
-    mhd.type_psychosis_psychotic_illness_numeric,
-    mhd.schizophrenia,
-    mhd.schizoaffective_disorder,
-    mhd.type_psychosis_psychotic_illness
-  )
-```
 
 Overlap between self-report schizophrenia and bipolar disorder
 +++CH: Check overlap between schizophrenia group and bipolar disorder
@@ -892,14 +882,14 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     bipolar_and_schizophrenia_numeric =
       case_when(
-        psychotic_disorders_numeric == 1 &
-          mhd.mania_hypomania_bipolar_or_manicdepression == 1 ~ 0,
-        psychotic_disorders_numeric == 1 &
-          mhd.mania_hypomania_bipolar_or_manicdepression == 1 ~ 1,
-        psychotic_disorders_numeric == 1 &
-          mhd.mania_hypomania_bipolar_or_manicdepression == 0 ~ 2,
         psychotic_disorders_numeric == 0 &
-          mhd.mania_hypomania_bipolar_or_manicdepression == 1 ~ 3
+          mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 0 ~ 0,
+                psychotic_disorders_numeric == 1 &
+          mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 0 ~ 2,
+        psychotic_disorders_numeric == 0 &
+          mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 3,
+                psychotic_disorders_numeric == 1 &
+          mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 1
       )
   )
 
@@ -910,7 +900,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     "0" = "No psychotic or bipolar disorder",
                     "1" = "Psychotic and bipolar disorder",
                     "2" = "Only psychotic disorder",
-                    "2" = "Only bipolar disorder",
+                    "3" = "Only bipolar disorder",
                     missing = NA_character_
                     )
   )
@@ -920,6 +910,23 @@ glad.mhd.raw.id %>%
        cumul = F)
 ```
 
+```{r Check psychotic_disorders}
+glad.mhd.raw.id %>%
+  select(
+    psychotic_disorders,
+    psychotic_disorders_numeric,
+    bipolar_and_schizophrenia,
+    bipolar_and_schizophrenia_numeric,
+    mhd.schizophrenia_numeric,
+    mhd.schizoaffective_disorder_numeric,
+    mhd.mania_hypomania_bipolar_or_manicdepression,
+    mhd.mania_hypomania_bipolar_or_manicdepression_numeric,
+    mhd.type_psychosis_psychotic_illness_numeric,
+    mhd.schizophrenia,
+    mhd.schizoaffective_disorder,
+    mhd.type_psychosis_psychotic_illness
+  )
+```
 
 Personality disorder groups
 ++KT: For all cluster coding chunks - have added other clusters as == 0, so that they are not coerced into NAs. 
