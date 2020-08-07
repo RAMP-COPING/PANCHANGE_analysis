@@ -1748,31 +1748,20 @@ coping.glad.pcl.raw.id <- coping.glad.pcl.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    pcl.stressful_experience_repeated_images_base_numeric = pcl6.stressful_experience_repeated_images_numeric,
-    pcl.stressful_experience_repeated_images_base = pcl6.stressful_experience_repeated_images,
-    pcl.stressful_experience_upset_reminded_base_numeric = pcl6.stressful_experience_upset_reminded_numeric,
-    pcl.stressful_experience_upset_reminded_base = pcl6.stressful_experience_upset_reminded,
-    pcl.stressful_situation_avoiding_activities_base_numeric = pcl6.avoiding_activities_stressful_experience_numeric, # differ to GLAD prepan
-    pcl.stressful_situation_avoiding_activities_base = pcl6.avoiding_activities_stressful_experience, # differ to GLAD prepan
-    pcl.cut_people_feeling_distant_base_numeric = pcl6.cut_people_feeling_distant_numeric,
-    pcl.cut_people_feeling_distant_base = pcl6.cut_people_feeling_distant,
-    pcl.feeling_irritable_or_having_angry_outbursts_base_numeric = pcl6.feeling_irritable_or_having_angry_outbursts_numeric,
-    pcl.feeling_irritable_or_having_angry_outbursts_base = pcl6.feeling_irritable_or_having_angry_outbursts,
-    pcl.difficulty_concentrating_base_numeric = pcl6.difficulty_concentrating_numeric,
-    pcl.difficulty_concentratin_base = pcl6.difficulty_concentrating,
-    pcl.stressful_experience_repeated_images_retro_numeric = pcl6.stressful_experience_repeated_images.1_numeric,
-    pcl.stressful_experience_repeated_images_retro = pcl6.stressful_experience_repeated_images.1,
-    pcl.stressful_experience_upset_reminded_retro_numeric = pcl6.stressful_experience_upset_reminded.1_numeric,
-    pcl.stressful_experience_upset_reminded_retro = pcl6.stressful_experience_upset_reminded.1,
-    pcl.stressful_situation_avoiding_activities_retro_numeric = pcl6.avoiding_activities_stressful_experience.1_numeric,
-    pcl.stressful_situation_avoiding_activities_retro = pcl6.avoiding_activities_stressful_experience.1,
-    pcl.cut_people_feeling_distant_retro_numeric = pcl6.cut_people_feeling_distant.1_numeric,
-    pcl.cut_people_feeling_distant_retro = pcl6.cut_people_feeling_distant.1,
-    pcl.feeling_irritable_or_having_angry_outbursts_retro_numeric = pcl6.feeling_irritable_or_having_angry_outbursts.1_numeric,
-    pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl6.feeling_irritable_or_having_angry_outbursts.1,
-    pcl.difficulty_concentrating_retro_numeric = pcl6.difficulty_concentrating.1_numeric,
-    pcl.difficulty_concentrating_retro = pcl6.difficulty_concentrating.1
+    pcl.stressful_experience_repeated_images_base = pcl.stressful_experience_repeated_images,
+    pcl.stressful_experience_upset_reminded_base = pcl.stressful_experience_upset_reminded, # differ to GLAD prepan
+    pcl.stressful_situation_avoiding_activities_base = pcl.avoiding_activities_stressful_experience, # differ to GLAD prepan
+    pcl.cut_people_feeling_distant_base = pcl.cut_people_feeling_distant,
+    pcl.feeling_irritable_or_having_angry_outbursts_base = pcl.feeling_irritable_or_having_angry_outbursts,
+    pcl.difficulty_concentrating_base = pcl.difficulty_concentrating,
+    pcl.stressful_experience_repeated_images_retro = pcl.stressful_experience_repeated_images.1,
+    pcl.stressful_experience_upset_reminded_retro = pcl.stressful_experience_upset_reminded.1,
+    pcl.stressful_situation_avoiding_activities_retro = pcl.avoiding_activities_stressful_experience.1,
+    pcl.cut_people_feeling_distant_retro = pcl.cut_people_feeling_distant.1,
+    pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl.feeling_irritable_or_having_angry_outbursts.1,
+    pcl.difficulty_concentrating_retro = pcl.difficulty_concentrating.1
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -1904,43 +1893,28 @@ coping.glad.phq.raw.id <- coping.glad.phq.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    phq.little_interest_or_pleasure_in_doing_things_retro = phq9.little_interest_or_pleasure_in_doing_things,
-    phq.feeling_down_depressed_or_hopeless_retro = phq9.feeling_down_depressed_or_hopeless,
-    phq.staying_asleep_sleeping_trouble_retro = phq9.staying_asleep_sleeping_trouble,
-    phq.feeling_tired_or_having_little_energy_retro = phq9.feeling_tired_or_having_little_energy,
-    phq.poor_appetite_or_overeating_retro = phq9.poor_appetite_or_overeating,
-    phq.feeling_bad_failure_family_retro = phq9.feeling_bad_failure_family,
-    phq.trouble_concentrating_reading_newspaper_retro = phq9.trouble_concentrating_newspaper_reading, # differ GLAD prepandemic
-    phq.moving_fidgety_noticed_opposite_retro = phq9.moving_fidgety_opposite_slowly, # differ GLAD prepandemic
-    phq.dead_hurting_thoughts_retro = phq9.dead_hurting_thoughts,
-    phq.little_interest_or_pleasure_in_doing_things_retro_numeric = phq9.little_interest_or_pleasure_in_doing_things_numeric,
-    phq.feeling_down_depressed_or_hopeless_retro_numeric = phq9.feeling_down_depressed_or_hopeless_numeric,
-    phq.staying_asleep_sleeping_trouble_retro_numeric = phq9.staying_asleep_sleeping_trouble_numeric,
-    phq.feeling_tired_or_having_little_energy_retro_numeric = phq9.feeling_tired_or_having_little_energy_numeric,
-    phq.poor_appetite_or_overeating_retro_numeric = phq9.poor_appetite_or_overeating_numeric,
-    phq.feeling_bad_failure_family_retro_numeric = phq9.feeling_bad_failure_family_numeric,
-    phq.trouble_concentrating_reading_newspaper_retro_numeric = phq9.trouble_concentrating_newspaper_reading_numeric, # differ GLAD prepandemic
-    phq.moving_fidgety_noticed_opposite_retro_numeric = phq9.moving_fidgety_opposite_slowly_numeric, # differ GLAD prepandemic
-    phq.dead_hurting_thoughts_retro_numeric = phq9.dead_hurting_thoughts_numeric,
-    phq.little_interest_or_pleasure_in_doing_things_base = phq9.little_interest_or_pleasure_in_doing_things.1,
-    phq.feeling_down_depressed_or_hopeless_base = phq9.feeling_down_depressed_or_hopeless.1,
-    phq.staying_asleep_sleeping_trouble_base = phq9.staying_asleep_sleeping_trouble.1,
-    phq.feeling_tired_or_having_little_energy_base = phq9.feeling_tired_or_having_little_energy.1,
-    phq.poor_appetite_or_overeating_base = phq9.poor_appetite_or_overeating.1,
-    phq.feeling_bad_failure_family_base = phq9.feeling_bad_failure_family.1,
-    phq.trouble_concentrating_reading_newspaper_base = phq9.trouble_concentrating_newspaper_reading.1, # differ GLAD prepandemic
-    phq.moving_fidgety_noticed_opposite_base = phq9.moving_fidgety_opposite_slowly.1, # differ GLAD prepandemic
-    phq.dead_hurting_thoughts_base = phq9.dead_hurting_thoughts.1,
-    phq.little_interest_or_pleasure_in_doing_things_base_numeric = phq9.little_interest_or_pleasure_in_doing_things.1_numeric,
-    phq.feeling_down_depressed_or_hopeless_base_numeric = phq9.feeling_down_depressed_or_hopeless.1_numeric,
-    phq.staying_asleep_sleeping_trouble_base_numeric = phq9.staying_asleep_sleeping_trouble.1_numeric,
-    phq.feeling_tired_or_having_little_energy_base_numeric = phq9.feeling_tired_or_having_little_energy.1_numeric,
-    phq.poor_appetite_or_overeating_base_numeric = phq9.poor_appetite_or_overeating.1_numeric,
-    phq.feeling_bad_failure_family_base_numeric = phq9.feeling_bad_failure_family.1_numeric,
-    phq.trouble_concentrating_reading_newspaper_base_numeric = phq9.trouble_concentrating_newspaper_reading.1_numeric, # differ GLAD prepandemic
-    phq.moving_fidgety_noticed_opposite_base_numeric = phq9.moving_fidgety_opposite_slowly.1_numeric, # differ GLAD prepandemic
-    phq.dead_hurting_thoughts_base_numeric = phq9.dead_hurting_thoughts_numeric
+    phq.problems_made_difficult_care,
+    phq.pandemic_felt_feelings,
+    phq.little_interest_or_pleasure_in_doing_things_retro = phq.little_interest_or_pleasure_in_doing_things,
+    phq.feeling_down_depressed_or_hopeless_retro = phq.feeling_down_depressed_or_hopeless,
+    phq.staying_asleep_sleeping_trouble_retro = phq.staying_asleep_sleeping_trouble,
+    phq.feeling_tired_or_having_little_energy_retro = phq.feeling_tired_or_having_little_energy,
+    phq.poor_appetite_or_overeating_retro = phq.poor_appetite_or_overeating,
+    phq.feeling_bad_failure_family_retro = phq.feeling_bad_failure_family,
+    phq.trouble_concentrating_reading_newspaper_retro = phq.trouble_concentrating_newspaper_reading, # differ GLAD prepandemic
+    phq.moving_fidgety_noticed_opposite_retro = phq.moving_fidgety_opposite_slowly, # differ GLAD prepandemic
+    phq.dead_hurting_thoughts_retro = phq.dead_hurting_thoughts,
+    phq.little_interest_or_pleasure_in_doing_things_base = phq.little_interest_or_pleasure_in_doing_things.1,
+    phq.feeling_down_depressed_or_hopeless_base = phq.feeling_down_depressed_or_hopeless.1,
+    phq.staying_asleep_sleeping_trouble_base = phq.staying_asleep_sleeping_trouble.1,
+    phq.feeling_tired_or_having_little_energy_base = phq.feeling_tired_or_having_little_energy.1,
+    phq.poor_appetite_or_overeating_base = phq.poor_appetite_or_overeating.1,
+    phq.feeling_bad_failure_family_base = phq.feeling_bad_failure_family.1,
+    phq.trouble_concentrating_reading_newspaper_base = phq.trouble_concentrating_newspaper_reading.1, # differ GLAD prepandemic
+    phq.moving_fidgety_noticed_opposite_base = phq.moving_fidgety_opposite_slowly.1, # differ GLAD prepandemic
+    phq.dead_hurting_thoughts_base = phq.dead_hurting_thoughts.1
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -2075,6 +2049,7 @@ coping.glad.ocir.raw.id <- coping.glad.ocir.raw %>%
   select(
     Sample, # Sample
     ID, # ID
+    ocir.felt_pandemic_feelings,
     ocir.i_repeatedly_check_doors_windows_drawers_etc_retro = ocir.i_repeatedly_check_doors_windows_drawers_etc.,
     ocir.arranged_things_change_upset_retro = ocir.arranged_things_change_upset,
     ocir.repeat_feel_numbers_retro = ocir.numbers_repeat_feel, ## Different from GLAD prepandemic
@@ -2112,6 +2087,7 @@ coping.glad.ocir.raw.id <- coping.glad.ocir.raw %>%
     ocir.control_difficult_find_thoughts_base = ocir.control_find_difficult_thoughts.1, ## Different from GLAD prepandemic
     ocir.i_collect_things_i_dont_need_base = ocir.i_collect_things_i_dont_need..1
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
