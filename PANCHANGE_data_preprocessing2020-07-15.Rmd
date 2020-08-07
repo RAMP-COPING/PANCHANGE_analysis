@@ -964,7 +964,8 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
   )
 
 glad.mhd.raw.id %>%
-  freq(personality_cluster_a)
+  freq(personality_cluster_a,
+       cumul = F)
 ```
 
 ```{r Check personality_cluster_a}
@@ -1013,7 +1014,8 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
   )
 
 glad.mhd.raw.id %>%
-  freq(personality_cluster_b)
+  freq(personality_cluster_b,
+       cumul = F)
 ```
 
 ```{r Check personality_cluster_b}
@@ -1060,7 +1062,8 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
   )
 
 glad.mhd.raw.id %>%
-  freq(personality_cluster_c)
+  freq(personality_cluster_c,
+       cumul = F)
 ```
 
 ```{r Check personality_cluster_c}
@@ -1107,7 +1110,52 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
   )
 
 glad.mhd.raw.id %>%
-  freq(control)
+  freq(control,
+       cumul = F)
+```
+
+Total disorder count
+```{r disorders_total_count}
+disorder_columns <- c(
+    "depressive_disorders_numeric",
+    "anxiety_disorders_numeric",
+    "eating_disorders_numeric",
+    "obsessive_compulsive_disorders_numeric",
+    "psychotic_disorders_numeric",
+    "mhd.mania_hypomania_bipolar_or_manicdepression_numeric",
+    "mhd.posttraumatic_stress_disorder_ptsd_numeric",
+    "mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric",
+    "mhd.attention_deficit_hyperactivity_disorder_numeric",
+    "mhd.personality_disorder_numeric"
+)
+
+
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
+  select(all_of(disorder_columns)) %>%
+  mutate(
+    disorders_total_count =
+      rowSums(.)
+  )
+
+glad.mhd.raw.id %>%
+  freq(disorders_total_count,
+       cumul = F)
+```
+
+Comorbidity count
+```{r}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
+  mutate(
+    comorbidity_total_count = 
+      case_when(
+        disorders_total_count == 1 ~ 0,
+        disorders_total_count > 1 ~ disorders_total_count - 1
+  )
+  )
+
+glad.mhd.raw.id %>%
+  freq(comorbidity_total_count,
+       cumul = F)
 ```
 
 
