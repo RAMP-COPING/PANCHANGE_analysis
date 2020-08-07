@@ -1272,19 +1272,14 @@ glad.pcl.raw.id <- glad.pcl.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    pcl.stressful_experience_repeated_images_prepan_numeric = pcl.stressful_experience_repeated_images_numeric,
     pcl.stressful_experience_repeated_images_prepan = pcl.stressful_experience_repeated_images,
-    pcl.stressful_experience_upset_reminded_prepan_numeric = pcl.stressful_experience_upset_reminded_numeric,
     pcl.stressful_experience_upset_reminded_prepan = pcl.stressful_experience_upset_reminded,
-    pcl.stressful_situation_avoiding_activities_prepan_numeric = pcl.stressful_situation_avoiding_activities_numeric,
     pcl.stressful_situation_avoiding_activities_prepan = pcl.stressful_situation_avoiding_activities,
-    pcl.cut_people_feeling_distant_prepan_numeric = pcl.cut_people_feeling_distant_numeric,
     pcl.cut_people_feeling_distant_prepan = pcl.cut_people_feeling_distant,
-    pcl.feeling_irritable_or_having_angry_outbursts_prepan_numeric = pcl.feeling_irritable_or_having_angry_outbursts_numeric,
     pcl.feeling_irritable_or_having_angry_outbursts_prepan = pcl.feeling_irritable_or_having_angry_outbursts,
-    pcl.difficulty_concentrating_prepan_numeric = pcl.difficulty_concentrating_numeric,
-    pcl.difficulty_concentratin_prepan = pcl.difficulty_concentrating
+    pcl.difficulty_concentrating_prepan = pcl.difficulty_concentrating
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -1380,17 +1375,9 @@ glad.phq.raw.id <- glad.phq.raw %>%
     phq.feeling_bad_failure_family_prepan = phq.feeling_bad_failure_family,
     phq.trouble_concentrating_reading_newspaper_prepan = phq.trouble_concentrating_reading_newspaper,
     phq.moving_fidgety_noticed_opposite_prepan = phq.moving_fidgety_noticed_opposite,
-    phq.dead_hurting_thoughts_prepan = phq.dead_hurting_thoughts,
-    phq.little_interest_or_pleasure_in_doing_things_prepan_numeric = phq.little_interest_or_pleasure_in_doing_things_numeric,
-    phq.feeling_down_depressed_or_hopeless_prepan_numeric = phq.feeling_down_depressed_or_hopeless_numeric,
-    phq.staying_asleep_sleeping_trouble_prepan_numeric = phq.staying_asleep_sleeping_trouble_numeric,
-    phq.feeling_tired_or_having_little_energy_prepan_numeric = phq.feeling_tired_or_having_little_energy_numeric,
-    phq.poor_appetite_or_overeating_prepan_numeric = phq.poor_appetite_or_overeating_numeric,
-    phq.feeling_bad_failure_family_prepan_numeric = phq.feeling_bad_failure_family_numeric,
-    phq.trouble_concentrating_reading_newspaper_prepan_numeric = phq.trouble_concentrating_reading_newspaper_numeric,
-    phq.moving_fidgety_noticed_opposite_prepan_numeric = phq.moving_fidgety_noticed_opposite_numeric,
-    phq.dead_hurting_thoughts_prepan_numeric = phq.dead_hurting_thoughts_numeric
+    phq.dead_hurting_thoughts_prepan = phq.dead_hurting_thoughts
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -1466,7 +1453,7 @@ summarytools::dfSummary(
 # glad ocir
 
 ```{r glad ocir cols}
-glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/2020-08-03/glad/ocir_glad.rds"))
+glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/glad/ocir_glad.rds"))
 dim(glad.ocir.raw)
 colnames(glad.ocir.raw)
 ```
@@ -1500,6 +1487,7 @@ glad.ocir.raw.id <- glad.ocir.raw %>%
     ocir.control_difficult_find_thoughts_prepan = ocir.control_difficult_find_thoughts,
     ocir.i_collect_things_i_dont_need_prepan = ocir.i_collect_things_i_dont_need
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
