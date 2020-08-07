@@ -684,8 +684,8 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     depression_and_anxiety_numeric =
       case_when(
-        depressive_disorders_numeric == 1 &
-          anxiety_disorders_numeric == 1 ~ 0,
+        depressive_disorders_numeric == 0 &
+          anxiety_disorders_numeric == 0 ~ 0,
         depressive_disorders_numeric == 1 &
           anxiety_disorders_numeric == 1 ~ 1,
         depressive_disorders_numeric == 1 &
