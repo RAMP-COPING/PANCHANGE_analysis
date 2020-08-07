@@ -1518,24 +1518,24 @@ ocir.items_key_prepan <- c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
 
 # Create vector with items that are included in sum score
 ocir.items_prepan = c(
-  "ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan",
-  "ocir.arranged_things_change_upset_prepan",
-  "ocir.repeat_feel_numbers_prepan",
-  "ocir.clean_simply_wash_feel_prepan",
-  "ocir.mind_upset_unpleasant_thoughts_prepan",
-  "ocir.afraid_avoid_throwing_things_prepan",
-  "ocir.light_switches_water_taps_prepan",
-  "ocir.arranged_things_prepan",
-  "ocir.good_feel_bad_numbers_prepan",
-  "ocir.hands_longer_wash_prepan",
-  "ocir.saved_things_prepan",
-  "ocir.frequently_difficulty_rid_nasty_prepan",
-  "ocir.i_check_things_more_often_than_necessary_prepan",
-  "ocir.arranged_properly_objects_upset_prepan",
-  "ocir.feel_compelled_count_things_prepan",
-  "ocir.strangers_touch_touched_difficult_prepan",
-  "ocir.control_difficult_find_thoughts_prepan",
-  "ocir.i_collect_things_i_dont_need_prepan"
+  "ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan_numeric",
+  "ocir.arranged_things_change_upset_prepan_numeric",
+  "ocir.repeat_feel_numbers_prepan_numeric",
+  "ocir.clean_simply_wash_feel_prepan_numeric",
+  "ocir.mind_upset_unpleasant_thoughts_prepan_numeric",
+  "ocir.afraid_avoid_throwing_things_prepan_numeric",
+  "ocir.light_switches_water_taps_prepan_numeric",
+  "ocir.arranged_things_prepan_numeric",
+  "ocir.good_feel_bad_numbers_prepan_numeric",
+  "ocir.hands_longer_wash_prepan_numeric",
+  "ocir.saved_things_prepan_numeric",
+  "ocir.frequently_difficulty_rid_nasty_prepan_numeric",
+  "ocir.i_check_things_more_often_than_necessary_prepan_numeric",
+  "ocir.arranged_properly_objects_upset_prepan_numeric",
+  "ocir.feel_compelled_count_things_prepan_numeric",
+  "ocir.strangers_touch_touched_difficult_prepan_numeric",
+  "ocir.control_difficult_find_thoughts_prepan_numeric",
+  "ocir.i_collect_things_i_dont_need_prepan_numeric"
   )
 
 # Calulate sum score
