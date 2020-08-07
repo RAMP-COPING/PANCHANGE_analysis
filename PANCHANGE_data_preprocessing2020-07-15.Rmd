@@ -49,6 +49,15 @@ Retrieve the current date to use it for file endings to not overwrite files when
 date = Sys.Date()
 ```
 
+# Specify cohort
+```{r}
+GLAD = TRUE
+EDGI = FALSE
+NBR = FALSE
+RAMP = FALSE
+```
+
+
 #Packages
 Install packages (if they are not available in your version of R)
 ```{r Installing packages}
