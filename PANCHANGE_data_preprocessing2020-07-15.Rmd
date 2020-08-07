@@ -174,16 +174,16 @@ glad.dem.raw.id.unclean <- glad.dem.raw %>%
          Sample, # Sample
          ID, # ID
          startDate.glad, #Date when participant signed up to glad
-         Age_raw = dem.how_old_are_you_now, # Age
-         Gender = dem.which_gender_do_you_identify_with, # Gender
-         Sex = dem.select_questionnaire_items_medical, #Sex
-         EduYrs = dem.school_education_school_years, # Years in education
-         dem.college_or_university_degree_numeric, # level of education - univeristy
-         dem.a_levelsas_levels_or_equivalent_numeric, # level of education - alevel
-         dem.o_levelsgcses_or_equivalent_numeric, # level of education - gcse
-         dem.cses_or_equivalent_numeric, # level of education - cse
-         dem.nvq_or_hnd_or_hnc_or_equivalent_numeric, # level of education - nvq
-         Ethnicity = dem.questions_based_ethnic_origin # Ethnicity
+         Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
+         Gender = demographics.which_gender_do_you_identify_with, # Gender
+         Sex = demographics.select_questionnaire_items_medical, #Sex
+         EduYrs = demographics.school_education_school_years.txt, # Years in education
+         demographics.college_or_university_degree, # level of education - univeristy
+         demographics.a_levelsas_levels_or_equivalent, # level of education - alevel
+         demographics.o_levelsgcses_or_equivalent, # level of education - gcse
+         demographics.cses_or_equivalent, # level of education - cse
+         demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+         Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
          ) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
@@ -205,6 +205,27 @@ colnames(glad.dem.raw.id.unclean)
 dim(glad.dem.raw)[1]-dim(glad.dem.raw.id.unclean)[1]
 ```
 
+Create dem numeric variables
+```{r create dem numeric variables}
+exclude_cols <- c("ID",
+                  "Sample",
+                  "startDate.glad",
+                  "Age_uncleaned",
+                  "EduYrs")
+
+glad.dem.raw.id.unclean.numeric <- add_numeric(glad.dem.raw.id.unclean, exclude = exclude_cols)
+
+# Check if factor columns have been added
+colnames(glad.dem.raw.id.unclean.numeric)
+
+# Dimensions before adding factor columns
+dim(glad.dem.raw.id.unclean)
+# Dimensions after adding factor columns
+dim(glad.dem.raw.id.unclean.numeric)
+```
+
+
+
 #Clean Age variable
 Age outlier
 ```{r age outlier}
@@ -215,8 +236,8 @@ age_lower_limit = 16
 # identify number of outliers
 length(
   which(
-  glad.dem.raw.id.unclean$Age_raw > age_upper_limit |
-    glad.dem.raw.id.unclean$Age_raw < age_lower_limit
+  glad.dem.raw.id.unclean$Age_uncleaned > age_upper_limit |
+    glad.dem.raw.id.unclean$Age_uncleaned < age_lower_limit
      )
 )
 
@@ -225,10 +246,10 @@ glad.dem.raw.id <- glad.dem.raw.id.unclean %>%
   mutate(
     Age = 
       if_else(
-        Age_raw > age_upper_limit | 
-        Age_raw < age_lower_limit, 
+        Age_uncleaned > age_upper_limit | 
+        Age_uncleaned < age_lower_limit, 
         true = NA_real_,
-        false = Age_raw,
+        false = Age_uncleaned,
         missing = NA_real_
       )
   )
@@ -300,11 +321,11 @@ glad.dem.raw.id <- glad.dem.raw.id %>%
   mutate(
     highest_education_numeric =
       case_when(
-        dem.college_or_university_degree_numeric == "1" ~ 4,
-        dem.a_levelsas_levels_or_equivalent_numeric == "1" ~ 3,
-        dem.nvq_or_hnd_or_hnc_or_equivalent_numeric == "1" ~ 2,
-        dem.o_levelsgcses_or_equivalent_numeric == "1" ~ 1,
-        dem.cses_or_equivalent_numeric == "1" ~ 1)
+        demographics.college_or_university_degree_numeric == "1" ~ 4,
+        demographics.a_levelsas_levels_or_equivalent_numeric == "1" ~ 3,
+        demographics.nvq_or_hnd_or_hnc_or_equivalent_numeric == "1" ~ 2,
+        demographics.o_levelsgcses_or_equivalent_numeric == "1" ~ 1,
+        demographics.cses_or_equivalent_numeric == "1" ~ 1)
     )
 
 #recode the numeric version into a factor
@@ -327,11 +348,11 @@ Check highest education coding
 ```{r Highest education check}
 glad.dem.raw.id %>%
   select(highest_education,
-        dem.college_or_university_degree_numeric,
-        dem.a_levelsas_levels_or_equivalent_numeric,
-        dem.nvq_or_hnd_or_hnc_or_equivalent_numeric,
-        dem.o_levelsgcses_or_equivalent_numeric,
-        dem.cses_or_equivalent_numeric
+        demographics.college_or_university_degree_numeric,
+        demographics.a_levelsas_levels_or_equivalent_numeric,
+        demographics.nvq_or_hnd_or_hnc_or_equivalent_numeric,
+        demographics.o_levelsgcses_or_equivalent_numeric,
+        demographics.cses_or_equivalent_numeric
   )
 ```
 
