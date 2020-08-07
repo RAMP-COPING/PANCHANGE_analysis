@@ -173,6 +173,12 @@ colnames(glad.dem.raw)
 
 # Select variables
 ```{r glad dem cleaning}
+exclude_cols_dem <- c("ID",
+                  "Sample",
+                  "startDate.glad",
+                  "Age_uncleaned",
+                  "EduYrs")
+
 glad.dem.raw.id <- glad.dem.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -194,6 +200,7 @@ glad.dem.raw.id <- glad.dem.raw %>%
          demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
          Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
          ) %>%
+  add_numeric(., exclude = exclude_cols_dem) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -213,26 +220,6 @@ colnames(glad.dem.raw.id)
 #Differences
 dim(glad.dem.raw)[1]-dim(glad.dem.raw.id)[1]
 ```
-
-Create dem numeric variables
-```{r create dem numeric variables}
-exclude_cols <- c("ID",
-                  "Sample",
-                  "startDate.glad",
-                  "Age_uncleaned",
-                  "EduYrs")
-
-glad.dem.raw.id.numeric <- add_numeric(glad.dem.raw.id, exclude = exclude_cols)
-
-# Check if factor columns have been added
-colnames(glad.dem.raw.id.numeric)
-
-# Dimensions before adding factor columns
-dim(glad.dem.raw.id)
-# Dimensions after adding factor columns
-dim(glad.dem.raw.id.numeric)
-```
-
 
 
 #Clean Age variable
