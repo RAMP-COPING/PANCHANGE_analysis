@@ -884,16 +884,22 @@ glad.mhd.raw.id %>%
   )
 ```
 
-Overlap between self-report schizphrenia and bipolar
+Overlap between self-report schizophrenia and bipolar disorder
 +++CH: Check overlap between schizophrenia group and bipolar disorder
-++KT: Only 63 with comorbid sel-report bipolar and schizophrenia. More likely to have shared symptoms, less likely to have confirmed diagnoses of both. Could be too severe to be in GLAD?
-```{r check bipolar overlap with schizophrenia}
+++KT: Only 63 with comorbid self-report bipolar disorder and schizophrenia. More likely to have shared symptoms, less likely to have confirmed diagnoses of both. Could be too severe to be in GLAD?
+```{r glad mhd bipolar_and_schizophrenia_numeric}
 glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     bipolar_and_schizophrenia_numeric =
-      if_else(
-        mhd.schizophrenia_numeric == "1" &
-          mhd.mania_hypomania_bipolar_or_manicdepression_numeric == "1", 1, 0
+      case_when(
+        psychotic_disorders_numeric == 1 &
+          mhd.mania_hypomania_bipolar_or_manicdepression == 1 ~ 0,
+        psychotic_disorders_numeric == 1 &
+          mhd.mania_hypomania_bipolar_or_manicdepression == 1 ~ 1,
+        psychotic_disorders_numeric == 1 &
+          mhd.mania_hypomania_bipolar_or_manicdepression == 0 ~ 2,
+        psychotic_disorders_numeric == 0 &
+          mhd.mania_hypomania_bipolar_or_manicdepression == 1 ~ 3
       )
   )
 
@@ -901,15 +907,19 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     bipolar_and_schizophrenia =
       recode_factor(bipolar_and_schizophrenia_numeric,
-                    "0" = "No comorbid bipoar and schizophrenia",
-                    "1" = "Comorbid bipoar and schizophrenia",
+                    "0" = "No psychotic or bipolar disorder",
+                    "1" = "Psychotic and bipolar disorder",
+                    "2" = "Only psychotic disorder",
+                    "2" = "Only bipolar disorder",
                     missing = NA_character_
                     )
   )
 
 glad.mhd.raw.id %>%
-  freq(bipolar_and_schizophrenia)
+  freq(bipolar_and_schizophrenia,
+       cumul = F)
 ```
+
 
 Personality disorder groups
 ++KT: For all cluster coding chunks - have added other clusters as == 0, so that they are not coerced into NAs. 
