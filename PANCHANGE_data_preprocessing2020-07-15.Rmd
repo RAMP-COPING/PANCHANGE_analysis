@@ -1587,6 +1587,12 @@ summarytools::dfSummary(
 
 
 ```{r coping glad gad cleaning}
+exclude_cols_coping_glad <- c(
+  "Sample",
+  "ID",
+  "startDate.coping.glad"
+)
+
 coping.glad.gad.raw.id <- coping.glad.gad.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -1614,7 +1620,7 @@ coping.glad.gad.raw.id <- coping.glad.gad.raw %>%
     gad.becoming_easily_annoyed_or_irritable_base = gad.becoming_easily_annoyed_or_irritable.1,
     gad.awful_feeling_afraid_happen_base = gad.awful_feeling_afraid_happen.1
   ) %>%
-  add_numeric(., exclude = exclude_cols) %>%
+  add_numeric(., exclude = exclude_cols_coping_glad) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -2022,7 +2028,7 @@ summarytools::dfSummary(
 # glad COPING ocir
 
 ```{r coping glad ocir cols}
-coping.glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/2020-08-04/glad/ocir_coping_glad.rds"))
+coping.glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/glad/ocir_coping_glad.rds"))
 dim(coping.glad.ocir.raw)
 colnames(coping.glad.ocir.raw)
 ```
@@ -2987,8 +2993,36 @@ dat.glad <- dat.glad %>%
       )
   )
 
-table(dat.glad$over_one_year_time_diff_sign_up_coping)
+dat.glad %>%
+  freq(over_one_year_time_diff_sign_up_coping, cumul = F)
 ```
+
+Proportion of people signed up over one year ago
+```{r eval=FALSE, include=FALSE}
+dat.glad <- dat.glad %>%
+  mutate(
+    over_half_a_year_time_diff_sign_up_coping_numeric =
+      as.numeric(
+        if_else(time_diff_sign_up_coping > 182.5, 1, 0
+                )
+      )
+  )
+
+dat.glad <- dat.glad %>%
+  mutate(
+    over_half_a_year_time_diff_sign_up_coping =
+      recode_factor(
+        over_half_a_year_time_diff_sign_up_coping_numeric,
+        "0" = "Sign up under half a year before COPING",
+        "1" = "Sign up over half a year before COPING"
+      )
+  )
+
+dat.glad %>%
+  freq(over_half_a_year_time_diff_sign_up_coping, cumul = F)
+```
+
+
 
 #Total score comparison between PHQ, PCL and GAD, prepandemic, retrospecive and baseline
 PHQ difference scores
