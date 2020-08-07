@@ -1367,8 +1367,6 @@ glad.phq.raw.id <- glad.phq.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    phq.problems_made_difficult_care, # Impairment
-    phq.pandemic_felt_feelings, # Comparison to before the pandemic (retro)
     phq.little_interest_or_pleasure_in_doing_things_prepan = phq.little_interest_or_pleasure_in_doing_things,
     phq.feeling_down_depressed_or_hopeless_prepan = phq.feeling_down_depressed_or_hopeless,
     phq.staying_asleep_sleeping_trouble_prepan = phq.staying_asleep_sleeping_trouble,
@@ -2049,7 +2047,7 @@ coping.glad.ocir.raw.id <- coping.glad.ocir.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    ocir.felt_pandemic_feelings,
+    ocir.felt_pandemic_feelings, # Comparison to before the pandemic
     ocir.i_repeatedly_check_doors_windows_drawers_etc_retro = ocir.i_repeatedly_check_doors_windows_drawers_etc.,
     ocir.arranged_things_change_upset_retro = ocir.arranged_things_change_upset,
     ocir.repeat_feel_numbers_retro = ocir.numbers_repeat_feel, ## Different from GLAD prepandemic
@@ -3249,7 +3247,7 @@ coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw %>%
          startDate.glad = startDate) %>% # Rename startDate
   select(
     Sample, # Sample
-    ID,
+    ID, # ID
     respiratory.breath_diarrhoea_fatigue_fever,
     respiratory.worst_ill_feel,
     respiratory.persistent_cough,
@@ -3261,8 +3259,8 @@ coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw %>%
     respiratory.throat_swab_test_nose,
     respiratory.coronavirus_antibody_test,
     respiratory.results_antibody_test
-    # ID
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -3284,21 +3282,10 @@ dim(coping.glad.respiratory.raw)[1]-dim(coping.glad.respiratory.raw.id)[1]
 
 ```
 
-```{r create respiratory numeric variables}
-exclude_cols <- c("ID",
-                  "Sample")
-
-coping.glad.respiratory.raw.numeric <- add_numeric(coping.glad.respiratory.raw.id, exclude = exclude_cols)
-
-colnames(coping.glad.respiratory.raw.numeric)
-dim(coping.glad.respiratory.raw.numeric)
-dim(coping.glad.respiratory.raw.id)
-```
-
 #Distribution of likert scale COVID-19 symptoms in COPING
 ```{r distribution of COVID symptoms}
 #persistent cough
-coping.glad.respiratory.raw.numeric %>%
+coping.glad.respiratory.raw.id %>%
   ggplot(
     mapping = aes(
       y = respiratory.persistent_cough_numeric 
@@ -3310,7 +3297,7 @@ coping.glad.respiratory.raw.numeric %>%
   )
 
 #severe fatigue
-coping.glad.respiratory.raw.numeric %>%
+coping.glad.respiratory.raw.id %>%
   ggplot(
     mapping = aes(
         y = respiratory.feeling_tiredfatigued_numeric 
@@ -3322,7 +3309,7 @@ coping.glad.respiratory.raw.numeric %>%
   )
 
 #skipped meals
-coping.glad.respiratory.raw.numeric %>%
+coping.glad.respiratory.raw.id %>%
   ggplot(
     mapping = aes(
         y = respiratory.skipping_meals_because_you_felt_unwell_numeric
@@ -3350,21 +3337,21 @@ Skipped meals: "Moderate symptoms" as cut off
 #persistent cough
 percentage_pcough <- ((0.5673*6452) + (0.4556*9186) + (0.3017*2434931))/(6452+9186+2434931)
 percentage_pcough    # 0.3029762% of Menni et al(2020) have fatigue
-quantile(x = coping.glad.respiratory.raw.numeric$respiratory.persistent_cough_numeric, 
+quantile(x = coping.glad.respiratory.raw.id$respiratory.persistent_cough_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_pcough) # this gives 0.3029762% of the sample reporting fatigue when using the "mild symptoms" persistent cough response
 
 #fatigue
 percentage_fatigue <- ((0.298*6452) + (0.1556*9186) + (0.0871*2434931))/(6452+9186+2434931) 
 percentage_fatigue   # 0.08791204% of Menni et al(2020) have fatigue
-quantile(x = coping.glad.respiratory.raw.numeric$respiratory.feeling_tiredfatigued_numeric, 
+quantile(x = coping.glad.respiratory.raw.id$respiratory.feeling_tiredfatigued_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_fatigue) #this gives 8% of the sample reporting fatigue when using the "severe symptoms" fatigue response
 
 #skipped meals 
 percentage_skipped_meals <- ((0.4203*6452) + (0.2493*9186) + (0.1912*2434931))/(6452+9186+2434931) 
 percentage_skipped_meals    # 0.192021% of Menni et al(2020) have fatigue
-quantile(x = coping.glad.respiratory.raw.numeric$respiratory.skipping_meals_because_you_felt_unwell_numeric, 
+quantile(x = coping.glad.respiratory.raw.id$respiratory.skipping_meals_because_you_felt_unwell_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_skipped_meals) # this gives 0.192021% of the sample reporting fatigue when using the "moderate symptoms" persistent cough response
 ```
@@ -3372,7 +3359,7 @@ quantile(x = coping.glad.respiratory.raw.numeric$respiratory.skipping_meals_beca
 Creating binary groups for COVID symptoms
 ```{r creating binary groups for COVID symptoms}
 #loss or smell or taste
-coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
   mutate(
     respiratory.anosmia_binary =
       if_else(
@@ -3383,7 +3370,7 @@ coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
   )
 
 #persistent cough
-coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
   mutate(
     respiratory.pcough_binary =
       if_else(
@@ -3394,7 +3381,7 @@ coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
   )
 
 #fatigue
-coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
   mutate(
     respiratory.fatigue_binary =
       if_else(
@@ -3405,7 +3392,7 @@ coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
   )
 
 #skipped meals
-coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
   mutate(
     respiratory.skipped_meals_binary =
       if_else(
@@ -3418,15 +3405,15 @@ coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
 
 Frequencies of binary COVID symptoms
 ```{r frequencies of COVID binary symptoms}
-freq(coping.glad.respiratory.raw.numeric$respiratory.anosmia_binary)
-freq(coping.glad.respiratory.raw.numeric$respiratory.pcough_binary)
-freq(coping.glad.respiratory.raw.numeric$respiratory.fatigue_binary)
-freq(coping.glad.respiratory.raw.numeric$respiratory.skipped_meals_binary)
+freq(coping.glad.respiratory.raw.id$respiratory.anosmia_binary)
+freq(coping.glad.respiratory.raw.id$respiratory.pcough_binary)
+freq(coping.glad.respiratory.raw.id$respiratory.fatigue_binary)
+freq(coping.glad.respiratory.raw.id$respiratory.skipped_meals_binary)
 ```
 
 Rename respiratory dataset joined to main dataset
 ```{r clean respiratory dataset}
-coping.glad.respiratory <- coping.glad.respiratory.raw.numeric
+coping.glad.respiratory <- coping.glad.respiratory.raw.id
 
 dat.glad.coping <- left_join(
   x = dat.glad,
