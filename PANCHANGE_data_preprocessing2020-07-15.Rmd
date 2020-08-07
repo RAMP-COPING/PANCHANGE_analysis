@@ -746,11 +746,49 @@ glad.mhd.raw.id %>%
        cumul = F)
 ```
 
+Eating disorders with binge eating vs eating disorders without
+Caveat: Anorexia nervosa can have binge eating as well. Therefore, this would need an additional variable from the ED100K
+```{r glad mhd restricting_vs_binge_eating_eating_disorders}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
+  mutate(
+    restricting_vs_binge_eating_eating_disorders_numeric =
+      case_when(
+                mhd.anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.bulimia_nervosa_numeric == "1" ~ 2,
+        mhd.psychological_overeating_or_bingeeating_numeric == "1" ~ 2,
+        (mhd.anorexia_nervosa_numeric == "0" &
+        mhd.atypical_anorexia_nervosa_numeric == "0" &
+        mhd.bulimia_nervosa_numeric == "0" &
+        mhd.psychological_overeating_or_bingeeating_numeric == "0") ~ 0
+      )
+  )
+
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
+  mutate(
+    restricting_vs_binge_eating_eating_disorders =
+      recode_factor(restricting_vs_binge_eating_eating_disorders_numeric,
+                    "0" = "No eating disorder",
+                    "1" = "Anorexia nervosa",
+                    "2" = "Eating disorder with binge eating",
+                    missing = NA_character_
+                    )
+  )
+
+glad.mhd.raw.id %>%
+  freq(restricting_vs_binge_eating_eating_disorders,
+       cumul = F)
+```
+
+
+
 ```{r Check eating_disorders}
 glad.mhd.raw.id %>%
   select(
     eating_disorders,
     eating_disorders_numeric,
+    restricting_vs_binge_eating_eating_disorders,
+    restricting_vs_binge_eating_eating_disorders_numeric,
     mhd.anorexia_nervosa_numeric,
     mhd.atypical_anorexia_nervosa_numeric,
     mhd.bulimia_nervosa_numeric,
