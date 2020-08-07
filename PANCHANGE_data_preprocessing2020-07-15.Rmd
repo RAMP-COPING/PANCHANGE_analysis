@@ -2309,9 +2309,10 @@ Exclusion of inflammatory bowel disease (IBD) BioResource (BR) cohort
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age
 ```
 
-##Missingness of questionnaire items
-#PHQ - baseline
-PHQ Missingness NAs per person - count
+
+# PHQ missingness (NAs per person)
+
+## baseline
 ```{r PHQ baseline missingness}
 coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
   mutate(
@@ -2326,122 +2327,92 @@ freq(na_per_person_phq_base, cumul = F) #have a look at the frequency
 ```
 
 
-
-
-
-
-```{r PHQ baseline missingness 8 items}
-#We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
+```{r PHQ base missingness 8 items}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
   mutate(
-    phq.base_cut_off = 
+    phq.missing_only_suicide_item_base = 
       if_else(
-        na_per_person_phq_base == 1 & 
+        condition = na_per_person_phq_base == 1 & 
           is.na(phq.dead_hurting_thoughts_base_numeric), 
-        1,
-        0
+        true = 1,
+        false = 0,
+        missing = NA_real_
       )
   )
 
-table(dat.no.sex.no.gender.no.age.no.ibd$phq.base_cut_off)
+coping.glad.phq.raw.id %>%
+  freq(phq.missing_only_suicide_item_base,
+       cumul = F)
 ```
 
-
-#PHQ - retrospective
-PHQ Missingness NAs per person - count and percentages
+## retrospective
 ```{r PHQ retrospective missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
   mutate(
     na_per_person_phq_retro =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the PHQ items at retroline
-           %in%
-             phq.items_retro]
+      rowSums(
+        is.na(.[phq.items_retro])
         )
     )
-  )
 
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_retro) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_phq_retro = 
-      na_per_person_phq_retro/9 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_retro)
+coping.glad.phq.raw.id %>%
+freq(na_per_person_phq_retro, cumul = F) #have a look at the frequency
 ```
 
 
 ```{r PHQ retro missingness 8 items}
-#We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
   mutate(
-    phq.retro_cut_off = 
+    phq.missing_only_suicide_item_retro = 
       if_else(
-        na_per_person_phq_retro == 1 & 
+        condition = na_per_person_phq_retro == 1 & 
           is.na(phq.dead_hurting_thoughts_retro_numeric), 
-        1,
-        0
+        true = 1,
+        false = 0,
+        missing = NA_real_
       )
   )
 
-table(dat.no.sex.no.gender.no.age.no.ibd$phq.retro_cut_off)
+coping.glad.phq.raw.id %>%
+  freq(phq.missing_only_suicide_item_retro,
+       cumul = F)
 ```
 
-#PHQ - prepandemic
-PHQ Missingness NAs per person - count and percentages
+## prepandemic
 ```{r PHQ prepan missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+glad.phq.raw.id <- glad.phq.raw.id %>%
   mutate(
     na_per_person_phq_prepan =         # variable for NA per person
       rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the PHQ items at prepanline
-           %in%
-             phq.items_prepan]
+        is.na(.[phq.items_prepan])
         )
     )
-  )
 
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_prepan) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_phq_prepan = 
-      na_per_person_phq_prepan/9 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_prepan)
+glad.phq.raw.id %>%
+  freq(na_per_person_phq_prepan,
+       cumul = F)
 ```
 
 
 ```{r PHQ prepan missingness 8 items}
-#We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
+glad.phq.raw.id <- glad.phq.raw.id %>%
   mutate(
-    phq.prepan_cut_off = 
+    phq.missing_only_suicide_item_prepan = 
       if_else(
-        na_per_person_phq_prepan == 1 & 
+        condition = na_per_person_phq_prepan == 1 & 
           is.na(phq.dead_hurting_thoughts_prepan_numeric), 
-        1,
-        0
+        true = 1,
+        false = 0,
+        missing = NA_real_
       )
   )
 
-table(dat.no.sex.no.gender.no.age.no.ibd$phq.prepan_cut_off)
+glad.phq.raw.id %>%
+  freq(phq.missing_only_suicide_item_prepan,
+       cumul = F)
 ```
 
-Count for PHQ baseline, retrospective, and prepandemic missingness per person
-```{r count of people missing a number of items for PHQ}
-#baseline
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_base)
-#retrospective
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_retro)
-#pre-pandemic
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_prepan)
-```
 
 
 #GAD - baseline
@@ -2717,12 +2688,12 @@ table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_prepan)
 KT: This series of chunks creates a "full" sum score for the PHQ, GAD and PCL. 
 
 PHQ
-The PHQ sum score is set to NA if they have more than one missing item, and it is not the last suicide ideation item (they do not meet the cut off criteria - phq.base_cut_off)
+The PHQ sum score is set to NA if they have more than one missing item, and it is not the last suicide ideation item (they do not meet the cut off criteria - phq.missing_only_suicide_item)
 ```{r sum score cut offs PHQ base}
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
   mutate(
     phq.sum_score_base_full =
-      if_else(na_per_person_phq_base > 1 & phq.base_cut_off == 0,
+      if_else(na_per_person_phq_base > 1 & phq.missing_only_suicide_item == 0,
               NA_real_,
               phq.sum_score_base
               )
