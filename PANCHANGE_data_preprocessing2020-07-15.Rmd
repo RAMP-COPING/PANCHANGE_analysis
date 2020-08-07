@@ -2569,8 +2569,11 @@ dat.glad <- dat.glad %>%
       )
   )
 
+
 table(dat.glad$data_group_phq)
 ```
+
+
 
 GAD
 ```{r data level groups GAD}
@@ -2936,8 +2939,18 @@ descr(x = dat.glad.coping[,covid_variables],
       transpose = TRUE)
 
 ## looking at cases over 0.5
-table(dat.glad.coping$covid_odds_ratio_50) 
+freq(dat.glad.coping$covid_odds_ratio_50, 
+     cumul = FALSE) 
 ```
+
+
+
+
+
+
+
+
+
 
 
 
