@@ -3251,7 +3251,7 @@ table(dat.glad$data_group_pcl)
 
 #Read in respiratory data
 ```{r coping resp cols}
-coping.glad.respiratory.raw <- readRDS(file = paste0(data.raw_path, "/2020-08-03/glad/respiratory_coping_glad.rds"))
+coping.glad.respiratory.raw <- readRDS(file = paste0(data.raw_path, "/glad/respiratory_coping_glad.rds"))
 dim(coping.glad.respiratory.raw)
 colnames(coping.glad.respiratory.raw)
 ```
@@ -3454,15 +3454,15 @@ Variables required:
 
 ++KT: Needs to be developed further for RAMP dataset
 COVID prediction model for COPING
-
+The COVID prediction model has coded the sexes opposite to our data set
 ```{r create numeric sex variable with male=1}
 dat.glad.coping <- dat.glad.coping %>%
   mutate(
     Sex_respiratory =
       if_else(
         Sex == "Male",
-        1,
-        0
+        true = 1,
+        false = 0
       )
   )
 ```
