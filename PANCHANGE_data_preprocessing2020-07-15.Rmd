@@ -49,6 +49,15 @@ Retrieve the current date to use it for file endings to not overwrite files when
 date = Sys.Date()
 ```
 
+# Specify cohort
+```{r}
+GLAD = TRUE
+EDGI = FALSE
+NBR = FALSE
+RAMP = FALSE
+```
+
+
 #Packages
 Install packages (if they are not available in your version of R)
 ```{r Installing packages}
@@ -153,9 +162,8 @@ Note: All COPING surveys are separate surveys
 source("../PANCHANGE_raw_path.R")
 ```
 
-
-## GLAD demographics
-# Read in data
+# GLAD demographics
+## Read in data
 ```{r glad dem cols}
 glad.dem.raw <- readRDS(file = paste0(data.raw_path, "/glad/dem_glad.rds"))
 dim(glad.dem.raw)
@@ -164,7 +172,13 @@ colnames(glad.dem.raw)
 
 # Select variables
 ```{r glad dem cleaning}
-glad.dem.raw.id.unclean <- glad.dem.raw %>%
+exclude_cols_dem <- c("ID",
+                  "Sample",
+                  "startDate.glad",
+                  "Age_uncleaned",
+                  "EduYrs")
+
+glad.dem.raw.id <- glad.dem.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
@@ -174,17 +188,18 @@ glad.dem.raw.id.unclean <- glad.dem.raw %>%
          Sample, # Sample
          ID, # ID
          startDate.glad, #Date when participant signed up to glad
-         Age_raw = dem.how_old_are_you_now, # Age
-         Gender = dem.which_gender_do_you_identify_with, # Gender
-         Sex = dem.select_questionnaire_items_medical, #Sex
-         EduYrs = dem.school_education_school_years, # Years in education
-         dem.college_or_university_degree_numeric, # level of education - univeristy
-         dem.a_levelsas_levels_or_equivalent_numeric, # level of education - alevel
-         dem.o_levelsgcses_or_equivalent_numeric, # level of education - gcse
-         dem.cses_or_equivalent_numeric, # level of education - cse
-         dem.nvq_or_hnd_or_hnc_or_equivalent_numeric, # level of education - nvq
-         Ethnicity = dem.questions_based_ethnic_origin # Ethnicity
+         Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
+         Gender = demographics.which_gender_do_you_identify_with, # Gender
+         Sex = demographics.select_questionnaire_items_medical, #Sex
+         EduYrs = demographics.school_education_school_years.txt, # Years in education
+         demographics.college_or_university_degree, # level of education - univeristy
+         demographics.a_levelsas_levels_or_equivalent, # level of education - alevel
+         demographics.o_levelsgcses_or_equivalent, # level of education - gcse
+         demographics.cses_or_equivalent, # level of education - cse
+         demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+         Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
          ) %>%
+  add_numeric(., exclude = exclude_cols_dem) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -198,12 +213,13 @@ glad.dem.raw.id.unclean <- glad.dem.raw %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
 
 # Inspect dimensions
-dim(glad.dem.raw.id.unclean)
+dim(glad.dem.raw.id)
 # Inspect colnames
-colnames(glad.dem.raw.id.unclean)
+colnames(glad.dem.raw.id)
 #Differences
-dim(glad.dem.raw)[1]-dim(glad.dem.raw.id.unclean)[1]
+dim(glad.dem.raw)[1]-dim(glad.dem.raw.id)[1]
 ```
+
 
 #Clean Age variable
 Age outlier
@@ -215,20 +231,20 @@ age_lower_limit = 16
 # identify number of outliers
 length(
   which(
-  glad.dem.raw.id.unclean$Age_raw > age_upper_limit |
-    glad.dem.raw.id.unclean$Age_raw < age_lower_limit
+  glad.dem.raw.id$Age_uncleaned > age_upper_limit |
+    glad.dem.raw.id$Age_uncleaned < age_lower_limit
      )
 )
 
 # remove age outliers
-glad.dem.raw.id <- glad.dem.raw.id.unclean %>%
+glad.dem.raw.id <- glad.dem.raw.id %>%
   mutate(
     Age = 
       if_else(
-        Age_raw > age_upper_limit | 
-        Age_raw < age_lower_limit, 
+        Age_uncleaned > age_upper_limit | 
+        Age_uncleaned < age_lower_limit, 
         true = NA_real_,
-        false = Age_raw,
+        false = Age_uncleaned,
         missing = NA_real_
       )
   )
@@ -241,7 +257,7 @@ colnames(glad.dem.raw.id)
 In RAMP, age is indicated categorically: 16-18, 19-25, 26-35, 36-45, 46-55, 56-65, 66-70, 71-75, 76-80, 81-85, 86-90, 91-100, 100+
 Age categories in GLAD, EDGI and NBR have been created to reflect this
 ```{r Age groups}
-#if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
 
 # Create categorical age groups per 10 years
 glad.dem.raw.id <- glad.dem.raw.id %>%
@@ -288,7 +304,7 @@ glad.dem.raw.id <- glad.dem.raw.id %>%
 glad.dem.raw.id %>%
   freq(age_category)
 
-#}
+}
 ```
 
 # Highest education
@@ -300,11 +316,11 @@ glad.dem.raw.id <- glad.dem.raw.id %>%
   mutate(
     highest_education_numeric =
       case_when(
-        dem.college_or_university_degree_numeric == "1" ~ 4,
-        dem.a_levelsas_levels_or_equivalent_numeric == "1" ~ 3,
-        dem.nvq_or_hnd_or_hnc_or_equivalent_numeric == "1" ~ 2,
-        dem.o_levelsgcses_or_equivalent_numeric == "1" ~ 1,
-        dem.cses_or_equivalent_numeric == "1" ~ 1)
+        demographics.college_or_university_degree_numeric == "1" ~ 4,
+        demographics.a_levelsas_levels_or_equivalent_numeric == "1" ~ 3,
+        demographics.nvq_or_hnd_or_hnc_or_equivalent_numeric == "1" ~ 2,
+        demographics.o_levelsgcses_or_equivalent_numeric == "1" ~ 1,
+        demographics.cses_or_equivalent_numeric == "1" ~ 1)
     )
 
 #recode the numeric version into a factor
@@ -327,11 +343,11 @@ Check highest education coding
 ```{r Highest education check}
 glad.dem.raw.id %>%
   select(highest_education,
-        dem.college_or_university_degree_numeric,
-        dem.a_levelsas_levels_or_equivalent_numeric,
-        dem.nvq_or_hnd_or_hnc_or_equivalent_numeric,
-        dem.o_levelsgcses_or_equivalent_numeric,
-        dem.cses_or_equivalent_numeric
+        demographics.college_or_university_degree_numeric,
+        demographics.a_levelsas_levels_or_equivalent_numeric,
+        demographics.nvq_or_hnd_or_hnc_or_equivalent_numeric,
+        demographics.o_levelsgcses_or_equivalent_numeric,
+        demographics.cses_or_equivalent_numeric
   )
 ```
 
@@ -359,6 +375,9 @@ colnames(glad.gad.raw)
 
 
 ```{r glad gad cleaning}
+exclude_cols <- c("Sample",
+                  "ID")
+
 glad.gad.raw.id <- glad.gad.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -374,15 +393,9 @@ glad.gad.raw.id <- glad.gad.raw %>%
     gad.trouble_relaxing_prepan = gad.trouble_relaxing,
     gad.sit_restless_hard_prepan = gad.sit_restless_hard,
     gad.becoming_easily_annoyed_or_irritable_prepan = gad.becoming_easily_annoyed_or_irritable,
-    gad.awful_feeling_afraid_happen_prepan = gad.awful_feeling_afraid_happen,
-    gad.feeling_nervous_anxious_or_on_edge_prepan_numeric = gad.feeling_nervous_anxious_or_on_edge_numeric,
-    gad.control_worrying_stop_prepan_numeric = gad.control_worrying_stop_numeric,
-    gad.worrying_too_much_about_different_things_prepan_numeric = gad.worrying_too_much_about_different_things_numeric,
-    gad.trouble_relaxing_prepan_numeric = gad.trouble_relaxing_numeric,
-    gad.sit_restless_hard_prepan_numeric = gad.sit_restless_hard_numeric,
-    gad.becoming_easily_annoyed_or_irritable_prepan_numeric = gad.becoming_easily_annoyed_or_irritable_numeric,
-    gad.awful_feeling_afraid_happen_prepan_numeric = gad.awful_feeling_afraid_happen_numeric
+    gad.awful_feeling_afraid_happen_prepan = gad.awful_feeling_afraid_happen
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -407,7 +420,7 @@ Calculate sum score for GAD-7
 Max should be 21.
 
 *Note that scores with missingness will be changed to NA later in the script
-```{r gad sum score prepan}
+```{r gad sum score prepan raw}
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
 gad.items_key_prepan <- c(1,1,1,1,1,1,1)
@@ -432,14 +445,52 @@ gad.scored_items_prepan <- scoreItems(keys = gad.items_key_prepan,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-glad.gad.raw.id$gad.sum_score_prepan <- gad.scored_items_prepan$scores
+glad.gad.raw.id$gad.sum_score_prepan_raw <- gad.scored_items_prepan$scores
 
 # Look at values
 glad.gad.raw.id %>%
-  descr(gad.sum_score_prepan,
+  descr(gad.sum_score_prepan_raw,
         stats = "common"
         )
 ```
+
+missingness (NAs per person)
+
+prepandemic
+```{r gad prepan missingness}
+glad.gad.raw.id <- glad.gad.raw.id %>%
+  mutate(
+    na_per_person_gad_prepan =         # variable for NA per person
+      rowSums(                       
+        is.na(.[gad.items_prepan])
+      )
+  )
+
+glad.gad.raw.id %>%
+  freq(na_per_person_gad_prepan,
+       cumul = F)
+```
+
+
+```{r gad prepan sum score if missigng items set to NA}
+glad.gad.raw.id <- glad.gad.raw.id %>%
+  mutate(
+    gad.sum_score_prepan =
+      if_else(condition = na_per_person_gad_prepan > 0,
+              true = NA_real_,
+              false = gad.sum_score_prepan_raw,
+              missing = NA_real_
+              )
+  )
+
+glad.gad.raw.id %>%
+  descr(gad.sum_score_prepan_raw, stats = "common")
+
+glad.gad.raw.id %>%
+  descr(gad.sum_score_prepan, stats = "common")
+```
+
+
 
 ```{r glad gad head}
 head(glad.gad.raw.id)
@@ -453,17 +504,17 @@ summarytools::dfSummary(
   labels.col = F)
 ```
 
-# glad mhq
+# glad mhd
 
-```{r glad mhq cols}
-glad.mhq.raw <- readRDS(file = paste0(data.raw_path,"/glad/mhq_glad.rds"))
-dim(glad.mhq.raw)
-colnames(glad.mhq.raw)
+```{r glad mhd cols}
+glad.mhd.raw <- readRDS(file = paste0(data.raw_path,"/glad/mhd_glad.rds"))
+dim(glad.mhd.raw)
+colnames(glad.mhd.raw)
 ```
 
 
-```{r glad mhq cleaning}
-glad.mhq.raw.id <- glad.mhq.raw %>%
+```{r glad mhd cleaning}
+glad.mhd.raw.id <- glad.mhd.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
@@ -472,8 +523,9 @@ glad.mhq.raw.id <- glad.mhq.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    starts_with("mhq.")
+    starts_with("mhd.")
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -487,11 +539,11 @@ glad.mhq.raw.id <- glad.mhq.raw %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
 
 # Inspect dimensions
-dim(glad.mhq.raw.id)
+dim(glad.mhd.raw.id)
 # Inspect colnames
-colnames(glad.mhq.raw.id)
+colnames(glad.mhd.raw.id)
 #Differences
-dim(glad.mhq.raw)[1]-dim(glad.mhq.raw.id)[1]
+dim(glad.mhd.raw)[1]-dim(glad.mhd.raw.id)[1]
 ```
 
 # Grouping mental health disorders
@@ -523,19 +575,19 @@ No-diagnosis group
 2. Specific: breakdown by type of prior anxiety (& related) disorder diagnosis
 3. Breakdown by COVID or not (using COVIDENCE/Zoe algorithm)
 
-```{r glad mhq depressive_disorders}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd depressive_disorders}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     depressive_disorders_numeric =
       case_when(
-        (mhq.depression_numeric == "0" &
-        (mhq.pregnancy_depression_numeric == "0" | is.na(mhq.pregnancy_depression_numeric)) & 
-        (mhq.premenstrual_dysphoric_disorder_pmdd_numeric == "0" | is.na(mhq.premenstrual_dysphoric_disorder_pmdd_numeric))) ~ 0,
-        mhq.depression_numeric == "1" ~ 1,
-        mhq.pregnancy_depression_numeric == "1" ~ 1,
-        mhq.premenstrual_dysphoric_disorder_pmdd_numeric == "1" ~ 1))
+        (mhd.depression_numeric == "0" &
+        (mhd.pregnancy_depression_numeric == "0" | is.na(mhd.pregnancy_depression_numeric)) & 
+        (mhd.premenstrual_dysphoric_disorder_pmdd_numeric == "0" | is.na(mhd.premenstrual_dysphoric_disorder_pmdd_numeric))) ~ 0,
+        mhd.depression_numeric == "1" ~ 1,
+        mhd.pregnancy_depression_numeric == "1" ~ 1,
+        mhd.premenstrual_dysphoric_disorder_pmdd_numeric == "1" ~ 1))
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     depressive_disorders =
       recode_factor(depressive_disorders_numeric,
@@ -545,46 +597,47 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
-  freq(depressive_disorders)
+glad.mhd.raw.id %>%
+  freq(depressive_disorders,
+       cumul = F)
 ```
 
 ```{r Check depressive_disorders}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     depressive_disorders,
     depressive_disorders_numeric,
-    mhq.depression_numeric,
-    mhq.pregnancy_depression_numeric,
-    mhq.premenstrual_dysphoric_disorder_pmdd_numeric,
-    mhq.depression,
-    mhq.pregnancy_depression,
-    mhq.premenstrual_dysphoric_disorder_pmdd
+    mhd.depression_numeric,
+    mhd.pregnancy_depression_numeric,
+    mhd.premenstrual_dysphoric_disorder_pmdd_numeric,
+    mhd.depression,
+    mhd.pregnancy_depression,
+    mhd.premenstrual_dysphoric_disorder_pmdd
   )
 ```
 
 Anxiety disorders group
-```{r glad mhq anxiety_disorders}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd anxiety_disorders}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     anxiety_disorders_numeric =
       case_when(
-        mhq.anxiety_nerves_or_generalised_anxiety_disorder_numeric == "1" ~ 1,
-        mhq.social_anxiety_or_social_phobia_numeric == "1" ~ 1,
-        mhq.specific_phobia_e.g._phobia_of_flying_numeric == "1" ~ 1,
-        mhq.agoraphobia_numeric == "1" ~ 1,
-        mhq.panic_disorder_numeric == "1" ~ 1,
-        mhq.panic_attacks_numeric == "1" ~ 1,
-        (mhq.anxiety_nerves_or_generalised_anxiety_disorder_numeric == "0" &
-        mhq.social_anxiety_or_social_phobia_numeric == "0" &
-        mhq.specific_phobia_e.g._phobia_of_flying_numeric == "0" &
-        mhq.agoraphobia_numeric == "0" &
-        mhq.panic_disorder_numeric == "0" &
-        mhq.panic_attacks_numeric == "0") ~ 0
+        mhd.anxiety_nerves_or_generalised_anxiety_disorder_numeric == "1" ~ 1,
+        mhd.social_anxiety_or_social_phobia_numeric == "1" ~ 1,
+        mhd.specific_phobia_e.g._phobia_of_flying_numeric == "1" ~ 1,
+        mhd.agoraphobia_numeric == "1" ~ 1,
+        mhd.panic_disorder_numeric == "1" ~ 1,
+        mhd.panic_attacks_numeric == "1" ~ 1,
+        (mhd.anxiety_nerves_or_generalised_anxiety_disorder_numeric == "0" &
+        mhd.social_anxiety_or_social_phobia_numeric == "0" &
+        mhd.specific_phobia_e.g._phobia_of_flying_numeric == "0" &
+        mhd.agoraphobia_numeric == "0" &
+        mhd.panic_disorder_numeric == "0" &
+        mhd.panic_attacks_numeric == "0") ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     anxiety_disorders =
       recode_factor(anxiety_disorders_numeric,
@@ -594,46 +647,47 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
-  freq(anxiety_disorders)
+glad.mhd.raw.id %>%
+  freq(anxiety_disorders,
+       cumul = F)
 ```
 
 ```{r Check anxiety_disorders}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     anxiety_disorders,
     anxiety_disorders_numeric,
-    mhq.anxiety_nerves_or_generalised_anxiety_disorder_numeric,
-    mhq.social_anxiety_or_social_phobia_numeric,
-    mhq.specific_phobia_e.g._phobia_of_flying_numeric,
-    mhq.agoraphobia_numeric,
-    mhq.panic_disorder_numeric,
-    mhq.panic_attacks_numeric,
-    mhq.anxiety_nerves_or_generalised_anxiety_disorder,
-    mhq.social_anxiety_or_social_phobia,
-    mhq.specific_phobia_e.g._phobia_of_flying,
-    mhq.agoraphobia,
-    mhq.panic_disorder,
-    mhq.panic_attacks
+    mhd.anxiety_nerves_or_generalised_anxiety_disorder_numeric,
+    mhd.social_anxiety_or_social_phobia_numeric,
+    mhd.specific_phobia_e.g._phobia_of_flying_numeric,
+    mhd.agoraphobia_numeric,
+    mhd.panic_disorder_numeric,
+    mhd.panic_attacks_numeric,
+    mhd.anxiety_nerves_or_generalised_anxiety_disorder,
+    mhd.social_anxiety_or_social_phobia,
+    mhd.specific_phobia_e.g._phobia_of_flying,
+    mhd.agoraphobia,
+    mhd.panic_disorder,
+    mhd.panic_attacks
   )
 ```
 
 Agoraphonia and panic disorder group
-```{r glad mhq agoraphobia_panic_disorder}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd agoraphobia_panic_disorder}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     agoraphobia_panic_disorder_numeric =
       case_when(
-        mhq.agoraphobia_numeric == "1" ~ 1,
-        mhq.panic_disorder_numeric == "1" ~ 1,
-        mhq.panic_attacks_numeric == "1" ~ 1,
-        (mhq.agoraphobia_numeric == "0" &
-        mhq.panic_disorder_numeric == "0" &
-        mhq.panic_attacks_numeric == "0") ~ 0
+        mhd.agoraphobia_numeric == "1" ~ 1,
+        mhd.panic_disorder_numeric == "1" ~ 1,
+        mhd.panic_attacks_numeric == "1" ~ 1,
+        (mhd.agoraphobia_numeric == "0" &
+        mhd.panic_disorder_numeric == "0" &
+        mhd.panic_attacks_numeric == "0") ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     agoraphobia_panic_disorder =
       recode_factor(agoraphobia_panic_disorder_numeric,
@@ -643,42 +697,78 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   freq(agoraphobia_panic_disorder)
 ```
 
 ```{r Check agoraphobia_panic_disorder}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     agoraphobia_panic_disorder,
     agoraphobia_panic_disorder_numeric,
-    mhq.agoraphobia_numeric,
-    mhq.panic_disorder_numeric,
-    mhq.panic_attacks_numeric,
-    mhq.agoraphobia,
-    mhq.panic_disorder,
-    mhq.panic_attacks
+    mhd.agoraphobia_numeric,
+    mhd.panic_disorder_numeric,
+    mhd.panic_attacks_numeric,
+    mhd.agoraphobia,
+    mhd.panic_disorder,
+    mhd.panic_attacks
   )
 ```
 
-Eating disorders group
-```{r glad mhq eating_disorders}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+Depression and anxiety comorbidity
+```{r glad mhd depression_anxiety}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
-    eating_disorders_numeric =
+    depression_and_anxiety_numeric =
       case_when(
-        mhq.anorexia_nervosa_numeric == "1" ~ 1,
-        mhq.atypical_anorexia_nervosa_numeric == "1" ~ 1,
-        mhq.bulimia_nervosa_numeric == "1" ~ 1,
-        mhq.psychological_overeating_or_bingeeating_numeric == "1" ~ 1,
-        (mhq.anorexia_nervosa_numeric == "0" &
-        mhq.atypical_anorexia_nervosa_numeric == "0" &
-        mhq.bulimia_nervosa_numeric == "0" &
-        mhq.psychological_overeating_or_bingeeating_numeric == "0") ~ 0
+        depressive_disorders_numeric == 0 &
+          anxiety_disorders_numeric == 0 ~ 0,
+        depressive_disorders_numeric == 1 &
+          anxiety_disorders_numeric == 1 ~ 1,
+        depressive_disorders_numeric == 1 &
+          anxiety_disorders_numeric == 0 ~ 2,
+        depressive_disorders_numeric == 0 &
+          anxiety_disorders_numeric == 1 ~ 3
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
+  mutate(
+    depression_and_anxiety =
+      recode_factor(depression_and_anxiety_numeric,
+                    "0" = "No depressive or anxiety disorder",
+                    "1" = "Depressive and anxiety disorder",
+                    "2" = "Only depressive disorder",
+                    "2" = "Only anxiety disorder",
+                    missing = NA_character_
+                    )
+  )
+
+glad.mhd.raw.id %>%
+  freq(depression_and_anxiety,
+       cumul = F)
+```
+
+
+
+Eating disorders group
+```{r glad mhd eating_disorders}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
+  mutate(
+    eating_disorders_numeric =
+      case_when(
+        mhd.anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.bulimia_nervosa_numeric == "1" ~ 1,
+        mhd.psychological_overeating_or_bingeeating_numeric == "1" ~ 1,
+        (mhd.anorexia_nervosa_numeric == "0" &
+        mhd.atypical_anorexia_nervosa_numeric == "0" &
+        mhd.bulimia_nervosa_numeric == "0" &
+        mhd.psychological_overeating_or_bingeeating_numeric == "0") ~ 0
+      )
+  )
+
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     eating_disorders =
       recode_factor(eating_disorders_numeric,
@@ -688,42 +778,81 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
-  freq(eating_disorders)
+glad.mhd.raw.id %>%
+  freq(eating_disorders,
+       cumul = F)
 ```
 
+Eating disorders with binge eating vs eating disorders without
+Caveat: Anorexia nervosa can have binge eating as well. Therefore, this would need an additional variable from the ED100K
+```{r glad mhd restricting_vs_binge_eating_eating_disorders}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
+  mutate(
+    restricting_vs_binge_eating_eating_disorders_numeric =
+      case_when(
+                mhd.anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.bulimia_nervosa_numeric == "1" ~ 2,
+        mhd.psychological_overeating_or_bingeeating_numeric == "1" ~ 2,
+        (mhd.anorexia_nervosa_numeric == "0" &
+        mhd.atypical_anorexia_nervosa_numeric == "0" &
+        mhd.bulimia_nervosa_numeric == "0" &
+        mhd.psychological_overeating_or_bingeeating_numeric == "0") ~ 0
+      )
+  )
+
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
+  mutate(
+    restricting_vs_binge_eating_eating_disorders =
+      recode_factor(restricting_vs_binge_eating_eating_disorders_numeric,
+                    "0" = "No eating disorder",
+                    "1" = "Anorexia nervosa",
+                    "2" = "Eating disorder with binge eating",
+                    missing = NA_character_
+                    )
+  )
+
+glad.mhd.raw.id %>%
+  freq(restricting_vs_binge_eating_eating_disorders,
+       cumul = F)
+```
+
+
+
 ```{r Check eating_disorders}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     eating_disorders,
     eating_disorders_numeric,
-    mhq.anorexia_nervosa_numeric,
-    mhq.atypical_anorexia_nervosa_numeric,
-    mhq.bulimia_nervosa_numeric,
-    mhq.psychological_overeating_or_bingeeating_numeric,
-    mhq.anorexia_nervosa,
-    mhq.atypical_anorexia_nervosa,
-    mhq.bulimia_nervosa,
-    mhq.psychological_overeating_or_bingeeating
+    restricting_vs_binge_eating_eating_disorders,
+    restricting_vs_binge_eating_eating_disorders_numeric,
+    mhd.anorexia_nervosa_numeric,
+    mhd.atypical_anorexia_nervosa_numeric,
+    mhd.bulimia_nervosa_numeric,
+    mhd.psychological_overeating_or_bingeeating_numeric,
+    mhd.anorexia_nervosa,
+    mhd.atypical_anorexia_nervosa,
+    mhd.bulimia_nervosa,
+    mhd.psychological_overeating_or_bingeeating
   )
 ```
 
 Obsessive compulsive disorders
-```{r glad mhq obsessive_compulsive_disorders}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd obsessive_compulsive_disorders}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     obsessive_compulsive_disorders_numeric =
       case_when(
-        mhq.obsessivecompulsive_disorder_ocd_numeric == "1" ~ 1,
-        mhq.obsessive_compulsive_related_disorders_numeric == "1" ~ 1,
-        mhq.body_dysmorphic_disorder_bdd_numeric == "1" ~ 1,
-        (mhq.obsessivecompulsive_disorder_ocd_numeric == "0" &
-        mhq.obsessive_compulsive_related_disorders_numeric == "0" &
-        mhq.body_dysmorphic_disorder_bdd_numeric == "0") ~ 0
+        mhd.obsessivecompulsive_disorder_ocd_numeric == "1" ~ 1,
+        mhd.obsessive_compulsive_related_disorders_numeric == "1" ~ 1,
+        mhd.body_dysmorphic_disorder_bdd_numeric == "1" ~ 1,
+        (mhd.obsessivecompulsive_disorder_ocd_numeric == "0" &
+        mhd.obsessive_compulsive_related_disorders_numeric == "0" &
+        mhd.body_dysmorphic_disorder_bdd_numeric == "0") ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     obsessive_compulsive_disorders =
       recode_factor(obsessive_compulsive_disorders_numeric,
@@ -733,38 +862,41 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   freq(obsessive_compulsive_disorders)
 ```
 
 ```{r Check obsessive_compulsive_disorders}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     obsessive_compulsive_disorders,
     obsessive_compulsive_disorders_numeric,
-    mhq.obsessivecompulsive_disorder_ocd,
-    mhq.obsessivecompulsive_disorder_ocd_numeric,
-    mhq.obsessive_compulsive_related_disorders,
-    mhq.obsessive_compulsive_related_disorders_numeric
+    mhd.obsessivecompulsive_disorder_ocd,
+    mhd.obsessivecompulsive_disorder_ocd_numeric,
+    mhd.obsessive_compulsive_related_disorders,
+    mhd.obsessive_compulsive_related_disorders_numeric
   )
 ```
 
 Psychotic disorders group
-```{r glad mhq psychotic_disorders}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+[63] "mhd.schizophrenia_numeric"                                 
+[64] "mhd.schizoaffective_disorder_numeric"                      
+[65] "mhd.type_psychosis_psychotic_illness_numeric" 
+```{r glad mhd psychotic_disorders}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     psychotic_disorders_numeric =
       case_when(
-        mhq.schizophrenia_numeric == "1" ~ 1,
-        mhq.schizoaffective_disorder_numeric == "1" ~ 1,
-        mhq.type_psychosis_psychotic_illness_numeric == "1" ~ 1,
-        (mhq.schizophrenia_numeric == "0" &
-        mhq.schizoaffective_disorder_numeric == "0" &
-        mhq.type_psychosis_psychotic_illness_numeric == "0") ~ 0
+        mhd.schizophrenia_numeric == "1" ~ 1,
+        mhd.schizoaffective_disorder_numeric == "1" ~ 1,
+        mhd.type_psychosis_psychotic_illness_numeric == "1" ~ 1,
+        (mhd.schizophrenia_numeric == "0" &
+        mhd.schizoaffective_disorder_numeric == "0" &
+        mhd.type_psychosis_psychotic_illness_numeric == "0") ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     psychotic_disorders =
       recode_factor(psychotic_disorders_numeric,
@@ -774,49 +906,63 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   freq(psychotic_disorders)
 ```
 
-```{r Check psychotic_disorders}
-glad.mhq.raw.id %>%
-  select(
-    psychotic_disorders,
-    psychotic_disorders_numeric,
-    mhq.schizophrenia_numeric,
-    mhq.schizoaffective_disorder_numeric,
-    mhq.type_psychosis_psychotic_illness_numeric,
-    mhq.schizophrenia,
-    mhq.schizoaffective_disorder,
-    mhq.type_psychosis_psychotic_illness
-  )
-```
 
-Overlap between self-report schizphrenia and bipolar
+Overlap between self-report schizophrenia and bipolar disorder
 +++CH: Check overlap between schizophrenia group and bipolar disorder
-++KT: Only 63 with comorbid sel-report bipolar and schizophrenia. More likely to have shared symptoms, less likely to have confirmed diagnoses of both. Could be too severe to be in GLAD?
-```{r check bipolar overlap with schizophrenia}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+++KT: Only 63 with comorbid self-report bipolar disorder and schizophrenia. More likely to have shared symptoms, less likely to have confirmed diagnoses of both. Could be too severe to be in GLAD?
+```{r glad mhd bipolar_and_schizophrenia_numeric}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     bipolar_and_schizophrenia_numeric =
-      if_else(
-        mhq.schizophrenia_numeric == "1" &
-          mhq.mania_hypomania_bipolar_or_manicdepression_numeric == "1", 1, 0
+      case_when(
+        psychotic_disorders_numeric == 0 &
+          mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 0 ~ 0,
+                psychotic_disorders_numeric == 1 &
+          mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 0 ~ 2,
+        psychotic_disorders_numeric == 0 &
+          mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 3,
+                psychotic_disorders_numeric == 1 &
+          mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 1
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     bipolar_and_schizophrenia =
       recode_factor(bipolar_and_schizophrenia_numeric,
-                    "0" = "No comorbid bipoar and schizophrenia",
-                    "1" = "Comorbid bipoar and schizophrenia",
+                    "0" = "No psychotic or bipolar disorder",
+                    "1" = "Psychotic and bipolar disorder",
+                    "2" = "Only psychotic disorder",
+                    "3" = "Only bipolar disorder",
                     missing = NA_character_
                     )
   )
 
-glad.mhq.raw.id %>%
-  freq(bipolar_and_schizophrenia)
+glad.mhd.raw.id %>%
+  freq(bipolar_and_schizophrenia,
+       cumul = F)
+```
+
+```{r Check psychotic_disorders}
+glad.mhd.raw.id %>%
+  select(
+    psychotic_disorders,
+    psychotic_disorders_numeric,
+    bipolar_and_schizophrenia,
+    bipolar_and_schizophrenia_numeric,
+    mhd.schizophrenia_numeric,
+    mhd.schizoaffective_disorder_numeric,
+    mhd.mania_hypomania_bipolar_or_manicdepression,
+    mhd.mania_hypomania_bipolar_or_manicdepression_numeric,
+    mhd.type_psychosis_psychotic_illness_numeric,
+    mhd.schizophrenia,
+    mhd.schizoaffective_disorder,
+    mhd.type_psychosis_psychotic_illness
+  )
 ```
 
 Personality disorder groups
@@ -825,26 +971,26 @@ Cluster A
 1. Paranoid                         28 ( 1.0%)
 2. Schizoid                         15 ( 0.5%)
 3. Schizotypal                      14 ( 0.5%)
-```{r glad mhq personality_cluster_a}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd personality_cluster_a}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     personality_cluster_a_numeric =
       case_when(
-        mhq.personality_disorder_diagnosed_numeric == "1" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "2" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "3" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "4" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "5" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "6" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "7" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "8" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "9" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "10" ~ 0,
-        mhq.personality_disorder_numeric == "0" ~ 0
+        mhd.personality_disorder_diagnosed_numeric == "1" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "2" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "3" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "4" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "5" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "6" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "7" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "8" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "9" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "10" ~ 0,
+        mhd.personality_disorder_numeric == "0" ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     personality_cluster_a =
       recode_factor(personality_cluster_a_numeric,
@@ -854,17 +1000,18 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
-  freq(personality_cluster_a)
+glad.mhd.raw.id %>%
+  freq(personality_cluster_a,
+       cumul = F)
 ```
 
 ```{r Check personality_cluster_a}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     personality_cluster_a,
     personality_cluster_a_numeric,
-    mhq.personality_disorder_diagnosed,
-    mhq.personality_disorder_diagnosed_numeric
+    mhd.personality_disorder_diagnosed,
+    mhd.personality_disorder_diagnosed_numeric
   )
 ```
 
@@ -874,26 +1021,26 @@ Cluster B
 6. Histrionic                        7 ( 0.2%)
 7. Narcissistic                      8 ( 0.3%)
 
-```{r glad mhq personality_cluster_b}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd personality_cluster_b}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     personality_cluster_b_numeric =
       case_when(
-        mhq.personality_disorder_diagnosed_numeric == "1" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "2" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "3" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "4" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "5" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "6" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "7" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "8" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "9" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "10" ~ 0,
-        mhq.personality_disorder_numeric == "0" ~ 0
+        mhd.personality_disorder_diagnosed_numeric == "1" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "2" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "3" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "4" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "5" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "6" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "7" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "8" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "9" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "10" ~ 0,
+        mhd.personality_disorder_numeric == "0" ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     personality_cluster_b =
       recode_factor(personality_cluster_b_numeric,
@@ -903,17 +1050,18 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
-  freq(personality_cluster_b)
+glad.mhd.raw.id %>%
+  freq(personality_cluster_b,
+       cumul = F)
 ```
 
 ```{r Check personality_cluster_b}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     personality_cluster_b,
     personality_cluster_b_numeric,
-    mhq.personality_disorder_diagnosed,
-    mhq.personality_disorder_diagnosed_numeric
+    mhd.personality_disorder_diagnosed,
+    mhd.personality_disorder_diagnosed_numeric
   )
 ```
 
@@ -921,26 +1069,26 @@ Cluster C
 8. Avoidant/anxious                133 ( 4.7%)
 9. Dependent                        29 ( 1.0%)
 10. Obsessive-compulsive
-```{r glad mhq personality_cluster_c}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd personality_cluster_c}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     personality_cluster_c_numeric =
       case_when(
-        mhq.personality_disorder_diagnosed_numeric == "1" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "2" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "3" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "4" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "5" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "6" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "7" ~ 0,
-        mhq.personality_disorder_diagnosed_numeric == "8" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "9" ~ 1,
-        mhq.personality_disorder_diagnosed_numeric == "10" ~ 1,
-        mhq.personality_disorder_numeric == "0" ~ 0
+        mhd.personality_disorder_diagnosed_numeric == "1" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "2" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "3" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "4" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "5" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "6" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "7" ~ 0,
+        mhd.personality_disorder_diagnosed_numeric == "8" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "9" ~ 1,
+        mhd.personality_disorder_diagnosed_numeric == "10" ~ 1,
+        mhd.personality_disorder_numeric == "0" ~ 0
       )
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     personality_cluster_c =
       recode_factor(personality_cluster_c_numeric,
@@ -950,25 +1098,26 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
-  freq(personality_cluster_c)
+glad.mhd.raw.id %>%
+  freq(personality_cluster_c,
+       cumul = F)
 ```
 
 ```{r Check personality_cluster_c}
-glad.mhq.raw.id %>%
+glad.mhd.raw.id %>%
   select(
     personality_cluster_c,
     personality_cluster_c_numeric,
-    mhq.personality_disorder_diagnosed,
-    mhq.personality_disorder_diagnosed_numeric
+    mhd.personality_disorder_diagnosed,
+    mhd.personality_disorder_diagnosed_numeric
   )
 ```
 
 Control grouping
 These individuals have no self report diagnosis of any kind that we measure. 
 Controls = 784
-```{r glad mhq control}
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+```{r glad mhd control}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     control_numeric =
       if_else(
@@ -977,17 +1126,17 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
     eating_disorders_numeric == "0" &
     obsessive_compulsive_disorders_numeric == "0" &
     psychotic_disorders_numeric == "0" &
-    mhq.mania_hypomania_bipolar_or_manicdepression_numeric == "0" &
-    mhq.posttraumatic_stress_disorder_ptsd_numeric == "0" &
-    mhq.autism_aspergers_or_autistic_spectrum_disorder_numeric == "0" &
-    mhq.attention_deficit_hyperactivity_disorder_numeric == "0" &
-    mhq.personality_disorder_numeric == "0", 
+    mhd.mania_hypomania_bipolar_or_manicdepression_numeric == "0" &
+    mhd.posttraumatic_stress_disorder_ptsd_numeric == "0" &
+    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == "0" &
+    mhd.attention_deficit_hyperactivity_disorder_numeric == "0" &
+    mhd.personality_disorder_numeric == "0", 
     true = 1, 
     false = 0, 
     NA_real_)
   )
 
-glad.mhq.raw.id <- glad.mhq.raw.id %>%
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     control =
       recode_factor(control_numeric,
@@ -997,18 +1146,91 @@ glad.mhq.raw.id <- glad.mhq.raw.id %>%
                     )
   )
 
-glad.mhq.raw.id %>%
-  freq(control)
+glad.mhd.raw.id %>%
+  freq(control,
+       cumul = F)
 ```
 
+Total disorder count
+```{r disorders_total_count}
+disorder_columns <- c(
+    "depressive_disorders_numeric",
+    "anxiety_disorders_numeric",
+    "eating_disorders_numeric",
+    "obsessive_compulsive_disorders_numeric",
+    "psychotic_disorders_numeric",
+    "mhd.mania_hypomania_bipolar_or_manicdepression_numeric",
+    "mhd.posttraumatic_stress_disorder_ptsd_numeric",
+    "mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric",
+    "mhd.attention_deficit_hyperactivity_disorder_numeric",
+    "mhd.personality_disorder_numeric"
+)
 
-```{r glad mhq head}
-head(glad.mhq.raw.id)
+
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
+  mutate(
+    disorders_total_count =
+      rowSums(.[disorder_columns])
+  )
+
+glad.mhd.raw.id %>%
+  freq(disorders_total_count,
+       cumul = F)
 ```
 
-```{r glad mhq summary}
+Comorbidity count
+```{r cormorbidity_total_count}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
+  mutate(
+    comorbidity_total_count_numeric = 
+      case_when(
+        disorders_total_count == 1 ~ 0,
+        disorders_total_count > 1 ~ disorders_total_count - 1
+  )
+  )
+
+glad.mhd.raw.id %>%
+  freq(comorbidity_total_count_numeric,
+       cumul = F)
+```
+
+```{r}
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
+  mutate(
+    comorbidity_total_count_factor_numeric =
+      case_when(
+    comorbidity_total_count_numeric == "0" ~ 0,
+    comorbidity_total_count_numeric == "1" ~ 1,
+    comorbidity_total_count_numeric == "2" ~ 2,
+    comorbidity_total_count_numeric > 2 ~ 3
+    )
+  )
+
+
+glad.mhd.raw.id <- glad.mhd.raw.id %>%
+  mutate(
+    comorbidity_total_count_factor =
+      recode_factor(comorbidity_total_count_factor_numeric,
+                    "0" = "No comorbidity",
+                    "1" = "1 comorbid disoder",
+                    "2" = "2 comorbid disoders",
+                    "3" = "3+ comorbid disoder",
+                    missing = NA_character_
+                    )
+  )
+
+glad.mhd.raw.id %>%
+  freq(comorbidity_total_count_factor,
+       cumul = F)
+```
+
+```{r glad mhd head}
+head(glad.mhd.raw.id)
+```
+
+```{r glad mhd summary}
 summarytools::dfSummary(
-  glad.mhq.raw.id,
+  glad.mhd.raw.id,
   graph.col = F,
   valid.col = F,
   labels.col = F)
@@ -1016,17 +1238,17 @@ summarytools::dfSummary(
 
 Create new dataframe with the derived categories
 ++KT: do we want to keep individual diagnoses here as well?? 
-```{r glad mhq categories}
-glad.mhq.raw.categories <- glad.mhq.raw.id %>%
+```{r glad mhd categories}
+glad.mhd.raw.categories <- glad.mhd.raw.id %>%
   select(
     Sample,
     ID,
     anxiety_disorders_numeric,
     anxiety_disorders,
-    mhq.specific_phobia_e.g._phobia_of_flying_numeric,
-    mhq.specific_phobia_e.g._phobia_of_flying,
-    mhq.social_anxiety_or_social_phobia_numeric,
-    mhq.social_anxiety_or_social_phobia,
+    mhd.specific_phobia_e.g._phobia_of_flying_numeric,
+    mhd.specific_phobia_e.g._phobia_of_flying,
+    mhd.social_anxiety_or_social_phobia_numeric,
+    mhd.social_anxiety_or_social_phobia,
     agoraphobia_panic_disorder_numeric,
     agoraphobia_panic_disorder,
     depressive_disorders_numeric,
@@ -1037,22 +1259,34 @@ glad.mhq.raw.categories <- glad.mhq.raw.id %>%
     obsessive_compulsive_disorders,
     psychotic_disorders_numeric,
     psychotic_disorders,
-    mhq.mania_hypomania_bipolar_or_manicdepression_numeric,
-    mhq.mania_hypomania_bipolar_or_manicdepression,
-    mhq.posttraumatic_stress_disorder_ptsd_numeric,
-    mhq.posttraumatic_stress_disorder_ptsd,
-    mhq.autism_aspergers_or_autistic_spectrum_disorder_numeric,
-    mhq.autism_aspergers_or_autistic_spectrum_disorder,
-    mhq.attention_deficit_hyperactivity_disorder_numeric,
-    mhq.attention_deficit_hyperactivity_disorder,
-    mhq.personality_disorder_numeric,
-    mhq.personality_disorder,
+    mhd.mania_hypomania_bipolar_or_manicdepression_numeric,
+    mhd.mania_hypomania_bipolar_or_manicdepression,
+    mhd.posttraumatic_stress_disorder_ptsd_numeric,
+    mhd.posttraumatic_stress_disorder_ptsd,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder,
+    mhd.attention_deficit_hyperactivity_disorder_numeric,
+    mhd.attention_deficit_hyperactivity_disorder,
+    mhd.personality_disorder_numeric,
+    mhd.personality_disorder,
     personality_cluster_a_numeric,
     personality_cluster_a,
     personality_cluster_b_numeric,
     personality_cluster_b,
     personality_cluster_c_numeric,
-    personality_cluster_c
+    personality_cluster_c,
+    depression_and_anxiety_numeric,
+    depression_and_anxiety,
+    restricting_vs_binge_eating_eating_disorders_numeric,
+    restricting_vs_binge_eating_eating_disorders,
+    bipolar_and_schizophrenia_numeric,
+    bipolar_and_schizophrenia,
+    control_numeric,
+    control,
+    disorders_total_count,
+    comorbidity_total_count_numeric,
+    comorbidity_total_count_factor_numeric,
+    comorbidity_total_count_factor
     )
 ```
 
@@ -1075,19 +1309,14 @@ glad.pcl.raw.id <- glad.pcl.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    pcl.stressful_experience_repeated_images_prepan_numeric = pcl.stressful_experience_repeated_images_numeric,
     pcl.stressful_experience_repeated_images_prepan = pcl.stressful_experience_repeated_images,
-    pcl.stressful_experience_upset_reminded_prepan_numeric = pcl.stressful_experience_upset_reminded_numeric,
     pcl.stressful_experience_upset_reminded_prepan = pcl.stressful_experience_upset_reminded,
-    pcl.stressful_situation_avoiding_activities_prepan_numeric = pcl.stressful_situation_avoiding_activities_numeric,
     pcl.stressful_situation_avoiding_activities_prepan = pcl.stressful_situation_avoiding_activities,
-    pcl.cut_people_feeling_distant_prepan_numeric = pcl.cut_people_feeling_distant_numeric,
     pcl.cut_people_feeling_distant_prepan = pcl.cut_people_feeling_distant,
-    pcl.feeling_irritable_or_having_angry_outbursts_prepan_numeric = pcl.feeling_irritable_or_having_angry_outbursts_numeric,
     pcl.feeling_irritable_or_having_angry_outbursts_prepan = pcl.feeling_irritable_or_having_angry_outbursts,
-    pcl.difficulty_concentrating_prepan_numeric = pcl.difficulty_concentrating_numeric,
-    pcl.difficulty_concentratin_prepan = pcl.difficulty_concentrating
+    pcl.difficulty_concentrating_prepan = pcl.difficulty_concentrating
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -1135,15 +1364,49 @@ pcl.scored_items_prepan <- scoreItems(keys = pcl.items_key_prepan,
                                         min = 1, 
                                         max = 5)
 # Add in column to tibble
-glad.pcl.raw.id$pcl.sum_score_prepan <- pcl.scored_items_prepan$scores
+glad.pcl.raw.id$pcl.sum_score_prepan_raw <- pcl.scored_items_prepan$scores
 
 # Look at values
 glad.pcl.raw.id %>%
-  descr(pcl.sum_score_prepan,
+  descr(pcl.sum_score_prepan_raw,
         stats = "common"
         )
 ```
 
+Missigness
+
+prepandemic
+```{r pcl prepan missingness}
+glad.pcl.raw.id <- glad.pcl.raw.id %>%
+  mutate(
+    na_per_person_pcl_prepan =         # variable for NA per person
+      rowSums(                       
+        is.na(.[pcl.items_prepan])
+      )
+  )
+
+glad.pcl.raw.id %>%
+  freq(na_per_person_pcl_prepan,
+       cumul = F)
+```
+
+```{r pcl prepan sum score if missigng items set to NA}
+glad.pcl.raw.id <- glad.pcl.raw.id %>%
+  mutate(
+    pcl.sum_score_prepan =
+      if_else(condition = na_per_person_pcl_prepan > 0,
+              true = NA_real_,
+              false = pcl.sum_score_prepan_raw,
+              missing = NA_real_
+      )
+  )
+
+glad.pcl.raw.id %>%
+  descr(pcl.sum_score_prepan_raw, stats = "common")
+
+glad.pcl.raw.id %>%
+  descr(pcl.sum_score_prepan, stats = "common")
+```
 
 ```{r glad pcl head}
 head(glad.pcl.raw.id)
@@ -1183,17 +1446,9 @@ glad.phq.raw.id <- glad.phq.raw %>%
     phq.feeling_bad_failure_family_prepan = phq.feeling_bad_failure_family,
     phq.trouble_concentrating_reading_newspaper_prepan = phq.trouble_concentrating_reading_newspaper,
     phq.moving_fidgety_noticed_opposite_prepan = phq.moving_fidgety_noticed_opposite,
-    phq.dead_hurting_thoughts_prepan = phq.dead_hurting_thoughts,
-    phq.little_interest_or_pleasure_in_doing_things_prepan_numeric = phq.little_interest_or_pleasure_in_doing_things_numeric,
-    phq.feeling_down_depressed_or_hopeless_prepan_numeric = phq.feeling_down_depressed_or_hopeless_numeric,
-    phq.staying_asleep_sleeping_trouble_prepan_numeric = phq.staying_asleep_sleeping_trouble_numeric,
-    phq.feeling_tired_or_having_little_energy_prepan_numeric = phq.feeling_tired_or_having_little_energy_numeric,
-    phq.poor_appetite_or_overeating_prepan_numeric = phq.poor_appetite_or_overeating_numeric,
-    phq.feeling_bad_failure_family_prepan_numeric = phq.feeling_bad_failure_family_numeric,
-    phq.trouble_concentrating_reading_newspaper_prepan_numeric = phq.trouble_concentrating_reading_newspaper_numeric,
-    phq.moving_fidgety_noticed_opposite_prepan_numeric = phq.moving_fidgety_noticed_opposite_numeric,
-    phq.dead_hurting_thoughts_prepan_numeric = phq.dead_hurting_thoughts_numeric
+    phq.dead_hurting_thoughts_prepan = phq.dead_hurting_thoughts
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -1244,14 +1499,92 @@ phq.scored_items_prepan <- scoreItems(keys = phq.items_key_prepan,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-glad.phq.raw.id$phq.sum_score_prepan <- phq.scored_items_prepan$scores
+glad.phq.raw.id$phq.sum_score_prepan_raw <- phq.scored_items_prepan$scores
 
 # Look at values
 glad.phq.raw.id %>%
-  descr(phq.sum_score_prepan,
+  descr(phq.sum_score_prepan_raw,
         stats = "common"
         )
 ```
+
+PHQ missingness (NAs per person)
+
+prepandemic
+```{r phq prepan missingness}
+glad.phq.raw.id <- glad.phq.raw.id %>%
+  mutate(
+    na_per_person_phq_prepan =         # variable for NA per person
+      rowSums(                       
+        is.na(.[phq.items_prepan])
+      )
+  )
+
+glad.phq.raw.id %>%
+  freq(na_per_person_phq_prepan,
+       cumul = F)
+```
+
+
+```{r phq prepan missingness 8 items}
+glad.phq.raw.id <- glad.phq.raw.id %>%
+  mutate(
+    phq.missing_only_suicide_item_prepan = 
+      if_else(
+        condition = na_per_person_phq_prepan == 1 & 
+          is.na(phq.dead_hurting_thoughts_prepan_numeric), 
+        true = 1,
+        false = 0,
+        missing = NA_real_
+      )
+  )
+
+glad.phq.raw.id %>%
+  freq(phq.missing_only_suicide_item_prepan,
+       cumul = F)
+```
+
+all times
+```{r phq prepan sum score if missigng items set to NA - all items}
+glad.phq.raw.id <- glad.phq.raw.id %>%
+  mutate(
+    phq.sum_score_prepan =
+      if_else(condition = na_per_person_phq_prepan > 0,
+              true = NA_real_,
+              false = phq.sum_score_prepan_raw,
+              missing = NA_real_
+      )
+  )
+
+glad.phq.raw.id %>%
+  descr(phq.sum_score_prepan_raw, stats = "common")
+
+glad.phq.raw.id %>%
+  descr(phq.sum_score_prepan, stats = "common")
+```
+
++++CH: THINK ABOUT THIS!!!
+
+8 items
+```{r phq prepan sum score if missigng items set to NA - 8 items}
+glad.phq.raw.id <- glad.phq.raw.id %>%
+  mutate(
+    phq.sum_score_8items_prepan =
+      if_else(condition = na_per_person_phq_prepan > 1 &
+                phq.missing_only_suicide_item_prepan == 1,
+              true = NA_real_,
+              false = phq.sum_score_prepan_raw,
+              missing = NA_real_
+      )
+  )
+
+glad.phq.raw.id %>%
+  descr(phq.sum_score_8items_prepan, stats = "common")
+
+glad.phq.raw.id %>%
+  descr(phq.sum_score_8items_prepan, stats = "common")
+```
+
 
 ```{r glad phq head}
 head(glad.phq.raw.id)
@@ -1269,7 +1602,7 @@ summarytools::dfSummary(
 # glad ocir
 
 ```{r glad ocir cols}
-glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/2020-08-03/glad/ocir_glad.rds"))
+glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/glad/ocir_glad.rds"))
 dim(glad.ocir.raw)
 colnames(glad.ocir.raw)
 ```
@@ -1303,6 +1636,7 @@ glad.ocir.raw.id <- glad.ocir.raw %>%
     ocir.control_difficult_find_thoughts_prepan = ocir.control_difficult_find_thoughts,
     ocir.i_collect_things_i_dont_need_prepan = ocir.i_collect_things_i_dont_need
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -1333,24 +1667,24 @@ ocir.items_key_prepan <- c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
 
 # Create vector with items that are included in sum score
 ocir.items_prepan = c(
-  "ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan",
-  "ocir.arranged_things_change_upset_prepan",
-  "ocir.repeat_feel_numbers_prepan",
-  "ocir.clean_simply_wash_feel_prepan",
-  "ocir.mind_upset_unpleasant_thoughts_prepan",
-  "ocir.afraid_avoid_throwing_things_prepan",
-  "ocir.light_switches_water_taps_prepan",
-  "ocir.arranged_things_prepan",
-  "ocir.good_feel_bad_numbers_prepan",
-  "ocir.hands_longer_wash_prepan",
-  "ocir.saved_things_prepan",
-  "ocir.frequently_difficulty_rid_nasty_prepan",
-  "ocir.i_check_things_more_often_than_necessary_prepan",
-  "ocir.arranged_properly_objects_upset_prepan",
-  "ocir.feel_compelled_count_things_prepan",
-  "ocir.strangers_touch_touched_difficult_prepan",
-  "ocir.control_difficult_find_thoughts_prepan",
-  "ocir.i_collect_things_i_dont_need_prepan"
+  "ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan_numeric",
+  "ocir.arranged_things_change_upset_prepan_numeric",
+  "ocir.repeat_feel_numbers_prepan_numeric",
+  "ocir.clean_simply_wash_feel_prepan_numeric",
+  "ocir.mind_upset_unpleasant_thoughts_prepan_numeric",
+  "ocir.afraid_avoid_throwing_things_prepan_numeric",
+  "ocir.light_switches_water_taps_prepan_numeric",
+  "ocir.arranged_things_prepan_numeric",
+  "ocir.good_feel_bad_numbers_prepan_numeric",
+  "ocir.hands_longer_wash_prepan_numeric",
+  "ocir.saved_things_prepan_numeric",
+  "ocir.frequently_difficulty_rid_nasty_prepan_numeric",
+  "ocir.i_check_things_more_often_than_necessary_prepan_numeric",
+  "ocir.arranged_properly_objects_upset_prepan_numeric",
+  "ocir.feel_compelled_count_things_prepan_numeric",
+  "ocir.strangers_touch_touched_difficult_prepan_numeric",
+  "ocir.control_difficult_find_thoughts_prepan_numeric",
+  "ocir.i_collect_things_i_dont_need_prepan_numeric"
   )
 
 # Calulate sum score
@@ -1371,6 +1705,23 @@ glad.ocir.raw.id %>%
         )
 ```
 
+prepandemic
+```{r ocir prepan missingness}
+glad.ocir.raw.id <- glad.ocir.raw.id %>%
+  mutate(
+    na_per_person_ocir_prepan =         # variable for NA per person
+      rowSums(                       
+        is.na(.[ocir.items_prepan])
+      )
+  )
+
+glad.ocir.raw.id %>%
+  freq(na_per_person_ocir_prepan,
+       cumul = F)
+```
+
+
+
 ```{r glad ocir head}
 head(glad.ocir.raw.id)
 ```
@@ -1386,7 +1737,7 @@ summarytools::dfSummary(
 # COPING GLAD: GAD-7
 
 ```{r coping glad gad cols}
-coping.glad.gad.raw <- readRDS(file = paste0(data.raw_path,"/coping_glad/gad_coping_glad.rds"))
+coping.glad.gad.raw <- readRDS(file = paste0(data.raw_path,"/glad/gad_coping_glad.rds"))
 dim(coping.glad.gad.raw)
 colnames(coping.glad.gad.raw)
 ```
@@ -1402,6 +1753,12 @@ summarytools::dfSummary(
 
 
 ```{r coping glad gad cleaning}
+exclude_cols_coping_glad <- c(
+  "Sample",
+  "ID",
+  "startDate.coping.glad"
+)
+
 coping.glad.gad.raw.id <- coping.glad.gad.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -1412,35 +1769,24 @@ coping.glad.gad.raw.id <- coping.glad.gad.raw %>%
     Sample, # Sample
     ID, # ID
     startDate.coping.glad = startDate,
-    gad.feeling_nervous_anxious_or_on_edge_retro = gad7.feeling_nervous_anxious_or_on_edge,
-    gad.control_worrying_stop_retro = gad7.control_worrying_stop,
-    gad.worrying_too_much_about_different_things_retro = gad7.worrying_too_much_about_different_things,
-    gad.trouble_relaxing_retro = gad7.trouble_relaxing,
-    gad.sit_restless_hard_retro = gad7.sit_restless_hard,
-    gad.becoming_easily_annoyed_or_irritable_retro = gad7.becoming_easily_annoyed_or_irritable,
-    gad.awful_feeling_afraid_happen_retro = gad7.awful_feeling_afraid_happen,
-    gad.feeling_nervous_anxious_or_on_edge_base = gad7.feeling_nervous_anxious_or_on_edge.1,
-    gad.control_worrying_stop_base = gad7.control_worrying_stop.1,
-    gad.worrying_too_much_about_different_things_base = gad7.worrying_too_much_about_different_things.1,
-    gad.trouble_relaxing_base = gad7.trouble_relaxing.1,
-    gad.sit_restless_hard_base = gad7.sit_restless_hard.1,
-    gad.becoming_easily_annoyed_or_irritable_base = gad7.becoming_easily_annoyed_or_irritable.1,
-    gad.awful_feeling_afraid_happen_base = gad7.awful_feeling_afraid_happen.1,
-    gad.feeling_nervous_anxious_or_on_edge_retro_numeric = gad7.feeling_nervous_anxious_or_on_edge_numeric,
-    gad.control_worrying_stop_retro_numeric = gad7.control_worrying_stop_numeric,
-    gad.worrying_too_much_about_different_things_retro_numeric = gad7.worrying_too_much_about_different_things_numeric,
-    gad.trouble_relaxing_retro_numeric = gad7.trouble_relaxing_numeric,
-    gad.sit_restless_hard_retro_numeric = gad7.sit_restless_hard_numeric,
-    gad.becoming_easily_annoyed_or_irritable_retro_numeric = gad7.becoming_easily_annoyed_or_irritable_numeric,
-    gad.awful_feeling_afraid_happen_retro_numeric = gad7.awful_feeling_afraid_happen_numeric,
-    gad.feeling_nervous_anxious_or_on_edge_base_numeric = gad7.feeling_nervous_anxious_or_on_edge.1_numeric,
-    gad.control_worrying_stop_base_numeric = gad7.control_worrying_stop.1_numeric,
-    gad.worrying_too_much_about_different_things_base_numeric = gad7.worrying_too_much_about_different_things.1_numeric,
-    gad.trouble_relaxing_base_numeric = gad7.trouble_relaxing.1_numeric,
-    gad.sit_restless_hard_base_numeric = gad7.sit_restless_hard.1_numeric,
-    gad.becoming_easily_annoyed_or_irritable_base_numeric = gad7.becoming_easily_annoyed_or_irritable.1_numeric,
-    gad.awful_feeling_afraid_happen_base_numeric = gad7.awful_feeling_afraid_happen.1_numeric
+    gad.problems_made_difficult_care, # Impairment
+    gad.pandemic_felt_feelings, # Comparison to before the pandemic (retro)
+    gad.feeling_nervous_anxious_or_on_edge_retro = gad.feeling_nervous_anxious_or_on_edge,
+    gad.control_worrying_stop_retro = gad.control_worrying_stop,
+    gad.worrying_too_much_about_different_things_retro = gad.worrying_too_much_about_different_things,
+    gad.trouble_relaxing_retro = gad.trouble_relaxing,
+    gad.sit_restless_hard_retro = gad.sit_restless_hard,
+    gad.becoming_easily_annoyed_or_irritable_retro = gad.becoming_easily_annoyed_or_irritable,
+    gad.awful_feeling_afraid_happen_retro = gad.awful_feeling_afraid_happen,
+    gad.feeling_nervous_anxious_or_on_edge_base = gad.feeling_nervous_anxious_or_on_edge.1,
+    gad.control_worrying_stop_base = gad.control_worrying_stop.1,
+    gad.worrying_too_much_about_different_things_base = gad.worrying_too_much_about_different_things.1,
+    gad.trouble_relaxing_base = gad.trouble_relaxing.1,
+    gad.sit_restless_hard_base = gad.sit_restless_hard.1,
+    gad.becoming_easily_annoyed_or_irritable_base = gad.becoming_easily_annoyed_or_irritable.1,
+    gad.awful_feeling_afraid_happen_base = gad.awful_feeling_afraid_happen.1
   ) %>%
+  add_numeric(., exclude = exclude_cols_coping_glad) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -1487,11 +1833,11 @@ gad.scored_items_retro <- scoreItems(keys = gad.items_key_retro,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-coping.glad.gad.raw.id$gad.sum_score_retro <- gad.scored_items_retro$scores
+coping.glad.gad.raw.id$gad.sum_score_retro_raw <- gad.scored_items_retro$scores
 
 # Look at values
 coping.glad.gad.raw.id %>%
-  descr(gad.sum_score_retro,
+  descr(gad.sum_score_retro_raw,
         stats = "common"
         )
 ```
@@ -1522,14 +1868,83 @@ gad.scored_items_base <- scoreItems(keys = gad.items_key_base,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-coping.glad.gad.raw.id$gad.sum_score_base <- gad.scored_items_base$scores
+coping.glad.gad.raw.id$gad.sum_score_base_raw <- gad.scored_items_base$scores
 
 # Look at values
 coping.glad.gad.raw.id %>%
-  descr(gad.sum_score_base,
+  descr(gad.sum_score_base_raw,
         stats = "common"
         )
 ```
+
+Missigness
+
+baseline
+```{r coping gad baseline missingness}
+coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
+  mutate(
+    na_per_person_gad_base =         # variable for NA per person
+      rowSums(                       
+        is.na(.[gad.items_base])
+      )
+  )
+
+coping.glad.gad.raw.id %>%
+  freq(na_per_person_gad_base, cumul = F) #have a look at the frequency
+```
+
+```{r coping gad retrospective missingness}
+coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
+  mutate(
+    na_per_person_gad_retro =         # variable for NA per person
+      rowSums(
+        is.na(.[gad.items_retro])
+      )
+  )
+
+coping.glad.gad.raw.id %>%
+  freq(na_per_person_gad_retro, cumul = F) #have a look at the frequency
+```
+
+```{r coping gad base sum score if missigng items set to NA}
+coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
+  mutate(
+    gad.sum_score_base =
+      if_else(condition = na_per_person_gad_base > 0,
+              true = NA_real_,
+              false = gad.sum_score_base_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.gad.raw.id %>%
+  descr(gad.sum_score_base_raw, stats = "common")
+
+coping.glad.gad.raw.id %>%
+  descr(gad.sum_score_base, stats = "common")
+```
+
+
+```{r coping gad retro sum score if missigng items set to NA}
+coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
+  mutate(
+    gad.sum_score_retro =
+      if_else(condition = na_per_person_gad_retro > 0,
+              true = NA_real_,
+              false = gad.sum_score_retro_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.gad.raw.id %>%
+  descr(gad.sum_score_retro_raw, stats = "common")
+
+coping.glad.gad.raw.id %>%
+  descr(gad.sum_score_retro, stats = "common")
+```
+
+
+
 
 ```{r coping glad gad head}
 head(coping.glad.gad.raw.id)
@@ -1546,7 +1961,7 @@ summarytools::dfSummary(
 # COPING GLAD: PCL-6
 
 ```{r coping glad pcl cols}
-coping.glad.pcl.raw <- readRDS(file = paste0(data.raw_path,"/coping_glad/pcl_coping_glad.rds"))
+coping.glad.pcl.raw <- readRDS(file = paste0(data.raw_path,"/glad/pcl_coping_glad.rds"))
 dim(coping.glad.pcl.raw)
 colnames(coping.glad.pcl.raw)
 ```
@@ -1572,31 +1987,20 @@ coping.glad.pcl.raw.id <- coping.glad.pcl.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    pcl.stressful_experience_repeated_images_base_numeric = pcl6.stressful_experience_repeated_images_numeric,
-    pcl.stressful_experience_repeated_images_base = pcl6.stressful_experience_repeated_images,
-    pcl.stressful_experience_upset_reminded_base_numeric = pcl6.stressful_experience_upset_reminded_numeric,
-    pcl.stressful_experience_upset_reminded_base = pcl6.stressful_experience_upset_reminded,
-    pcl.stressful_situation_avoiding_activities_base_numeric = pcl6.avoiding_activities_stressful_experience_numeric, # differ to GLAD prepan
-    pcl.stressful_situation_avoiding_activities_base = pcl6.avoiding_activities_stressful_experience, # differ to GLAD prepan
-    pcl.cut_people_feeling_distant_base_numeric = pcl6.cut_people_feeling_distant_numeric,
-    pcl.cut_people_feeling_distant_base = pcl6.cut_people_feeling_distant,
-    pcl.feeling_irritable_or_having_angry_outbursts_base_numeric = pcl6.feeling_irritable_or_having_angry_outbursts_numeric,
-    pcl.feeling_irritable_or_having_angry_outbursts_base = pcl6.feeling_irritable_or_having_angry_outbursts,
-    pcl.difficulty_concentrating_base_numeric = pcl6.difficulty_concentrating_numeric,
-    pcl.difficulty_concentratin_base = pcl6.difficulty_concentrating,
-    pcl.stressful_experience_repeated_images_retro_numeric = pcl6.stressful_experience_repeated_images.1_numeric,
-    pcl.stressful_experience_repeated_images_retro = pcl6.stressful_experience_repeated_images.1,
-    pcl.stressful_experience_upset_reminded_retro_numeric = pcl6.stressful_experience_upset_reminded.1_numeric,
-    pcl.stressful_experience_upset_reminded_retro = pcl6.stressful_experience_upset_reminded.1,
-    pcl.stressful_situation_avoiding_activities_retro_numeric = pcl6.avoiding_activities_stressful_experience.1_numeric,
-    pcl.stressful_situation_avoiding_activities_retro = pcl6.avoiding_activities_stressful_experience.1,
-    pcl.cut_people_feeling_distant_retro_numeric = pcl6.cut_people_feeling_distant.1_numeric,
-    pcl.cut_people_feeling_distant_retro = pcl6.cut_people_feeling_distant.1,
-    pcl.feeling_irritable_or_having_angry_outbursts_retro_numeric = pcl6.feeling_irritable_or_having_angry_outbursts.1_numeric,
-    pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl6.feeling_irritable_or_having_angry_outbursts.1,
-    pcl.difficulty_concentrating_retro_numeric = pcl6.difficulty_concentrating.1_numeric,
-    pcl.difficulty_concentrating_retro = pcl6.difficulty_concentrating.1
+    pcl.stressful_experience_repeated_images_base = pcl.stressful_experience_repeated_images,
+    pcl.stressful_experience_upset_reminded_base = pcl.stressful_experience_upset_reminded, # differ to GLAD prepan
+    pcl.stressful_situation_avoiding_activities_base = pcl.avoiding_activities_stressful_experience, # differ to GLAD prepan
+    pcl.cut_people_feeling_distant_base = pcl.cut_people_feeling_distant,
+    pcl.feeling_irritable_or_having_angry_outbursts_base = pcl.feeling_irritable_or_having_angry_outbursts,
+    pcl.difficulty_concentrating_base = pcl.difficulty_concentrating,
+    pcl.stressful_experience_repeated_images_retro = pcl.stressful_experience_repeated_images.1,
+    pcl.stressful_experience_upset_reminded_retro = pcl.stressful_experience_upset_reminded.1,
+    pcl.stressful_situation_avoiding_activities_retro = pcl.avoiding_activities_stressful_experience.1,
+    pcl.cut_people_feeling_distant_retro = pcl.cut_people_feeling_distant.1,
+    pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl.feeling_irritable_or_having_angry_outbursts.1,
+    pcl.difficulty_concentrating_retro = pcl.difficulty_concentrating.1
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -1642,11 +2046,11 @@ pcl.scored_items_retro <- scoreItems(keys = pcl.items_key_retro,
                                      min = 0, 
                                      max = 1)
 # Add in column to tibble
-coping.glad.pcl.raw.id$pcl.sum_score_retro <- pcl.scored_items_retro$scores
+coping.glad.pcl.raw.id$pcl.sum_score_retro_raw <- pcl.scored_items_retro$scores
 
 # Look at values
 coping.glad.pcl.raw.id %>%
-  descr(pcl.sum_score_retro,
+  descr(pcl.sum_score_retro_raw,
         stats = "common"
   )
 ```
@@ -1678,13 +2082,82 @@ pcl.scored_items_base <- scoreItems(keys = pcl.items_key_base,
                                     min = 1, 
                                     max = 5)
 # Add in column to tibble
-coping.glad.pcl.raw.id$pcl.sum_score_base <- pcl.scored_items_base$scores
+coping.glad.pcl.raw.id$pcl.sum_score_base_raw <- pcl.scored_items_base$scores
 
 # Look at values
 coping.glad.pcl.raw.id %>%
-  descr(pcl.sum_score_base,
+  descr(pcl.sum_score_base_raw,
         stats = "common"
   )
+```
+
+
+PCL missingness (NAs per person)
+
+baseline
+```{r coping pcl baseline missingness}
+coping.glad.pcl.raw.id <- coping.glad.pcl.raw.id %>%
+  mutate(
+    na_per_person_pcl_base =         # variable for NA per person
+      rowSums(                       
+        is.na(.[pcl.items_base])
+      )
+  )
+
+coping.glad.pcl.raw.id %>%
+  freq(na_per_person_pcl_base, cumul = F) #have a look at the frequency
+```
+
+
+retrospective
+```{r coping pcl retrospective missingness}
+coping.glad.pcl.raw.id <- coping.glad.pcl.raw.id %>%
+  mutate(
+    na_per_person_pcl_retro =         # variable for NA per person
+      rowSums(
+        is.na(.[pcl.items_retro])
+      )
+  )
+
+coping.glad.pcl.raw.id %>%
+  freq(na_per_person_pcl_retro, cumul = F) #have a look at the frequency
+```
+
+
+```{r coping pcl base sum score if missigng items set to NA}
+coping.glad.pcl.raw.id <- coping.glad.pcl.raw.id %>%
+  mutate(
+    pcl.sum_score_base =
+      if_else(condition = na_per_person_pcl_base > 0,
+              true = NA_real_,
+              false = pcl.sum_score_base_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.pcl.raw.id %>%
+  descr(pcl.sum_score_base_raw, stats = "common")
+
+coping.glad.pcl.raw.id %>%
+  descr(pcl.sum_score_base, stats = "common")
+```
+
+```{r coping pcl retro sum score if missigng items set to NA}
+coping.glad.pcl.raw.id <- coping.glad.pcl.raw.id %>%
+  mutate(
+    pcl.sum_score_retro =
+      if_else(condition = na_per_person_pcl_retro > 0,
+              true = NA_real_,
+              false = pcl.sum_score_retro_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.pcl.raw.id %>%
+  descr(pcl.sum_score_retro_raw, stats = "common")
+
+coping.glad.pcl.raw.id %>%
+  descr(pcl.sum_score_retro, stats = "common")
 ```
 
 ```{r coping glad pcl head}
@@ -1702,7 +2175,7 @@ summarytools::dfSummary(
 # glad COPING phq
 
 ```{r coping glad phq cols}
-coping.glad.phq.raw <- readRDS(file = paste0(data.raw_path, "/coping_glad/phq_coping_glad.rds"))
+coping.glad.phq.raw <- readRDS(file = paste0(data.raw_path, "/glad/phq_coping_glad.rds"))
 dim(coping.glad.phq.raw)
 colnames(coping.glad.phq.raw)
 ```
@@ -1728,43 +2201,28 @@ coping.glad.phq.raw.id <- coping.glad.phq.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    phq.little_interest_or_pleasure_in_doing_things_retro = phq9.little_interest_or_pleasure_in_doing_things,
-    phq.feeling_down_depressed_or_hopeless_retro = phq9.feeling_down_depressed_or_hopeless,
-    phq.staying_asleep_sleeping_trouble_retro = phq9.staying_asleep_sleeping_trouble,
-    phq.feeling_tired_or_having_little_energy_retro = phq9.feeling_tired_or_having_little_energy,
-    phq.poor_appetite_or_overeating_retro = phq9.poor_appetite_or_overeating,
-    phq.feeling_bad_failure_family_retro = phq9.feeling_bad_failure_family,
-    phq.trouble_concentrating_reading_newspaper_retro = phq9.trouble_concentrating_newspaper_reading, # differ GLAD prepandemic
-    phq.moving_fidgety_noticed_opposite_retro = phq9.moving_fidgety_opposite_slowly, # differ GLAD prepandemic
-    phq.dead_hurting_thoughts_retro = phq9.dead_hurting_thoughts,
-    phq.little_interest_or_pleasure_in_doing_things_retro_numeric = phq9.little_interest_or_pleasure_in_doing_things_numeric,
-    phq.feeling_down_depressed_or_hopeless_retro_numeric = phq9.feeling_down_depressed_or_hopeless_numeric,
-    phq.staying_asleep_sleeping_trouble_retro_numeric = phq9.staying_asleep_sleeping_trouble_numeric,
-    phq.feeling_tired_or_having_little_energy_retro_numeric = phq9.feeling_tired_or_having_little_energy_numeric,
-    phq.poor_appetite_or_overeating_retro_numeric = phq9.poor_appetite_or_overeating_numeric,
-    phq.feeling_bad_failure_family_retro_numeric = phq9.feeling_bad_failure_family_numeric,
-    phq.trouble_concentrating_reading_newspaper_retro_numeric = phq9.trouble_concentrating_newspaper_reading_numeric, # differ GLAD prepandemic
-    phq.moving_fidgety_noticed_opposite_retro_numeric = phq9.moving_fidgety_opposite_slowly_numeric, # differ GLAD prepandemic
-    phq.dead_hurting_thoughts_retro_numeric = phq9.dead_hurting_thoughts_numeric,
-    phq.little_interest_or_pleasure_in_doing_things_base = phq9.little_interest_or_pleasure_in_doing_things.1,
-    phq.feeling_down_depressed_or_hopeless_base = phq9.feeling_down_depressed_or_hopeless.1,
-    phq.staying_asleep_sleeping_trouble_base = phq9.staying_asleep_sleeping_trouble.1,
-    phq.feeling_tired_or_having_little_energy_base = phq9.feeling_tired_or_having_little_energy.1,
-    phq.poor_appetite_or_overeating_base = phq9.poor_appetite_or_overeating.1,
-    phq.feeling_bad_failure_family_base = phq9.feeling_bad_failure_family.1,
-    phq.trouble_concentrating_reading_newspaper_base = phq9.trouble_concentrating_newspaper_reading.1, # differ GLAD prepandemic
-    phq.moving_fidgety_noticed_opposite_base = phq9.moving_fidgety_opposite_slowly.1, # differ GLAD prepandemic
-    phq.dead_hurting_thoughts_base = phq9.dead_hurting_thoughts.1,
-    phq.little_interest_or_pleasure_in_doing_things_base_numeric = phq9.little_interest_or_pleasure_in_doing_things.1_numeric,
-    phq.feeling_down_depressed_or_hopeless_base_numeric = phq9.feeling_down_depressed_or_hopeless.1_numeric,
-    phq.staying_asleep_sleeping_trouble_base_numeric = phq9.staying_asleep_sleeping_trouble.1_numeric,
-    phq.feeling_tired_or_having_little_energy_base_numeric = phq9.feeling_tired_or_having_little_energy.1_numeric,
-    phq.poor_appetite_or_overeating_base_numeric = phq9.poor_appetite_or_overeating.1_numeric,
-    phq.feeling_bad_failure_family_base_numeric = phq9.feeling_bad_failure_family.1_numeric,
-    phq.trouble_concentrating_reading_newspaper_base_numeric = phq9.trouble_concentrating_newspaper_reading.1_numeric, # differ GLAD prepandemic
-    phq.moving_fidgety_noticed_opposite_base_numeric = phq9.moving_fidgety_opposite_slowly.1_numeric, # differ GLAD prepandemic
-    phq.dead_hurting_thoughts_base_numeric = phq9.dead_hurting_thoughts_numeric
+    phq.problems_made_difficult_care,
+    phq.pandemic_felt_feelings,
+    phq.little_interest_or_pleasure_in_doing_things_retro = phq.little_interest_or_pleasure_in_doing_things,
+    phq.feeling_down_depressed_or_hopeless_retro = phq.feeling_down_depressed_or_hopeless,
+    phq.staying_asleep_sleeping_trouble_retro = phq.staying_asleep_sleeping_trouble,
+    phq.feeling_tired_or_having_little_energy_retro = phq.feeling_tired_or_having_little_energy,
+    phq.poor_appetite_or_overeating_retro = phq.poor_appetite_or_overeating,
+    phq.feeling_bad_failure_family_retro = phq.feeling_bad_failure_family,
+    phq.trouble_concentrating_reading_newspaper_retro = phq.trouble_concentrating_newspaper_reading, # differ GLAD prepandemic
+    phq.moving_fidgety_noticed_opposite_retro = phq.moving_fidgety_opposite_slowly, # differ GLAD prepandemic
+    phq.dead_hurting_thoughts_retro = phq.dead_hurting_thoughts,
+    phq.little_interest_or_pleasure_in_doing_things_base = phq.little_interest_or_pleasure_in_doing_things.1,
+    phq.feeling_down_depressed_or_hopeless_base = phq.feeling_down_depressed_or_hopeless.1,
+    phq.staying_asleep_sleeping_trouble_base = phq.staying_asleep_sleeping_trouble.1,
+    phq.feeling_tired_or_having_little_energy_base = phq.feeling_tired_or_having_little_energy.1,
+    phq.poor_appetite_or_overeating_base = phq.poor_appetite_or_overeating.1,
+    phq.feeling_bad_failure_family_base = phq.feeling_bad_failure_family.1,
+    phq.trouble_concentrating_reading_newspaper_base = phq.trouble_concentrating_newspaper_reading.1, # differ GLAD prepandemic
+    phq.moving_fidgety_noticed_opposite_base = phq.moving_fidgety_opposite_slowly.1, # differ GLAD prepandemic
+    phq.dead_hurting_thoughts_base = phq.dead_hurting_thoughts.1
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -1813,11 +2271,11 @@ phq.scored_items_retro <- scoreItems(keys = phq.items_key_retro,
                                      min = 0, 
                                      max = 3)
 # Add in column to tibble
-coping.glad.phq.raw.id$phq.sum_score_retro <- phq.scored_items_retro$scores
+coping.glad.phq.raw.id$phq.sum_score_retro_raw <- phq.scored_items_retro$scores
 
 # Look at values
 coping.glad.phq.raw.id %>%
-  descr(phq.sum_score_retro,
+  descr(phq.sum_score_retro_raw,
         stats = "common"
   )
 ```
@@ -1850,14 +2308,160 @@ phq.scored_items_base <- scoreItems(keys = phq.items_key_base,
                                     min = 0, 
                                     max = 3)
 # Add in column to tibble
-coping.glad.phq.raw.id$phq.sum_score_base <- phq.scored_items_base$scores
+coping.glad.phq.raw.id$phq.sum_score_base_raw <- phq.scored_items_base$scores
 
 # Look at values
 coping.glad.phq.raw.id %>%
-  descr(phq.sum_score_base,
+  descr(phq.sum_score_base_raw,
         stats = "common"
   )
 ```
+
+
+missigness
+
+retrospective
+```{r coping phq retro missingness}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    na_per_person_phq_retro =         # variable for NA per person
+      rowSums(
+        is.na(.[phq.items_retro])
+      )
+  )
+
+coping.glad.phq.raw.id %>%
+  freq(na_per_person_phq_retro, cumul = F) #have a look at the frequency
+```
+
+
+```{r coping phq retro missingness 8 items}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    phq.missing_only_suicide_item_retro = 
+      if_else(
+        condition = na_per_person_phq_retro == 1 & 
+          is.na(phq.dead_hurting_thoughts_retro_numeric), 
+        true = 1,
+        false = 0,
+        missing = NA_real_
+      )
+  )
+
+coping.glad.phq.raw.id %>%
+  freq(phq.missing_only_suicide_item_retro,
+       cumul = F)
+```
+
+
+baseline
+```{r coping phq base missingness}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    na_per_person_phq_base =         # variable for NA per person
+      rowSums(                       
+        is.na(.[phq.items_base])
+      )
+  )
+
+coping.glad.phq.raw.id %>%
+  freq(na_per_person_phq_base, cumul = F) #have a look at the frequency
+```
+
+
+We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
+```{r coping phq base missingness 8 items}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    phq.missing_only_suicide_item_base = 
+      if_else(
+        condition = na_per_person_phq_base == 1 & 
+          is.na(phq.dead_hurting_thoughts_base_numeric), 
+        true = 1,
+        false = 0,
+        missing = NA_real_
+      )
+  )
+
+coping.glad.phq.raw.id %>%
+  freq(phq.missing_only_suicide_item_base,
+       cumul = F)
+```
+
+
+```{r coping phq base sum score if missigng items set to NA}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    phq.sum_score_base =
+      if_else(condition = na_per_person_phq_base > 0,
+              true = NA_real_,
+              false = phq.sum_score_base_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.phq.raw.id %>%
+  descr(phq.sum_score_base_raw, stats = "common")
+
+coping.glad.phq.raw.id %>%
+  descr(phq.sum_score_base, stats = "common")
+```
+
+8 items
+```{r phq base sum score if missigng items set to NA - 8 items}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    phq.sum_score_8items_base =
+      if_else(condition = na_per_person_phq_base > 1 &
+                phq.missing_only_suicide_item_base == 1,
+              true = NA_real_,
+              false = phq.sum_score_base_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.phq.raw.id %>%
+  descr(phq.sum_score_8items_base, stats = "common")
+```
+
+
+```{r coping phq retro sum score if missigng items set to NA}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    phq.sum_score_retro =
+      if_else(condition = na_per_person_phq_retro > 0,
+              true = NA_real_,
+              false = phq.sum_score_retro_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.phq.raw.id %>%
+  descr(phq.sum_score_retro_raw, stats = "common")
+
+coping.glad.phq.raw.id %>%
+  descr(phq.sum_score_retro, stats = "common")
+```
+
+8 items
+```{r phq retro sum score if missigng items set to NA - 8 items}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    phq.sum_score_8items_retro =
+      if_else(condition = na_per_person_phq_retro > 1 &
+                phq.missing_only_suicide_item_retro == 1,
+              true = NA_real_,
+              false = phq.sum_score_retro_raw,
+              missing = NA_real_
+      )
+  )
+
+
+coping.glad.phq.raw.id %>%
+  descr(phq.sum_score_8items_retro, stats = "common")
+```
+
+
 
 ```{r coping glad phq head}
 head(coping.glad.phq.raw.id)
@@ -1874,7 +2478,7 @@ summarytools::dfSummary(
 # glad COPING ocir
 
 ```{r coping glad ocir cols}
-coping.glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/2020-08-04/glad/ocir_coping_glad.rds"))
+coping.glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/glad/ocir_coping_glad.rds"))
 dim(coping.glad.ocir.raw)
 colnames(coping.glad.ocir.raw)
 ```
@@ -1899,6 +2503,7 @@ coping.glad.ocir.raw.id <- coping.glad.ocir.raw %>%
   select(
     Sample, # Sample
     ID, # ID
+    ocir.felt_pandemic_feelings, # Comparison to before the pandemic
     ocir.i_repeatedly_check_doors_windows_drawers_etc_retro = ocir.i_repeatedly_check_doors_windows_drawers_etc.,
     ocir.arranged_things_change_upset_retro = ocir.arranged_things_change_upset,
     ocir.repeat_feel_numbers_retro = ocir.numbers_repeat_feel, ## Different from GLAD prepandemic
@@ -1936,6 +2541,7 @@ coping.glad.ocir.raw.id <- coping.glad.ocir.raw %>%
     ocir.control_difficult_find_thoughts_base = ocir.control_find_difficult_thoughts.1, ## Different from GLAD prepandemic
     ocir.i_collect_things_i_dont_need_base = ocir.i_collect_things_i_dont_need..1
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -1993,11 +2599,11 @@ ocir.scored_items_retro <- scoreItems(keys = ocir.items_key_retro,
                                      min = 0, 
                                      max = 4)
 # Add in column to tibble
-coping.glad.ocir.raw.id$ocir.sum_score_retro <- ocir.scored_items_retro$scores
+coping.glad.ocir.raw.id$ocir.sum_score_retro_raw <- ocir.scored_items_retro$scores
 
 # Look at values
 coping.glad.ocir.raw.id %>%
-  descr(ocir.sum_score_retro,
+  descr(ocir.sum_score_retro_raw,
         stats = "common"
   )
 ```
@@ -2039,13 +2645,81 @@ ocir.scored_items_base <- scoreItems(keys = ocir.items_key_base,
                                     min = 0, 
                                     max = 4)
 # Add in column to tibble
-coping.glad.ocir.raw.id$ocir.sum_score_base <- ocir.scored_items_base$scores
+coping.glad.ocir.raw.id$ocir.sum_score_base_raw <- ocir.scored_items_base$scores
 
 # Look at values
 coping.glad.ocir.raw.id %>%
-  descr(ocir.sum_score_base,
+  descr(ocir.sum_score_base_raw,
         stats = "common"
   )
+```
+
+
+missigness
+
+retrospective
+```{r coping ocir retro missingness}
+coping.glad.ocir.raw.id <- coping.glad.ocir.raw.id %>%
+  mutate(
+    na_per_person_ocir_retro =         # variable for NA per person
+      rowSums(
+        is.na(.[ocir.items_retro])
+      )
+  )
+
+coping.glad.ocir.raw.id %>%
+  freq(na_per_person_ocir_retro, cumul = F) #have a look at the frequency
+```
+
+
+baseline
+```{r coping ocir base missingness}
+coping.glad.ocir.raw.id <- coping.glad.ocir.raw.id %>%
+  mutate(
+    na_per_person_ocir_base =         # variable for NA per person
+      rowSums(                       
+        is.na(.[ocir.items_base])
+      )
+  )
+
+coping.glad.ocir.raw.id %>%
+  freq(na_per_person_ocir_base, cumul = F) #have a look at the frequency
+```
+
+```{r coping ocir base sum score if missigng items set to NA}
+coping.glad.ocir.raw.id <- coping.glad.ocir.raw.id %>%
+  mutate(
+    ocir.sum_score_base =
+      if_else(condition = na_per_person_ocir_base > 0,
+              true = NA_real_,
+              false = ocir.sum_score_base_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.ocir.raw.id %>%
+  descr(ocir.sum_score_base_raw, stats = "common")
+
+coping.glad.ocir.raw.id %>%
+  descr(ocir.sum_score_base, stats = "common")
+```
+
+```{r coping ocir retro sum score if missigng items set to NA}
+coping.glad.ocir.raw.id <- coping.glad.ocir.raw.id %>%
+  mutate(
+    ocir.sum_score_retro =
+      if_else(condition = na_per_person_ocir_retro > 0,
+              true = NA_real_,
+              false = ocir.sum_score_retro_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.ocir.raw.id %>%
+  descr(ocir.sum_score_retro_raw, stats = "common")
+
+coping.glad.ocir.raw.id %>%
+  descr(ocir.sum_score_retro, stats = "common")
 ```
 
 ```{r coping glad ocir head}
@@ -2067,7 +2741,7 @@ glad data frame list
 glad.dfs.list <- list(
   glad.dem.raw.id,
   glad.gad.raw.id,
-  glad.mhq.raw.categories,
+  glad.mhd.raw.categories,
   glad.ocir.raw.id,
   glad.pcl.raw.id,
   glad.phq.raw.id,
@@ -2153,543 +2827,11 @@ Exclusion of inflammatory bowel disease (IBD) BioResource (BR) cohort
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age
 ```
 
-##Missingness of questionnaire items
-#PHQ - baseline
-PHQ Missingness NAs per person - count and percentages
-```{r PHQ baseline missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_phq_base =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the PHQ items at baseline
-           %in%
-             phq.items_base]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_base) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_phq_base = 
-      na_per_person_phq_base/9 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_base)
-```
-
-```{r PHQ baseline missingness 8 items}
-#We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    phq.base_cut_off = 
-      if_else(
-        na_per_person_phq_base == 1 & 
-          is.na(phq.dead_hurting_thoughts_base_numeric), 
-        1,
-        0
-      )
-  )
-
-table(dat.no.sex.no.gender.no.age.no.ibd$phq.base_cut_off)
-```
-
-
-#PHQ - retrospective
-PHQ Missingness NAs per person - count and percentages
-```{r PHQ retrospective missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_phq_retro =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the PHQ items at retroline
-           %in%
-             phq.items_retro]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_retro) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_phq_retro = 
-      na_per_person_phq_retro/9 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_retro)
-```
-
-
-```{r PHQ retro missingness 8 items}
-#We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    phq.retro_cut_off = 
-      if_else(
-        na_per_person_phq_retro == 1 & 
-          is.na(phq.dead_hurting_thoughts_retro_numeric), 
-        1,
-        0
-      )
-  )
-
-table(dat.no.sex.no.gender.no.age.no.ibd$phq.retro_cut_off)
-```
-
-#PHQ - prepandemic
-PHQ Missingness NAs per person - count and percentages
-```{r PHQ prepan missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_phq_prepan =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the PHQ items at prepanline
-           %in%
-             phq.items_prepan]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_prepan) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_phq_prepan = 
-      na_per_person_phq_prepan/9 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_phq_prepan)
-```
-
-
-```{r PHQ prepan missingness 8 items}
-#We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    phq.prepan_cut_off = 
-      if_else(
-        na_per_person_phq_prepan == 1 & 
-          is.na(phq.dead_hurting_thoughts_prepan_numeric), 
-        1,
-        0
-      )
-  )
-
-table(dat.no.sex.no.gender.no.age.no.ibd$phq.prepan_cut_off)
-```
-
-Count for PHQ baseline, retrospective, and prepandemic missingness per person
-```{r count of people missing a number of items for PHQ}
-#baseline
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_base)
-#retrospective
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_retro)
-#pre-pandemic
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_phq_prepan)
-```
-
-
-#GAD - baseline
-GAD Missingness NAs per person - count and percentages
-```{r gad baseline missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_gad_base =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the gad items at baseline
-           %in%
-             gad.items_base]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_base) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_gad_base = 
-      na_per_person_gad_base/7 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_gad_base)
-```
-
-#GAD - retrospective
-GAD Missingness NAs per person - count and percentages
-```{r gad retrospective missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_gad_retro =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the gad items at retroline
-           %in%
-             gad.items_retro]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_retro) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_gad_retro = 
-      na_per_person_gad_retro/7 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_gad_retro)
-```
-
-#GAD - prepandemic
-GAD Missingness NAs per person - count and percentages
-```{r gad prepan missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_gad_prepan =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the gad items at prepanline
-           %in%
-             gad.items_prepan]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_prepan) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_gad_prepan = 
-      na_per_person_gad_prepan/7 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_gad_prepan)
-```
-
-Count for gad baseline, retrospective, and prepandemic missingness per person
-```{r count of people missing a number of items for gad}
-#baseline
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_base)
-#retrospective
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_retro)
-#pre-pandemic
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_prepan)
-```
-
-
-#PCL - baseline
-PCL Missingness NAs per person - count and percentages
-```{r pcl baseline missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_pcl_base =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the pcl items at baseline
-           %in%
-             pcl.items_base]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_base) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_pcl_base = 
-      na_per_person_pcl_base/6 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_pcl_base)
-```
-
-#PCL - retrospective
-PCL Missingness NAs per person - count and percentages
-```{r pcl retrospective missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_pcl_retro =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the pcl items at retroline
-           %in%
-             pcl.items_retro]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_retro) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_pcl_retro = 
-      na_per_person_pcl_retro/6 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_pcl_retro)
-```
-
-#PCL - prepandemic
-pcl Missingness NAs per person - count and percentages
-```{r pcl prepan missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_pcl_prepan =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the pcl items at prepanline
-           %in%
-             pcl.items_prepan]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_prepan) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_pcl_prepan = 
-      na_per_person_pcl_prepan/6 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_pcl_prepan)
-```
-
-Count for pcl baseline, retrospective, and prepandemic missingness per person
-```{r count of people missing a number of items for pcl}
-# baseline
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_base)
-# retrospective
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_retro)
-# pre-pandemic
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_pcl_prepan)
-
-# rename dataset
-dat.no.sex.no.gender.no.age.no.ibd.missingness <- dat.no.sex.no.gender.no.age.no.ibd
-```
-
-
-#OCI-R - baseline
-OCI-R Missingness NAs per person - count and percentages
-```{r OCI-R baseline missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_ocir_base =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the OCI-R items at baseline
-           %in%
-             ocir.items_base]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_base) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_ocir_base = 
-      na_per_person_ocir_base/18 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_ocir_base)
-```
-
-#OCI-R - retrospective
-OCI-R Missingness NAs per person - count and percentages
-```{r OCI-R retrospective missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_ocir_retro =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the OCI-R items at retroline
-           %in%
-             ocir.items_retro]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_retro) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_ocir_retro = 
-      na_per_person_ocir_retro/18 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_ocir_retro)
-```
-
-#OCI-R - prepandemic
-OCI-R Missingness NAs per person - count and percentages
-```{r OCI-R prepan missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_ocir_prepan =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the OCI-R items at prepanline
-           %in%
-             ocir.items_prepan]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_prepan) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_ocir_prepan = 
-      na_per_person_ocir_prepan/18 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_ocir_prepan)
-```
-
-Count for OCI-R baseline, retrospective, and prepandemic missingness per person
-```{r count of people missing a number of items for OCI-R}
-#baseline
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_base)
-#retrospective
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_retro)
-#pre-pandemic
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_ocir_prepan)
-```
-
-#Sum scores missingness cut offs
-KT: This series of chunks creates a "full" sum score for the PHQ, GAD and PCL. 
-
-PHQ
-The PHQ sum score is set to NA if they have more than one missing item, and it is not the last suicide ideation item (they do not meet the cut off criteria - phq.base_cut_off)
-```{r sum score cut offs PHQ base}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    phq.sum_score_base_full =
-      if_else(na_per_person_phq_base > 1 & phq.base_cut_off == 0,
-              NA_real_,
-              phq.sum_score_base
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_base)
-summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_base_full)
-```
-
-```{r sum score cut offs PHQ prepan}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    phq.sum_score_prepan_full =
-      if_else(na_per_person_phq_prepan > 1 & phq.prepan_cut_off == 0,
-              NA_real_,
-              phq.sum_score_prepan
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_prepan)
-summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_prepan_full)
-```
-
-```{r sum score cut offs PHQ retro}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    phq.sum_score_retro_full =
-      if_else(na_per_person_phq_retro > 1 & phq.retro_cut_off == 0,
-              NA_real_,
-              phq.sum_score_retro
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_retro)
-summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_retro_full)
-```
-
-GAD
-The GAD sum score is set to NA if they have any missing items
-```{r sum score cut offs GAD base}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    gad.sum_score_base_full =
-      if_else(na_per_person_gad_base > 0,
-              NA_real_,
-              gad.sum_score_base
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_base)
-summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_base_full)
-```
-
-```{r sum score cut offs GAD prepan}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    gad.sum_score_prepan_full =
-      if_else(na_per_person_gad_prepan > 0,
-              NA_real_,
-              gad.sum_score_prepan
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_prepan)
-summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_prepan_full)
-```
-
-```{r sum score cut offs GAD retro}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    gad.sum_score_retro_full =
-      if_else(na_per_person_gad_retro > 0,
-              NA_real_,
-              gad.sum_score_retro
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_retro)
-summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_retro_full)
-```
-
-PCL
-The PCL sum score is set to NA if they have any missing items - only for basline and prepan.
-```{r sum score cut offs PCL base}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    pcl.sum_score_base_full =
-      if_else(na_per_person_pcl_base > 0,
-              NA_real_,
-              pcl.sum_score_base
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_base)
-summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_base_full)
-```
-
-```{r sum score cut offs PCL prepan}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    pcl.sum_score_prepan_full =
-      if_else(na_per_person_pcl_prepan > 0,
-              NA_real_,
-              pcl.sum_score_prepan
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_prepan)
-summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_prepan_full)
-```
-
-
 
 ##Create tidy data on which the exclusion criteria have been applied
 Complete sex, gender, age and missingness information applied. 
 ```{r Tidy data}
-dat.glad <- dat.no.sex.no.gender.no.age.no.ibd.missingness
+dat.glad <- dat.no.sex.no.gender.no.age.no.ibd
 
 skimr::skim(dat.glad)
 ```
@@ -2837,8 +2979,36 @@ dat.glad <- dat.glad %>%
       )
   )
 
-table(dat.glad$over_one_year_time_diff_sign_up_coping)
+dat.glad %>%
+  freq(over_one_year_time_diff_sign_up_coping, cumul = F)
 ```
+
+Proportion of people signed up over one year ago
+```{r eval=FALSE, include=FALSE}
+dat.glad <- dat.glad %>%
+  mutate(
+    over_half_a_year_time_diff_sign_up_coping_numeric =
+      as.numeric(
+        if_else(time_diff_sign_up_coping > 182.5, 1, 0
+                )
+      )
+  )
+
+dat.glad <- dat.glad %>%
+  mutate(
+    over_half_a_year_time_diff_sign_up_coping =
+      recode_factor(
+        over_half_a_year_time_diff_sign_up_coping_numeric,
+        "0" = "Sign up under half a year before COPING",
+        "1" = "Sign up over half a year before COPING"
+      )
+  )
+
+dat.glad %>%
+  freq(over_half_a_year_time_diff_sign_up_coping, cumul = F)
+```
+
+
 
 #Total score comparison between PHQ, PCL and GAD, prepandemic, retrospecive and baseline
 PHQ difference scores
@@ -3097,7 +3267,7 @@ coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw %>%
          startDate.glad = startDate) %>% # Rename startDate
   select(
     Sample, # Sample
-    ID,
+    ID, # ID
     respiratory.breath_diarrhoea_fatigue_fever,
     respiratory.worst_ill_feel,
     respiratory.persistent_cough,
@@ -3109,8 +3279,8 @@ coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw %>%
     respiratory.throat_swab_test_nose,
     respiratory.coronavirus_antibody_test,
     respiratory.results_antibody_test
-    # ID
   ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -3132,21 +3302,10 @@ dim(coping.glad.respiratory.raw)[1]-dim(coping.glad.respiratory.raw.id)[1]
 
 ```
 
-```{r create respiratory numeric variables}
-exclude_cols <- c("ID",
-                  "Sample")
-
-coping.glad.respiratory.raw.numeric <- add_numeric(coping.glad.respiratory.raw.id, exclude = exclude_cols)
-
-colnames(coping.glad.respiratory.raw.numeric)
-dim(coping.glad.respiratory.raw.numeric)
-dim(coping.glad.respiratory.raw.id)
-```
-
 #Distribution of likert scale COVID-19 symptoms in COPING
 ```{r distribution of COVID symptoms}
 #persistent cough
-coping.glad.respiratory.raw.numeric %>%
+coping.glad.respiratory.raw.id %>%
   ggplot(
     mapping = aes(
       y = respiratory.persistent_cough_numeric 
@@ -3158,7 +3317,7 @@ coping.glad.respiratory.raw.numeric %>%
   )
 
 #severe fatigue
-coping.glad.respiratory.raw.numeric %>%
+coping.glad.respiratory.raw.id %>%
   ggplot(
     mapping = aes(
         y = respiratory.feeling_tiredfatigued_numeric 
@@ -3170,7 +3329,7 @@ coping.glad.respiratory.raw.numeric %>%
   )
 
 #skipped meals
-coping.glad.respiratory.raw.numeric %>%
+coping.glad.respiratory.raw.id %>%
   ggplot(
     mapping = aes(
         y = respiratory.skipping_meals_because_you_felt_unwell_numeric
@@ -3198,21 +3357,21 @@ Skipped meals: "Moderate symptoms" as cut off
 #persistent cough
 percentage_pcough <- ((0.5673*6452) + (0.4556*9186) + (0.3017*2434931))/(6452+9186+2434931)
 percentage_pcough    # 0.3029762% of Menni et al(2020) have fatigue
-quantile(x = coping.glad.respiratory.raw.numeric$respiratory.persistent_cough_numeric, 
+quantile(x = coping.glad.respiratory.raw.id$respiratory.persistent_cough_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_pcough) # this gives 0.3029762% of the sample reporting fatigue when using the "mild symptoms" persistent cough response
 
 #fatigue
 percentage_fatigue <- ((0.298*6452) + (0.1556*9186) + (0.0871*2434931))/(6452+9186+2434931) 
 percentage_fatigue   # 0.08791204% of Menni et al(2020) have fatigue
-quantile(x = coping.glad.respiratory.raw.numeric$respiratory.feeling_tiredfatigued_numeric, 
+quantile(x = coping.glad.respiratory.raw.id$respiratory.feeling_tiredfatigued_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_fatigue) #this gives 8% of the sample reporting fatigue when using the "severe symptoms" fatigue response
 
 #skipped meals 
 percentage_skipped_meals <- ((0.4203*6452) + (0.2493*9186) + (0.1912*2434931))/(6452+9186+2434931) 
 percentage_skipped_meals    # 0.192021% of Menni et al(2020) have fatigue
-quantile(x = coping.glad.respiratory.raw.numeric$respiratory.skipping_meals_because_you_felt_unwell_numeric, 
+quantile(x = coping.glad.respiratory.raw.id$respiratory.skipping_meals_because_you_felt_unwell_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_skipped_meals) # this gives 0.192021% of the sample reporting fatigue when using the "moderate symptoms" persistent cough response
 ```
@@ -3220,7 +3379,7 @@ quantile(x = coping.glad.respiratory.raw.numeric$respiratory.skipping_meals_beca
 Creating binary groups for COVID symptoms
 ```{r creating binary groups for COVID symptoms}
 #loss or smell or taste
-coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
   mutate(
     respiratory.anosmia_binary =
       if_else(
@@ -3231,7 +3390,7 @@ coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
   )
 
 #persistent cough
-coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
   mutate(
     respiratory.pcough_binary =
       if_else(
@@ -3242,7 +3401,7 @@ coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
   )
 
 #fatigue
-coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
   mutate(
     respiratory.fatigue_binary =
       if_else(
@@ -3253,7 +3412,7 @@ coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
   )
 
 #skipped meals
-coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
+coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
   mutate(
     respiratory.skipped_meals_binary =
       if_else(
@@ -3266,15 +3425,15 @@ coping.glad.respiratory.raw.numeric <- coping.glad.respiratory.raw.numeric %>%
 
 Frequencies of binary COVID symptoms
 ```{r frequencies of COVID binary symptoms}
-freq(coping.glad.respiratory.raw.numeric$respiratory.anosmia_binary)
-freq(coping.glad.respiratory.raw.numeric$respiratory.pcough_binary)
-freq(coping.glad.respiratory.raw.numeric$respiratory.fatigue_binary)
-freq(coping.glad.respiratory.raw.numeric$respiratory.skipped_meals_binary)
+freq(coping.glad.respiratory.raw.id$respiratory.anosmia_binary)
+freq(coping.glad.respiratory.raw.id$respiratory.pcough_binary)
+freq(coping.glad.respiratory.raw.id$respiratory.fatigue_binary)
+freq(coping.glad.respiratory.raw.id$respiratory.skipped_meals_binary)
 ```
 
 Rename respiratory dataset joined to main dataset
 ```{r clean respiratory dataset}
-coping.glad.respiratory <- coping.glad.respiratory.raw.numeric
+coping.glad.respiratory <- coping.glad.respiratory.raw.id
 
 dat.glad.coping <- left_join(
   x = dat.glad,
