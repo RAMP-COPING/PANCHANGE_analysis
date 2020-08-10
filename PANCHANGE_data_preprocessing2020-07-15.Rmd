@@ -378,6 +378,15 @@ if(NBR = TRUE){
 
 ```
 
+```{r glad gad summary}
+if(NBR == TRUE) {
+summarytools::dfSummary(
+  nbr.cohort,
+  graph.col = F,
+  valid.col = F,
+  labels.col = F)
+}
+```
 
 
 # glad gad
