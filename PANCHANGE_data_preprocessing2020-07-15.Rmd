@@ -1336,6 +1336,24 @@ glad.pcl.raw.id %>%
         )
 ```
 
+## Missigness
+
+## prepandemic
+```{r PCL prepan missingness}
+glad.pcl.raw.id <- glad.pcl.raw.id %>%
+  mutate(
+    na_per_person_pcl_prepan =         # variable for NA per person
+      rowSums(                       
+        is.na(.[pcl.items_prepan])
+      )
+  )
+
+glad.pcl.raw.id %>%
+  freq(na_per_person_pcl_prepan,
+       cumul = F)
+```
+
+
 
 ```{r glad pcl head}
 head(glad.pcl.raw.id)
@@ -1753,10 +1771,10 @@ coping.glad.gad.raw.id %>%
         )
 ```
 
-# GAD missingness
+Missigness
 
-## baseline
-```{r GAD baseline missingness}
+baseline
+```{r coping gad baseline missingness}
 coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
   mutate(
     na_per_person_gad_base =         # variable for NA per person
@@ -1769,28 +1787,7 @@ coping.glad.gad.raw.id %>%
   freq(na_per_person_gad_base, cumul = F) #have a look at the frequency
 ```
 
-
-We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
-```{r GAD base missingness 8 items}
-coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
-  mutate(
-    gad.missing_only_suicide_item_base = 
-      if_else(
-        condition = na_per_person_gad_base == 1 & 
-          is.na(gad.dead_hurting_thoughts_base_numeric), 
-        true = 1,
-        false = 0,
-        missing = NA_real_
-      )
-  )
-
-coping.glad.gad.raw.id %>%
-  freq(gad.missing_only_suicide_item_base,
-       cumul = F)
-```
-
-## retrospective
-```{r GAD retrospective missingness}
+```{r coping gad retrospective missingness}
 coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
   mutate(
     na_per_person_gad_retro =         # variable for NA per person
@@ -1801,25 +1798,6 @@ coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
 
 coping.glad.gad.raw.id %>%
   freq(na_per_person_gad_retro, cumul = F) #have a look at the frequency
-```
-
-
-```{r GAD retro missingness 8 items}
-coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
-  mutate(
-    gad.missing_only_suicide_item_retro = 
-      if_else(
-        condition = na_per_person_gad_retro == 1 & 
-          is.na(gad.dead_hurting_thoughts_retro_numeric), 
-        true = 1,
-        false = 0,
-        missing = NA_real_
-      )
-  )
-
-coping.glad.gad.raw.id %>%
-  freq(gad.missing_only_suicide_item_retro,
-       cumul = F)
 ```
 
 
@@ -1967,6 +1945,39 @@ coping.glad.pcl.raw.id %>%
         stats = "common"
   )
 ```
+
+
+PCL missingness (NAs per person)
+
+baseline
+```{r coping pcl baseline missingness}
+coping.glad.pcl.raw.id <- coping.glad.pcl.raw.id %>%
+  mutate(
+    na_per_person_pcl_base =         # variable for NA per person
+      rowSums(                       
+        is.na(.[pcl.items_base])
+      )
+  )
+
+coping.glad.pcl.raw.id %>%
+  freq(na_per_person_pcl_base, cumul = F) #have a look at the frequency
+```
+
+
+retrospective
+```{r coping pcl retrospective missingness}
+coping.glad.pcl.raw.id <- coping.glad.pcl.raw.id %>%
+  mutate(
+    na_per_person_pcl_retro =         # variable for NA per person
+      rowSums(
+        is.na(.[pcl.items_retro])
+      )
+  )
+
+coping.glad.pcl.raw.id %>%
+  freq(na_per_person_pcl_retro, cumul = F) #have a look at the frequency
+```
+
 
 ```{r coping glad pcl head}
 head(coping.glad.pcl.raw.id)
@@ -2494,94 +2505,6 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age
 ```
 
 
-
-#GAD - baseline
-GAD Missingness NAs per person - count and percentages
-```{r gad baseline missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_gad_base =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the gad items at baseline
-           %in%
-             gad.items_base]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_base) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_gad_base = 
-      na_per_person_gad_base/7 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_gad_base)
-```
-
-#GAD - retrospective
-GAD Missingness NAs per person - count and percentages
-```{r gad retrospective missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_gad_retro =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the gad items at retroline
-           %in%
-             gad.items_retro]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_retro) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_gad_retro = 
-      na_per_person_gad_retro/7 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_gad_retro)
-```
-
-#GAD - prepandemic
-GAD Missingness NAs per person - count and percentages
-```{r gad prepan missingness}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    na_per_person_gad_prepan =         # variable for NA per person
-      rowSums(                       
-        is.na(dat.no.sex.no.gender.no.age.no.ibd # sum the rows that are NA
-          [,colnames(dat.no.sex.no.gender.no.age.no.ibd) #for all the rows and columns that are in the gad items at prepanline
-           %in%
-             gad.items_prepan]
-        )
-    )
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_prepan) #have a look at the frequency 
-
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>% #NA per person as a percentage
-  mutate(
-    miss_pc_total_gad_prepan = 
-      na_per_person_gad_prepan/7 # NA per person divided by the amount of items
-  )
-
-freq(dat.no.sex.no.gender.no.age.no.ibd$miss_pc_total_gad_prepan)
-```
-
-Count for gad baseline, retrospective, and prepandemic missingness per person
-```{r count of people missing a number of items for gad}
-#baseline
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_base)
-#retrospective
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_retro)
-#pre-pandemic
-table(dat.no.sex.no.gender.no.age.no.ibd$na_per_person_gad_prepan)
-```
 
 
 #PCL - baseline
