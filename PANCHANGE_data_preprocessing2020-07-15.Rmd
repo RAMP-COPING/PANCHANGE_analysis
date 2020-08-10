@@ -1336,10 +1336,10 @@ glad.pcl.raw.id %>%
         )
 ```
 
-## Missigness
+Missigness
 
-## prepandemic
-```{r PCL prepan missingness}
+prepandemic
+```{r pcl prepan missingness}
 glad.pcl.raw.id <- glad.pcl.raw.id %>%
   mutate(
     na_per_person_pcl_prepan =         # variable for NA per person
@@ -1455,14 +1455,10 @@ glad.phq.raw.id %>%
         )
 ```
 
-# PHQ missingness (NAs per person)
+PHQ missingness (NAs per person)
 
-
-
-
-
-## prepandemic
-```{r PHQ prepan missingness}
+prepandemic
+```{r phq prepan missingness}
 glad.phq.raw.id <- glad.phq.raw.id %>%
   mutate(
     na_per_person_phq_prepan =         # variable for NA per person
@@ -1477,7 +1473,7 @@ glad.phq.raw.id %>%
 ```
 
 
-```{r PHQ prepan missingness 8 items}
+```{r phq prepan missingness 8 items}
 glad.phq.raw.id <- glad.phq.raw.id %>%
   mutate(
     phq.missing_only_suicide_item_prepan = 
@@ -1615,6 +1611,23 @@ glad.ocir.raw.id %>%
         stats = "common"
         )
 ```
+
+prepandemic
+```{r ocir prepan missingness}
+glad.ocir.raw.id <- glad.ocir.raw.id %>%
+  mutate(
+    na_per_person_ocir_prepan =         # variable for NA per person
+      rowSums(                       
+        is.na(.[ocir.items_prepan])
+      )
+  )
+
+glad.ocir.raw.id %>%
+  freq(na_per_person_ocir_prepan,
+       cumul = F)
+```
+
+
 
 ```{r glad ocir head}
 head(glad.ocir.raw.id)
