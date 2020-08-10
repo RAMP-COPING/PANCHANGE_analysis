@@ -162,9 +162,8 @@ Note: All COPING surveys are separate surveys
 source("../PANCHANGE_raw_path.R")
 ```
 
-
-## GLAD demographics
-# Read in data
+# GLAD demographics
+## Read in data
 ```{r glad dem cols}
 glad.dem.raw <- readRDS(file = paste0(data.raw_path, "/glad/dem_glad.rds"))
 dim(glad.dem.raw)
@@ -421,7 +420,7 @@ Calculate sum score for GAD-7
 Max should be 21.
 
 *Note that scores with missingness will be changed to NA later in the script
-```{r gad sum score prepan}
+```{r gad sum score prepan raw}
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
 gad.items_key_prepan <- c(1,1,1,1,1,1,1)
@@ -446,14 +445,49 @@ gad.scored_items_prepan <- scoreItems(keys = gad.items_key_prepan,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-glad.gad.raw.id$gad.sum_score_prepan <- gad.scored_items_prepan$scores
+glad.gad.raw.id$gad.sum_score_prepan_raw <- gad.scored_items_prepan$scores
 
 # Look at values
 glad.gad.raw.id %>%
-  descr(gad.sum_score_prepan,
+  descr(gad.sum_score_prepan_raw,
         stats = "common"
         )
 ```
+
+missingness (NAs per person)
+
+prepandemic
+```{r gad prepan missingness}
+glad.gad.raw.id <- glad.gad.raw.id %>%
+  mutate(
+    na_per_person_gad_prepan_raw =         # variable for NA per person
+      rowSums(                       
+        is.na(.[gad.items_prepan])
+      )
+  )
+
+glad.gad.raw.id %>%
+  freq(na_per_person_gad_prepan_raw,
+       cumul = F)
+```
+
+
+```{r gad prepan sum score if missigng items set to NA}
+glad.gad.raw.id <- glad.gad.raw.id %>%
+  mutate(
+    gad.sum_score_prepan =
+      if_else(condition = na_per_person_phq_prepan_raw > 0,
+              true = NA_real_,
+              false = gad.sum_score_prepan,
+              missing = NA_real_
+              )
+  )
+
+summary(glad.gad.raw.id$gad.sum_score_prepan_raw)
+summary(glad.gad.raw.id$gad.sum_score_prepan)
+```
+
+
 
 ```{r glad gad head}
 head(glad.gad.raw.id)
@@ -2575,19 +2609,7 @@ summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_base)
 summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_base_full)
 ```
 
-```{r sum score cut offs PHQ prepan}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    phq.sum_score_prepan_full =
-      if_else(na_per_person_phq_prepan > 1 & phq.prepan_cut_off == 0,
-              NA_real_,
-              phq.sum_score_prepan
-              )
-  )
 
-summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_prepan)
-summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_prepan_full)
-```
 
 ```{r sum score cut offs PHQ retro}
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
