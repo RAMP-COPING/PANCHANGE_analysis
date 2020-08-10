@@ -365,6 +365,21 @@ summarytools::dfSummary(
   labels.col = F)
 ```
 
+# NBR cohort information
+```{r nbr cohort information}
+if(NBR = TRUE){
+  nbr.cohort <- readxl::read_xlsx(
+    path = paste0(data.raw_path, "/nbr/coping_participants_export_20200730.xlsx")
+    )
+
+  dim(nbr.cohort)
+  colnames(nbr.cohort)
+  }
+
+```
+
+
+
 # glad gad
 
 ```{r glad gad cols}
@@ -1194,7 +1209,7 @@ glad.mhd.raw.id %>%
        cumul = F)
 ```
 
-```{r}
+```{r comordbitiy_total_count_factor}
 glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     comorbidity_total_count_factor_numeric =
@@ -3542,6 +3557,33 @@ freq(dat.glad.coping$covid_odds_ratio_50,
      cumul = FALSE) 
 ```
 
+Probable COVID case including the routing question
+```{r}
+dat.glad.coping <- dat.glad.coping %>%
+  mutate(
+    covid_probable_case_incl_screening_numeric =
+      case_when(
+        respiratory.breath_diarrhoea_fatigue_fever_numeric == 0 ~ 0,
+        covid_odds_ratio_50_numeric == 0 ~ 0,
+        covid_odds_ratio_50_numeric == 1 ~ 1
+      )
+  )
+
+#create factor with labels
+dat.glad.coping <- dat.glad.coping %>%
+  mutate(
+    covid_probable_case_incl_screening =
+      recode_factor(
+        covid_probable_case_incl_screening_numeric,
+        "0" = "No COVID",
+        "1" = "Probable COVID"
+      )
+  )
+
+dat.glad.coping %>%
+  freq(covid_probable_case_incl_screening, 
+     cumul = FALSE) 
+```
 
 
 
