@@ -1437,6 +1437,48 @@ glad.phq.raw.id %>%
         )
 ```
 
+# PHQ missingness (NAs per person)
+
+
+
+
+
+## prepandemic
+```{r PHQ prepan missingness}
+glad.phq.raw.id <- glad.phq.raw.id %>%
+  mutate(
+    na_per_person_phq_prepan =         # variable for NA per person
+      rowSums(                       
+        is.na(.[phq.items_prepan])
+      )
+  )
+
+glad.phq.raw.id %>%
+  freq(na_per_person_phq_prepan,
+       cumul = F)
+```
+
+
+```{r PHQ prepan missingness 8 items}
+glad.phq.raw.id <- glad.phq.raw.id %>%
+  mutate(
+    phq.missing_only_suicide_item_prepan = 
+      if_else(
+        condition = na_per_person_phq_prepan == 1 & 
+          is.na(phq.dead_hurting_thoughts_prepan_numeric), 
+        true = 1,
+        false = 0,
+        missing = NA_real_
+      )
+  )
+
+glad.phq.raw.id %>%
+  freq(phq.missing_only_suicide_item_prepan,
+       cumul = F)
+```
+
+
+
 ```{r glad phq head}
 head(glad.phq.raw.id)
 ```
@@ -1710,6 +1752,76 @@ coping.glad.gad.raw.id %>%
         stats = "common"
         )
 ```
+
+# GAD missingness
+
+## baseline
+```{r GAD baseline missingness}
+coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
+  mutate(
+    na_per_person_gad_base =         # variable for NA per person
+      rowSums(                       
+        is.na(.[gad.items_base])
+      )
+  )
+
+coping.glad.gad.raw.id %>%
+  freq(na_per_person_gad_base, cumul = F) #have a look at the frequency
+```
+
+
+We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
+```{r GAD base missingness 8 items}
+coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
+  mutate(
+    gad.missing_only_suicide_item_base = 
+      if_else(
+        condition = na_per_person_gad_base == 1 & 
+          is.na(gad.dead_hurting_thoughts_base_numeric), 
+        true = 1,
+        false = 0,
+        missing = NA_real_
+      )
+  )
+
+coping.glad.gad.raw.id %>%
+  freq(gad.missing_only_suicide_item_base,
+       cumul = F)
+```
+
+## retrospective
+```{r GAD retrospective missingness}
+coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
+  mutate(
+    na_per_person_gad_retro =         # variable for NA per person
+      rowSums(
+        is.na(.[gad.items_retro])
+      )
+  )
+
+coping.glad.gad.raw.id %>%
+  freq(na_per_person_gad_retro, cumul = F) #have a look at the frequency
+```
+
+
+```{r GAD retro missingness 8 items}
+coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
+  mutate(
+    gad.missing_only_suicide_item_retro = 
+      if_else(
+        condition = na_per_person_gad_retro == 1 & 
+          is.na(gad.dead_hurting_thoughts_retro_numeric), 
+        true = 1,
+        false = 0,
+        missing = NA_real_
+      )
+  )
+
+coping.glad.gad.raw.id %>%
+  freq(gad.missing_only_suicide_item_retro,
+       cumul = F)
+```
+
 
 ```{r coping glad gad head}
 head(coping.glad.gad.raw.id)
@@ -2013,6 +2125,78 @@ coping.glad.phq.raw.id %>%
   )
 ```
 
+
+# PHQ missigness
+
+## retrospective
+```{r PHQ retrospective missingness}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    na_per_person_phq_retro =         # variable for NA per person
+      rowSums(
+        is.na(.[phq.items_retro])
+      )
+  )
+
+coping.glad.phq.raw.id %>%
+  freq(na_per_person_phq_retro, cumul = F) #have a look at the frequency
+```
+
+
+```{r PHQ retro missingness 8 items}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    phq.missing_only_suicide_item_retro = 
+      if_else(
+        condition = na_per_person_phq_retro == 1 & 
+          is.na(phq.dead_hurting_thoughts_retro_numeric), 
+        true = 1,
+        false = 0,
+        missing = NA_real_
+      )
+  )
+
+coping.glad.phq.raw.id %>%
+  freq(phq.missing_only_suicide_item_retro,
+       cumul = F)
+```
+
+
+## baseline
+```{r PHQ baseline missingness}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    na_per_person_phq_base =         # variable for NA per person
+      rowSums(                       
+        is.na(.[phq.items_base])
+      )
+  )
+
+coping.glad.phq.raw.id %>%
+  freq(na_per_person_phq_base, cumul = F) #have a look at the frequency
+```
+
+
+We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
+```{r PHQ base missingness 8 items}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    phq.missing_only_suicide_item_base = 
+      if_else(
+        condition = na_per_person_phq_base == 1 & 
+          is.na(phq.dead_hurting_thoughts_base_numeric), 
+        true = 1,
+        false = 0,
+        missing = NA_real_
+      )
+  )
+
+coping.glad.phq.raw.id %>%
+  freq(phq.missing_only_suicide_item_base,
+       cumul = F)
+```
+
+
 ```{r coping glad phq head}
 head(coping.glad.phq.raw.id)
 ```
@@ -2307,110 +2491,6 @@ Exclusion of inflammatory bowel disease (IBD) BioResource (BR) cohort
 #dim(dat.no.sex.no.age)[1]-dim(dat.no.sex.no.age.no.ibd)[1]
 
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age
-```
-
-
-# PHQ missingness (NAs per person)
-
-## baseline
-```{r PHQ baseline missingness}
-coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
-  mutate(
-    na_per_person_phq_base =         # variable for NA per person
-      rowSums(                       
-        is.na(.[phq.items_base])
-        )
-    )
-
-coping.glad.phq.raw.id %>%
-freq(na_per_person_phq_base, cumul = F) #have a look at the frequency
-```
-
-
-We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
-```{r PHQ base missingness 8 items}
-coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
-  mutate(
-    phq.missing_only_suicide_item_base = 
-      if_else(
-        condition = na_per_person_phq_base == 1 & 
-          is.na(phq.dead_hurting_thoughts_base_numeric), 
-        true = 1,
-        false = 0,
-        missing = NA_real_
-      )
-  )
-
-coping.glad.phq.raw.id %>%
-  freq(phq.missing_only_suicide_item_base,
-       cumul = F)
-```
-
-## retrospective
-```{r PHQ retrospective missingness}
-coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
-  mutate(
-    na_per_person_phq_retro =         # variable for NA per person
-      rowSums(
-        is.na(.[phq.items_retro])
-        )
-    )
-
-coping.glad.phq.raw.id %>%
-freq(na_per_person_phq_retro, cumul = F) #have a look at the frequency
-```
-
-
-```{r PHQ retro missingness 8 items}
-coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
-  mutate(
-    phq.missing_only_suicide_item_retro = 
-      if_else(
-        condition = na_per_person_phq_retro == 1 & 
-          is.na(phq.dead_hurting_thoughts_retro_numeric), 
-        true = 1,
-        false = 0,
-        missing = NA_real_
-      )
-  )
-
-coping.glad.phq.raw.id %>%
-  freq(phq.missing_only_suicide_item_retro,
-       cumul = F)
-```
-
-## prepandemic
-```{r PHQ prepan missingness}
-glad.phq.raw.id <- glad.phq.raw.id %>%
-  mutate(
-    na_per_person_phq_prepan =         # variable for NA per person
-      rowSums(                       
-        is.na(.[phq.items_prepan])
-        )
-    )
-
-glad.phq.raw.id %>%
-  freq(na_per_person_phq_prepan,
-       cumul = F)
-```
-
-
-```{r PHQ prepan missingness 8 items}
-glad.phq.raw.id <- glad.phq.raw.id %>%
-  mutate(
-    phq.missing_only_suicide_item_prepan = 
-      if_else(
-        condition = na_per_person_phq_prepan == 1 & 
-          is.na(phq.dead_hurting_thoughts_prepan_numeric), 
-        true = 1,
-        false = 0,
-        missing = NA_real_
-      )
-  )
-
-glad.phq.raw.id %>%
-  freq(phq.missing_only_suicide_item_prepan,
-       cumul = F)
 ```
 
 
