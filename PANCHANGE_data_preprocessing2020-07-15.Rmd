@@ -2686,10 +2686,41 @@ coping.glad.ocir.raw.id %>%
   freq(na_per_person_ocir_base, cumul = F) #have a look at the frequency
 ```
 
+```{r coping ocir base sum score if missigng items set to NA}
+coping.glad.ocir.raw.id <- coping.glad.ocir.raw.id %>%
+  mutate(
+    ocir.sum_score_base =
+      if_else(condition = na_per_person_ocir_base > 0,
+              true = NA_real_,
+              false = ocir.sum_score_base_raw,
+              missing = NA_real_
+      )
+  )
 
+coping.glad.ocir.raw.id %>%
+  descr(ocir.sum_score_base_raw, stats = "common")
 
+coping.glad.ocir.raw.id %>%
+  descr(ocir.sum_score_base, stats = "common")
+```
 
+```{r coping ocir retro sum score if missigng items set to NA}
+coping.glad.ocir.raw.id <- coping.glad.ocir.raw.id %>%
+  mutate(
+    ocir.sum_score_retro =
+      if_else(condition = na_per_person_ocir_retro > 0,
+              true = NA_real_,
+              false = ocir.sum_score_retro_raw,
+              missing = NA_real_
+      )
+  )
 
+coping.glad.ocir.raw.id %>%
+  descr(ocir.sum_score_retro_raw, stats = "common")
+
+coping.glad.ocir.raw.id %>%
+  descr(ocir.sum_score_retro, stats = "common")
+```
 
 ```{r coping glad ocir head}
 head(coping.glad.ocir.raw.id)
