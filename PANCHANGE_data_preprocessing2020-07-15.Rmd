@@ -460,14 +460,14 @@ prepandemic
 ```{r gad prepan missingness}
 glad.gad.raw.id <- glad.gad.raw.id %>%
   mutate(
-    na_per_person_gad_prepan_raw =         # variable for NA per person
+    na_per_person_gad_prepan =         # variable for NA per person
       rowSums(                       
         is.na(.[gad.items_prepan])
       )
   )
 
 glad.gad.raw.id %>%
-  freq(na_per_person_gad_prepan_raw,
+  freq(na_per_person_gad_prepan,
        cumul = F)
 ```
 
@@ -476,15 +476,18 @@ glad.gad.raw.id %>%
 glad.gad.raw.id <- glad.gad.raw.id %>%
   mutate(
     gad.sum_score_prepan =
-      if_else(condition = na_per_person_phq_prepan_raw > 0,
+      if_else(condition = na_per_person_gad_prepan > 0,
               true = NA_real_,
-              false = gad.sum_score_prepan,
+              false = gad.sum_score_prepan_raw,
               missing = NA_real_
               )
   )
 
-summary(glad.gad.raw.id$gad.sum_score_prepan_raw)
-summary(glad.gad.raw.id$gad.sum_score_prepan)
+glad.gad.raw.id %>%
+  descr(gad.sum_score_prepan_raw, stats = "common")
+
+glad.gad.raw.id %>%
+  descr(gad.sum_score_prepan, stats = "common")
 ```
 
 
@@ -1525,6 +1528,44 @@ glad.phq.raw.id %>%
        cumul = F)
 ```
 
+all times
+```{r phq prepan sum score if missigng items set to NA - all times}
+glad.phq.raw.id <- glad.phq.raw.id %>%
+  mutate(
+    phq.sum_score_prepan =
+      if_else(condition = na_per_person_phq_prepan > 0,
+              true = NA_real_,
+              false = phq.sum_score_prepan_raw,
+              missing = NA_real_
+      )
+  )
+
+glad.phq.raw.id %>%
+  descr(phq.sum_score_prepan_raw, stats = "common")
+
+glad.phq.raw.id %>%
+  descr(phq.sum_score_prepan, stats = "common")
+```
+
+8 items
+```{r phq prepan sum score if missigng items set to NA - all times}
+glad.phq.raw.id <- glad.phq.raw.id %>%
+  mutate(
+    phq.sum_score_8items_prepan =
+      if_else(condition = na_per_person_phq_prepan > 1 &
+                phq.missing_only_suicide_item_prepan == 1,
+              true = NA_real_,
+              false = phq.sum_score_prepan_raw,
+              missing = NA_real_
+      )
+  )
+
+glad.phq.raw.id %>%
+  descr(phq.sum_score_8items_prepan_raw, stats = "common")
+
+glad.phq.raw.id %>%
+  descr(phq.sum_score_8items_prepan, stats = "common")
+```
 
 
 ```{r glad phq head}
