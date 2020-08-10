@@ -3470,7 +3470,7 @@ dat.glad.coping <- dat.glad.coping %>%
 ```{r how many people expereinced all symptoms}
 dat.glad.coping <- dat.glad.coping %>%
   mutate(
-    people_with_symptoms =
+    covid_symptoms =
       if_else(
           !is.na(respiratory.anosmia_binary) &
           !is.na(respiratory.pcough_binary) &
@@ -3481,7 +3481,8 @@ dat.glad.coping <- dat.glad.coping %>%
        )
   )
 
-table(dat.glad.coping$people_with_symptoms)
+dat.glad.coping %>%
+  freq(covid_symptoms, cumul = F)
 ```
 
 
