@@ -1545,7 +1545,7 @@ glad.phq.raw.id %>%
 ```
 
 all times
-```{r phq prepan sum score if missigng items set to NA - all times}
+```{r phq prepan sum score if missigng items set to NA - all items}
 glad.phq.raw.id <- glad.phq.raw.id %>%
   mutate(
     phq.sum_score_prepan =
@@ -1563,8 +1563,10 @@ glad.phq.raw.id %>%
   descr(phq.sum_score_prepan, stats = "common")
 ```
 
++++CH: THINK ABOUT THIS!!!
+
 8 items
-```{r phq prepan sum score if missigng items set to NA - all times}
+```{r phq prepan sum score if missigng items set to NA - 8 items}
 glad.phq.raw.id <- glad.phq.raw.id %>%
   mutate(
     phq.sum_score_8items_prepan =
@@ -1577,7 +1579,7 @@ glad.phq.raw.id <- glad.phq.raw.id %>%
   )
 
 glad.phq.raw.id %>%
-  descr(phq.sum_score_8items_prepan_raw, stats = "common")
+  descr(phq.sum_score_8items_prepan, stats = "common")
 
 glad.phq.raw.id %>%
   descr(phq.sum_score_8items_prepan, stats = "common")
@@ -1904,6 +1906,45 @@ coping.glad.gad.raw.id %>%
   freq(na_per_person_gad_retro, cumul = F) #have a look at the frequency
 ```
 
+```{r coping gad base sum score if missigng items set to NA}
+coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
+  mutate(
+    gad.sum_score_base =
+      if_else(condition = na_per_person_gad_base > 0,
+              true = NA_real_,
+              false = gad.sum_score_base_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.gad.raw.id %>%
+  descr(gad.sum_score_base_raw, stats = "common")
+
+coping.glad.gad.raw.id %>%
+  descr(gad.sum_score_base, stats = "common")
+```
+
+
+```{r coping gad retro sum score if missigng items set to NA}
+coping.glad.gad.raw.id <- coping.glad.gad.raw.id %>%
+  mutate(
+    gad.sum_score_retro =
+      if_else(condition = na_per_person_gad_retro > 0,
+              true = NA_real_,
+              false = gad.sum_score_retro_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.gad.raw.id %>%
+  descr(gad.sum_score_retro_raw, stats = "common")
+
+coping.glad.gad.raw.id %>%
+  descr(gad.sum_score_retro, stats = "common")
+```
+
+
+
 
 ```{r coping glad gad head}
 head(coping.glad.gad.raw.id)
@@ -2082,6 +2123,42 @@ coping.glad.pcl.raw.id %>%
   freq(na_per_person_pcl_retro, cumul = F) #have a look at the frequency
 ```
 
+
+```{r coping pcl base sum score if missigng items set to NA}
+coping.glad.pcl.raw.id <- coping.glad.pcl.raw.id %>%
+  mutate(
+    pcl.sum_score_base =
+      if_else(condition = na_per_person_pcl_base > 0,
+              true = NA_real_,
+              false = pcl.sum_score_base_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.pcl.raw.id %>%
+  descr(pcl.sum_score_base_raw, stats = "common")
+
+coping.glad.pcl.raw.id %>%
+  descr(pcl.sum_score_base, stats = "common")
+```
+
+```{r coping pcl retro sum score if missigng items set to NA}
+coping.glad.pcl.raw.id <- coping.glad.pcl.raw.id %>%
+  mutate(
+    pcl.sum_score_retro =
+      if_else(condition = na_per_person_pcl_retro > 0,
+              true = NA_real_,
+              false = pcl.sum_score_retro_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.pcl.raw.id %>%
+  descr(pcl.sum_score_retro_raw, stats = "common")
+
+coping.glad.pcl.raw.id %>%
+  descr(pcl.sum_score_retro, stats = "common")
+```
 
 ```{r coping glad pcl head}
 head(coping.glad.pcl.raw.id)
@@ -2310,6 +2387,80 @@ coping.glad.phq.raw.id %>%
   freq(phq.missing_only_suicide_item_base,
        cumul = F)
 ```
+
+
+```{r coping phq base sum score if missigng items set to NA}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    phq.sum_score_base =
+      if_else(condition = na_per_person_phq_base > 0,
+              true = NA_real_,
+              false = phq.sum_score_base_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.phq.raw.id %>%
+  descr(phq.sum_score_base_raw, stats = "common")
+
+coping.glad.phq.raw.id %>%
+  descr(phq.sum_score_base, stats = "common")
+```
+
+8 items
+```{r phq base sum score if missigng items set to NA - 8 items}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    phq.sum_score_8items_base =
+      if_else(condition = na_per_person_phq_base > 1 &
+                phq.missing_only_suicide_item_base == 1,
+              true = NA_real_,
+              false = phq.sum_score_base_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.phq.raw.id %>%
+  descr(phq.sum_score_8items_base, stats = "common")
+```
+
+
+```{r coping phq retro sum score if missigng items set to NA}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    phq.sum_score_retro =
+      if_else(condition = na_per_person_phq_retro > 0,
+              true = NA_real_,
+              false = phq.sum_score_retro_raw,
+              missing = NA_real_
+      )
+  )
+
+coping.glad.phq.raw.id %>%
+  descr(phq.sum_score_retro_raw, stats = "common")
+
+coping.glad.phq.raw.id %>%
+  descr(phq.sum_score_retro, stats = "common")
+```
+
+8 items
+```{r phq retro sum score if missigng items set to NA - 8 items}
+coping.glad.phq.raw.id <- coping.glad.phq.raw.id %>%
+  mutate(
+    phq.sum_score_8items_retro =
+      if_else(condition = na_per_person_phq_retro > 1 &
+                phq.missing_only_suicide_item_retro == 1,
+              true = NA_real_,
+              false = phq.sum_score_retro_raw,
+              missing = NA_real_
+      )
+  )
+
+
+coping.glad.phq.raw.id %>%
+  descr(phq.sum_score_8items_retro, stats = "common")
+```
+
 
 
 ```{r coping glad phq head}
@@ -2646,122 +2797,10 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age
 ```
 
 
-
-#Sum scores missingness cut offs
-KT: This series of chunks creates a "full" sum score for the PHQ, GAD and PCL. 
-
-PHQ
-The PHQ sum score is set to NA if they have more than one missing item, and it is not the last suicide ideation item (they do not meet the cut off criteria - phq.missing_only_suicide_item)
-```{r sum score cut offs PHQ base}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    phq.sum_score_base_full =
-      if_else(na_per_person_phq_base > 1 & phq.missing_only_suicide_item == 0,
-              NA_real_,
-              phq.sum_score_base
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_base)
-summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_base_full)
-```
-
-
-
-```{r sum score cut offs PHQ retro}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    phq.sum_score_retro_full =
-      if_else(na_per_person_phq_retro > 1 & phq.retro_cut_off == 0,
-              NA_real_,
-              phq.sum_score_retro
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_retro)
-summary(dat.no.sex.no.gender.no.age.no.ibd$phq.sum_score_retro_full)
-```
-
-GAD
-The GAD sum score is set to NA if they have any missing items
-```{r sum score cut offs GAD base}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    gad.sum_score_base_full =
-      if_else(na_per_person_gad_base > 0,
-              NA_real_,
-              gad.sum_score_base
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_base)
-summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_base_full)
-```
-
-```{r sum score cut offs GAD prepan}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    gad.sum_score_prepan_full =
-      if_else(na_per_person_gad_prepan > 0,
-              NA_real_,
-              gad.sum_score_prepan
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_prepan)
-summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_prepan_full)
-```
-
-```{r sum score cut offs GAD retro}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    gad.sum_score_retro_full =
-      if_else(na_per_person_gad_retro > 0,
-              NA_real_,
-              gad.sum_score_retro
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_retro)
-summary(dat.no.sex.no.gender.no.age.no.ibd$gad.sum_score_retro_full)
-```
-
-PCL
-The PCL sum score is set to NA if they have any missing items - only for basline and prepan.
-```{r sum score cut offs PCL base}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    pcl.sum_score_base_full =
-      if_else(na_per_person_pcl_base > 0,
-              NA_real_,
-              pcl.sum_score_base
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_base)
-summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_base_full)
-```
-
-```{r sum score cut offs PCL prepan}
-dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age.no.ibd %>%
-  mutate(
-    pcl.sum_score_prepan_full =
-      if_else(na_per_person_pcl_prepan > 0,
-              NA_real_,
-              pcl.sum_score_prepan
-              )
-  )
-
-summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_prepan)
-summary(dat.no.sex.no.gender.no.age.no.ibd$pcl.sum_score_prepan_full)
-```
-
-
-
 ##Create tidy data on which the exclusion criteria have been applied
 Complete sex, gender, age and missingness information applied. 
 ```{r Tidy data}
-dat.glad <- dat.no.sex.no.gender.no.age.no.ibd.missingness
+dat.glad <- dat.no.sex.no.gender.no.age.no.ibd
 
 skimr::skim(dat.glad)
 ```
