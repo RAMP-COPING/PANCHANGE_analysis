@@ -1364,11 +1364,11 @@ pcl.scored_items_prepan <- scoreItems(keys = pcl.items_key_prepan,
                                         min = 1, 
                                         max = 5)
 # Add in column to tibble
-glad.pcl.raw.id$pcl.sum_score_prepan <- pcl.scored_items_prepan$scores
+glad.pcl.raw.id$pcl.sum_score_prepan_raw <- pcl.scored_items_prepan$scores
 
 # Look at values
 glad.pcl.raw.id %>%
-  descr(pcl.sum_score_prepan,
+  descr(pcl.sum_score_prepan_raw,
         stats = "common"
         )
 ```
@@ -1390,7 +1390,23 @@ glad.pcl.raw.id %>%
        cumul = F)
 ```
 
+```{r pcl prepan sum score if missigng items set to NA}
+glad.pcl.raw.id <- glad.pcl.raw.id %>%
+  mutate(
+    pcl.sum_score_prepan =
+      if_else(condition = na_per_person_pcl_prepan > 0,
+              true = NA_real_,
+              false = pcl.sum_score_prepan_raw,
+              missing = NA_real_
+      )
+  )
 
+glad.pcl.raw.id %>%
+  descr(pcl.sum_score_prepan_raw, stats = "common")
+
+glad.pcl.raw.id %>%
+  descr(pcl.sum_score_prepan, stats = "common")
+```
 
 ```{r glad pcl head}
 head(glad.pcl.raw.id)
@@ -1483,11 +1499,11 @@ phq.scored_items_prepan <- scoreItems(keys = phq.items_key_prepan,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-glad.phq.raw.id$phq.sum_score_prepan <- phq.scored_items_prepan$scores
+glad.phq.raw.id$phq.sum_score_prepan_raw <- phq.scored_items_prepan$scores
 
 # Look at values
 glad.phq.raw.id %>%
-  descr(phq.sum_score_prepan,
+  descr(phq.sum_score_prepan_raw,
         stats = "common"
         )
 ```
@@ -1815,11 +1831,11 @@ gad.scored_items_retro <- scoreItems(keys = gad.items_key_retro,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-coping.glad.gad.raw.id$gad.sum_score_retro <- gad.scored_items_retro$scores
+coping.glad.gad.raw.id$gad.sum_score_retro_raw <- gad.scored_items_retro$scores
 
 # Look at values
 coping.glad.gad.raw.id %>%
-  descr(gad.sum_score_retro,
+  descr(gad.sum_score_retro_raw,
         stats = "common"
         )
 ```
@@ -1850,11 +1866,11 @@ gad.scored_items_base <- scoreItems(keys = gad.items_key_base,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-coping.glad.gad.raw.id$gad.sum_score_base <- gad.scored_items_base$scores
+coping.glad.gad.raw.id$gad.sum_score_base_raw <- gad.scored_items_base$scores
 
 # Look at values
 coping.glad.gad.raw.id %>%
-  descr(gad.sum_score_base,
+  descr(gad.sum_score_base_raw,
         stats = "common"
         )
 ```
@@ -1989,11 +2005,11 @@ pcl.scored_items_retro <- scoreItems(keys = pcl.items_key_retro,
                                      min = 0, 
                                      max = 1)
 # Add in column to tibble
-coping.glad.pcl.raw.id$pcl.sum_score_retro <- pcl.scored_items_retro$scores
+coping.glad.pcl.raw.id$pcl.sum_score_retro_raw <- pcl.scored_items_retro$scores
 
 # Look at values
 coping.glad.pcl.raw.id %>%
-  descr(pcl.sum_score_retro,
+  descr(pcl.sum_score_retro_raw,
         stats = "common"
   )
 ```
@@ -2025,11 +2041,11 @@ pcl.scored_items_base <- scoreItems(keys = pcl.items_key_base,
                                     min = 1, 
                                     max = 5)
 # Add in column to tibble
-coping.glad.pcl.raw.id$pcl.sum_score_base <- pcl.scored_items_base$scores
+coping.glad.pcl.raw.id$pcl.sum_score_base_raw <- pcl.scored_items_base$scores
 
 # Look at values
 coping.glad.pcl.raw.id %>%
-  descr(pcl.sum_score_base,
+  descr(pcl.sum_score_base_raw,
         stats = "common"
   )
 ```
@@ -2178,11 +2194,11 @@ phq.scored_items_retro <- scoreItems(keys = phq.items_key_retro,
                                      min = 0, 
                                      max = 3)
 # Add in column to tibble
-coping.glad.phq.raw.id$phq.sum_score_retro <- phq.scored_items_retro$scores
+coping.glad.phq.raw.id$phq.sum_score_retro_raw <- phq.scored_items_retro$scores
 
 # Look at values
 coping.glad.phq.raw.id %>%
-  descr(phq.sum_score_retro,
+  descr(phq.sum_score_retro_raw,
         stats = "common"
   )
 ```
@@ -2215,11 +2231,11 @@ phq.scored_items_base <- scoreItems(keys = phq.items_key_base,
                                     min = 0, 
                                     max = 3)
 # Add in column to tibble
-coping.glad.phq.raw.id$phq.sum_score_base <- phq.scored_items_base$scores
+coping.glad.phq.raw.id$phq.sum_score_base_raw <- phq.scored_items_base$scores
 
 # Look at values
 coping.glad.phq.raw.id %>%
-  descr(phq.sum_score_base,
+  descr(phq.sum_score_base_raw,
         stats = "common"
   )
 ```
@@ -2432,11 +2448,11 @@ ocir.scored_items_retro <- scoreItems(keys = ocir.items_key_retro,
                                      min = 0, 
                                      max = 4)
 # Add in column to tibble
-coping.glad.ocir.raw.id$ocir.sum_score_retro <- ocir.scored_items_retro$scores
+coping.glad.ocir.raw.id$ocir.sum_score_retro_raw <- ocir.scored_items_retro$scores
 
 # Look at values
 coping.glad.ocir.raw.id %>%
-  descr(ocir.sum_score_retro,
+  descr(ocir.sum_score_retro_raw,
         stats = "common"
   )
 ```
@@ -2478,11 +2494,11 @@ ocir.scored_items_base <- scoreItems(keys = ocir.items_key_base,
                                     min = 0, 
                                     max = 4)
 # Add in column to tibble
-coping.glad.ocir.raw.id$ocir.sum_score_base <- ocir.scored_items_base$scores
+coping.glad.ocir.raw.id$ocir.sum_score_base_raw <- ocir.scored_items_base$scores
 
 # Look at values
 coping.glad.ocir.raw.id %>%
-  descr(ocir.sum_score_base,
+  descr(ocir.sum_score_base_raw,
         stats = "common"
   )
 ```
