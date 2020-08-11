@@ -2919,7 +2919,7 @@ coping.gad.raw.id %>%
   descr(gad.sum_score_retro, stats = "common")
 ```
 
-
+## Inspection
 ```{r coping glad gad head}
 head(coping.gad.raw.id)
 ```
@@ -3206,6 +3206,7 @@ if(RAMP == TRUE) {
 }
 ```
 
+## Sum scores
 Calculate sum score for PCL-6 retro
 ```{r coping pcl sum score retro}
 # Create vector with scoring key: If the item is reversed coded use -1. 
@@ -3277,6 +3278,7 @@ coping.pcl.raw.id %>%
 ```
 
 
+## Missingness
 PCL missingness (NAs per person)
 
 baseline
@@ -3345,6 +3347,8 @@ coping.pcl.raw.id %>%
   descr(pcl.sum_score_retro, stats = "common")
 ```
 
+
+## Inspection
 ```{r coping glad pcl head}
 head(coping.pcl.raw.id)
 ```
@@ -3357,8 +3361,9 @@ summarytools::dfSummary(
   labels.col = F)
 ```
 
-# glad COPING phq
+# COPING: PHQ
 
+## GLAD
 ```{r coping glad phq cols}
 coping.glad.phq.raw <- readRDS(file = paste0(data.raw_path, "/glad/phq_coping_glad.rds"))
 dim(coping.glad.phq.raw)
@@ -3427,6 +3432,241 @@ colnames(coping.glad.phq.raw.id)
 #Differences
 dim(coping.glad.phq.raw)[1]-dim(coping.glad.phq.raw.id)[1]
 ```
+
+```{r coping glad gad copy}
+if(GLAD == TRUE) {
+  coping.gad.raw.id <- coping.glad.gad.raw.id
+}
+```
+
+## EDGI
+```{r coping edgi phq cols}
+coping.edgi.phq.raw <- readRDS(file = paste0(data.raw_path, "/edgi/phq_coping_edgi.rds"))
+dim(coping.edgi.phq.raw)
+colnames(coping.edgi.phq.raw)
+```
+
+```{r coping edgi phq summary labels}
+summarytools::dfSummary(
+  coping.edgi.phq.raw,
+  graph.col = F,
+  valid.col = F
+  #labels.col = F
+)
+```
+
+Will need to double check these namings once we have the new cleaned data -- KT. 
+```{r coping edgi phq cleaning}
+coping.edgi.phq.raw.id <- coping.edgi.phq.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)
+  ) %>%
+  select(
+    Sample, # Sample
+    ID, # ID
+    phq.problems_made_difficult_care,
+    phq.pandemic_felt_feelings,
+    phq.little_interest_or_pleasure_in_doing_things_retro = phq.little_interest_or_pleasure_in_doing_things,
+    phq.feeling_down_depressed_or_hopeless_retro = phq.feeling_down_depressed_or_hopeless,
+    phq.staying_asleep_sleeping_trouble_retro = phq.staying_asleep_sleeping_trouble,
+    phq.feeling_tired_or_having_little_energy_retro = phq.feeling_tired_or_having_little_energy,
+    phq.poor_appetite_or_overeating_retro = phq.poor_appetite_or_overeating,
+    phq.feeling_bad_failure_family_retro = phq.feeling_bad_failure_family,
+    phq.trouble_concentrating_reading_newspaper_retro = phq.trouble_concentrating_newspaper_reading, # differ EDGI prepandemic
+    phq.moving_fidgety_noticed_opposite_retro = phq.moving_fidgety_opposite_slowly, # differ EDGI prepandemic
+    phq.dead_hurting_thoughts_retro = phq.dead_hurting_thoughts,
+    phq.little_interest_or_pleasure_in_doing_things_base = phq.little_interest_or_pleasure_in_doing_things.1,
+    phq.feeling_down_depressed_or_hopeless_base = phq.feeling_down_depressed_or_hopeless.1,
+    phq.staying_asleep_sleeping_trouble_base = phq.staying_asleep_sleeping_trouble.1,
+    phq.feeling_tired_or_having_little_energy_base = phq.feeling_tired_or_having_little_energy.1,
+    phq.poor_appetite_or_overeating_base = phq.poor_appetite_or_overeating.1,
+    phq.feeling_bad_failure_family_base = phq.feeling_bad_failure_family.1,
+    phq.trouble_concentrating_reading_newspaper_base = phq.trouble_concentrating_newspaper_reading.1, # differ EDGI prepandemic
+    phq.moving_fidgety_noticed_opposite_base = phq.moving_fidgety_opposite_slowly.1, # differ EDGI prepandemic
+    phq.dead_hurting_thoughts_base = phq.dead_hurting_thoughts.1
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(coping.edgi.phq.raw.id)
+# Inspect colnames
+colnames(coping.edgi.phq.raw.id)
+#Differences
+dim(coping.edgi.phq.raw)[1]-dim(coping.edgi.phq.raw.id)[1]
+```
+
+```{r coping edgi gad copy}
+if(EDGI == TRUE) {
+  coping.gad.raw.id <- coping.edgi.gad.raw.id
+}
+```
+
+## NBR
+```{r coping nbr phq cols}
+coping.nbr.phq.raw <- readRDS(file = paste0(data.raw_path, "/nbr/phq_coping_nbr.rds"))
+dim(coping.nbr.phq.raw)
+colnames(coping.nbr.phq.raw)
+```
+
+```{r coping nbr phq summary labels}
+summarytools::dfSummary(
+  coping.nbr.phq.raw,
+  graph.col = F,
+  valid.col = F
+  #labels.col = F
+)
+```
+
+
+Will need to double check these namings once we have the new cleaned data -- KT. 
+```{r coping nbr phq cleaning}
+coping.nbr.phq.raw.id <- coping.nbr.phq.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)
+  ) %>%
+  select(
+    Sample, # Sample
+    ID, # ID
+    phq.problems_made_difficult_care,
+    phq.pandemic_felt_feelings,
+    phq.little_interest_or_pleasure_in_doing_things_retro = phq.little_interest_or_pleasure_in_doing_things,
+    phq.feeling_down_depressed_or_hopeless_retro = phq.feeling_down_depressed_or_hopeless,
+    phq.staying_asleep_sleeping_trouble_retro = phq.staying_asleep_sleeping_trouble,
+    phq.feeling_tired_or_having_little_energy_retro = phq.feeling_tired_or_having_little_energy,
+    phq.poor_appetite_or_overeating_retro = phq.poor_appetite_or_overeating,
+    phq.feeling_bad_failure_family_retro = phq.feeling_bad_failure_family,
+    phq.trouble_concentrating_reading_newspaper_retro = phq.trouble_concentrating_newspaper_reading, # differ NBR prepandemic
+    phq.moving_fidgety_noticed_opposite_retro = phq.moving_fidgety_opposite_slowly, # differ NBR prepandemic
+    phq.dead_hurting_thoughts_retro = phq.dead_hurting_thoughts,
+    phq.little_interest_or_pleasure_in_doing_things_base = phq.little_interest_or_pleasure_in_doing_things.1,
+    phq.feeling_down_depressed_or_hopeless_base = phq.feeling_down_depressed_or_hopeless.1,
+    phq.staying_asleep_sleeping_trouble_base = phq.staying_asleep_sleeping_trouble.1,
+    phq.feeling_tired_or_having_little_energy_base = phq.feeling_tired_or_having_little_energy.1,
+    phq.poor_appetite_or_overeating_base = phq.poor_appetite_or_overeating.1,
+    phq.feeling_bad_failure_family_base = phq.feeling_bad_failure_family.1,
+    phq.trouble_concentrating_reading_newspaper_base = phq.trouble_concentrating_newspaper_reading.1, # differ NBR prepandemic
+    phq.moving_fidgety_noticed_opposite_base = phq.moving_fidgety_opposite_slowly.1, # differ NBR prepandemic
+    phq.dead_hurting_thoughts_base = phq.dead_hurting_thoughts.1
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(coping.nbr.phq.raw.id)
+# Inspect colnames
+colnames(coping.nbr.phq.raw.id)
+#Differences
+dim(coping.nbr.phq.raw)[1]-dim(coping.nbr.phq.raw.id)[1]
+```
+
+```{r coping nbr gad copy}
+if(NBR == TRUE) {
+  coping.gad.raw.id <- coping.nbr.gad.raw.id
+}
+```
+
+## RAMP
+```{r coping ramp phq cols}
+coping.ramp.phq.raw <- readRDS(file = paste0(data.raw_path, "/ramp/phq_coping_ramp.rds"))
+dim(coping.ramp.phq.raw)
+colnames(coping.ramp.phq.raw)
+```
+
+```{r coping ramp phq summary labels}
+summarytools::dfSummary(
+  coping.ramp.phq.raw,
+  graph.col = F,
+  valid.col = F
+  #labels.col = F
+)
+```
+
+
+Will need to double check these namings once we have the new cleaned data -- KT. 
+```{r coping ramp phq cleaning}
+coping.ramp.phq.raw.id <- coping.ramp.phq.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)
+  ) %>%
+  select(
+    Sample, # Sample
+    ID, # ID
+    phq.problems_made_difficult_care,
+    phq.pandemic_felt_feelings,
+    phq.little_interest_or_pleasure_in_doing_things_retro = phq.little_interest_or_pleasure_in_doing_things,
+    phq.feeling_down_depressed_or_hopeless_retro = phq.feeling_down_depressed_or_hopeless,
+    phq.staying_asleep_sleeping_trouble_retro = phq.staying_asleep_sleeping_trouble,
+    phq.feeling_tired_or_having_little_energy_retro = phq.feeling_tired_or_having_little_energy,
+    phq.poor_appetite_or_overeating_retro = phq.poor_appetite_or_overeating,
+    phq.feeling_bad_failure_family_retro = phq.feeling_bad_failure_family,
+    phq.trouble_concentrating_reading_newspaper_retro = phq.trouble_concentrating_newspaper_reading, # differ RAMP prepandemic
+    phq.moving_fidgety_noticed_opposite_retro = phq.moving_fidgety_opposite_slowly, # differ RAMP prepandemic
+    phq.dead_hurting_thoughts_retro = phq.dead_hurting_thoughts,
+    phq.little_interest_or_pleasure_in_doing_things_base = phq.little_interest_or_pleasure_in_doing_things.1,
+    phq.feeling_down_depressed_or_hopeless_base = phq.feeling_down_depressed_or_hopeless.1,
+    phq.staying_asleep_sleeping_trouble_base = phq.staying_asleep_sleeping_trouble.1,
+    phq.feeling_tired_or_having_little_energy_base = phq.feeling_tired_or_having_little_energy.1,
+    phq.poor_appetite_or_overeating_base = phq.poor_appetite_or_overeating.1,
+    phq.feeling_bad_failure_family_base = phq.feeling_bad_failure_family.1,
+    phq.trouble_concentrating_reading_newspaper_base = phq.trouble_concentrating_newspaper_reading.1, # differ RAMP prepandemic
+    phq.moving_fidgety_noticed_opposite_base = phq.moving_fidgety_opposite_slowly.1, # differ RAMP prepandemic
+    phq.dead_hurting_thoughts_base = phq.dead_hurting_thoughts.1
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(coping.ramp.phq.raw.id)
+# Inspect colnames
+colnames(coping.ramp.phq.raw.id)
+#Differences
+dim(coping.ramp.phq.raw)[1]-dim(coping.ramp.phq.raw.id)[1]
+```
+
+```{r coping ramp gad copy}
+if(RAMP == TRUE) {
+  coping.gad.raw.id <- coping.ramp.gad.raw.id
+}
+```
+
+## Sum scores
 
 Calculate sum score for PHQ-9 retro
 ```{r coping phq sum score retro}
@@ -3503,7 +3743,7 @@ coping.phq.raw.id %>%
 ```
 
 
-missigness
+# Missingness
 
 retrospective
 ```{r coping phq retro missingness}
@@ -3646,7 +3886,7 @@ coping.phq.raw.id %>%
   descr(phq.sum_score_8items_retro, stats = "common")
 ```
 
-
+## Inspection
 
 ```{r coping glad phq head}
 head(coping.phq.raw.id)
