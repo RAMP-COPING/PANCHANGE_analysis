@@ -2445,8 +2445,8 @@ summarytools::dfSummary(
 }
 ```
 
-# COPING GLAD: GAD-7
-
+# COPING GAD-7
+## GLAD
 ```{r coping glad gad cols}
 if(GLAD == TRUE) {
 coping.glad.gad.raw <- readRDS(file = paste0(data.raw_path,"/glad/gad_coping_glad.rds"))
@@ -2530,6 +2530,7 @@ if(GLAD == TRUE) {
 }
 ```
 
+## EDGI
 ```{r coping edgi gad cols}
 if(EDGI == TRUE) {
   coping.edgi.gad.raw <- readRDS(file = paste0(data.raw_path,"/edgi/gad_coping_edgi.rds"))
@@ -2613,6 +2614,7 @@ if(EDGI == TRUE) {
 }
 ```
 
+## NBR
 ```{r coping nbr gad cols}
 if(NBR == TRUE) {
   coping.nbr.gad.raw <- readRDS(file = paste0(data.raw_path,"/nbr/gad_coping_nbr.rds"))
@@ -2696,6 +2698,7 @@ if(NBR == TRUE) {
 }
 ```
 
+## RAMP
 ```{r coping ramp gad cols}
 if(RAMP == TRUE) {
   coping.ramp.gad.raw <- readRDS(file = paste0(data.raw_path,"/ramp/gad_coping_ramp.rds"))
@@ -2779,6 +2782,7 @@ if(RAMP == TRUE) {
 }
 ```
 
+## Sum scores
 Calculate sum score for GAD-7 retrospective
 ```{r coping gad sum score retro}
 # Create vector with scoring key: If the item is reversed coded use -1. 
@@ -2849,7 +2853,7 @@ coping.gad.raw.id %>%
         )
 ```
 
-Missigness
+## Missingness
 
 baseline
 ```{r coping gad baseline missingness}
@@ -2916,8 +2920,6 @@ coping.gad.raw.id %>%
 ```
 
 
-
-
 ```{r coping glad gad head}
 head(coping.gad.raw.id)
 ```
@@ -2930,8 +2932,9 @@ summarytools::dfSummary(
   labels.col = F)
 ```
 
-# COPING GLAD: PCL-6
+# COPING: PCL-6
 
+## GLAD
 ```{r coping glad pcl cols}
 coping.glad.pcl.raw <- readRDS(file = paste0(data.raw_path,"/glad/pcl_coping_glad.rds"))
 dim(coping.glad.pcl.raw)
@@ -2991,6 +2994,216 @@ dim(coping.glad.pcl.raw.id)
 colnames(coping.glad.pcl.raw.id)
 #Differences
 dim(coping.glad.pcl.raw)[1]-dim(coping.glad.pcl.raw.id)[1]
+```
+
+```{r coping glad pcl copy}
+if(GLAD == TRUE) {
+  coping.pcl.raw.id <- coping.glad.pcl.raw.id
+}
+```
+
+## EDGI
+```{r coping edgi pcl cols}
+coping.edgi.pcl.raw <- readRDS(file = paste0(data.raw_path,"/edgi/pcl_coping_edgi.rds"))
+dim(coping.edgi.pcl.raw)
+colnames(coping.edgi.pcl.raw)
+```
+
+```{r coping edgi pcl summary labels}
+summarytools::dfSummary(
+  coping.edgi.pcl.raw,
+  graph.col = F,
+  valid.col = F,
+  labels.col = F
+)
+```
+
+Note: Retro for the PCL does not mean retrospective
+
+```{r coping edgi pcl cleaning}
+coping.edgi.pcl.raw.id <- coping.edgi.pcl.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID),
+         startDate.coping = startDate) %>% # Rename startDate
+  select(
+    Sample, # Sample
+    ID, # ID
+    pcl.stressful_experience_repeated_images_base = pcl.stressful_experience_repeated_images,
+    pcl.stressful_experience_upset_reminded_base = pcl.stressful_experience_upset_reminded, # differ to EDGI prepan
+    pcl.stressful_situation_avoiding_activities_base = pcl.avoiding_activities_stressful_experience, # differ to EDGI prepan
+    pcl.cut_people_feeling_distant_base = pcl.cut_people_feeling_distant,
+    pcl.feeling_irritable_or_having_angry_outbursts_base = pcl.feeling_irritable_or_having_angry_outbursts,
+    pcl.difficulty_concentrating_base = pcl.difficulty_concentrating,
+    pcl.stressful_experience_repeated_images_retro = pcl.stressful_experience_repeated_images.1,
+    pcl.stressful_experience_upset_reminded_retro = pcl.stressful_experience_upset_reminded.1,
+    pcl.stressful_situation_avoiding_activities_retro = pcl.avoiding_activities_stressful_experience.1,
+    pcl.cut_people_feeling_distant_retro = pcl.cut_people_feeling_distant.1,
+    pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl.feeling_irritable_or_having_angry_outbursts.1,
+    pcl.difficulty_concentrating_retro = pcl.difficulty_concentrating.1
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(coping.edgi.pcl.raw.id)
+# Inspect colnames
+colnames(coping.edgi.pcl.raw.id)
+#Differences
+dim(coping.edgi.pcl.raw)[1]-dim(coping.edgi.pcl.raw.id)[1]
+```
+
+```{r coping edgi pcl copy}
+if(EDGI == TRUE) {
+  coping.pcl.raw.id <- coping.edgi.pcl.raw.id
+}
+```
+
+## NBR
+```{r coping nbr pcl cols}
+coping.nbr.pcl.raw <- readRDS(file = paste0(data.raw_path,"/nbr/pcl_coping_nbr.rds"))
+dim(coping.nbr.pcl.raw)
+colnames(coping.nbr.pcl.raw)
+```
+
+```{r coping nbr pcl summary labels}
+summarytools::dfSummary(
+  coping.nbr.pcl.raw,
+  graph.col = F,
+  valid.col = F,
+  labels.col = F
+)
+```
+
+Note: Retro for the PCL does not mean retrospective
+
+```{r coping nbr pcl cleaning}
+coping.nbr.pcl.raw.id <- coping.nbr.pcl.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID),
+         startDate.coping = startDate) %>% # Rename startDate
+  select(
+    Sample, # Sample
+    ID, # ID
+    pcl.stressful_experience_repeated_images_base = pcl.stressful_experience_repeated_images,
+    pcl.stressful_experience_upset_reminded_base = pcl.stressful_experience_upset_reminded, # differ to NBR prepan
+    pcl.stressful_situation_avoiding_activities_base = pcl.avoiding_activities_stressful_experience, # differ to NBR prepan
+    pcl.cut_people_feeling_distant_base = pcl.cut_people_feeling_distant,
+    pcl.feeling_irritable_or_having_angry_outbursts_base = pcl.feeling_irritable_or_having_angry_outbursts,
+    pcl.difficulty_concentrating_base = pcl.difficulty_concentrating,
+    pcl.stressful_experience_repeated_images_retro = pcl.stressful_experience_repeated_images.1,
+    pcl.stressful_experience_upset_reminded_retro = pcl.stressful_experience_upset_reminded.1,
+    pcl.stressful_situation_avoiding_activities_retro = pcl.avoiding_activities_stressful_experience.1,
+    pcl.cut_people_feeling_distant_retro = pcl.cut_people_feeling_distant.1,
+    pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl.feeling_irritable_or_having_angry_outbursts.1,
+    pcl.difficulty_concentrating_retro = pcl.difficulty_concentrating.1
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(coping.nbr.pcl.raw.id)
+# Inspect colnames
+colnames(coping.nbr.pcl.raw.id)
+#Differences
+dim(coping.nbr.pcl.raw)[1]-dim(coping.nbr.pcl.raw.id)[1]
+```
+
+```{r coping nbr pcl copy}
+if(NBR == TRUE) {
+  coping.pcl.raw.id <- coping.nbr.pcl.raw.id
+}
+```
+
+## RAMP
+```{r coping ramp pcl cols}
+coping.ramp.pcl.raw <- readRDS(file = paste0(data.raw_path,"/ramp/pcl_coping_ramp.rds"))
+dim(coping.ramp.pcl.raw)
+colnames(coping.ramp.pcl.raw)
+```
+
+```{r coping ramp pcl summary labels}
+summarytools::dfSummary(
+  coping.ramp.pcl.raw,
+  graph.col = F,
+  valid.col = F,
+  labels.col = F
+)
+```
+
+Note: Retro for the PCL does not mean retrospective
+
+```{r coping ramp pcl cleaning}
+coping.ramp.pcl.raw.id <- coping.ramp.pcl.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID),
+         startDate.coping = startDate) %>% # Rename startDate
+  select(
+    Sample, # Sample
+    ID, # ID
+    pcl.stressful_experience_repeated_images_base = pcl.stressful_experience_repeated_images,
+    pcl.stressful_experience_upset_reminded_base = pcl.stressful_experience_upset_reminded, # differ to RAMP prepan
+    pcl.stressful_situation_avoiding_activities_base = pcl.avoiding_activities_stressful_experience, # differ to RAMP prepan
+    pcl.cut_people_feeling_distant_base = pcl.cut_people_feeling_distant,
+    pcl.feeling_irritable_or_having_angry_outbursts_base = pcl.feeling_irritable_or_having_angry_outbursts,
+    pcl.difficulty_concentrating_base = pcl.difficulty_concentrating,
+    pcl.stressful_experience_repeated_images_retro = pcl.stressful_experience_repeated_images.1,
+    pcl.stressful_experience_upset_reminded_retro = pcl.stressful_experience_upset_reminded.1,
+    pcl.stressful_situation_avoiding_activities_retro = pcl.avoiding_activities_stressful_experience.1,
+    pcl.cut_people_feeling_distant_retro = pcl.cut_people_feeling_distant.1,
+    pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl.feeling_irritable_or_having_angry_outbursts.1,
+    pcl.difficulty_concentrating_retro = pcl.difficulty_concentrating.1
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(coping.ramp.pcl.raw.id)
+# Inspect colnames
+colnames(coping.ramp.pcl.raw.id)
+#Differences
+dim(coping.ramp.pcl.raw)[1]-dim(coping.ramp.pcl.raw.id)[1]
+```
+
+```{r coping ramp pcl copy}
+if(RAMP == TRUE) {
+  coping.pcl.raw.id <- coping.ramp.pcl.raw.id
+}
 ```
 
 Calculate sum score for PCL-6 retro
@@ -3168,8 +3381,8 @@ coping.glad.phq.raw.id <- coping.glad.phq.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.coping = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)
+         ) %>%
   select(
     Sample, # Sample
     ID, # ID
