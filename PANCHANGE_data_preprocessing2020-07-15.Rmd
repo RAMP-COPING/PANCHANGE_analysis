@@ -1759,6 +1759,8 @@ colnames(glad.pcl.raw)
 
 ```{r glad prepandemic pcl cleaning}
 if(GLAD == TRUE) {
+exclude_cols <- c("Sample",
+                  "ID")
 glad.pcl.raw.id <- glad.pcl.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -1866,6 +1868,7 @@ Calculate sum score for PCL-6
 
 *Note that scores with missingness will be changed to NA later in the script
 ```{r pcl sum score prepan}
+if(GLAD == TRUE | EDGI == TRUE){
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
 pcl.items_key_prepan <- c(1,1,1,1,1,1)
@@ -1896,13 +1899,15 @@ prepan.pcl.raw.id %>%
   descr(pcl.sum_score_prepan_raw,
         stats = "common"
         )
+}
 ```
 
 Missigness
 
 prepandemic
 ```{r pcl prepan missingness}
-glad.pcl.raw.id <- glad.pcl.raw.id %>%
+if(GLAD == TRUE | EDGI == TRUE){
+prepan.pcl.raw.id <- prepan.pcl.raw.id %>%
   mutate(
     na_per_person_pcl_prepan =         # variable for NA per person
       rowSums(                       
@@ -1910,13 +1915,15 @@ glad.pcl.raw.id <- glad.pcl.raw.id %>%
       )
   )
 
-glad.pcl.raw.id %>%
+prepan.pcl.raw.id %>%
   freq(na_per_person_pcl_prepan,
        cumul = F)
+}
 ```
 
 ```{r pcl prepan sum score if missigng items set to NA}
-glad.pcl.raw.id <- glad.pcl.raw.id %>%
+if(GLAD == TRUE | EDGI == TRUE){
+prepan.pcl.raw.id <- prepan.pcl.raw.id %>%
   mutate(
     pcl.sum_score_prepan =
       if_else(condition = na_per_person_pcl_prepan > 0,
@@ -1926,22 +1933,27 @@ glad.pcl.raw.id <- glad.pcl.raw.id %>%
       )
   )
 
-glad.pcl.raw.id %>%
+prepan.pcl.raw.id %>%
   descr(pcl.sum_score_prepan_raw, stats = "common")
 
-glad.pcl.raw.id %>%
+prepan.pcl.raw.id %>%
   descr(pcl.sum_score_prepan, stats = "common")
+}
 ```
 
 ```{r glad pcl head}
-head(glad.pcl.raw.id)
+if(GLAD == TRUE | EDGI == TRUE){
+head(prepan.pcl.raw.id)
+}
 ```
 
 ```{r glad pcl summary}
+if(GLAD == TRUE | EDGI == TRUE){
 summarytools::dfSummary(
-  glad.pcl.raw.id,
+  prepan.pcl.raw.id,
   graph.col = F,
   valid.col = F, labels.col = F)
+}
 ```
 
 # glad phq
@@ -1954,6 +1966,7 @@ colnames(glad.phq.raw)
 
 
 ```{r glad phq cleaning}
+if(GLAD == TRUE){
 glad.phq.raw.id <- glad.phq.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -1992,6 +2005,7 @@ dim(glad.phq.raw.id)
 colnames(glad.phq.raw.id)
 #Differences
 dim(glad.phq.raw)[1]-dim(glad.phq.raw.id)[1]
+}
 ```
 
 Calculate sum score for PHQ-9
