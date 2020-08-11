@@ -756,9 +756,9 @@ colnames(glad.gad.raw)
 
 
 ```{r glad gad cleaning}
+if(GLAD ==TRUE){
 exclude_cols <- c("Sample",
                   "ID")
-
 glad.gad.raw.id <- glad.gad.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -795,11 +795,12 @@ dim(glad.gad.raw.id)
 colnames(glad.gad.raw.id)
 #Differences
 dim(glad.gad.raw)[1]-dim(glad.gad.raw.id)[1]
+}
 ```
 
 ```{r glad copy gad}
 if(GLAD == TRUE){
-gad.raw.id <- glad.gad.raw.id
+prepan.gad.raw.id <- glad.gad.raw.id
 }
 ```
 
@@ -858,10 +859,9 @@ dim(edgi.gad.raw)[1]-dim(edgi.gad.raw.id)[1]
 
 ```{r nbr copy gad}
 if(EDGI == TRUE){
-  gad.raw.id <- edgi.gad.raw.id
+  prepan.gad.raw.id <- edgi.gad.raw.id
 }
 ```
-
 
 
 Calculate sum score for GAD-7
@@ -869,6 +869,7 @@ Max should be 21.
 
 *Note that scores with missingness will be changed to NA later in the script
 ```{r gad sum score prepan raw}
+if(GLAD ==TRUE | EDGI == TRUE){
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
 gad.items_key_prepan <- c(1,1,1,1,1,1,1)
@@ -886,27 +887,29 @@ gad.items_prepan <- c(
 
 # Calulate total score
 gad.scored_items_prepan <- scoreItems(keys = gad.items_key_prepan,
-                                        items = gad.raw.id[gad.items_prepan],
+                                        items = prepan.gad.raw.id[gad.items_prepan],
                                         totals = TRUE, 
                                         missing = TRUE, 
                                         impute = 'none', 
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-gad.raw.id$gad.sum_score_prepan_raw <- gad.scored_items_prepan$scores
+prepan.gad.raw.id$gad.sum_score_prepan_raw <- gad.scored_items_prepan$scores
 
 # Look at values
-gad.raw.id %>%
+prepan.gad.raw.id %>%
   descr(gad.sum_score_prepan_raw,
         stats = "common"
         )
+}
 ```
 
 missingness (NAs per person)
 
 prepandemic
 ```{r gad prepan missingness}
-gad.raw.id <- gad.raw.id %>%
+if(GLAD ==TRUE | EDGI == TRUE){
+prepan.gad.raw.id <- prepan.gad.raw.id %>%
   mutate(
     na_per_person_gad_prepan =         # variable for NA per person
       rowSums(                       
@@ -914,14 +917,16 @@ gad.raw.id <- gad.raw.id %>%
       )
   )
 
-gad.raw.id %>%
+prepan.gad.raw.id %>%
   freq(na_per_person_gad_prepan,
        cumul = F)
+}
 ```
 
 
 ```{r gad prepan sum score if missigng items set to NA}
-gad.raw.id <- gad.raw.id %>%
+if(GLAD ==TRUE | EDGI == TRUE){
+prepan.gad.raw.id <- prepan.gad.raw.id %>%
   mutate(
     gad.sum_score_prepan =
       if_else(condition = na_per_person_gad_prepan > 0,
@@ -931,25 +936,28 @@ gad.raw.id <- gad.raw.id %>%
               )
   )
 
-gad.raw.id %>%
+prepan.gad.raw.id %>%
   descr(gad.sum_score_prepan_raw, stats = "common")
 
-gad.raw.id %>%
+prepan.gad.raw.id %>%
   descr(gad.sum_score_prepan, stats = "common")
+}
 ```
 
-
-
 ```{r glad gad head}
-head(gad.raw.id)
+if(GLAD ==TRUE | EDGI == TRUE){
+head(prepan.gad.raw.id)
+}
 ```
 
 ```{r glad gad summary}
+if(GLAD ==TRUE | EDGI == TRUE){
 summarytools::dfSummary(
-  gad.raw.id,
+  prepan.gad.raw.id,
   graph.col = F,
   valid.col = F,
   labels.col = F)
+}
 ```
 
 # glad mhd
@@ -1740,14 +1748,17 @@ glad.mhd.raw.categories <- glad.mhd.raw.id %>%
 
 # glad pcl
 
-```{r glad pcl cols}
+```{r glad prepandemic pcl cols}
+if(GLAD == TRUE) {
 glad.pcl.raw <- readRDS(file = paste0(data.raw_path,"/glad/pcl_glad.rds"))
 dim(glad.pcl.raw)
 colnames(glad.pcl.raw)
+}
 ```
 
 
-```{r glad pcl cleaning}
+```{r glad prepandemic pcl cleaning}
+if(GLAD == TRUE) {
 glad.pcl.raw.id <- glad.pcl.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -1783,7 +1794,73 @@ dim(glad.pcl.raw.id)
 colnames(glad.pcl.raw.id)
 #Differences
 dim(glad.pcl.raw)[1]-dim(glad.pcl.raw.id)[1]
+}
 ```
+
+```{r glad pcl copy}
+if(GLAD == TRUE) {
+  prepan.pcl.raw.id <- glad.pcl.raw.id
+}
+```
+
+# edgi pcl
+
+```{r edgi pcl cols}
+if(EDGI == TRUE) {
+  edgi.pcl.raw <- readRDS(file = paste0(data.raw_path,"/edgi/pcl_edgi.rds"))
+  dim(edgi.pcl.raw)
+  colnames(edgi.pcl.raw)
+}
+```
+
+
+```{r edgi pcl cleaning}
+if(EDGI == TRUE) {
+  edgi.pcl.raw.id <- edgi.pcl.raw %>%
+    drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID),
+           startDate.prepandemic = startDate) %>% # Rename startDate
+    select(
+      Sample, # Sample
+      ID, # ID
+      pcl.stressful_experience_repeated_images_prepan = pcl.stressful_experience_repeated_images,
+      pcl.stressful_experience_upset_reminded_prepan = pcl.stressful_experience_upset_reminded,
+      pcl.stressful_situation_avoiding_activities_prepan = pcl.stressful_situation_avoiding_activities,
+      pcl.cut_people_feeling_distant_prepan = pcl.cut_people_feeling_distant,
+      pcl.feeling_irritable_or_having_angry_outbursts_prepan = pcl.feeling_irritable_or_having_angry_outbursts,
+      pcl.difficulty_concentrating_prepan = pcl.difficulty_concentrating
+    ) %>%
+    add_numeric(., exclude = exclude_cols) %>%
+    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+    mutate_if(is.numeric, ~na_if(., -99)) %>%
+    mutate_if(is.numeric, ~na_if(., -77)) %>%
+    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+  
+  # Inspect dimensions
+  dim(edgi.pcl.raw.id)
+  # Inspect colnames
+  colnames(edgi.pcl.raw.id)
+  #Differences
+  dim(edgi.pcl.raw)[1]-dim(edgi.pcl.raw.id)[1]
+}
+```
+
+
+```{r edgi pcl copy}
+if(EDGI == TRUE) {
+  prepan.pcl.raw.id <- edgi.pcl.raw.id
+}
+```
+
 
 Calculate sum score for PCL-6
 
@@ -1805,17 +1882,17 @@ pcl.items_prepan <- c(
 
 # Calulate total score
 pcl.scored_items_prepan <- scoreItems(keys = pcl.items_key_prepan,
-                                        items = glad.pcl.raw.id[pcl.items_prepan],
+                                        items = prepan.pcl.raw.id[pcl.items_prepan],
                                         totals = TRUE, 
                                         missing = TRUE, 
                                         impute = 'none', 
                                         min = 1, 
                                         max = 5)
 # Add in column to tibble
-glad.pcl.raw.id$pcl.sum_score_prepan_raw <- pcl.scored_items_prepan$scores
+prepan.pcl.raw.id$pcl.sum_score_prepan_raw <- pcl.scored_items_prepan$scores
 
 # Look at values
-glad.pcl.raw.id %>%
+prepan.pcl.raw.id %>%
   descr(pcl.sum_score_prepan_raw,
         stats = "common"
         )
