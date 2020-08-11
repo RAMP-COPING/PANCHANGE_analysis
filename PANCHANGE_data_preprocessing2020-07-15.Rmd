@@ -2475,7 +2475,7 @@ exclude_cols_coping_glad <- c(
   "startDate.coping"
 )
 
-coping.gad.raw.id <- coping.gad.raw %>%
+coping.glad.gad.raw.id <- coping.glad.gad.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
@@ -2516,17 +2516,266 @@ coping.gad.raw.id <- coping.gad.raw %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
 
 # Inspect dimensions
-dim(coping.gad.raw.id)
+dim(coping.glad.gad.raw.id)
 # Inspect colnames
-colnames(coping.gad.raw.id)
+colnames(coping.glad.gad.raw.id)
 #Differences
-dim(coping.gad.raw)[1]-dim(coping.gad.raw.id)[1]
+dim(coping.glad.gad.raw)[1]-dim(coping.glad.gad.raw.id)[1]
 }
 ```
 
 ```{r coping glad gad copy}
 if(GLAD == TRUE) {
-  prepan.ocir.raw.id <- glad.ocir.raw.id
+  coping.gad.raw.id <- coping.glad.gad.raw.id
+}
+```
+
+```{r coping edgi gad cols}
+if(EDGI == TRUE) {
+  coping.edgi.gad.raw <- readRDS(file = paste0(data.raw_path,"/edgi/gad_coping_edgi.rds"))
+  dim(coping.edgi.gad.raw)
+  colnames(coping.edgi.gad.raw)
+}
+```
+
+```{r coping edgi gad summary}
+if(EDGI == TRUE) {
+  summarytools::dfSummary(
+    coping.edgi.gad.raw,
+    graph.col = F,
+    valid.col = F,
+    labels.col = F
+  )
+}
+```
+
+
+```{r coping edgi gad cleaning}
+if(EDGI == TRUE) {
+  exclude_cols_coping_edgi <- c(
+    "Sample",
+    "ID",
+    "startDate.coping"
+  )
+  
+  coping.edgi.gad.raw.id <- coping.edgi.gad.raw %>%
+    drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID)
+    ) %>% 
+    select(
+      Sample, # Sample
+      ID, # ID
+      startDate.coping = startDate, # Rename startDate
+      gad.problems_made_difficult_care, # Impairment
+      gad.pandemic_felt_feelings, # Comparison to before the pandemic (retro)
+      gad.feeling_nervous_anxious_or_on_edge_retro = gad.feeling_nervous_anxious_or_on_edge,
+      gad.control_worrying_stop_retro = gad.control_worrying_stop,
+      gad.worrying_too_much_about_different_things_retro = gad.worrying_too_much_about_different_things,
+      gad.trouble_relaxing_retro = gad.trouble_relaxing,
+      gad.sit_restless_hard_retro = gad.sit_restless_hard,
+      gad.becoming_easily_annoyed_or_irritable_retro = gad.becoming_easily_annoyed_or_irritable,
+      gad.awful_feeling_afraid_happen_retro = gad.awful_feeling_afraid_happen,
+      gad.feeling_nervous_anxious_or_on_edge_base = gad.feeling_nervous_anxious_or_on_edge.1,
+      gad.control_worrying_stop_base = gad.control_worrying_stop.1,
+      gad.worrying_too_much_about_different_things_base = gad.worrying_too_much_about_different_things.1,
+      gad.trouble_relaxing_base = gad.trouble_relaxing.1,
+      gad.sit_restless_hard_base = gad.sit_restless_hard.1,
+      gad.becoming_easily_annoyed_or_irritable_base = gad.becoming_easily_annoyed_or_irritable.1,
+      gad.awful_feeling_afraid_happen_base = gad.awful_feeling_afraid_happen.1
+    ) %>%
+    add_numeric(., exclude = exclude_cols_coping_edgi) %>%
+    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+    mutate_if(is.numeric, ~na_if(., -99)) %>%
+    mutate_if(is.numeric, ~na_if(., -77)) %>%
+    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+  
+  # Inspect dimensions
+  dim(coping.edgi.gad.raw.id)
+  # Inspect colnames
+  colnames(coping.edgi.gad.raw.id)
+  #Differences
+  dim(coping.edgi.gad.raw)[1]-dim(coping.edgi.gad.raw.id)[1]
+}
+```
+
+```{r coping edgi gad copy}
+if(EDGI == TRUE) {
+  coping.gad.raw.id <- coping.edgi.gad.raw.id
+}
+```
+
+```{r coping nbr gad cols}
+if(NBR == TRUE) {
+  coping.nbr.gad.raw <- readRDS(file = paste0(data.raw_path,"/nbr/gad_coping_nbr.rds"))
+  dim(coping.nbr.gad.raw)
+  colnames(coping.nbr.gad.raw)
+}
+```
+
+```{r coping nbr gad summary}
+if(NBR == TRUE) {
+  summarytools::dfSummary(
+    coping.nbr.gad.raw,
+    graph.col = F,
+    valid.col = F,
+    labels.col = F
+  )
+}
+```
+
+
+```{r coping nbr gad cleaning}
+if(NBR == TRUE) {
+  exclude_cols_coping_nbr <- c(
+    "Sample",
+    "ID",
+    "startDate.coping"
+  )
+  
+  coping.nbr.gad.raw.id <- coping.nbr.gad.raw %>%
+    drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID)
+    ) %>% 
+    select(
+      Sample, # Sample
+      ID, # ID
+      startDate.coping = startDate, # Rename startDate
+      gad.problems_made_difficult_care, # Impairment
+      gad.pandemic_felt_feelings, # Comparison to before the pandemic (retro)
+      gad.feeling_nervous_anxious_or_on_edge_retro = gad.feeling_nervous_anxious_or_on_edge,
+      gad.control_worrying_stop_retro = gad.control_worrying_stop,
+      gad.worrying_too_much_about_different_things_retro = gad.worrying_too_much_about_different_things,
+      gad.trouble_relaxing_retro = gad.trouble_relaxing,
+      gad.sit_restless_hard_retro = gad.sit_restless_hard,
+      gad.becoming_easily_annoyed_or_irritable_retro = gad.becoming_easily_annoyed_or_irritable,
+      gad.awful_feeling_afraid_happen_retro = gad.awful_feeling_afraid_happen,
+      gad.feeling_nervous_anxious_or_on_edge_base = gad.feeling_nervous_anxious_or_on_edge.1,
+      gad.control_worrying_stop_base = gad.control_worrying_stop.1,
+      gad.worrying_too_much_about_different_things_base = gad.worrying_too_much_about_different_things.1,
+      gad.trouble_relaxing_base = gad.trouble_relaxing.1,
+      gad.sit_restless_hard_base = gad.sit_restless_hard.1,
+      gad.becoming_easily_annoyed_or_irritable_base = gad.becoming_easily_annoyed_or_irritable.1,
+      gad.awful_feeling_afraid_happen_base = gad.awful_feeling_afraid_happen.1
+    ) %>%
+    add_numeric(., exclude = exclude_cols_coping_nbr) %>%
+    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+    mutate_if(is.numeric, ~na_if(., -99)) %>%
+    mutate_if(is.numeric, ~na_if(., -77)) %>%
+    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+  
+  # Inspect dimensions
+  dim(coping.nbr.gad.raw.id)
+  # Inspect colnames
+  colnames(coping.nbr.gad.raw.id)
+  #Differences
+  dim(coping.nbr.gad.raw)[1]-dim(coping.nbr.gad.raw.id)[1]
+}
+```
+
+```{r coping nbr gad copy}
+if(NBR == TRUE) {
+  coping.gad.raw.id <- coping.nbr.gad.raw.id
+}
+```
+
+```{r coping ramp gad cols}
+if(RAMP == TRUE) {
+  coping.ramp.gad.raw <- readRDS(file = paste0(data.raw_path,"/ramp/gad_coping_ramp.rds"))
+  dim(coping.ramp.gad.raw)
+  colnames(coping.ramp.gad.raw)
+}
+```
+
+```{r coping ramp gad summary}
+if(RAMP == TRUE) {
+  summarytools::dfSummary(
+    coping.ramp.gad.raw,
+    graph.col = F,
+    valid.col = F,
+    labels.col = F
+  )
+}
+```
+
+
+```{r coping ramp gad cleaning}
+if(RAMP == TRUE) {
+  exclude_cols_coping_ramp <- c(
+    "Sample",
+    "ID",
+    "startDate.coping"
+  )
+  
+  coping.ramp.gad.raw.id <- coping.ramp.gad.raw %>%
+    drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID)
+    ) %>% 
+    select(
+      Sample, # Sample
+      ID, # ID
+      startDate.coping = startDate, # Rename startDate
+      gad.problems_made_difficult_care, # Impairment
+      gad.pandemic_felt_feelings, # Comparison to before the pandemic (retro)
+      gad.feeling_nervous_anxious_or_on_edge_retro = gad.feeling_nervous_anxious_or_on_edge,
+      gad.control_worrying_stop_retro = gad.control_worrying_stop,
+      gad.worrying_too_much_about_different_things_retro = gad.worrying_too_much_about_different_things,
+      gad.trouble_relaxing_retro = gad.trouble_relaxing,
+      gad.sit_restless_hard_retro = gad.sit_restless_hard,
+      gad.becoming_easily_annoyed_or_irritable_retro = gad.becoming_easily_annoyed_or_irritable,
+      gad.awful_feeling_afraid_happen_retro = gad.awful_feeling_afraid_happen,
+      gad.feeling_nervous_anxious_or_on_edge_base = gad.feeling_nervous_anxious_or_on_edge.1,
+      gad.control_worrying_stop_base = gad.control_worrying_stop.1,
+      gad.worrying_too_much_about_different_things_base = gad.worrying_too_much_about_different_things.1,
+      gad.trouble_relaxing_base = gad.trouble_relaxing.1,
+      gad.sit_restless_hard_base = gad.sit_restless_hard.1,
+      gad.becoming_easily_annoyed_or_irritable_base = gad.becoming_easily_annoyed_or_irritable.1,
+      gad.awful_feeling_afraid_happen_base = gad.awful_feeling_afraid_happen.1
+    ) %>%
+    add_numeric(., exclude = exclude_cols_coping_ramp) %>%
+    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+    mutate_if(is.numeric, ~na_if(., -99)) %>%
+    mutate_if(is.numeric, ~na_if(., -77)) %>%
+    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+  
+  # Inspect dimensions
+  dim(coping.ramp.gad.raw.id)
+  # Inspect colnames
+  colnames(coping.ramp.gad.raw.id)
+  #Differences
+  dim(coping.ramp.gad.raw)[1]-dim(coping.ramp.gad.raw.id)[1]
+}
+```
+
+```{r coping ramp gad copy}
+if(RAMP == TRUE) {
+  coping.gad.raw.id <- coping.ramp.gad.raw.id
 }
 ```
 
