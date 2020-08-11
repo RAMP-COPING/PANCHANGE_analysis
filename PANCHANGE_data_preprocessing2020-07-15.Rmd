@@ -1746,6 +1746,13 @@ glad.mhd.raw.categories <- glad.mhd.raw.id %>%
     )
 ```
 
+# eclude cols 
+
+```{r cols to exclude}
+exclude_cols <- c("Sample",
+                  "ID")
+```
+
 # glad pcl
 
 ```{r glad prepandemic pcl cols}
@@ -2121,6 +2128,7 @@ PHQ missingness (NAs per person)
 
 prepandemic
 ```{r phq prepan missingness}
+if(GLAD == TRUE | EDGI == TRUE) {
 prepan.phq.raw.id <- prepan.phq.raw.id %>%
   mutate(
     na_per_person_phq_prepan =         # variable for NA per person
@@ -2132,10 +2140,12 @@ prepan.phq.raw.id <- prepan.phq.raw.id %>%
 prepan.phq.raw.id %>%
   freq(na_per_person_phq_prepan,
        cumul = F)
+}
 ```
 
 
 ```{r phq prepan missingness 8 items}
+if(GLAD == TRUE | EDGI == TRUE) {
 prepan.phq.raw.id <- prepan.phq.raw.id %>%
   mutate(
     phq.missing_only_suicide_item_prepan = 
@@ -2151,10 +2161,12 @@ prepan.phq.raw.id <- prepan.phq.raw.id %>%
 prepan.phq.raw.id %>%
   freq(phq.missing_only_suicide_item_prepan,
        cumul = F)
+}
 ```
 
 all times
 ```{r phq prepan sum score if missigng items set to NA - all items}
+if(GLAD == TRUE | EDGI == TRUE) {
 prepan.phq.raw.id <- prepan.phq.raw.id %>%
   mutate(
     phq.sum_score_prepan =
@@ -2170,13 +2182,15 @@ prepan.phq.raw.id %>%
 
 prepan.phq.raw.id %>%
   descr(phq.sum_score_prepan, stats = "common")
+}
 ```
 
 +++CH: THINK ABOUT THIS!!!
 
 8 items
 ```{r phq prepan sum score if missigng items set to NA - 8 items}
-glad.phq.raw.id <- glad.phq.raw.id %>%
+if(GLAD == TRUE | EDGI == TRUE) {
+prepan.phq.raw.id <- prepan.phq.raw.id %>%
   mutate(
     phq.sum_score_8items_prepan =
       if_else(condition = na_per_person_phq_prepan > 1 &
@@ -2187,36 +2201,43 @@ glad.phq.raw.id <- glad.phq.raw.id %>%
       )
   )
 
-glad.phq.raw.id %>%
+prepan.phq.raw.id %>%
   descr(phq.sum_score_8items_prepan, stats = "common")
 
-glad.phq.raw.id %>%
+prepan.phq.raw.id %>%
   descr(phq.sum_score_8items_prepan, stats = "common")
+}
 ```
 
 
 ```{r glad phq head}
-head(glad.phq.raw.id)
+if(GLAD == TRUE | EDGI == TRUE) {
+head(prepan.phq.raw.id)
+}
 ```
 
 ```{r glad phq summary}
+if(GLAD == TRUE | EDGI == TRUE) {
 summarytools::dfSummary(
-  glad.phq.raw.id,
+  prepan.phq.raw.id,
   graph.col = F,
   valid.col = F
   )
+}
 ```
-
 
 # glad ocir
 
 ```{r glad ocir cols}
+if(GLAD == TRUE){
 glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/glad/ocir_glad.rds"))
 dim(glad.ocir.raw)
 colnames(glad.ocir.raw)
+}
 ```
 
 ```{r glad ocir cleaning}
+if(GLAD == TRUE){
 glad.ocir.raw.id <- glad.ocir.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -2264,12 +2285,88 @@ dim(glad.ocir.raw.id)
 colnames(glad.ocir.raw.id)
 #Differences
 dim(glad.ocir.raw)[1]-dim(glad.ocir.raw.id)[1]
+}
+```
+
+```{r glad ocir prepan copy}
+if(GLAD == TRUE) {
+  prepan.ocir.raw.id <- glad.ocir.raw.id
+}
+```
+
+# edgi ocir
+
+```{r edgi ocir cols}
+if(EDGI == TRUE){
+  edgi.ocir.raw <- readRDS(file = paste0(data.raw_path, "/edgi/ocir_edgi.rds"))
+  dim(edgi.ocir.raw)
+  colnames(edgi.ocir.raw)
+}
+```
+
+```{r edgi ocir cleaning}
+if(EDGI == TRUE){
+  edgi.ocir.raw.id <- edgi.ocir.raw %>%
+    drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID),
+           startDate.prepandemic = startDate) %>% # Rename startDate
+    select(
+      Sample, # Sample
+      ID, # ID
+      ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan = ocir.i_repeatedly_check_doors_windows_drawers_etc.,
+      ocir.arranged_things_change_upset_prepan = ocir.arranged_things_change_upset,
+      ocir.repeat_feel_numbers_prepan = ocir.repeat_feel_numbers,
+      ocir.clean_simply_wash_feel_prepan = ocir.clean_simply_wash_feel,
+      ocir.mind_upset_unpleasant_thoughts_prepan = ocir.mind_upset_unpleasant_thoughts,
+      ocir.afraid_avoid_throwing_things_prepan = ocir.afraid_avoid_throwing_things,
+      ocir.light_switches_water_taps_prepan = ocir.light_switches_water_taps,
+      ocir.arranged_things_prepan = ocir.arranged_things,
+      ocir.good_feel_bad_numbers_prepan = ocir.good_feel_bad_numbers,
+      ocir.hands_longer_wash_prepan = ocir.hands_longer_wash,
+      ocir.saved_things_prepan = ocir.saved_things,
+      ocir.frequently_difficulty_rid_nasty_prepan = ocir.frequently_difficulty_rid_nasty,
+      ocir.i_check_things_more_often_than_necessary_prepan = ocir.i_check_things_more_often_than_necessary.,
+      ocir.arranged_properly_objects_upset_prepan = ocir.arranged_properly_objects_upset,
+      ocir.feel_compelled_count_things_prepan = ocir.feel_compelled_count_things,
+      ocir.strangers_touch_touched_difficult_prepan = ocir.strangers_touch_touched_difficult,
+      ocir.control_difficult_find_thoughts_prepan = ocir.control_difficult_find_thoughts,
+      ocir.i_collect_things_i_dont_need_prepan = ocir.i_collect_things_i_dont_need
+    ) %>%
+    add_numeric(., exclude = exclude_cols) %>%
+    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+    mutate_if(is.numeric, ~na_if(., -99)) %>%
+    mutate_if(is.numeric, ~na_if(., -77)) %>%
+    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+  
+  # Inspect dimensions
+  dim(edgi.ocir.raw.id)
+  # Inspect colnames
+  colnames(edgi.ocir.raw.id)
+  #Differences
+  dim(edgi.ocir.raw)[1]-dim(edgi.ocir.raw.id)[1]
+}
+```
+
+```{r edgi ocir prepan copy}
+if(EDGI == TRUE) {
+  prepan.ocir.raw.id <- edgi.ocir.raw.id
+}
 ```
 
 Calculate sum score for OCI-R
 
 *Note that scores with missingness will be changed to NA later in the script
 ```{r ocir sum score prepan}
+if(GLAD == TRUE | EDGI == TRUE) {
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
 ocir.items_key_prepan <- c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
@@ -2298,25 +2395,27 @@ ocir.items_prepan = c(
 
 # Calulate sum score
 ocir.scored_items_prepan <- scoreItems(keys = ocir.items_key_prepan,
-                                        items = glad.ocir.raw.id[ocir.items_prepan],
+                                        items = prepan.ocir.raw.id[ocir.items_prepan],
                                         totals = TRUE, 
                                         missing = TRUE, 
                                         impute = 'none', 
                                         min = 0, 
                                         max = 4)
 # Add in column to tibble
-glad.ocir.raw.id$ocir.sum_score_prepan <- ocir.scored_items_prepan$scores
+prepan.ocir.raw.id$ocir.sum_score_prepan <- ocir.scored_items_prepan$scores
 
 # Look at values
-glad.ocir.raw.id %>%
+prepan.ocir.raw.id %>%
   descr(ocir.sum_score_prepan,
         stats = "common"
         )
+}
 ```
 
 prepandemic
 ```{r ocir prepan missingness}
-glad.ocir.raw.id <- glad.ocir.raw.id %>%
+if(GLAD == TRUE | EDGI == TRUE) {
+prepan.ocir.raw.id <- prepan.ocir.raw.id %>%
   mutate(
     na_per_person_ocir_prepan =         # variable for NA per person
       rowSums(                       
@@ -2324,23 +2423,26 @@ glad.ocir.raw.id <- glad.ocir.raw.id %>%
       )
   )
 
-glad.ocir.raw.id %>%
+prepan.ocir.raw.id %>%
   freq(na_per_person_ocir_prepan,
        cumul = F)
+}
 ```
 
-
-
 ```{r glad ocir head}
-head(glad.ocir.raw.id)
+if(GLAD == TRUE | EDGI == TRUE) {
+head(prepan.ocir.raw.id)
+}
 ```
 
 ```{r glad ocir summary}
+if(GLAD == TRUE | EDGI == TRUE) {
 summarytools::dfSummary(
-  glad.ocir.raw.id,
+  prepan.ocir.raw.id,
   graph.col = F,
   valid.col = F
   )
+}
 ```
 
 # COPING GLAD: GAD-7
