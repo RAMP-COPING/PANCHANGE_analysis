@@ -756,9 +756,9 @@ colnames(glad.gad.raw)
 
 
 ```{r glad gad cleaning}
+if(GLAD ==TRUE){
 exclude_cols <- c("Sample",
                   "ID")
-
 glad.gad.raw.id <- glad.gad.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -795,11 +795,12 @@ dim(glad.gad.raw.id)
 colnames(glad.gad.raw.id)
 #Differences
 dim(glad.gad.raw)[1]-dim(glad.gad.raw.id)[1]
+}
 ```
 
 ```{r glad copy gad}
 if(GLAD == TRUE){
-gad.raw.id <- glad.gad.raw.id
+prepan.gad.raw.id <- glad.gad.raw.id
 }
 ```
 
@@ -858,10 +859,9 @@ dim(edgi.gad.raw)[1]-dim(edgi.gad.raw.id)[1]
 
 ```{r nbr copy gad}
 if(EDGI == TRUE){
-  gad.raw.id <- edgi.gad.raw.id
+  prepan.gad.raw.id <- edgi.gad.raw.id
 }
 ```
-
 
 
 Calculate sum score for GAD-7
@@ -869,6 +869,7 @@ Max should be 21.
 
 *Note that scores with missingness will be changed to NA later in the script
 ```{r gad sum score prepan raw}
+if(GLAD ==TRUE | EDGI == TRUE){
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
 gad.items_key_prepan <- c(1,1,1,1,1,1,1)
@@ -886,27 +887,29 @@ gad.items_prepan <- c(
 
 # Calulate total score
 gad.scored_items_prepan <- scoreItems(keys = gad.items_key_prepan,
-                                        items = gad.raw.id[gad.items_prepan],
+                                        items = prepan.gad.raw.id[gad.items_prepan],
                                         totals = TRUE, 
                                         missing = TRUE, 
                                         impute = 'none', 
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-gad.raw.id$gad.sum_score_prepan_raw <- gad.scored_items_prepan$scores
+prepan.gad.raw.id$gad.sum_score_prepan_raw <- gad.scored_items_prepan$scores
 
 # Look at values
-gad.raw.id %>%
+prepan.gad.raw.id %>%
   descr(gad.sum_score_prepan_raw,
         stats = "common"
         )
+}
 ```
 
 missingness (NAs per person)
 
 prepandemic
 ```{r gad prepan missingness}
-gad.raw.id <- gad.raw.id %>%
+if(GLAD ==TRUE | EDGI == TRUE){
+prepan.gad.raw.id <- prepan.gad.raw.id %>%
   mutate(
     na_per_person_gad_prepan =         # variable for NA per person
       rowSums(                       
@@ -914,14 +917,16 @@ gad.raw.id <- gad.raw.id %>%
       )
   )
 
-gad.raw.id %>%
+prepan.gad.raw.id %>%
   freq(na_per_person_gad_prepan,
        cumul = F)
+}
 ```
 
 
 ```{r gad prepan sum score if missigng items set to NA}
-gad.raw.id <- gad.raw.id %>%
+if(GLAD ==TRUE | EDGI == TRUE){
+prepan.gad.raw.id <- prepan.gad.raw.id %>%
   mutate(
     gad.sum_score_prepan =
       if_else(condition = na_per_person_gad_prepan > 0,
@@ -931,25 +936,28 @@ gad.raw.id <- gad.raw.id %>%
               )
   )
 
-gad.raw.id %>%
+prepan.gad.raw.id %>%
   descr(gad.sum_score_prepan_raw, stats = "common")
 
-gad.raw.id %>%
+prepan.gad.raw.id %>%
   descr(gad.sum_score_prepan, stats = "common")
+}
 ```
 
-
-
 ```{r glad gad head}
-head(gad.raw.id)
+if(GLAD ==TRUE | EDGI == TRUE){
+head(prepan.gad.raw.id)
+}
 ```
 
 ```{r glad gad summary}
+if(GLAD ==TRUE | EDGI == TRUE){
 summarytools::dfSummary(
-  gad.raw.id,
+  prepan.gad.raw.id,
   graph.col = F,
   valid.col = F,
   labels.col = F)
+}
 ```
 
 # glad mhd
@@ -1738,16 +1746,28 @@ glad.mhd.raw.categories <- glad.mhd.raw.id %>%
     )
 ```
 
+# eclude cols 
+
+```{r cols to exclude}
+exclude_cols <- c("Sample",
+                  "ID")
+```
+
 # glad pcl
 
-```{r glad pcl cols}
+```{r glad prepandemic pcl cols}
+if(GLAD == TRUE) {
 glad.pcl.raw <- readRDS(file = paste0(data.raw_path,"/glad/pcl_glad.rds"))
 dim(glad.pcl.raw)
 colnames(glad.pcl.raw)
+}
 ```
 
 
-```{r glad pcl cleaning}
+```{r glad prepandemic pcl cleaning}
+if(GLAD == TRUE) {
+exclude_cols <- c("Sample",
+                  "ID")
 glad.pcl.raw.id <- glad.pcl.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -1783,12 +1803,79 @@ dim(glad.pcl.raw.id)
 colnames(glad.pcl.raw.id)
 #Differences
 dim(glad.pcl.raw)[1]-dim(glad.pcl.raw.id)[1]
+}
 ```
+
+```{r glad pcl prepan copy}
+if(GLAD == TRUE) {
+  prepan.pcl.raw.id <- glad.pcl.raw.id
+}
+```
+
+# edgi pcl
+
+```{r edgi pcl cols}
+if(EDGI == TRUE) {
+  edgi.pcl.raw <- readRDS(file = paste0(data.raw_path,"/edgi/pcl_edgi.rds"))
+  dim(edgi.pcl.raw)
+  colnames(edgi.pcl.raw)
+}
+```
+
+
+```{r edgi pcl cleaning}
+if(EDGI == TRUE) {
+  edgi.pcl.raw.id <- edgi.pcl.raw %>%
+    drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID),
+           startDate.prepandemic = startDate) %>% # Rename startDate
+    select(
+      Sample, # Sample
+      ID, # ID
+      pcl.stressful_experience_repeated_images_prepan = pcl.stressful_experience_repeated_images,
+      pcl.stressful_experience_upset_reminded_prepan = pcl.stressful_experience_upset_reminded,
+      pcl.stressful_situation_avoiding_activities_prepan = pcl.stressful_situation_avoiding_activities,
+      pcl.cut_people_feeling_distant_prepan = pcl.cut_people_feeling_distant,
+      pcl.feeling_irritable_or_having_angry_outbursts_prepan = pcl.feeling_irritable_or_having_angry_outbursts,
+      pcl.difficulty_concentrating_prepan = pcl.difficulty_concentrating
+    ) %>%
+    add_numeric(., exclude = exclude_cols) %>%
+    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+    mutate_if(is.numeric, ~na_if(., -99)) %>%
+    mutate_if(is.numeric, ~na_if(., -77)) %>%
+    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+  
+  # Inspect dimensions
+  dim(edgi.pcl.raw.id)
+  # Inspect colnames
+  colnames(edgi.pcl.raw.id)
+  #Differences
+  dim(edgi.pcl.raw)[1]-dim(edgi.pcl.raw.id)[1]
+}
+```
+
+
+```{r edgi pcl prepan copy}
+if(EDGI == TRUE) {
+  prepan.pcl.raw.id <- edgi.pcl.raw.id
+}
+```
+
 
 Calculate sum score for PCL-6
 
 *Note that scores with missingness will be changed to NA later in the script
 ```{r pcl sum score prepan}
+if(GLAD == TRUE | EDGI == TRUE){
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
 pcl.items_key_prepan <- c(1,1,1,1,1,1)
@@ -1805,27 +1892,29 @@ pcl.items_prepan <- c(
 
 # Calulate total score
 pcl.scored_items_prepan <- scoreItems(keys = pcl.items_key_prepan,
-                                        items = glad.pcl.raw.id[pcl.items_prepan],
+                                        items = prepan.pcl.raw.id[pcl.items_prepan],
                                         totals = TRUE, 
                                         missing = TRUE, 
                                         impute = 'none', 
                                         min = 1, 
                                         max = 5)
 # Add in column to tibble
-glad.pcl.raw.id$pcl.sum_score_prepan_raw <- pcl.scored_items_prepan$scores
+prepan.pcl.raw.id$pcl.sum_score_prepan_raw <- pcl.scored_items_prepan$scores
 
 # Look at values
-glad.pcl.raw.id %>%
+prepan.pcl.raw.id %>%
   descr(pcl.sum_score_prepan_raw,
         stats = "common"
         )
+}
 ```
 
 Missigness
 
 prepandemic
 ```{r pcl prepan missingness}
-glad.pcl.raw.id <- glad.pcl.raw.id %>%
+if(GLAD == TRUE | EDGI == TRUE){
+prepan.pcl.raw.id <- prepan.pcl.raw.id %>%
   mutate(
     na_per_person_pcl_prepan =         # variable for NA per person
       rowSums(                       
@@ -1833,13 +1922,15 @@ glad.pcl.raw.id <- glad.pcl.raw.id %>%
       )
   )
 
-glad.pcl.raw.id %>%
+prepan.pcl.raw.id %>%
   freq(na_per_person_pcl_prepan,
        cumul = F)
+}
 ```
 
 ```{r pcl prepan sum score if missigng items set to NA}
-glad.pcl.raw.id <- glad.pcl.raw.id %>%
+if(GLAD == TRUE | EDGI == TRUE){
+prepan.pcl.raw.id <- prepan.pcl.raw.id %>%
   mutate(
     pcl.sum_score_prepan =
       if_else(condition = na_per_person_pcl_prepan > 0,
@@ -1849,34 +1940,42 @@ glad.pcl.raw.id <- glad.pcl.raw.id %>%
       )
   )
 
-glad.pcl.raw.id %>%
+prepan.pcl.raw.id %>%
   descr(pcl.sum_score_prepan_raw, stats = "common")
 
-glad.pcl.raw.id %>%
+prepan.pcl.raw.id %>%
   descr(pcl.sum_score_prepan, stats = "common")
+}
 ```
 
 ```{r glad pcl head}
-head(glad.pcl.raw.id)
+if(GLAD == TRUE | EDGI == TRUE){
+head(prepan.pcl.raw.id)
+}
 ```
 
 ```{r glad pcl summary}
+if(GLAD == TRUE | EDGI == TRUE){
 summarytools::dfSummary(
-  glad.pcl.raw.id,
+  prepan.pcl.raw.id,
   graph.col = F,
   valid.col = F, labels.col = F)
+}
 ```
 
 # glad phq
 
 ```{r glad phq cols}
+if(GLAD == TRUE){
 glad.phq.raw <- readRDS(file = paste0(data.raw_path, "/glad/phq_glad.rds"))
 dim(glad.phq.raw)
 colnames(glad.phq.raw)
+}
 ```
 
 
 ```{r glad phq cleaning}
+if(GLAD == TRUE){
 glad.phq.raw.id <- glad.phq.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -1915,12 +2014,80 @@ dim(glad.phq.raw.id)
 colnames(glad.phq.raw.id)
 #Differences
 dim(glad.phq.raw)[1]-dim(glad.phq.raw.id)[1]
+}
+```
+
+```{r glad phq prepan copy}
+if(GLAD == TRUE) {
+  prepan.phq.raw.id <- glad.phq.raw.id
+}
+```
+
+# edgi phq
+
+```{r edgi phq cols}
+if(EDGI == TRUE){
+  edgi.phq.raw <- readRDS(file = paste0(data.raw_path, "/edgi/phq_edgi.rds"))
+  dim(edgi.phq.raw)
+  colnames(edgi.phq.raw)
+}
+```
+
+
+```{r edgi phq cleaning}
+if(EDGI == TRUE){
+  edgi.phq.raw.id <- edgi.phq.raw %>%
+    drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID),
+           startDate.prepandemic = startDate) %>% # Rename startDate
+    select(
+      Sample, # Sample
+      ID, # ID
+      phq.little_interest_or_pleasure_in_doing_things_prepan = phq.little_interest_or_pleasure_in_doing_things,
+      phq.feeling_down_depressed_or_hopeless_prepan = phq.feeling_down_depressed_or_hopeless,
+      phq.staying_asleep_sleeping_trouble_prepan = phq.staying_asleep_sleeping_trouble,
+      phq.feeling_tired_or_having_little_energy_prepan = phq.feeling_tired_or_having_little_energy,
+      phq.poor_appetite_or_overeating_prepan = phq.poor_appetite_or_overeating,
+      phq.feeling_bad_failure_family_prepan = phq.feeling_bad_failure_family,
+      phq.trouble_concentrating_reading_newspaper_prepan = phq.trouble_concentrating_reading_newspaper,
+      phq.moving_fidgety_noticed_opposite_prepan = phq.moving_fidgety_noticed_opposite,
+      phq.dead_hurting_thoughts_prepan = phq.dead_hurting_thoughts
+    ) %>%
+    add_numeric(., exclude = exclude_cols) %>%
+    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+    mutate_if(is.numeric, ~na_if(., -99)) %>%
+    mutate_if(is.numeric, ~na_if(., -77)) %>%
+    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+  
+  # Inspect dimensions
+  dim(edgi.phq.raw.id)
+  # Inspect colnames
+  colnames(edgi.phq.raw.id)
+  #Differences
+  dim(edgi.phq.raw)[1]-dim(edgi.phq.raw.id)[1]
+}
+```
+
+```{r edgi phq prepan copy}
+if(EDGI == TRUE) {
+  prepan.phq.raw.id <- edgi.phq.raw.id
+}
 ```
 
 Calculate sum score for PHQ-9
 
 *Note that scores with missingness will be changed to NA later in the script
 ```{r phq sum score prepan}
+if(GLAD == TRUE | EDGI == TRUE) {
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
 phq.items_key_prepan <- c(1,1,1,1,1,1,1,1,1)
@@ -1940,27 +2107,29 @@ phq.items_prepan <- c(
 
 # Calulate sum score
 phq.scored_items_prepan <- scoreItems(keys = phq.items_key_prepan,
-                                        items = glad.phq.raw.id[phq.items_prepan],
+                                        items = prepan.phq.raw.id[phq.items_prepan],
                                         totals = TRUE, 
                                         missing = TRUE, 
                                         impute = 'none', 
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-glad.phq.raw.id$phq.sum_score_prepan_raw <- phq.scored_items_prepan$scores
+prepan.phq.raw.id$phq.sum_score_prepan_raw <- phq.scored_items_prepan$scores
 
 # Look at values
-glad.phq.raw.id %>%
+prepan.phq.raw.id %>%
   descr(phq.sum_score_prepan_raw,
         stats = "common"
         )
+}
 ```
 
 PHQ missingness (NAs per person)
 
 prepandemic
 ```{r phq prepan missingness}
-glad.phq.raw.id <- glad.phq.raw.id %>%
+if(GLAD == TRUE | EDGI == TRUE) {
+prepan.phq.raw.id <- prepan.phq.raw.id %>%
   mutate(
     na_per_person_phq_prepan =         # variable for NA per person
       rowSums(                       
@@ -1968,14 +2137,16 @@ glad.phq.raw.id <- glad.phq.raw.id %>%
       )
   )
 
-glad.phq.raw.id %>%
+prepan.phq.raw.id %>%
   freq(na_per_person_phq_prepan,
        cumul = F)
+}
 ```
 
 
 ```{r phq prepan missingness 8 items}
-glad.phq.raw.id <- glad.phq.raw.id %>%
+if(GLAD == TRUE | EDGI == TRUE) {
+prepan.phq.raw.id <- prepan.phq.raw.id %>%
   mutate(
     phq.missing_only_suicide_item_prepan = 
       if_else(
@@ -1987,14 +2158,16 @@ glad.phq.raw.id <- glad.phq.raw.id %>%
       )
   )
 
-glad.phq.raw.id %>%
+prepan.phq.raw.id %>%
   freq(phq.missing_only_suicide_item_prepan,
        cumul = F)
+}
 ```
 
 all times
 ```{r phq prepan sum score if missigng items set to NA - all items}
-glad.phq.raw.id <- glad.phq.raw.id %>%
+if(GLAD == TRUE | EDGI == TRUE) {
+prepan.phq.raw.id <- prepan.phq.raw.id %>%
   mutate(
     phq.sum_score_prepan =
       if_else(condition = na_per_person_phq_prepan > 0,
@@ -2004,18 +2177,20 @@ glad.phq.raw.id <- glad.phq.raw.id %>%
       )
   )
 
-glad.phq.raw.id %>%
+prepan.phq.raw.id %>%
   descr(phq.sum_score_prepan_raw, stats = "common")
 
-glad.phq.raw.id %>%
+prepan.phq.raw.id %>%
   descr(phq.sum_score_prepan, stats = "common")
+}
 ```
 
 +++CH: THINK ABOUT THIS!!!
 
 8 items
 ```{r phq prepan sum score if missigng items set to NA - 8 items}
-glad.phq.raw.id <- glad.phq.raw.id %>%
+if(GLAD == TRUE | EDGI == TRUE) {
+prepan.phq.raw.id <- prepan.phq.raw.id %>%
   mutate(
     phq.sum_score_8items_prepan =
       if_else(condition = na_per_person_phq_prepan > 1 &
@@ -2026,36 +2201,43 @@ glad.phq.raw.id <- glad.phq.raw.id %>%
       )
   )
 
-glad.phq.raw.id %>%
+prepan.phq.raw.id %>%
   descr(phq.sum_score_8items_prepan, stats = "common")
 
-glad.phq.raw.id %>%
+prepan.phq.raw.id %>%
   descr(phq.sum_score_8items_prepan, stats = "common")
+}
 ```
 
 
 ```{r glad phq head}
-head(glad.phq.raw.id)
+if(GLAD == TRUE | EDGI == TRUE) {
+head(prepan.phq.raw.id)
+}
 ```
 
 ```{r glad phq summary}
+if(GLAD == TRUE | EDGI == TRUE) {
 summarytools::dfSummary(
-  glad.phq.raw.id,
+  prepan.phq.raw.id,
   graph.col = F,
   valid.col = F
   )
+}
 ```
-
 
 # glad ocir
 
 ```{r glad ocir cols}
+if(GLAD == TRUE){
 glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/glad/ocir_glad.rds"))
 dim(glad.ocir.raw)
 colnames(glad.ocir.raw)
+}
 ```
 
 ```{r glad ocir cleaning}
+if(GLAD == TRUE){
 glad.ocir.raw.id <- glad.ocir.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -2103,12 +2285,88 @@ dim(glad.ocir.raw.id)
 colnames(glad.ocir.raw.id)
 #Differences
 dim(glad.ocir.raw)[1]-dim(glad.ocir.raw.id)[1]
+}
+```
+
+```{r glad ocir prepan copy}
+if(GLAD == TRUE) {
+  prepan.ocir.raw.id <- glad.ocir.raw.id
+}
+```
+
+# edgi ocir
+
+```{r edgi ocir cols}
+if(EDGI == TRUE){
+  edgi.ocir.raw <- readRDS(file = paste0(data.raw_path, "/edgi/ocir_edgi.rds"))
+  dim(edgi.ocir.raw)
+  colnames(edgi.ocir.raw)
+}
+```
+
+```{r edgi ocir cleaning}
+if(EDGI == TRUE){
+  edgi.ocir.raw.id <- edgi.ocir.raw %>%
+    drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID),
+           startDate.prepandemic = startDate) %>% # Rename startDate
+    select(
+      Sample, # Sample
+      ID, # ID
+      ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan = ocir.i_repeatedly_check_doors_windows_drawers_etc.,
+      ocir.arranged_things_change_upset_prepan = ocir.arranged_things_change_upset,
+      ocir.repeat_feel_numbers_prepan = ocir.repeat_feel_numbers,
+      ocir.clean_simply_wash_feel_prepan = ocir.clean_simply_wash_feel,
+      ocir.mind_upset_unpleasant_thoughts_prepan = ocir.mind_upset_unpleasant_thoughts,
+      ocir.afraid_avoid_throwing_things_prepan = ocir.afraid_avoid_throwing_things,
+      ocir.light_switches_water_taps_prepan = ocir.light_switches_water_taps,
+      ocir.arranged_things_prepan = ocir.arranged_things,
+      ocir.good_feel_bad_numbers_prepan = ocir.good_feel_bad_numbers,
+      ocir.hands_longer_wash_prepan = ocir.hands_longer_wash,
+      ocir.saved_things_prepan = ocir.saved_things,
+      ocir.frequently_difficulty_rid_nasty_prepan = ocir.frequently_difficulty_rid_nasty,
+      ocir.i_check_things_more_often_than_necessary_prepan = ocir.i_check_things_more_often_than_necessary.,
+      ocir.arranged_properly_objects_upset_prepan = ocir.arranged_properly_objects_upset,
+      ocir.feel_compelled_count_things_prepan = ocir.feel_compelled_count_things,
+      ocir.strangers_touch_touched_difficult_prepan = ocir.strangers_touch_touched_difficult,
+      ocir.control_difficult_find_thoughts_prepan = ocir.control_difficult_find_thoughts,
+      ocir.i_collect_things_i_dont_need_prepan = ocir.i_collect_things_i_dont_need
+    ) %>%
+    add_numeric(., exclude = exclude_cols) %>%
+    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+    mutate_if(is.numeric, ~na_if(., -99)) %>%
+    mutate_if(is.numeric, ~na_if(., -77)) %>%
+    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+  
+  # Inspect dimensions
+  dim(edgi.ocir.raw.id)
+  # Inspect colnames
+  colnames(edgi.ocir.raw.id)
+  #Differences
+  dim(edgi.ocir.raw)[1]-dim(edgi.ocir.raw.id)[1]
+}
+```
+
+```{r edgi ocir prepan copy}
+if(EDGI == TRUE) {
+  prepan.ocir.raw.id <- edgi.ocir.raw.id
+}
 ```
 
 Calculate sum score for OCI-R
 
 *Note that scores with missingness will be changed to NA later in the script
 ```{r ocir sum score prepan}
+if(GLAD == TRUE | EDGI == TRUE) {
 # Create vector with scoring key: If the item is reversed coded use -1. 
 # There needs to be the correct number of values for each item in the questionnaire. 
 ocir.items_key_prepan <- c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
@@ -2137,25 +2395,27 @@ ocir.items_prepan = c(
 
 # Calulate sum score
 ocir.scored_items_prepan <- scoreItems(keys = ocir.items_key_prepan,
-                                        items = glad.ocir.raw.id[ocir.items_prepan],
+                                        items = prepan.ocir.raw.id[ocir.items_prepan],
                                         totals = TRUE, 
                                         missing = TRUE, 
                                         impute = 'none', 
                                         min = 0, 
                                         max = 4)
 # Add in column to tibble
-glad.ocir.raw.id$ocir.sum_score_prepan <- ocir.scored_items_prepan$scores
+prepan.ocir.raw.id$ocir.sum_score_prepan <- ocir.scored_items_prepan$scores
 
 # Look at values
-glad.ocir.raw.id %>%
+prepan.ocir.raw.id %>%
   descr(ocir.sum_score_prepan,
         stats = "common"
         )
+}
 ```
 
 prepandemic
 ```{r ocir prepan missingness}
-glad.ocir.raw.id <- glad.ocir.raw.id %>%
+if(GLAD == TRUE | EDGI == TRUE) {
+prepan.ocir.raw.id <- prepan.ocir.raw.id %>%
   mutate(
     na_per_person_ocir_prepan =         # variable for NA per person
       rowSums(                       
@@ -2163,23 +2423,26 @@ glad.ocir.raw.id <- glad.ocir.raw.id %>%
       )
   )
 
-glad.ocir.raw.id %>%
+prepan.ocir.raw.id %>%
   freq(na_per_person_ocir_prepan,
        cumul = F)
+}
 ```
 
-
-
 ```{r glad ocir head}
-head(glad.ocir.raw.id)
+if(GLAD == TRUE | EDGI == TRUE) {
+head(prepan.ocir.raw.id)
+}
 ```
 
 ```{r glad ocir summary}
+if(GLAD == TRUE | EDGI == TRUE) {
 summarytools::dfSummary(
-  glad.ocir.raw.id,
+  prepan.ocir.raw.id,
   graph.col = F,
   valid.col = F
   )
+}
 ```
 
 # COPING GLAD: GAD-7
