@@ -50,7 +50,7 @@ date = Sys.Date()
 ```
 
 # Specify cohort
-```{r}
+```{r Specify cohort}
 GLAD = TRUE
 EDGI = FALSE
 NBR = FALSE
@@ -165,16 +165,19 @@ source("../PANCHANGE_raw_path.R")
 # GLAD demographics
 ## Read in data
 ```{r glad dem cols}
+if(GLAD == TRUE){
 glad.dem.raw <- readRDS(file = paste0(data.raw_path, "/glad/dem_glad.rds"))
 dim(glad.dem.raw)
 colnames(glad.dem.raw)
+}
 ```
 
 # Select variables
 ```{r glad dem cleaning}
+if(GLAD == TRUE){
 exclude_cols_dem <- c("ID",
                   "Sample",
-                  "startDate.glad",
+                  "startDate.prepandemic",
                   "Age_uncleaned",
                   "EduYrs")
 
@@ -183,11 +186,11 @@ glad.dem.raw.id <- glad.dem.raw %>%
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID),
-         startDate.glad = startDate) %>% # Rename startDate
+         startDate.prepandemic = startDate) %>% # Rename startDate
   select(
          Sample, # Sample
          ID, # ID
-         startDate.glad, #Date when participant signed up to glad
+         startDate.prepandemic, #Date when participant signed up to glad
          Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
          Gender = demographics.which_gender_do_you_identify_with, # Gender
          Sex = demographics.select_questionnaire_items_medical, #Sex
@@ -218,6 +221,235 @@ dim(glad.dem.raw.id)
 colnames(glad.dem.raw.id)
 #Differences
 dim(glad.dem.raw)[1]-dim(glad.dem.raw.id)[1]
+}
+```
+
+```{r glad copy dem}
+if(GLAD == TRUE){
+dem.raw.id <- glad.dem.raw.id
+}
+```
+
+# EDGI demographics
+## Read in data
+```{r edgi dem cols}
+if(EDGI == TRUE){
+  edgi.dem.raw <- readRDS(file = paste0(data.raw_path, "/edgi/dem_edgi.rds"))
+  dim(edgi.dem.raw)
+  colnames(edgi.dem.raw)
+}
+```
+
+# Select variables
+```{r edgi dem cleaning}
+if(EDGI == TRUE){
+  exclude_cols_dem <- c("ID",
+                        "Sample",
+                        "startDate.prepandemic",
+                        "Age_uncleaned",
+                        "EduYrs")
+  
+  edgi.dem.raw.id <- edgi.dem.raw %>%
+    drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID),
+           startDate.edgi = startDate) %>% # Rename startDate
+    select(
+      Sample, # Sample
+      ID, # ID
+      startDate.edgi, #Date when participant signed up to edgi
+      Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
+      Gender = demographics.what_gender_do_you_identify_with, # Gender (which [GLAD] vs what [EDGI])
+      Sex = demographics.select_questionnaire_items_birth, #Sex (different to GLAD)
+      EduYrs = demographics.university_education_attend_school.txt, # Years in education (different to GLAD)
+      demographics.college_or_university_degree, # level of education - univeristy
+      demographics.a_levelsas_levels_or_equivalent, # level of education - alevel
+      demographics.o_levelsgcses_or_equivalent, # level of education - gcse
+      demographics.cses_or_equivalent, # level of education - cse
+      demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+      Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
+    ) %>%
+    add_numeric(., exclude = exclude_cols_dem) %>%
+    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+    mutate_if(is.numeric, ~na_if(., -99)) %>%
+    mutate_if(is.numeric, ~na_if(., -77)) %>%
+    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+  
+  # Inspect dimensions
+  dim(edgi.dem.raw.id)
+  # Inspect colnames
+  colnames(edgi.dem.raw.id)
+  #Differences
+  dim(edgi.dem.raw)[1]-dim(edgi.dem.raw.id)[1]
+}
+```
+
+```{r edgi copy dem}
+if(EDGI == TRUE){
+  dem.raw.id <- edgi.dem.raw.id
+}
+```
+
+
+
+# NBR demographics
+## Read in data
+```{r nbr dem cols}
+if(NBR == TRUE){
+  nbr.dem.raw <- readRDS(file = paste0(data.raw_path, "/nbr/dem_nbr.rds"))
+  dim(nbr.dem.raw)
+  colnames(nbr.dem.raw)
+}
+```
+
+# Select variables
+```{r nbr dem cleaning}
+if(NBR == TRUE){
+  exclude_cols_dem <- c("ID",
+                        "Sample",
+                        "startDate.nbr",
+                        "Age_uncleaned",
+                        "EduYrs")
+  
+  nbr.dem.raw.id <- nbr.dem.raw %>%
+    drop_na(subjectid) %>% # Drop NAs
+    distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+    separate(ID.intm, into = "ID", sep = 7) %>%
+    mutate(ID = as.numeric(ID),
+           startDate.coping = startDate) %>% # Rename startDate
+    select(
+      Sample, # Sample
+      ID, # ID
+      startDate.coping, #Date when participant signed up to nbr
+#      Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
+      Birthyear = demographics.year, # Birthyear
+      Gender = demographics.which_gender_do_you_identify_with, # Gender
+      Sex = demographics.select_questionnaire_items_medical, #Sex
+      EduYrs = demographics.school_education_school_years.txt, # Years in education
+      demographics.college_or_university_degree, # level of education - univeristy
+      demographics.a_levelsas_levels_or_equivalent, # level of education - alevel
+      demographics.o_levelsgcses_or_equivalent, # level of education - gcse
+      demographics.cses_or_equivalent, # level of education - cse
+      demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+      Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
+    ) %>%
+    add_numeric(., exclude = exclude_cols_dem) %>%
+    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+    mutate_if(is.numeric, ~na_if(., -99)) %>%
+    mutate_if(is.numeric, ~na_if(., -77)) %>%
+    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+  
+  # Inspect dimensions
+  dim(nbr.dem.raw.id)
+  # Inspect colnames
+  colnames(nbr.dem.raw.id)
+  #Differences
+  dim(nbr.dem.raw)[1]-dim(nbr.dem.raw.id)[1]
+}
+```
+
+
+## Cohort information
+Information on INTERVAL, COMPARE, and STRIDES
+http://www.donorhealth-btru.nihr.ac.uk/studies/
+```{r nbr cohort information}
+if(NBR == TRUE){
+  nbr.cohort.raw <- readxl::read_xlsx(
+    path = paste0(data.raw_path, "/nbr/coping_participants_export_20200730.xlsx")
+    )
+
+  dim(nbr.cohort.raw)
+  colnames(nbr.cohort.raw)
+  }
+```
+
+
+```{r nbr dem cleaning}
+if(NBR == TRUE) {
+exclude_cols_dem <- c("ID",
+                  "Sample",
+                  "startDate.coping",
+                  "Age_uncleaned",
+                  "EduYrs")
+
+nbr.cohort.raw.id <- nbr.cohort.raw %>%
+  drop_na(`NBR ID`) %>% # Drop NAs
+  distinct(`NBR ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(`NBR ID`, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(
+    ID = as.numeric(ID),
+#         startDate.coping = startDate
+         ) %>% # Rename startDate
+  select(
+         Sample, # Sample
+         ID, # ID
+#         startDate.coping, #Date when participant signed up to NBR COPING
+         Age_uncleaned = age, # Age
+         Gender = gender, # Gender
+#         Sex = demographics.select_questionnaire_items_medical, #Sex
+#         EduYrs = demographics.school_education_school_years.txt, # Years in education
+#         demographics.college_or_university_degree, # level of education - univeristy
+#         demographics.a_levelsas_levels_or_equivalent, # level of education - alevel
+#         demographics.o_levelsgcses_or_equivalent, # level of education - gcse
+#         demographics.cses_or_equivalent, # level of education - cse
+#         demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+         Ethnicity = ethnicity # Ethnicity
+         ) %>%
+  add_numeric(., exclude = exclude_cols_dem) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(nbr.cohort.raw.id)
+# Inspect colnames
+colnames(nbr.cohort.raw.id)
+#Differences
+dim(nbr.cohort.raw)[1]-dim(nbr.cohort.raw.id)[1]
+}
+```
+
+```{r nbr copy dem}
+if(NBR == TRUE){
+dem.raw.id <- nbr.dem.raw.id
+}
+```
+
+
+
+```{r nbr demo summary}
+if(NBR == TRUE) {
+summarytools::dfSummary(
+  nbr.cohort.raw.id,
+  graph.col = F,
+  valid.col = F,
+  labels.col = F)
+}
 ```
 
 
@@ -311,6 +543,7 @@ glad.dem.raw.id %>%
 Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
 Assumes University degree > A level > NVQ > GCSE/O Level/CSE
 ```{r Highest education}
+if(GLAD == TRUE | EDGI == TRUE) {
 #create numeric version of the highest education variable
 glad.dem.raw.id <- glad.dem.raw.id %>%
   mutate(
@@ -337,10 +570,12 @@ glad.dem.raw.id <- glad.dem.raw.id %>%
 
 glad.dem.raw.id %>%
   freq(highest_education)
+}
 ```
 
 Check highest education coding
 ```{r Highest education check}
+if(GLAD == TRUE | EDGI == TRUE) {
 glad.dem.raw.id %>%
   select(highest_education,
         demographics.college_or_university_degree_numeric,
@@ -349,6 +584,7 @@ glad.dem.raw.id %>%
         demographics.o_levelsgcses_or_equivalent_numeric,
         demographics.cses_or_equivalent_numeric
   )
+}
 ```
 
 
@@ -365,12 +601,157 @@ summarytools::dfSummary(
   labels.col = F)
 ```
 
+# GLAD employment
+## Read in data
+```{r glad dem cols}
+if(GLAD == TRUE){
+glad.employment.raw <- readRDS(file = paste0(data.raw_path, "/glad/employment_coping_glad.rds"))
+dim(glad.employment.raw)
+colnames(glad.employment.raw)
+}
+```
+
+# Select variables
+```{r glad employment cleaning}
+if(GLAD == TRUE){
+exclude_cols_employment <- c("ID",
+                  "Sample")
+
+glad.employment.raw.id <- glad.employment.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(
+    ID = as.numeric(ID)
+    ) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         employment.phd, # level of education - univeristy
+         employment.masters_degree_or_equivalent, # level of education - univeristy
+         employment.postgraduate_degree_or_equivalent, # level of education - univeristy
+         employment.bachelors_degree_or_equivalent, # level of education - univeristy
+         employment.a_levelsas_levels_or_equivalent, # level of education - alevel
+         employment.o_levelsgcses_or_equivalent, # level of education - gcse
+         employment.cses_or_equivalent, # level of education - cse
+         employment.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+         employment.government_work_key_workers # key worker status
+         ) %>%
+  add_numeric(., exclude = exclude_cols_employment) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(glad.employment.raw.id)
+# Inspect colnames
+colnames(glad.employment.raw.id)
+#Differences
+dim(glad.employment.raw)[1]-dim(glad.employment.raw.id)[1]
+}
+```
+
+
+# Highest education
+Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
+Assumes University degree > A level > NVQ > GCSE/O Level/CSE
+```{r Highest education}
+if(GLAD == TRUE | EDGI == TRUE) {
+#create numeric version of the highest education variable
+glad.employment.raw.id <- glad.employment.raw.id %>%
+  mutate(
+    highest_education_numeric =
+      case_when(
+        employment.phd_numeric == "1" ~ 4,
+        employment.masters_degree_or_equivalent_numeric == "1" ~ 4,
+        employment.postgraduate_degree_or_equivalent_numeric == "1" ~ 4,
+        employment.bachelors_degree_or_equivalent_numeric == "1" ~ 4,
+        employment.a_levelsas_levels_or_equivalent_numeric == "1" ~ 3,
+        employment.nvq_or_hnd_or_hnc_or_equivalent_numeric == "1" ~ 2,
+        employment.o_levelsgcses_or_equivalent_numeric == "1" ~ 1,
+        employment.cses_or_equivalent_numeric == "1" ~ 1
+      )
+    )
+
+#recode the numeric version into a factor
+glad.employment.raw.id <- glad.employment.raw.id %>%
+  mutate(
+    highest_education =
+      recode_factor(
+        highest_education_numeric,
+        `1` = "GCSE/CSE",
+        `2` = "NVQ",
+        `3` = "A-levels",
+        `4` = "University")
+    )
+
+glad.employment.raw.id %>%
+  freq(highest_education)
+}
+```
+
+Check highest education coding
+```{r Highest education check}
+if(GLAD == TRUE | EDGI == TRUE) {
+glad.employment.raw.id %>%
+  select(highest_education,
+         employment.phd_numeric,
+         employment.masters_degree_or_equivalent_numeric,
+         employment.postgraduate_degree_or_equivalent_numeric,
+         employment.bachelors_degree_or_equivalent_numeric,
+         employment.a_levelsas_levels_or_equivalent_numeric,
+         employment.nvq_or_hnd_or_hnc_or_equivalent_numeric,
+         employment.o_levelsgcses_or_equivalent_numeric,
+         employment.cses_or_equivalent_numeric
+  )
+}
+```
+
+# Key worker status
+```{r Key worker}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
+#create numeric version of the variable
+glad.employment.raw.id <- glad.employment.raw.id %>%
+  mutate(
+    key_worker_numeric =
+      case_when(
+        employment.government_work_key_workers_numeric == "0" ~ 0,
+        employment.government_work_key_workers_numeric > 0 ~ 1
+      )
+    )
+
+#recode the numeric version into a factor
+glad.employment.raw.id <- glad.employment.raw.id %>%
+  mutate(
+    key_worker =
+      recode_factor(
+        key_worker_numeric,
+        `0` = "No key worker",
+        `1` = "Key worker"
+        )
+    )
+
+glad.employment.raw.id %>%
+  freq(key_worker)
+}
+```
+
 # glad gad
 
 ```{r glad gad cols}
+if(GLAD == TRUE){
 glad.gad.raw <- readRDS(file = paste0(data.raw_path, "/glad/gad_glad.rds"))
 dim(glad.gad.raw)
 colnames(glad.gad.raw)
+}
 ```
 
 
@@ -383,7 +764,7 @@ glad.gad.raw.id <- glad.gad.raw %>%
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID),
-         startDate.glad = startDate) %>% # Rename startDate
+         startDate.prepandemic = startDate) %>% # Rename startDate
   select(
     Sample, # Sample
     ID, # ID
@@ -416,6 +797,73 @@ colnames(glad.gad.raw.id)
 dim(glad.gad.raw)[1]-dim(glad.gad.raw.id)[1]
 ```
 
+```{r glad copy gad}
+if(GLAD == TRUE){
+gad.raw.id <- glad.gad.raw.id
+}
+```
+
+```{r edgi gad cols}
+if(EDGI == TRUE){
+  edgi.gad.raw <- readRDS(file = paste0(data.raw_path, "/edgi/gad_edgi.rds"))
+  dim(edgi.gad.raw)
+  colnames(edgi.gad.raw)
+}
+```
+
+
+```{r edgi gad cleaning}
+if(EDGI == TRUE){
+exclude_cols <- c("Sample",
+                  "ID")
+
+edgi.gad.raw.id <- edgi.gad.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID),
+         startDate.edgi = startDate) %>% # Rename startDate
+  select(
+    Sample, # Sample
+    ID, # ID
+    gad.feeling_nervous_anxious_or_on_edge_prepan = gad.feeling_nervous_anxious_or_on_edge,
+    gad.control_worrying_stop_prepan = gad.control_worrying_stop,
+    gad.worrying_too_much_about_different_things_prepan = gad.worrying_too_much_about_different_things,
+    gad.trouble_relaxing_prepan = gad.trouble_relaxing,
+    gad.sit_restless_hard_prepan = gad.sit_restless_hard,
+    gad.becoming_easily_annoyed_or_irritable_prepan = gad.becoming_easily_annoyed_or_irritable,
+    gad.awful_feeling_afraid_happen_prepan = gad.awful_feeling_afraid_happen
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(edgi.gad.raw.id)
+# Inspect colnames
+colnames(edgi.gad.raw.id)
+#Differences
+dim(edgi.gad.raw)[1]-dim(edgi.gad.raw.id)[1]
+}
+```
+
+```{r nbr copy gad}
+if(EDGI == TRUE){
+  gad.raw.id <- edgi.gad.raw.id
+}
+```
+
+
+
 Calculate sum score for GAD-7
 Max should be 21.
 
@@ -438,17 +886,17 @@ gad.items_prepan <- c(
 
 # Calulate total score
 gad.scored_items_prepan <- scoreItems(keys = gad.items_key_prepan,
-                                        items = glad.gad.raw.id[gad.items_prepan],
+                                        items = gad.raw.id[gad.items_prepan],
                                         totals = TRUE, 
                                         missing = TRUE, 
                                         impute = 'none', 
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-glad.gad.raw.id$gad.sum_score_prepan_raw <- gad.scored_items_prepan$scores
+gad.raw.id$gad.sum_score_prepan_raw <- gad.scored_items_prepan$scores
 
 # Look at values
-glad.gad.raw.id %>%
+gad.raw.id %>%
   descr(gad.sum_score_prepan_raw,
         stats = "common"
         )
@@ -458,7 +906,7 @@ missingness (NAs per person)
 
 prepandemic
 ```{r gad prepan missingness}
-glad.gad.raw.id <- glad.gad.raw.id %>%
+gad.raw.id <- gad.raw.id %>%
   mutate(
     na_per_person_gad_prepan =         # variable for NA per person
       rowSums(                       
@@ -466,14 +914,14 @@ glad.gad.raw.id <- glad.gad.raw.id %>%
       )
   )
 
-glad.gad.raw.id %>%
+gad.raw.id %>%
   freq(na_per_person_gad_prepan,
        cumul = F)
 ```
 
 
 ```{r gad prepan sum score if missigng items set to NA}
-glad.gad.raw.id <- glad.gad.raw.id %>%
+gad.raw.id <- gad.raw.id %>%
   mutate(
     gad.sum_score_prepan =
       if_else(condition = na_per_person_gad_prepan > 0,
@@ -483,22 +931,22 @@ glad.gad.raw.id <- glad.gad.raw.id %>%
               )
   )
 
-glad.gad.raw.id %>%
+gad.raw.id %>%
   descr(gad.sum_score_prepan_raw, stats = "common")
 
-glad.gad.raw.id %>%
+gad.raw.id %>%
   descr(gad.sum_score_prepan, stats = "common")
 ```
 
 
 
 ```{r glad gad head}
-head(glad.gad.raw.id)
+head(gad.raw.id)
 ```
 
 ```{r glad gad summary}
 summarytools::dfSummary(
-  glad.gad.raw.id,
+  gad.raw.id,
   graph.col = F,
   valid.col = F,
   labels.col = F)
@@ -519,7 +967,7 @@ glad.mhd.raw.id <- glad.mhd.raw %>%
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID),
-         startDate.glad = startDate) %>% # Rename startDate
+         startDate.prepandemic = startDate) %>% # Rename startDate
   select(
     Sample, # Sample
     ID, # ID
@@ -1194,7 +1642,7 @@ glad.mhd.raw.id %>%
        cumul = F)
 ```
 
-```{r}
+```{r comordbitiy_total_count_factor}
 glad.mhd.raw.id <- glad.mhd.raw.id %>%
   mutate(
     comorbidity_total_count_factor_numeric =
@@ -1305,7 +1753,7 @@ glad.pcl.raw.id <- glad.pcl.raw %>%
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID),
-         startDate.glad = startDate) %>% # Rename startDate
+         startDate.prepandemic = startDate) %>% # Rename startDate
   select(
     Sample, # Sample
     ID, # ID
@@ -1434,7 +1882,7 @@ glad.phq.raw.id <- glad.phq.raw %>%
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID),
-         startDate.glad = startDate) %>% # Rename startDate
+         startDate.prepandemic = startDate) %>% # Rename startDate
   select(
     Sample, # Sample
     ID, # ID
@@ -1613,7 +2061,7 @@ glad.ocir.raw.id <- glad.ocir.raw %>%
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID),
-         startDate.glad = startDate) %>% # Rename startDate
+         startDate.prepandemic = startDate) %>% # Rename startDate
   select(
     Sample, # Sample
     ID, # ID
@@ -1756,7 +2204,7 @@ summarytools::dfSummary(
 exclude_cols_coping_glad <- c(
   "Sample",
   "ID",
-  "startDate.coping.glad"
+  "startDate.coping"
 )
 
 coping.glad.gad.raw.id <- coping.glad.gad.raw %>%
@@ -1764,7 +2212,7 @@ coping.glad.gad.raw.id <- coping.glad.gad.raw %>%
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID),
-         startDate.glad = startDate) %>% # Rename startDate
+         startDate.coping = startDate) %>% # Rename startDate
   select(
     Sample, # Sample
     ID, # ID
@@ -1983,7 +2431,7 @@ coping.glad.pcl.raw.id <- coping.glad.pcl.raw %>%
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID),
-         startDate.glad = startDate) %>% # Rename startDate
+         startDate.coping = startDate) %>% # Rename startDate
   select(
     Sample, # Sample
     ID, # ID
@@ -2197,7 +2645,7 @@ coping.glad.phq.raw.id <- coping.glad.phq.raw %>%
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID),
-         startDate.glad = startDate) %>% # Rename startDate
+         startDate.coping = startDate) %>% # Rename startDate
   select(
     Sample, # Sample
     ID, # ID
@@ -2499,7 +2947,7 @@ coping.glad.ocir.raw.id <- coping.glad.ocir.raw %>%
   distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(recipientFirstName, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID),
-         startDate.glad = startDate) %>% # Rename startDate
+         startDate.coping = startDate) %>% # Rename startDate
   select(
     Sample, # Sample
     ID, # ID
@@ -2864,7 +3312,7 @@ dat.glad <- dat.glad %>%
   mutate(
     prepandemic_january_31_numeric =
       if_else(
-        startDate.glad > date_first_case_uk_january_31, # The GLAD sign up is dated before the cut off (> longer ago)
+        startDate.prepandemic > date_first_case_uk_january_31, # The GLAD sign up is dated before the cut off (> longer ago)
         true = 0, # Participant has not signed up before the pandemic,
         false = 1, # Participant has signed up before the pandemic,
         missing = NA_real_
@@ -2891,7 +3339,7 @@ dat.glad <- dat.glad %>%
   mutate(
     prepandemic_march_1_numeric =
       if_else(
-        startDate.glad > date_higher_awareness_march_1, # The GLAD sign up is dated before the cut off (> longer ago)
+        startDate.prepandemic > date_higher_awareness_march_1, # The GLAD sign up is dated before the cut off (> longer ago)
         true = 0, # Participant has not signed up before the pandemic,
         false = 1, # Participant has signed up before the pandemic,
         missing = NA_real_
@@ -2917,7 +3365,7 @@ dat.glad <- dat.glad %>%
   mutate(
     prepandemic_march_23_numeric =
       if_else(
-        startDate.glad > date_uk_lockdown_march_23, # The GLAD sign up is dated before the cut off (> longer ago)
+        startDate.prepandemic > date_uk_lockdown_march_23, # The GLAD sign up is dated before the cut off (> longer ago)
         true = 0, # Participant has not signed up before the pandemic,
         false = 1, # Participant has signed up before the pandemic,
         missing = NA_real_
@@ -2945,8 +3393,8 @@ dat.glad <- dat.glad %>%
     time_diff_sign_up_coping =
         as.numeric(
         difftime(           #this function does time1 - time2 as difftime(time1, time2...)
-          startDate.coping.glad,    #should be start date for COPING (time1)
-          startDate.glad),    #should be start date for GLAD (time2)
+          startDate.coping,    #should be start date for COPING (time1)
+          startDate.prepandemic),    #should be start date for GLAD (time2)
           units = c("days")  #can also be "secs", "mins", "hours", "weeks"
           )
         )
@@ -3251,7 +3699,7 @@ table(dat.glad$data_group_pcl)
 
 #Read in respiratory data
 ```{r coping resp cols}
-coping.glad.respiratory.raw <- readRDS(file = paste0(data.raw_path, "/2020-08-03/glad/respiratory_coping_glad.rds"))
+coping.glad.respiratory.raw <- readRDS(file = paste0(data.raw_path, "/glad/respiratory_coping_glad.rds"))
 dim(coping.glad.respiratory.raw)
 colnames(coping.glad.respiratory.raw)
 ```
@@ -3263,8 +3711,7 @@ coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.glad = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -3454,15 +3901,15 @@ Variables required:
 
 ++KT: Needs to be developed further for RAMP dataset
 COVID prediction model for COPING
-
+The COVID prediction model has coded the sexes opposite to our data set
 ```{r create numeric sex variable with male=1}
 dat.glad.coping <- dat.glad.coping %>%
   mutate(
     Sex_respiratory =
       if_else(
         Sex == "Male",
-        1,
-        0
+        true = 1,
+        false = 0
       )
   )
 ```
@@ -3470,7 +3917,7 @@ dat.glad.coping <- dat.glad.coping %>%
 ```{r how many people expereinced all symptoms}
 dat.glad.coping <- dat.glad.coping %>%
   mutate(
-    people_with_symptoms =
+    covid_symptoms =
       if_else(
           !is.na(respiratory.anosmia_binary) &
           !is.na(respiratory.pcough_binary) &
@@ -3481,7 +3928,8 @@ dat.glad.coping <- dat.glad.coping %>%
        )
   )
 
-table(dat.glad.coping$people_with_symptoms)
+dat.glad.coping %>%
+  freq(covid_symptoms, cumul = F)
 ```
 
 
@@ -3541,6 +3989,33 @@ freq(dat.glad.coping$covid_odds_ratio_50,
      cumul = FALSE) 
 ```
 
+Probable COVID case including the routing question
+```{r}
+dat.glad.coping <- dat.glad.coping %>%
+  mutate(
+    covid_probable_case_incl_screening_numeric =
+      case_when(
+        respiratory.breath_diarrhoea_fatigue_fever_numeric == 0 ~ 0,
+        covid_odds_ratio_50_numeric == 0 ~ 0,
+        covid_odds_ratio_50_numeric == 1 ~ 1
+      )
+  )
+
+#create factor with labels
+dat.glad.coping <- dat.glad.coping %>%
+  mutate(
+    covid_probable_case_incl_screening =
+      recode_factor(
+        covid_probable_case_incl_screening_numeric,
+        "0" = "No COVID",
+        "1" = "Probable COVID"
+      )
+  )
+
+dat.glad.coping %>%
+  freq(covid_probable_case_incl_screening, 
+     cumul = FALSE) 
+```
 
 
 
