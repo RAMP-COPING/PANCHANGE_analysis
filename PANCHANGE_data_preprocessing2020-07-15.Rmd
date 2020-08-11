@@ -2448,22 +2448,27 @@ summarytools::dfSummary(
 # COPING GLAD: GAD-7
 
 ```{r coping glad gad cols}
+if(GLAD == TRUE) {
 coping.glad.gad.raw <- readRDS(file = paste0(data.raw_path,"/glad/gad_coping_glad.rds"))
 dim(coping.glad.gad.raw)
 colnames(coping.glad.gad.raw)
+}
 ```
 
 ```{r coping glad gad summary}
+if(GLAD == TRUE) {
 summarytools::dfSummary(
   coping.glad.gad.raw,
   graph.col = F,
   valid.col = F,
   labels.col = F
   )
+}
 ```
 
 
 ```{r coping glad gad cleaning}
+if(GLAD == TRUE) {
 exclude_cols_coping_glad <- c(
   "Sample",
   "ID",
@@ -2474,12 +2479,12 @@ coping.gad.raw.id <- coping.gad.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.coping = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)
+         ) %>% 
   select(
     Sample, # Sample
     ID, # ID
-    startDate.coping = startDate,
+    startDate.coping = startDate, # Rename startDate
     gad.problems_made_difficult_care, # Impairment
     gad.pandemic_felt_feelings, # Comparison to before the pandemic (retro)
     gad.feeling_nervous_anxious_or_on_edge_retro = gad.feeling_nervous_anxious_or_on_edge,
@@ -2516,6 +2521,13 @@ dim(coping.gad.raw.id)
 colnames(coping.gad.raw.id)
 #Differences
 dim(coping.gad.raw)[1]-dim(coping.gad.raw.id)[1]
+}
+```
+
+```{r coping glad gad copy}
+if(GLAD == TRUE) {
+  prepan.ocir.raw.id <- glad.ocir.raw.id
+}
 ```
 
 Calculate sum score for GAD-7 retrospective
