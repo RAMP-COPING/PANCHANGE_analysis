@@ -65,6 +65,7 @@ Install packages (if they are not available in your version of R)
 #install.packages("tidyverse")
 #install.packages("psych")
 #install.packages("dplyr")
+#install.packages("eeptools")
 ```
 
 Load packages
@@ -74,6 +75,7 @@ library(summarytools)
 library(psych)
 library(dplyr)
 library(tidyverse)
+library(eeptools)
 ```
 
 # Colour palettes
@@ -331,10 +333,12 @@ if(NBR == TRUE){
       ID, # ID
       startDate.coping, #Date when participant signed up to nbr
 #      Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
-      Birthyear = demographics.year, # Birthyear
+      Birthyear_unc = demographics.year, # Birthyear
+      Birthmonth = demographics.month, #Birthmonth
+      Birthday = demographics.day, #Birthday
       Gender = demographics.which_gender_do_you_identify_with, # Gender
       Sex = demographics.select_questionnaire_items_medical, #Sex
-      Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
+#      Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
     ) %>%
     add_numeric(., exclude = exclude_cols_dem) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -355,6 +359,37 @@ if(NBR == TRUE){
   colnames(nbr.dem.raw.id)
   #Differences
   dim(nbr.dem.raw)[1]-dim(nbr.dem.raw.id)[1]
+}
+```
+
+```{r nbr dem calculating age from birthday}
+if(NBR == TRUE) {
+#add 1900 to birthyear
+nbr.dem.raw.id$Birthyear_numeric <- nbr.dem.raw.id$Birthyear_unc_numeric + 1900
+  
+#create dob as date format
+nbr.dem.raw.id$Birthdate <- as.Date(paste(nbr.dem.raw.id$Birthyear_numeric,
+                                  nbr.dem.raw.id$Birthmonth_numeric,
+                                  nbr.dem.raw.id$Birthday_numeric,
+                                  sep = "-"))
+
+head(nbr.dem.raw.id$Birthdate)
+
+#Calculate dem.age(remove NAs as it throws an error)
+ages <- age_calc(na.omit(nbr.dem.raw.id$Birthdate), enddate = Sys.Date(), units = "years")
+
+#Create dem.agecolumn
+nbr.dem.raw.id$Age_uncleaned<- NA
+
+#Populate with values (excluding NAs)
+nbr.dem.raw.id$Age_uncleaned[!is.na(nbr.dem.raw.id$Birthdate)] <- ages
+
+#Round age down
+nbr.dem.raw.id$Age_uncleaned <- floor(nbr.dem.raw.id$Age_uncleaned)
+
+#Visualise
+head(nbr.dem.raw.id$Age_uncleaned)
+head(nbr.dem.raw.id$Birthdate)
 }
 ```
 
@@ -395,7 +430,7 @@ nbr.cohort.raw.id <- nbr.cohort.raw %>%
          Sample, # Sample
          ID, # ID
 #         startDate.coping, #Date when participant signed up to NBR COPING
-         Age_uncleaned = age, # Age
+#         Age_uncleaned = age, # Age
          Gender = gender, # Gender
 #         Sex = demographics.select_questionnaire_items_medical, #Sex
 #         EduYrs = demographics.school_education_school_years.txt, # Years in education
@@ -428,13 +463,11 @@ dim(nbr.cohort.raw)[1]-dim(nbr.cohort.raw.id)[1]
 }
 ```
 
-```{r nbr copy dem}
+```{r nbr combine demographics}
 if(NBR == TRUE){
-dem.raw.id <- nbr.dem.raw.id
+dem.raw.id <- merge(nbr.cohort.raw.id, nbr.dem.raw.id, by = "ID")
 }
 ```
-
-
 
 ```{r nbr demo summary}
 if(NBR == TRUE) {
