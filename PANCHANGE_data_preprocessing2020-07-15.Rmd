@@ -51,9 +51,9 @@ date = Sys.Date()
 
 # Specify cohort
 ```{r Specify cohort}
-GLAD = TRUE
+GLAD = FALSE
 EDGI = FALSE
-NBR = FALSE
+NBR = TRUE
 RAMP = FALSE
 ```
 
@@ -334,12 +334,6 @@ if(NBR == TRUE){
       Birthyear = demographics.year, # Birthyear
       Gender = demographics.which_gender_do_you_identify_with, # Gender
       Sex = demographics.select_questionnaire_items_medical, #Sex
-      EduYrs = demographics.school_education_school_years.txt, # Years in education
-      demographics.college_or_university_degree, # level of education - univeristy
-      demographics.a_levelsas_levels_or_equivalent, # level of education - alevel
-      demographics.o_levelsgcses_or_equivalent, # level of education - gcse
-      demographics.cses_or_equivalent, # level of education - cse
-      demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
       Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
     ) %>%
     add_numeric(., exclude = exclude_cols_dem) %>%
