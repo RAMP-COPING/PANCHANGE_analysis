@@ -960,16 +960,20 @@ summarytools::dfSummary(
 }
 ```
 
-# glad mhd
+# mhd
 
+## GLAD
 ```{r glad mhd cols}
+if(GLAD == TRUE) {
 glad.mhd.raw <- readRDS(file = paste0(data.raw_path,"/glad/mhd_glad.rds"))
 dim(glad.mhd.raw)
 colnames(glad.mhd.raw)
+}
 ```
 
 
 ```{r glad mhd cleaning}
+if(GLAD == TRUE) {
 glad.mhd.raw.id <- glad.mhd.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -1000,6 +1004,7 @@ dim(glad.mhd.raw.id)
 colnames(glad.mhd.raw.id)
 #Differences
 dim(glad.mhd.raw)[1]-dim(glad.mhd.raw.id)[1]
+}
 ```
 
 # Grouping mental health disorders
@@ -1032,7 +1037,7 @@ No-diagnosis group
 3. Breakdown by COVID or not (using COVIDENCE/Zoe algorithm)
 
 ```{r glad mhd depressive_disorders}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     depressive_disorders_numeric =
       case_when(
@@ -1043,7 +1048,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
         mhd.pregnancy_depression_numeric == "1" ~ 1,
         mhd.premenstrual_dysphoric_disorder_pmdd_numeric == "1" ~ 1))
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     depressive_disorders =
       recode_factor(depressive_disorders_numeric,
@@ -1053,13 +1058,13 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(depressive_disorders,
        cumul = F)
 ```
 
 ```{r Check depressive_disorders}
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   select(
     depressive_disorders,
     depressive_disorders_numeric,
@@ -1074,7 +1079,7 @@ glad.mhd.raw.id %>%
 
 Anxiety disorders group
 ```{r glad mhd anxiety_disorders}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     anxiety_disorders_numeric =
       case_when(
@@ -1093,7 +1098,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
       )
   )
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     anxiety_disorders =
       recode_factor(anxiety_disorders_numeric,
@@ -1103,13 +1108,13 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(anxiety_disorders,
        cumul = F)
 ```
 
 ```{r Check anxiety_disorders}
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   select(
     anxiety_disorders,
     anxiety_disorders_numeric,
@@ -1130,7 +1135,7 @@ glad.mhd.raw.id %>%
 
 Agoraphonia and panic disorder group
 ```{r glad mhd agoraphobia_panic_disorder}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     agoraphobia_panic_disorder_numeric =
       case_when(
@@ -1143,7 +1148,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
       )
   )
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     agoraphobia_panic_disorder =
       recode_factor(agoraphobia_panic_disorder_numeric,
@@ -1153,12 +1158,12 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(agoraphobia_panic_disorder)
 ```
 
 ```{r Check agoraphobia_panic_disorder}
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   select(
     agoraphobia_panic_disorder,
     agoraphobia_panic_disorder_numeric,
@@ -1173,7 +1178,7 @@ glad.mhd.raw.id %>%
 
 Depression and anxiety comorbidity
 ```{r glad mhd depression_anxiety}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     depression_and_anxiety_numeric =
       case_when(
@@ -1188,7 +1193,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
       )
   )
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     depression_and_anxiety =
       recode_factor(depression_and_anxiety_numeric,
@@ -1200,7 +1205,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(depression_and_anxiety,
        cumul = F)
 ```
@@ -1209,7 +1214,7 @@ glad.mhd.raw.id %>%
 
 Eating disorders group
 ```{r glad mhd eating_disorders}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     eating_disorders_numeric =
       case_when(
@@ -1224,7 +1229,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
       )
   )
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     eating_disorders =
       recode_factor(eating_disorders_numeric,
@@ -1234,7 +1239,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(eating_disorders,
        cumul = F)
 ```
@@ -1242,7 +1247,7 @@ glad.mhd.raw.id %>%
 Eating disorders with binge eating vs eating disorders without
 Caveat: Anorexia nervosa can have binge eating as well. Therefore, this would need an additional variable from the ED100K
 ```{r glad mhd restricting_vs_binge_eating_eating_disorders}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     restricting_vs_binge_eating_eating_disorders_numeric =
       case_when(
@@ -1257,7 +1262,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
       )
   )
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     restricting_vs_binge_eating_eating_disorders =
       recode_factor(restricting_vs_binge_eating_eating_disorders_numeric,
@@ -1268,7 +1273,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(restricting_vs_binge_eating_eating_disorders,
        cumul = F)
 ```
@@ -1276,7 +1281,7 @@ glad.mhd.raw.id %>%
 
 
 ```{r Check eating_disorders}
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   select(
     eating_disorders,
     eating_disorders_numeric,
@@ -1295,7 +1300,7 @@ glad.mhd.raw.id %>%
 
 Obsessive compulsive disorders
 ```{r glad mhd obsessive_compulsive_disorders}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     obsessive_compulsive_disorders_numeric =
       case_when(
@@ -1308,7 +1313,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
       )
   )
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     obsessive_compulsive_disorders =
       recode_factor(obsessive_compulsive_disorders_numeric,
@@ -1318,12 +1323,12 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(obsessive_compulsive_disorders)
 ```
 
 ```{r Check obsessive_compulsive_disorders}
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   select(
     obsessive_compulsive_disorders,
     obsessive_compulsive_disorders_numeric,
@@ -1339,7 +1344,7 @@ Psychotic disorders group
 [64] "mhd.schizoaffective_disorder_numeric"                      
 [65] "mhd.type_psychosis_psychotic_illness_numeric" 
 ```{r glad mhd psychotic_disorders}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     psychotic_disorders_numeric =
       case_when(
@@ -1352,7 +1357,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
       )
   )
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     psychotic_disorders =
       recode_factor(psychotic_disorders_numeric,
@@ -1362,7 +1367,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(psychotic_disorders)
 ```
 
@@ -1371,7 +1376,7 @@ Overlap between self-report schizophrenia and bipolar disorder
 +++CH: Check overlap between schizophrenia group and bipolar disorder
 ++KT: Only 63 with comorbid self-report bipolar disorder and schizophrenia. More likely to have shared symptoms, less likely to have confirmed diagnoses of both. Could be too severe to be in GLAD?
 ```{r glad mhd bipolar_and_schizophrenia_numeric}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     bipolar_and_schizophrenia_numeric =
       case_when(
@@ -1386,7 +1391,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
       )
   )
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     bipolar_and_schizophrenia =
       recode_factor(bipolar_and_schizophrenia_numeric,
@@ -1398,13 +1403,13 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(bipolar_and_schizophrenia,
        cumul = F)
 ```
 
 ```{r Check psychotic_disorders}
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   select(
     psychotic_disorders,
     psychotic_disorders_numeric,
@@ -1428,7 +1433,7 @@ Cluster A
 2. Schizoid                         15 ( 0.5%)
 3. Schizotypal                      14 ( 0.5%)
 ```{r glad mhd personality_cluster_a}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     personality_cluster_a_numeric =
       case_when(
@@ -1446,7 +1451,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
       )
   )
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     personality_cluster_a =
       recode_factor(personality_cluster_a_numeric,
@@ -1456,13 +1461,13 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(personality_cluster_a,
        cumul = F)
 ```
 
 ```{r Check personality_cluster_a}
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   select(
     personality_cluster_a,
     personality_cluster_a_numeric,
@@ -1478,7 +1483,7 @@ Cluster B
 7. Narcissistic                      8 ( 0.3%)
 
 ```{r glad mhd personality_cluster_b}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     personality_cluster_b_numeric =
       case_when(
@@ -1496,7 +1501,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
       )
   )
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     personality_cluster_b =
       recode_factor(personality_cluster_b_numeric,
@@ -1506,13 +1511,13 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(personality_cluster_b,
        cumul = F)
 ```
 
 ```{r Check personality_cluster_b}
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   select(
     personality_cluster_b,
     personality_cluster_b_numeric,
@@ -1526,7 +1531,7 @@ Cluster C
 9. Dependent                        29 ( 1.0%)
 10. Obsessive-compulsive
 ```{r glad mhd personality_cluster_c}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     personality_cluster_c_numeric =
       case_when(
@@ -1544,7 +1549,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
       )
   )
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     personality_cluster_c =
       recode_factor(personality_cluster_c_numeric,
@@ -1554,13 +1559,13 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(personality_cluster_c,
        cumul = F)
 ```
 
 ```{r Check personality_cluster_c}
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   select(
     personality_cluster_c,
     personality_cluster_c_numeric,
@@ -1573,7 +1578,7 @@ Control grouping
 These individuals have no self report diagnosis of any kind that we measure. 
 Controls = 784
 ```{r glad mhd control}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     control_numeric =
       if_else(
@@ -1592,7 +1597,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
     NA_real_)
   )
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     control =
       recode_factor(control_numeric,
@@ -1602,7 +1607,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(control,
        cumul = F)
 ```
@@ -1623,20 +1628,20 @@ disorder_columns <- c(
 )
 
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     disorders_total_count =
       rowSums(.[disorder_columns])
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(disorders_total_count,
        cumul = F)
 ```
 
 Comorbidity count
 ```{r cormorbidity_total_count}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     comorbidity_total_count_numeric = 
       case_when(
@@ -1645,13 +1650,13 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
   )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(comorbidity_total_count_numeric,
        cumul = F)
 ```
 
 ```{r comordbitiy_total_count_factor}
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     comorbidity_total_count_factor_numeric =
       case_when(
@@ -1663,7 +1668,7 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
   )
 
 
-glad.mhd.raw.id <- glad.mhd.raw.id %>%
+mhd.raw.id <- mhd.raw.id %>%
   mutate(
     comorbidity_total_count_factor =
       recode_factor(comorbidity_total_count_factor_numeric,
@@ -1675,18 +1680,18 @@ glad.mhd.raw.id <- glad.mhd.raw.id %>%
                     )
   )
 
-glad.mhd.raw.id %>%
+mhd.raw.id %>%
   freq(comorbidity_total_count_factor,
        cumul = F)
 ```
 
 ```{r glad mhd head}
-head(glad.mhd.raw.id)
+head(mhd.raw.id)
 ```
 
 ```{r glad mhd summary}
 summarytools::dfSummary(
-  glad.mhd.raw.id,
+  mhd.raw.id,
   graph.col = F,
   valid.col = F,
   labels.col = F)
@@ -1695,7 +1700,7 @@ summarytools::dfSummary(
 Create new dataframe with the derived categories
 ++KT: do we want to keep individual diagnoses here as well?? 
 ```{r glad mhd categories}
-glad.mhd.raw.categories <- glad.mhd.raw.id %>%
+mhd.raw.categories <- mhd.raw.id %>%
   select(
     Sample,
     ID,
@@ -4523,12 +4528,12 @@ summarytools::dfSummary(
 glad data frame list
 ```{r glad data frame list}
 glad.dfs.list <- list(
-  glad.dem.raw.id,
-  glad.gad.raw.id,
-  glad.mhd.raw.categories,
-  glad.ocir.raw.id,
-  glad.pcl.raw.id,
-  glad.phq.raw.id,
+  dem.raw.id,
+  prepan.gad.raw.id,
+  prepan.mhd.raw.categories,
+  prepan.ocir.raw.id,
+  prepan.pcl.raw.id,
+  prepan.phq.raw.id,
   coping.gad.raw.id,
   coping.pcl.raw.id,
   coping.phq.raw.id,
