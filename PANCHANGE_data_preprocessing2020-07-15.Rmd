@@ -429,9 +429,10 @@ nbr.cohort.raw.id <- nbr.cohort.raw %>%
   select(
          Sample, # Sample
          ID, # ID
+         Cohort = cohort, #cohort information
 #         startDate.coping, #Date when participant signed up to NBR COPING
 #         Age_uncleaned = age, # Age
-         Gender = gender, # Gender
+#         Gender = gender, # Gender
 #         Sex = demographics.select_questionnaire_items_medical, #Sex
 #         EduYrs = demographics.school_education_school_years.txt, # Years in education
 #         demographics.college_or_university_degree, # level of education - univeristy
@@ -465,14 +466,14 @@ dim(nbr.cohort.raw)[1]-dim(nbr.cohort.raw.id)[1]
 
 ```{r nbr combine demographics}
 if(NBR == TRUE){
-dem.raw.id <- merge(nbr.cohort.raw.id, nbr.dem.raw.id, by = "ID")
+dem.raw.id <- merge(nbr.cohort.raw.id, nbr.dem.raw.id, by = c("Sample", "ID"))
 }
 ```
 
 ```{r nbr demo summary}
 if(NBR == TRUE) {
 summarytools::dfSummary(
-  nbr.cohort.raw.id,
+  dem.raw.id,
   graph.col = F,
   valid.col = F,
   labels.col = F)
