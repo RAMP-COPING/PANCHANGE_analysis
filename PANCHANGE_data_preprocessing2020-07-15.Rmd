@@ -463,13 +463,13 @@ age_lower_limit = 16
 # identify number of outliers
 length(
   which(
-  glad.dem.raw.id$Age_uncleaned > age_upper_limit |
-    glad.dem.raw.id$Age_uncleaned < age_lower_limit
+  dem.raw.id$Age_uncleaned > age_upper_limit |
+    dem.raw.id$Age_uncleaned < age_lower_limit
      )
 )
 
 # remove age outliers
-glad.dem.raw.id <- glad.dem.raw.id %>%
+dem.raw.id <- dem.raw.id %>%
   mutate(
     Age = 
       if_else(
@@ -482,7 +482,7 @@ glad.dem.raw.id <- glad.dem.raw.id %>%
   )
 
 # Inspect colnames
-colnames(glad.dem.raw.id)
+colnames(dem.raw.id)
 ```
 
 # Categorise age into groups 
@@ -492,7 +492,7 @@ Age categories in GLAD, EDGI and NBR have been created to reflect this
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
 
 # Create categorical age groups per 10 years
-glad.dem.raw.id <- glad.dem.raw.id %>%
+dem.raw.id <- dem.raw.id %>%
   mutate(
     age_category_numeric =
       case_when(
@@ -512,7 +512,7 @@ glad.dem.raw.id <- glad.dem.raw.id %>%
                 )
       )
 
-glad.dem.raw.id <- glad.dem.raw.id %>%
+dem.raw.id <- dem.raw.id %>%
     mutate(
       age_category =
         recode_factor(
@@ -533,7 +533,7 @@ glad.dem.raw.id <- glad.dem.raw.id %>%
           )
     )
 
-glad.dem.raw.id %>%
+dem.raw.id %>%
   freq(age_category)
 
 }
@@ -545,7 +545,7 @@ Assumes University degree > A level > NVQ > GCSE/O Level/CSE
 ```{r Highest education}
 if(GLAD == TRUE | EDGI == TRUE) {
 #create numeric version of the highest education variable
-glad.dem.raw.id <- glad.dem.raw.id %>%
+dem.raw.id <- dem.raw.id %>%
   mutate(
     highest_education_numeric =
       case_when(
@@ -557,7 +557,7 @@ glad.dem.raw.id <- glad.dem.raw.id %>%
     )
 
 #recode the numeric version into a factor
-glad.dem.raw.id <- glad.dem.raw.id %>%
+dem.raw.id <- dem.raw.id %>%
   mutate(
     highest_education =
       recode_factor(
@@ -568,7 +568,7 @@ glad.dem.raw.id <- glad.dem.raw.id %>%
         `4` = "University")
     )
 
-glad.dem.raw.id %>%
+dem.raw.id %>%
   freq(highest_education)
 }
 ```
@@ -576,7 +576,7 @@ glad.dem.raw.id %>%
 Check highest education coding
 ```{r Highest education check}
 if(GLAD == TRUE | EDGI == TRUE) {
-glad.dem.raw.id %>%
+dem.raw.id %>%
   select(highest_education,
         demographics.college_or_university_degree_numeric,
         demographics.a_levelsas_levels_or_equivalent_numeric,
@@ -589,13 +589,13 @@ glad.dem.raw.id %>%
 
 
 ```{r glad dem head}
-head(glad.dem.raw.id)
+head(dem.raw.id)
 ```
 
 
 ```{r glad dem summary}
 summarytools::dfSummary(
-  glad.dem.raw.id,
+  dem.raw.id,
   graph.col = F,
   valid.col = F,
   labels.col = F)
@@ -1006,6 +1006,13 @@ colnames(glad.mhd.raw.id)
 dim(glad.mhd.raw)[1]-dim(glad.mhd.raw.id)[1]
 }
 ```
+
+```{r glad mhd copy}
+if(GLAD == TRUE) {
+  mhd.raw.id <- glad.mhd.raw.id
+}
+```
+
 
 # Grouping mental health disorders
 *#Disorder groupings - from COPING/RAMP analysis minutes*
@@ -4530,7 +4537,7 @@ glad data frame list
 glad.dfs.list <- list(
   dem.raw.id,
   prepan.gad.raw.id,
-  prepan.mhd.raw.categories,
+  mhd.raw.categories,
   prepan.ocir.raw.id,
   prepan.pcl.raw.id,
   prepan.phq.raw.id,
