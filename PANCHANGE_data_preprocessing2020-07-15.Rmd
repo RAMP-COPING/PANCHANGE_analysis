@@ -2936,23 +2936,28 @@ summarytools::dfSummary(
 
 ## GLAD
 ```{r coping glad pcl cols}
+if(GLAD == TRUE) {
 coping.glad.pcl.raw <- readRDS(file = paste0(data.raw_path,"/glad/pcl_coping_glad.rds"))
 dim(coping.glad.pcl.raw)
 colnames(coping.glad.pcl.raw)
+}
 ```
 
 ```{r coping glad pcl summary labels}
+if(GLAD == TRUE) {
 summarytools::dfSummary(
   coping.glad.pcl.raw,
   graph.col = F,
   valid.col = F,
   labels.col = F
 )
+}
 ```
 
 Note: Retro for the PCL does not mean retrospective
 
 ```{r coping glad pcl cleaning}
+if(GLAD == TRUE) {
 coping.glad.pcl.raw.id <- coping.glad.pcl.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -2994,6 +2999,7 @@ dim(coping.glad.pcl.raw.id)
 colnames(coping.glad.pcl.raw.id)
 #Differences
 dim(coping.glad.pcl.raw)[1]-dim(coping.glad.pcl.raw.id)[1]
+}
 ```
 
 ```{r coping glad pcl copy}
@@ -3004,23 +3010,28 @@ if(GLAD == TRUE) {
 
 ## EDGI
 ```{r coping edgi pcl cols}
+if(EDGI == TRUE) {
 coping.edgi.pcl.raw <- readRDS(file = paste0(data.raw_path,"/edgi/pcl_coping_edgi.rds"))
 dim(coping.edgi.pcl.raw)
 colnames(coping.edgi.pcl.raw)
+}
 ```
 
 ```{r coping edgi pcl summary labels}
+if(EDGI == TRUE) {
 summarytools::dfSummary(
   coping.edgi.pcl.raw,
   graph.col = F,
   valid.col = F,
   labels.col = F
 )
+}
 ```
 
 Note: Retro for the PCL does not mean retrospective
 
 ```{r coping edgi pcl cleaning}
+if(EDGI == TRUE) {
 coping.edgi.pcl.raw.id <- coping.edgi.pcl.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -3062,6 +3073,7 @@ dim(coping.edgi.pcl.raw.id)
 colnames(coping.edgi.pcl.raw.id)
 #Differences
 dim(coping.edgi.pcl.raw)[1]-dim(coping.edgi.pcl.raw.id)[1]
+}
 ```
 
 ```{r coping edgi pcl copy}
@@ -3072,23 +3084,28 @@ if(EDGI == TRUE) {
 
 ## NBR
 ```{r coping nbr pcl cols}
+if(NBR == TRUE) {
 coping.nbr.pcl.raw <- readRDS(file = paste0(data.raw_path,"/nbr/pcl_coping_nbr.rds"))
 dim(coping.nbr.pcl.raw)
 colnames(coping.nbr.pcl.raw)
+}
 ```
 
 ```{r coping nbr pcl summary labels}
+if(NBR == TRUE) {
 summarytools::dfSummary(
   coping.nbr.pcl.raw,
   graph.col = F,
   valid.col = F,
   labels.col = F
 )
+}
 ```
 
 Note: Retro for the PCL does not mean retrospective
 
 ```{r coping nbr pcl cleaning}
+if(NBR == TRUE) {
 coping.nbr.pcl.raw.id <- coping.nbr.pcl.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -3130,6 +3147,7 @@ dim(coping.nbr.pcl.raw.id)
 colnames(coping.nbr.pcl.raw.id)
 #Differences
 dim(coping.nbr.pcl.raw)[1]-dim(coping.nbr.pcl.raw.id)[1]
+}
 ```
 
 ```{r coping nbr pcl copy}
@@ -3140,23 +3158,28 @@ if(NBR == TRUE) {
 
 ## RAMP
 ```{r coping ramp pcl cols}
+if(RAMP == TRUE) {
 coping.ramp.pcl.raw <- readRDS(file = paste0(data.raw_path,"/ramp/pcl_coping_ramp.rds"))
 dim(coping.ramp.pcl.raw)
 colnames(coping.ramp.pcl.raw)
+}
 ```
 
 ```{r coping ramp pcl summary labels}
+if(RAMP == TRUE) {
 summarytools::dfSummary(
   coping.ramp.pcl.raw,
   graph.col = F,
   valid.col = F,
   labels.col = F
 )
+}
 ```
 
 Note: Retro for the PCL does not mean retrospective
 
 ```{r coping ramp pcl cleaning}
+if(RAMP == TRUE) {
 coping.ramp.pcl.raw.id <- coping.ramp.pcl.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -3198,6 +3221,7 @@ dim(coping.ramp.pcl.raw.id)
 colnames(coping.ramp.pcl.raw.id)
 #Differences
 dim(coping.ramp.pcl.raw)[1]-dim(coping.ramp.pcl.raw.id)[1]
+}
 ```
 
 ```{r coping ramp pcl copy}
@@ -3365,23 +3389,28 @@ summarytools::dfSummary(
 
 ## GLAD
 ```{r coping glad phq cols}
+if(GLAD == TRUE) {
 coping.glad.phq.raw <- readRDS(file = paste0(data.raw_path, "/glad/phq_coping_glad.rds"))
 dim(coping.glad.phq.raw)
 colnames(coping.glad.phq.raw)
+}
 ```
 
 ```{r coping glad phq summary labels}
+if(GLAD == TRUE) {
 summarytools::dfSummary(
   coping.glad.phq.raw,
   graph.col = F,
   valid.col = F
   #labels.col = F
 )
+}
 ```
 
 
 Will need to double check these namings once we have the new cleaned data -- KT. 
 ```{r coping glad phq cleaning}
+if(GLAD == TRUE) {
 coping.glad.phq.raw.id <- coping.glad.phq.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -3431,6 +3460,7 @@ dim(coping.glad.phq.raw.id)
 colnames(coping.glad.phq.raw.id)
 #Differences
 dim(coping.glad.phq.raw)[1]-dim(coping.glad.phq.raw.id)[1]
+}
 ```
 
 ```{r coping glad gad copy}
@@ -3441,22 +3471,27 @@ if(GLAD == TRUE) {
 
 ## EDGI
 ```{r coping edgi phq cols}
+if(EDGI == TRUE) {
 coping.edgi.phq.raw <- readRDS(file = paste0(data.raw_path, "/edgi/phq_coping_edgi.rds"))
 dim(coping.edgi.phq.raw)
 colnames(coping.edgi.phq.raw)
+}
 ```
 
 ```{r coping edgi phq summary labels}
+if(EDGI == TRUE) {
 summarytools::dfSummary(
   coping.edgi.phq.raw,
   graph.col = F,
   valid.col = F
   #labels.col = F
 )
+}
 ```
 
 Will need to double check these namings once we have the new cleaned data -- KT. 
 ```{r coping edgi phq cleaning}
+if(EDGI == TRUE) {
 coping.edgi.phq.raw.id <- coping.edgi.phq.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -3506,6 +3541,7 @@ dim(coping.edgi.phq.raw.id)
 colnames(coping.edgi.phq.raw.id)
 #Differences
 dim(coping.edgi.phq.raw)[1]-dim(coping.edgi.phq.raw.id)[1]
+}
 ```
 
 ```{r coping edgi gad copy}
@@ -3516,23 +3552,28 @@ if(EDGI == TRUE) {
 
 ## NBR
 ```{r coping nbr phq cols}
+if(NBR == TRUE) {
 coping.nbr.phq.raw <- readRDS(file = paste0(data.raw_path, "/nbr/phq_coping_nbr.rds"))
 dim(coping.nbr.phq.raw)
 colnames(coping.nbr.phq.raw)
+}
 ```
 
 ```{r coping nbr phq summary labels}
+if(NBR == TRUE) {
 summarytools::dfSummary(
   coping.nbr.phq.raw,
   graph.col = F,
   valid.col = F
   #labels.col = F
 )
+}
 ```
 
 
 Will need to double check these namings once we have the new cleaned data -- KT. 
 ```{r coping nbr phq cleaning}
+if(NBR == TRUE) {
 coping.nbr.phq.raw.id <- coping.nbr.phq.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -3582,6 +3623,7 @@ dim(coping.nbr.phq.raw.id)
 colnames(coping.nbr.phq.raw.id)
 #Differences
 dim(coping.nbr.phq.raw)[1]-dim(coping.nbr.phq.raw.id)[1]
+}
 ```
 
 ```{r coping nbr gad copy}
@@ -3592,23 +3634,28 @@ if(NBR == TRUE) {
 
 ## RAMP
 ```{r coping ramp phq cols}
+if(RAMP == TRUE) {
 coping.ramp.phq.raw <- readRDS(file = paste0(data.raw_path, "/ramp/phq_coping_ramp.rds"))
 dim(coping.ramp.phq.raw)
 colnames(coping.ramp.phq.raw)
+}
 ```
 
 ```{r coping ramp phq summary labels}
+if(RAMP == TRUE) {
 summarytools::dfSummary(
   coping.ramp.phq.raw,
   graph.col = F,
   valid.col = F
   #labels.col = F
 )
+}
 ```
 
 
 Will need to double check these namings once we have the new cleaned data -- KT. 
 ```{r coping ramp phq cleaning}
+if(RAMP == TRUE) {
 coping.ramp.phq.raw.id <- coping.ramp.phq.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -3658,6 +3705,7 @@ dim(coping.ramp.phq.raw.id)
 colnames(coping.ramp.phq.raw.id)
 #Differences
 dim(coping.ramp.phq.raw)[1]-dim(coping.ramp.phq.raw.id)[1]
+}
 ```
 
 ```{r coping ramp gad copy}
@@ -3904,22 +3952,27 @@ summarytools::dfSummary(
 
 ## GLAD
 ```{r coping glad ocir cols}
+if(GLAD == TRUE) {
 coping.glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/glad/ocir_coping_glad.rds"))
 dim(coping.glad.ocir.raw)
 colnames(coping.glad.ocir.raw)
+}
 ```
 
 ```{r coping glad ocir summary labels}
+if(GLAD == TRUE) {
 summarytools::dfSummary(
   coping.glad.ocir.raw,
   graph.col = F,
   valid.col = F
   #labels.col = F
 )
+}
 ```
 
 *Note that the COPING GLAD OCI-R ID numbers are stored under recipientFirstName (rather than ExternalDataReference)
 ```{r coping glad ocir cleaning}
+if(GLAD == TRUE) {
 coping.glad.ocir.raw.id <- coping.glad.ocir.raw %>%
   drop_na(recipientFirstName) %>% # Drop NAs
   distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -3986,6 +4039,7 @@ dim(coping.glad.ocir.raw.id)
 colnames(coping.glad.ocir.raw.id)
 #Differences
 dim(coping.glad.ocir.raw)[1]-dim(coping.glad.ocir.raw.id)[1]
+}
 ```
 
 ```{r coping glad ocir copy}
@@ -3996,22 +4050,27 @@ if(GLAD == TRUE) {
 
 ## EDGI
 ```{r coping edgi ocir cols}
+if(EDGI == TRUE) {
 coping.edgi.ocir.raw <- readRDS(file = paste0(data.raw_path, "/edgi/ocir_coping_edgi.rds"))
 dim(coping.edgi.ocir.raw)
 colnames(coping.edgi.ocir.raw)
+}
 ```
 
 ```{r coping edgi ocir summary labels}
+if(EDGI == TRUE) {
 summarytools::dfSummary(
   coping.edgi.ocir.raw,
   graph.col = F,
   valid.col = F
   #labels.col = F
 )
+}
 ```
 
 *Note that the COPING EDGI OCI-R ID numbers are stored under recipientFirstName (rather than ExternalDataReference)
 ```{r coping edgi ocir cleaning}
+if(EDGI == TRUE) {
 coping.edgi.ocir.raw.id <- coping.edgi.ocir.raw %>%
   drop_na(recipientFirstName) %>% # Drop NAs
   distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -4078,6 +4137,7 @@ dim(coping.edgi.ocir.raw.id)
 colnames(coping.edgi.ocir.raw.id)
 #Differences
 dim(coping.edgi.ocir.raw)[1]-dim(coping.edgi.ocir.raw.id)[1]
+}
 ```
 
 ```{r coping edgi ocir copy}
@@ -4088,22 +4148,27 @@ if(EDGI == TRUE) {
 
 ## NBR
 ```{r coping nbr ocir cols}
+if(NBR == TRUE) {
 coping.nbr.ocir.raw <- readRDS(file = paste0(data.raw_path, "/nbr/ocir_coping_nbr.rds"))
 dim(coping.nbr.ocir.raw)
 colnames(coping.nbr.ocir.raw)
+}
 ```
 
 ```{r coping nbr ocir summary labels}
+if(NBR == TRUE) {
 summarytools::dfSummary(
   coping.nbr.ocir.raw,
   graph.col = F,
   valid.col = F
   #labels.col = F
 )
+}
 ```
 
 *Note that the COPING NBR OCI-R ID numbers are stored under recipientFirstName (rather than ExternalDataReference)
 ```{r coping nbr ocir cleaning}
+if(NBR == TRUE) {
 coping.nbr.ocir.raw.id <- coping.nbr.ocir.raw %>%
   drop_na(recipientFirstName) %>% # Drop NAs
   distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -4170,6 +4235,7 @@ dim(coping.nbr.ocir.raw.id)
 colnames(coping.nbr.ocir.raw.id)
 #Differences
 dim(coping.nbr.ocir.raw)[1]-dim(coping.nbr.ocir.raw.id)[1]
+}
 ```
 
 ```{r coping nbr ocir copy}
@@ -4180,22 +4246,27 @@ if(NBR == TRUE) {
 
 ## RAMP
 ```{r coping ramp ocir cols}
+if(RAMP == TRUE) {
 coping.ramp.ocir.raw <- readRDS(file = paste0(data.raw_path, "/ramp/ocir_coping_ramp.rds"))
 dim(coping.ramp.ocir.raw)
 colnames(coping.ramp.ocir.raw)
+}
 ```
 
 ```{r coping ramp ocir summary labels}
+if(RAMP == TRUE) {
 summarytools::dfSummary(
   coping.ramp.ocir.raw,
   graph.col = F,
   valid.col = F
   #labels.col = F
 )
+}
 ```
 
 *Note that the COPING RAMP OCI-R ID numbers are stored under recipientFirstName (rather than ExternalDataReference)
 ```{r coping ramp ocir cleaning}
+if(RAMP == TRUE) {
 coping.ramp.ocir.raw.id <- coping.ramp.ocir.raw %>%
   drop_na(recipientFirstName) %>% # Drop NAs
   distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -4262,6 +4333,7 @@ dim(coping.ramp.ocir.raw.id)
 colnames(coping.ramp.ocir.raw.id)
 #Differences
 dim(coping.ramp.ocir.raw)[1]-dim(coping.ramp.ocir.raw.id)[1]
+}
 ```
 
 ```{r coping ramp ocir copy}
