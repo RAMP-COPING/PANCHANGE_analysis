@@ -648,7 +648,7 @@ if(GLAD == TRUE | EDGI == TRUE) {
 #create numeric version of the highest education variable
 dem.raw.id <- dem.raw.id %>%
   mutate(
-    highest_education_numeric =
+    highest_education_prepan_numeric =
       case_when(
         demographics.college_or_university_degree_numeric == "1" ~ 4,
         demographics.a_levelsas_levels_or_equivalent_numeric == "1" ~ 3,
@@ -660,7 +660,7 @@ dem.raw.id <- dem.raw.id %>%
 #recode the numeric version into a factor
 dem.raw.id <- dem.raw.id %>%
   mutate(
-    highest_education =
+    highest_education_prepan =
       recode_factor(
         highest_education_numeric,
         `1` = "GCSE/CSE",
@@ -670,7 +670,7 @@ dem.raw.id <- dem.raw.id %>%
     )
 
 dem.raw.id %>%
-  freq(highest_education)
+  freq(highest_education_prepan)
 }
 ```
 
@@ -678,7 +678,7 @@ Check highest education coding
 ```{r Highest education prepandemic check}
 if(GLAD == TRUE | EDGI == TRUE) {
 dem.raw.id %>%
-  select(highest_education,
+  select(highest_education_prepan,
         demographics.college_or_university_degree_numeric,
         demographics.a_levelsas_levels_or_equivalent_numeric,
         demographics.nvq_or_hnd_or_hnc_or_equivalent_numeric,
@@ -687,7 +687,6 @@ dem.raw.id %>%
   )
 }
 ```
-
 
 ```{r dem summary}
 if(GLAD == TRUE | EDGI == TRUE) {
@@ -701,7 +700,8 @@ summarytools::dfSummary(
 
 # Employment/highest education (baseline)
 
-## Read in data
+## GLAD
+### Read in data
 ```{r glad employment cols}
 if(GLAD == TRUE){
 glad.employment.raw <- readRDS(file = paste0(data.raw_path, "/glad/employment_coping_glad.rds"))
@@ -710,7 +710,7 @@ colnames(glad.employment.raw)
 }
 ```
 
-# Select variables
+### Select variables
 ```{r glad employment cleaning}
 if(GLAD == TRUE){
 exclude_cols_employment <- c("ID",
@@ -758,6 +758,78 @@ dim(glad.employment.raw)[1]-dim(glad.employment.raw.id)[1]
 }
 ```
 
+```{r glad copy employment}
+if(GLAD == TRUE){
+  employment.raw.id <- glad.employment.raw.id
+}
+```
+
+## EDGI
+### Read in data
+```{r edgi employment cols}
+if(EDGI == TRUE){
+edgi.employment.raw <- readRDS(file = paste0(data.raw_path, "/edgi/employment_coping_edgi.rds"))
+dim(edgi.employment.raw)
+colnames(edgi.employment.raw)
+}
+```
+
+### Select variables
+```{r edgi employment cleaning}
+if(EDGI == TRUE){
+exclude_cols_employment <- c("ID",
+                  "Sample")
+
+edgi.employment.raw.id <- edgi.employment.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(
+    ID = as.numeric(ID)
+    ) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         employment.phd, # level of education - univeristy
+         employment.masters_degree_or_equivalent, # level of education - univeristy
+         employment.postgraduate_degree_or_equivalent, # level of education - univeristy
+         employment.bachelors_degree_or_equivalent, # level of education - univeristy
+         employment.a_levelsas_levels_or_equivalent, # level of education - alevel
+         employment.o_levelsgcses_or_equivalent, # level of education - gcse
+         employment.cses_or_equivalent, # level of education - cse
+         employment.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+         employment.government_work_key_workers # key worker status
+         ) %>%
+  add_numeric(., exclude = exclude_cols_employment) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(edgi.employment.raw.id)
+# Inspect colnames
+colnames(edgi.employment.raw.id)
+#Differences
+dim(edgi.employment.raw)[1]-dim(edgi.employment.raw.id)[1]
+}
+```
+
+```{r edgi copy employment}
+if(EDGI == TRUE){
+  employment.raw.id <- edgi.employment.raw.id
+}
+```
+
+## NBR
+### Read in data
 ```{r nbr employment cols}
 if(NBR == TRUE){
 nbr.employment.raw <- readRDS(file = paste0(data.raw_path, "/nbr/employment_coping_nbr.rds"))
@@ -766,16 +838,16 @@ colnames(nbr.employment.raw)
 }
 ```
 
-# Select variables
+### Select variables
 ```{r nbr employment cleaning}
 if(NBR == TRUE){
 exclude_cols_employment <- c("ID",
                   "Sample")
 
 nbr.employment.raw.id <- nbr.employment.raw %>%
-  drop_na(externalDataReference) %>% # Drop NAs
-  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(
     ID = as.numeric(ID)
     ) %>%
@@ -814,13 +886,19 @@ dim(nbr.employment.raw)[1]-dim(nbr.employment.raw.id)[1]
 }
 ```
 
-# Highest education
+```{r nbr copy employment}
+if(NBR == TRUE){
+  employment.raw.id <- nbr.employment.raw.id
+}
+```
+
+## Highest education (baseline)
 Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
 Assumes University degree > A level > NVQ > GCSE/O Level/CSE
-```{r Highest education}
-if(GLAD == TRUE | EDGI == TRUE) {
+```{r Highest education baseline}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE) {
 #create numeric version of the highest education variable
-glad.employment.raw.id <- glad.employment.raw.id %>%
+employment.raw.id <- employment.raw.id %>%
   mutate(
     highest_education_numeric =
       case_when(
@@ -836,7 +914,7 @@ glad.employment.raw.id <- glad.employment.raw.id %>%
     )
 
 #recode the numeric version into a factor
-glad.employment.raw.id <- glad.employment.raw.id %>%
+employment.raw.id <- employment.raw.id %>%
   mutate(
     highest_education =
       recode_factor(
@@ -847,15 +925,15 @@ glad.employment.raw.id <- glad.employment.raw.id %>%
         `4` = "University")
     )
 
-glad.employment.raw.id %>%
+employment.raw.id %>%
   freq(highest_education)
 }
 ```
 
 Check highest education coding
 ```{r Highest education check}
-if(GLAD == TRUE | EDGI == TRUE) {
-glad.employment.raw.id %>%
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE) {
+employment.raw.id %>%
   select(highest_education,
          employment.phd_numeric,
          employment.masters_degree_or_equivalent_numeric,
