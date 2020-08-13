@@ -1395,6 +1395,15 @@ nbr.mhd.raw.id <- nbr.mhd.raw %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
 
+# Rename columns that differ from GLAD
+nbr.mhd.raw.id <- nbr.mhd.raw.id %>% 
+  mutate(
+    mhd.specific_phobia_e.g._phobia_of_flying = mhd.specific_phobia_e.g._fear_of_flying,
+    mhd.specific_phobia_e.g._phobia_of_flying_numeric = mhd.specific_phobia_e.g._fear_of_flying_numeric,
+    mhd.psychological_overeating_or_bingeeating = mhd.bingeeating_disorder,
+    mhd.psychological_overeating_or_bingeeating_numeric = mhd.bingeeating_disorder_numeric
+  )
+
 # Inspect dimensions
 dim(nbr.mhd.raw.id)
 # Inspect colnames
@@ -1440,8 +1449,7 @@ No-diagnosis group
 3. Breakdown by COVID or not (using COVIDENCE/Zoe algorithm)
 
 ```{r mhd depressive_disorders}
-## CHECK THAT THIS CHUNK WORKS FOR EDGI AS WELL (confirmed that it works for NBR)
-if(GLAD = TRUE | EDGI = TRUE | NBR = TRUE)
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE)
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     depressive_disorders_numeric =
@@ -1469,6 +1477,7 @@ mhd.raw.id %>%
 ```
 
 ```{r Check depressive_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     depressive_disorders,
@@ -1480,48 +1489,12 @@ mhd.raw.id %>%
     mhd.pregnancy_depression,
     mhd.premenstrual_dysphoric_disorder_pmdd
   )
-```
-
-Anxiety disorders group
-```{r glad mhd anxiety_disorders}
-if(GLAD = TRUE) {
-mhd.raw.id <- mhd.raw.id %>%
-  mutate(
-    anxiety_disorders_numeric =
-      case_when(
-        mhd.anxiety_nerves_or_generalised_anxiety_disorder_numeric == "1" ~ 1,
-        mhd.social_anxiety_or_social_phobia_numeric == "1" ~ 1,
-        mhd.specific_phobia_e.g._phobia_of_flying_numeric == "1" ~ 1,
-        mhd.agoraphobia_numeric == "1" ~ 1,
-        mhd.panic_disorder_numeric == "1" ~ 1,
-        mhd.panic_attacks_numeric == "1" ~ 1,
-        (mhd.anxiety_nerves_or_generalised_anxiety_disorder_numeric == "0" &
-        mhd.social_anxiety_or_social_phobia_numeric == "0" &
-        mhd.specific_phobia_e.g._phobia_of_flying_numeric == "0" &
-        mhd.agoraphobia_numeric == "0" &
-        mhd.panic_disorder_numeric == "0" &
-        mhd.panic_attacks_numeric == "0") ~ 0
-      )
-  )
-
-mhd.raw.id <- mhd.raw.id %>%
-  mutate(
-    anxiety_disorders =
-      recode_factor(anxiety_disorders_numeric,
-                    "0" = "No anxiety disorder",
-                    "1" = "Anxiety disorder",
-                    missing = NA_character_
-                    )
-  )
-
-mhd.raw.id %>%
-  freq(anxiety_disorders,
-       cumul = F)
 }
 ```
 
-```{r nbr mhd anxiety_disorders}
-if(NBR = TRUE) {
+Anxiety disorders group
+```{r mhd anxiety_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     anxiety_disorders_numeric =
@@ -1558,6 +1531,7 @@ mhd.raw.id %>%
 ```
 
 ```{r Check anxiety_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     anxiety_disorders,
@@ -1575,10 +1549,12 @@ mhd.raw.id %>%
     mhd.panic_disorder,
     mhd.panic_attacks
   )
+}
 ```
 
 Agoraphonia and panic disorder group
-```{r glad mhd agoraphobia_panic_disorder}
+```{r mhd agoraphobia_panic_disorder}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     agoraphobia_panic_disorder_numeric =
@@ -1604,9 +1580,11 @@ mhd.raw.id <- mhd.raw.id %>%
 
 mhd.raw.id %>%
   freq(agoraphobia_panic_disorder)
+}
 ```
 
 ```{r Check agoraphobia_panic_disorder}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     agoraphobia_panic_disorder,
@@ -1618,10 +1596,12 @@ mhd.raw.id %>%
     mhd.panic_disorder,
     mhd.panic_attacks
   )
+}
 ```
 
 Depression and anxiety comorbidity
-```{r glad mhd depression_anxiety}
+```{r mhd depression_anxiety}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     depression_and_anxiety_numeric =
@@ -1652,12 +1632,12 @@ mhd.raw.id <- mhd.raw.id %>%
 mhd.raw.id %>%
   freq(depression_and_anxiety,
        cumul = F)
+}
 ```
 
-
-
 Eating disorders group
-```{r glad mhd eating_disorders}
+```{r mhd eating_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     eating_disorders_numeric =
@@ -1686,11 +1666,13 @@ mhd.raw.id <- mhd.raw.id %>%
 mhd.raw.id %>%
   freq(eating_disorders,
        cumul = F)
+}
 ```
 
 Eating disorders with binge eating vs eating disorders without
 Caveat: Anorexia nervosa can have binge eating as well. Therefore, this would need an additional variable from the ED100K
-```{r glad mhd restricting_vs_binge_eating_eating_disorders}
+```{r mhd restricting_vs_binge_eating_eating_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     restricting_vs_binge_eating_eating_disorders_numeric =
@@ -1720,11 +1702,13 @@ mhd.raw.id <- mhd.raw.id %>%
 mhd.raw.id %>%
   freq(restricting_vs_binge_eating_eating_disorders,
        cumul = F)
+}
 ```
 
 
 
 ```{r Check eating_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     eating_disorders,
@@ -1740,6 +1724,7 @@ mhd.raw.id %>%
     mhd.bulimia_nervosa,
     mhd.psychological_overeating_or_bingeeating
   )
+}
 ```
 
 Obsessive compulsive disorders
