@@ -892,11 +892,75 @@ if(NBR == TRUE){
 }
 ```
 
+## RAMP
+### Read in data
+```{r ramp employment cols}
+if(RAMP == TRUE){
+ramp.employment.raw <- readRDS(file = paste0(data.raw_path, "/ramp/employment_coping_ramp.rds"))
+dim(ramp.employment.raw)
+colnames(ramp.employment.raw)
+}
+```
+
+### Select variables
+```{r ramp employment cleaning}
+if(RAMP == TRUE){
+exclude_cols_employment <- c("ID",
+                  "Sample")
+
+ramp.employment.raw.id <- ramp.employment.raw %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(
+    ID = as.numeric(ID)
+    ) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         employment.phd, # level of education - univeristy
+         employment.masters_degree_or_equivalent, # level of education - univeristy
+         employment.postgraduate_degree_or_equivalent, # level of education - univeristy
+         employment.bachelors_degree_or_equivalent, # level of education - univeristy
+         employment.a_levelsas_levels_or_equivalent, # level of education - alevel
+         employment.o_levelsgcses_or_equivalent, # level of education - gcse
+         employment.cses_or_equivalent, # level of education - cse
+         employment.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+         employment.government_work_key_workers # key worker status
+         ) %>%
+  add_numeric(., exclude = exclude_cols_employment) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(ramp.employment.raw.id)
+# Inspect colnames
+colnames(ramp.employment.raw.id)
+#Differences
+dim(ramp.employment.raw)[1]-dim(ramp.employment.raw.id)[1]
+}
+```
+
+```{r ramp copy employment}
+if(RAMP == TRUE){
+  employment.raw.id <- ramp.employment.raw.id
+}
+```
+
 ## Highest education (baseline)
 Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
 Assumes University degree > A level > NVQ > GCSE/O Level/CSE
 ```{r Highest education baseline}
-if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE) {
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP = TRUE) {
 #create numeric version of the highest education variable
 employment.raw.id <- employment.raw.id %>%
   mutate(
@@ -932,7 +996,7 @@ employment.raw.id %>%
 
 Check highest education coding
 ```{r Highest education check}
-if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE) {
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP = TRUE) {
 employment.raw.id %>%
   select(highest_education,
          employment.phd_numeric,
