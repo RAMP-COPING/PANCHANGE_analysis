@@ -947,11 +947,11 @@ employment.raw.id %>%
 }
 ```
 
-# Key worker status
+## Key worker status
 ```{r Key worker}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 #create numeric version of the variable
-glad.employment.raw.id <- glad.employment.raw.id %>%
+employment.raw.id <- employment.raw.id %>%
   mutate(
     key_worker_numeric =
       case_when(
@@ -961,7 +961,7 @@ glad.employment.raw.id <- glad.employment.raw.id %>%
     )
 
 #recode the numeric version into a factor
-glad.employment.raw.id <- glad.employment.raw.id %>%
+employment.raw.id <- employment.raw.id %>%
   mutate(
     key_worker =
       recode_factor(
@@ -971,7 +971,7 @@ glad.employment.raw.id <- glad.employment.raw.id %>%
         )
     )
 
-glad.employment.raw.id %>%
+employment.raw.id %>%
   freq(key_worker)
 }
 ```
