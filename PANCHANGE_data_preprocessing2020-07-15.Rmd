@@ -71,7 +71,7 @@ Load packages
 ```{r Load packages}
 library(knitr)
 library(summarytools)
-#library(psych)
+library(psych)
 library(tidyverse)
 library(eeptools) #Needed to calculate age from birthdate
 ```
