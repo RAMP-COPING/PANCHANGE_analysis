@@ -483,7 +483,7 @@ ramp.dem.raw$externalDataReference <- ramp.dem.raw$`Login ID` #move Login ID to 
            startDate.ramp = startDate) %>% # Rename startDate
     select(
       Sample, # Sample
-     # "Login ID", # ID
+      ID, # ID
       startDate.ramp, #Date when participant signed up to ramp
       age_category = demographics.how_old_are_you, # Age
       Gender = demographics.which_gender_do_you_identify_with, # Gender (what [GLAD] vs which [RAMP])
@@ -618,28 +618,32 @@ dem.raw.id %>%
 ## Read in data
 ```{r ramp emp cols}
 if(RAMP == TRUE){
-  ramp.emp.raw <- readRDS(file = paste0(data.raw_path, "/ramp/employment_ramp.rds"))
-  dim(ramp.emp.raw)
-  colnames(ramp.emp.raw)
+  ramp.employment.raw <- readRDS(file = paste0(data.raw_path, "/ramp/employment_ramp.rds"))
+  dim(ramp.employment.raw)
+  colnames(ramp.employment.raw)
 }
 ```
 
 # Select variables
 ```{r ramp emp cleaning}
 if(RAMP == TRUE){
-  exclude_cols_emp <- c("ID",
-                        "Sample")
+  exclude_cols_employment <- c("ID",
+                        "Sample",
+                        "startDate.ramp")
 
-ramp.emp.raw$externalDataReference <- ramp.emp.raw$`Login ID` #move Login ID to external data reference
+ramp.employment.raw$externalDataReference <- ramp.employment.raw$`Login ID` #move Login ID to external data reference
   
-ramp.emp.raw.id <- ramp.emp.raw %>%
+ramp.employment.raw.id <- ramp.employment.raw %>%
     drop_na(externalDataReference) %>% # Drop NAs
     distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
     separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
     mutate(ID = as.numeric(ID),
            startDate.ramp = startDate) %>% # Rename startDate
     select(
-      highest_education_ramp = employment.what_is_your_highest_level_of_education,
+      Sample,
+      ID,
+      startDate.ramp,
+      highest_education_ramp = employment.what_is_your_highest_level_of_education, #this is missing NVQ or equivalent which we have in GLAD-COPING
       # EduYrs = employment.university_education_attend_school.txt, # Years in education - not in RAMP dataset
       employment.government_work_key_workers
     ) %>%
@@ -657,17 +661,17 @@ ramp.emp.raw.id <- ramp.emp.raw %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
   
   # Inspect dimensions
-  dim(ramp.emp.raw.id)
+  dim(ramp.employment.raw.id)
   # Inspect colnames
-  colnames(ramp.emp.raw.id)
+  colnames(ramp.employment.raw.id)
   #Differences
-  dim(ramp.emp.raw)[1]-dim(ramp.emp.raw.id)[1]
+  dim(ramp.employment.raw)[1]-dim(ramp.employment.raw.id)[1]
 }
 ```
 
 ```{r ramp copy emp}
 if(RAMP == TRUE){
-  emp.raw.id <- ramp.emp.raw.id
+  employment.raw.id <- ramp.employment.raw.id
 }
 ```
 
@@ -792,6 +796,11 @@ dim(glad.employment.raw)[1]-dim(glad.employment.raw.id)[1]
 }
 ```
 
+```{r GLAD copy employment}
+if(RAMP == GLAD){
+  employment.raw.id <- glad.employment.raw.id
+}
+```
 
 # Highest education
 Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
@@ -799,7 +808,7 @@ Assumes University degree > A level > NVQ > GCSE/O Level/CSE
 ```{r Highest education}
 if(GLAD == TRUE | EDGI == TRUE) {
 #create numeric version of the highest education variable
-glad.employment.raw.id <- glad.employment.raw.id %>%
+employment.raw.id <- employment.raw.id %>%
   mutate(
     highest_education_numeric =
       case_when(
@@ -815,7 +824,7 @@ glad.employment.raw.id <- glad.employment.raw.id %>%
     )
 
 #recode the numeric version into a factor
-glad.employment.raw.id <- glad.employment.raw.id %>%
+employment.raw.id <- employment.raw.id %>%
   mutate(
     highest_education =
       recode_factor(
@@ -826,7 +835,7 @@ glad.employment.raw.id <- glad.employment.raw.id %>%
         `4` = "University")
     )
 
-glad.employment.raw.id %>%
+employment.raw.id %>%
   freq(highest_education)
 }
 ```
@@ -834,7 +843,7 @@ glad.employment.raw.id %>%
 Check highest education coding
 ```{r Highest education check}
 if(GLAD == TRUE | EDGI == TRUE) {
-glad.employment.raw.id %>%
+employment.raw.id %>%
   select(highest_education,
          employment.phd_numeric,
          employment.masters_degree_or_equivalent_numeric,
@@ -852,7 +861,7 @@ glad.employment.raw.id %>%
 ```{r Key worker}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 #create numeric version of the variable
-glad.employment.raw.id <- glad.employment.raw.id %>%
+employment.raw.id <- employment.raw.id %>%
   mutate(
     key_worker_numeric =
       case_when(
@@ -862,7 +871,7 @@ glad.employment.raw.id <- glad.employment.raw.id %>%
     )
 
 #recode the numeric version into a factor
-glad.employment.raw.id <- glad.employment.raw.id %>%
+employment.raw.id <- employment.raw.id %>%
   mutate(
     key_worker =
       recode_factor(
@@ -872,7 +881,7 @@ glad.employment.raw.id <- glad.employment.raw.id %>%
         )
     )
 
-glad.employment.raw.id %>%
+employment.raw.id %>%
   freq(key_worker)
 }
 ```
