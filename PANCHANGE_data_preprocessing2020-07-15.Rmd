@@ -64,7 +64,6 @@ Install packages (if they are not available in your version of R)
 #install.packages("summarytools")
 #install.packages("tidyverse")
 #install.packages("psych")
-#install.packages("dplyr")
 #install.packages("eeptools")
 ```
 
@@ -73,9 +72,8 @@ Load packages
 library(knitr)
 library(summarytools)
 library(psych)
-library(dplyr)
 library(tidyverse)
-library(eeptools)
+library(eeptools) #Needed to calculate age from birthdate
 ```
 
 # Colour palettes
@@ -483,6 +481,7 @@ dim(nbr.cohort.raw)[1]-dim(nbr.cohort.raw.id)[1]
 ```
 
 ```{r nbr cohort recode ethnicity}
+if(NBR == TRUE) {
 #Recode details ethnicity info
 nbr.cohort.raw.id$Ethnicity_full <- recode_factor(nbr.cohort.raw.id$Ethnicity.unc,
                                              "A" = "White - British",
@@ -526,7 +525,7 @@ nbr.cohort.raw.id$Ethnicity <- recode_factor(nbr.cohort.raw.id$Ethnicity.unc,
                                              "W" = NULL, ## Asking NBR what this level means
                                              "Z" = NULL,
                                              "99" = NULL)
-
+}
 ```
 
 
@@ -591,7 +590,6 @@ In RAMP, age is indicated categorically: 16-18, 19-25, 26-35, 36-45, 46-55, 56-6
 Age categories in GLAD, EDGI and NBR have been created to reflect this
 ```{r Age groups}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
-
 # Create categorical age groups per 10 years
 dem.raw.id <- dem.raw.id %>%
   mutate(
@@ -1396,26 +1394,32 @@ nbr.mhd.raw.id <- nbr.mhd.raw %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
 
 # Rename columns that differ from GLAD
-nbr.mhd.raw.id <- nbr.mhd.raw.id %>% 
+nbr.mhd.raw.id_renamed <- nbr.mhd.raw.id %>% 
   mutate(
     mhd.specific_phobia_e.g._phobia_of_flying = mhd.specific_phobia_e.g._fear_of_flying,
     mhd.specific_phobia_e.g._phobia_of_flying_numeric = mhd.specific_phobia_e.g._fear_of_flying_numeric,
     mhd.psychological_overeating_or_bingeeating = mhd.bingeeating_disorder,
-    mhd.psychological_overeating_or_bingeeating_numeric = mhd.bingeeating_disorder_numeric
+    mhd.psychological_overeating_or_bingeeating_numeric = mhd.bingeeating_disorder_numeric,
+    mhd.type_psychosis_psychotic_illness = mhd.psychosis_type_psychotic_illness,
+    mhd.type_psychosis_psychotic_illness_numeric = mhd.psychosis_type_psychotic_illness_numeric
+    ) %>% 
+  add_column(
+    mhd.schizoaffective_disorder = NA, #NBR dooesn't ask about schizoaffective
+    mhd.schizoaffective_disorder_numeric = NA
   )
 
 # Inspect dimensions
-dim(nbr.mhd.raw.id)
+dim(nbr.mhd.raw.id_renamed)
 # Inspect colnames
-colnames(nbr.mhd.raw.id)
+colnames(nbr.mhd.raw.id_renamed)
 #Differences
-dim(nbr.mhd.raw)[1]-dim(nbr.mhd.raw.id)[1]
+dim(nbr.mhd.raw)[1]-dim(nbr.mhd.raw.id_renamed)[1]
 }
 ```
 
 ```{r nbr mhd copy}
 if(NBR == TRUE) {
-  mhd.raw.id <- nbr.mhd.raw.id
+  mhd.raw.id <- nbr.mhd.raw.id_renamed
 }
 ```
 
@@ -1728,7 +1732,8 @@ mhd.raw.id %>%
 ```
 
 Obsessive compulsive disorders
-```{r glad mhd obsessive_compulsive_disorders}
+```{r mhd obsessive_compulsive_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     obsessive_compulsive_disorders_numeric =
@@ -1754,9 +1759,11 @@ mhd.raw.id <- mhd.raw.id %>%
 
 mhd.raw.id %>%
   freq(obsessive_compulsive_disorders)
+}
 ```
 
 ```{r Check obsessive_compulsive_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     obsessive_compulsive_disorders,
@@ -1766,13 +1773,15 @@ mhd.raw.id %>%
     mhd.obsessive_compulsive_related_disorders,
     mhd.obsessive_compulsive_related_disorders_numeric
   )
+}
 ```
 
 Psychotic disorders group
 [63] "mhd.schizophrenia_numeric"                                 
 [64] "mhd.schizoaffective_disorder_numeric"                      
 [65] "mhd.type_psychosis_psychotic_illness_numeric" 
-```{r glad mhd psychotic_disorders}
+```{r mhd psychotic_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     psychotic_disorders_numeric =
@@ -1781,7 +1790,7 @@ mhd.raw.id <- mhd.raw.id %>%
         mhd.schizoaffective_disorder_numeric == "1" ~ 1,
         mhd.type_psychosis_psychotic_illness_numeric == "1" ~ 1,
         (mhd.schizophrenia_numeric == "0" &
-        mhd.schizoaffective_disorder_numeric == "0" &
+        (mhd.schizoaffective_disorder_numeric == "0" | is.na(mhd.schizoaffective_disorder_numeric == "0") &
         mhd.type_psychosis_psychotic_illness_numeric == "0") ~ 0
       )
   )
@@ -1798,13 +1807,15 @@ mhd.raw.id <- mhd.raw.id %>%
 
 mhd.raw.id %>%
   freq(psychotic_disorders)
+}
 ```
 
 
 Overlap between self-report schizophrenia and bipolar disorder
 +++CH: Check overlap between schizophrenia group and bipolar disorder
 ++KT: Only 63 with comorbid self-report bipolar disorder and schizophrenia. More likely to have shared symptoms, less likely to have confirmed diagnoses of both. Could be too severe to be in GLAD?
-```{r glad mhd bipolar_and_schizophrenia_numeric}
+```{r mhd bipolar_and_schizophrenia_numeric}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     bipolar_and_schizophrenia_numeric =
@@ -1835,9 +1846,11 @@ mhd.raw.id <- mhd.raw.id %>%
 mhd.raw.id %>%
   freq(bipolar_and_schizophrenia,
        cumul = F)
+}
 ```
 
 ```{r Check psychotic_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     psychotic_disorders,
@@ -1853,6 +1866,7 @@ mhd.raw.id %>%
     mhd.schizoaffective_disorder,
     mhd.type_psychosis_psychotic_illness
   )
+}
 ```
 
 Personality disorder groups
