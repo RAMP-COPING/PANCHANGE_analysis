@@ -232,6 +232,16 @@ dem.raw.id <- glad.dem.raw.id
 }
 ```
 
+```{r glad dem summary}
+if(GLAD == TRUE) {
+summarytools::dfSummary(
+  dem.raw.id,
+  graph.col = F,
+  valid.col = F,
+  labels.col = F)
+}
+```
+
 # EDGI demographics
 ## Read in data
 ```{r edgi dem cols}
@@ -300,7 +310,15 @@ if(EDGI == TRUE){
 }
 ```
 
-
+```{r edgi dem summary}
+if(EDGI == TRUE) {
+summarytools::dfSummary(
+  dem.raw.id,
+  graph.col = F,
+  valid.col = F,
+  labels.col = F)
+}
+```
 
 # NBR demographics
 ## Read in data
@@ -525,7 +543,7 @@ dim(nbr.dem.raw.id)[1]-dim(dem.raw.id)[1]
 }
 ```
 
-```{r nbr demo summary}
+```{r nbr dem summary}
 if(NBR == TRUE) {
 summarytools::dfSummary(
   dem.raw.id,
@@ -671,17 +689,14 @@ dem.raw.id %>%
 ```
 
 
-```{r glad dem head}
-head(dem.raw.id)
-```
-
-
-```{r glad dem summary}
+```{r dem summary}
+if(GLAD == TRUE | EDGI == TRUE) {
 summarytools::dfSummary(
   dem.raw.id,
   graph.col = F,
   valid.col = F,
   labels.col = F)
+}
 ```
 
 # Employment/highest education (baseline)
