@@ -647,7 +647,7 @@ ramp.employment.raw.id <- ramp.employment.raw %>%
       # EduYrs = employment.university_education_attend_school.txt, # Years in education - not in RAMP dataset
       employment.government_work_key_workers
     ) %>%
-    add_numeric(., exclude = exclude_cols_emp) %>%
+    add_numeric(., exclude = exclude_cols_employment) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
     mutate_if(is.numeric, ~na_if(., -99)) %>%
     mutate_if(is.numeric, ~na_if(., -77)) %>%
