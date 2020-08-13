@@ -174,7 +174,7 @@ colnames(glad.dem.raw)
 }
 ```
 
-# Select variables
+## Select variables
 ```{r glad dem cleaning}
 if(GLAD == TRUE){
 exclude_cols_dem <- c("ID",
@@ -242,7 +242,7 @@ if(EDGI == TRUE){
 }
 ```
 
-# Select variables
+## Select variables
 ```{r edgi dem cleaning}
 if(EDGI == TRUE){
   exclude_cols_dem <- c("ID",
@@ -312,7 +312,7 @@ if(NBR == TRUE){
 }
 ```
 
-# Select variables
+## Select variables
 ```{r nbr dem cleaning}
 if(NBR == TRUE){
   exclude_cols_dem <- c("ID",
@@ -409,7 +409,7 @@ if(NBR == TRUE){
 ```
 
 
-```{r nbr dem cleaning}
+```{r nbr cohort cleaning}
 if(NBR == TRUE) {
 exclude_cols_dem <- c("ID",
                   "Sample",
@@ -440,7 +440,7 @@ nbr.cohort.raw.id <- nbr.cohort.raw %>%
 #         demographics.o_levelsgcses_or_equivalent, # level of education - gcse
 #         demographics.cses_or_equivalent, # level of education - cse
 #         demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
-         Ethnicity = ethnicity # Ethnicity
+         Ethnicity.unc = ethnicity # Ethnicity
          ) %>%
   add_numeric(., exclude = exclude_cols_dem) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -464,9 +464,64 @@ dim(nbr.cohort.raw)[1]-dim(nbr.cohort.raw.id)[1]
 }
 ```
 
+```{r nbr cohort recode ethnicity}
+#Recode details ethnicity info
+nbr.cohort.raw.id$Ethnicity_full <- recode_factor(nbr.cohort.raw.id$Ethnicity.unc,
+                                             "A" = "White - British",
+                                             "B" = "White - Irish",
+                                             "C" = "White - Other",
+                                             "D" = "Mixed - White & Black Caribbean",
+                                             "E" = "Mixed - White & Black African",
+                                             "F" = "Mixed - White & Asian",
+                                             "G" = "Mixed - Other",
+                                             "H" = "Asian - Indian",
+                                             "J" = "Asian - Pakistani",
+                                             "K" = "Asian - Bangladeshi",
+                                             "L" = "Asian - Other",
+                                             "M" = "Black - Caribbean",
+                                             "N" = "Black - African",
+                                             "P" = "Black - Other",
+                                             "R" = "Chinese - Chinese",
+                                             "S" = "Chinese - Other",
+                                             "W" = NULL, ## Asking NBR what this level means
+                                             "Z" = NULL,
+                                             "99" = NULL)
+
+#Match GLAD/EDGI/RAMP categories
+nbr.cohort.raw.id$Ethnicity <- recode_factor(nbr.cohort.raw.id$Ethnicity.unc,
+                                             "A" = "White, white European or Caucasian",
+                                             "B" = "White, white European or Caucasian",
+                                             "C" = "White, white European or Caucasian",
+                                             "D" = "Mixed or multiple ethnic origins",
+                                             "E" = "Mixed or multiple ethnic origins",
+                                             "F" = "Mixed or multiple ethnic origins",
+                                             "G" = "Mixed or multiple ethnic origins",
+                                             "H" = "Asian or Asian British (including Chinese)",
+                                             "J" = "Asian or Asian British (including Chinese)",
+                                             "K" = "Asian or Asian British (including Chinese)",
+                                             "L" = "Asian or Asian British (including Chinese)",
+                                             "M" = "Black or Black British",
+                                             "N" = "Black or Black British",
+                                             "P" = "Black or Black British",
+                                             "R" = "Asian or Asian British (including Chinese)",
+                                             "S" = "Asian or Asian British (including Chinese)",
+                                             "W" = NULL, ## Asking NBR what this level means
+                                             "Z" = NULL,
+                                             "99" = NULL)
+
+```
+
+
 ```{r nbr combine demographics}
 if(NBR == TRUE){
-dem.raw.id <- merge(nbr.cohort.raw.id, nbr.dem.raw.id, by = c("Sample", "ID"))
+dem.raw.id <- left_join(nbr.dem.raw.id, nbr.cohort.raw.id, by = c("Sample", "ID"))
+
+# Inspect dimensions
+dim(dem.raw.id)
+# Inspect colnames
+colnames(dem.raw.id)
+#Differences
+dim(nbr.dem.raw.id)[1]-dim(dem.raw.id)[1]
 }
 ```
 
@@ -567,10 +622,10 @@ dem.raw.id %>%
 }
 ```
 
-# Highest education
+# Highest education (prepandemic)
 Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
 Assumes University degree > A level > NVQ > GCSE/O Level/CSE
-```{r Highest education}
+```{r Highest education prepandemic}
 if(GLAD == TRUE | EDGI == TRUE) {
 #create numeric version of the highest education variable
 dem.raw.id <- dem.raw.id %>%
@@ -602,7 +657,7 @@ dem.raw.id %>%
 ```
 
 Check highest education coding
-```{r Highest education check}
+```{r Highest education prepandemic check}
 if(GLAD == TRUE | EDGI == TRUE) {
 dem.raw.id %>%
   select(highest_education,
@@ -629,9 +684,10 @@ summarytools::dfSummary(
   labels.col = F)
 ```
 
-# GLAD employment
+# Employment/highest education (baseline)
+
 ## Read in data
-```{r glad dem cols}
+```{r glad employment cols}
 if(GLAD == TRUE){
 glad.employment.raw <- readRDS(file = paste0(data.raw_path, "/glad/employment_coping_glad.rds"))
 dim(glad.employment.raw)
@@ -687,6 +743,61 @@ dim(glad.employment.raw)[1]-dim(glad.employment.raw.id)[1]
 }
 ```
 
+```{r nbr employment cols}
+if(NBR == TRUE){
+nbr.employment.raw <- readRDS(file = paste0(data.raw_path, "/nbr/employment_coping_nbr.rds"))
+dim(nbr.employment.raw)
+colnames(nbr.employment.raw)
+}
+```
+
+# Select variables
+```{r nbr employment cleaning}
+if(NBR == TRUE){
+exclude_cols_employment <- c("ID",
+                  "Sample")
+
+nbr.employment.raw.id <- nbr.employment.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(
+    ID = as.numeric(ID)
+    ) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         employment.phd, # level of education - univeristy
+         employment.masters_degree_or_equivalent, # level of education - univeristy
+         employment.postgraduate_degree_or_equivalent, # level of education - univeristy
+         employment.bachelors_degree_or_equivalent, # level of education - univeristy
+         employment.a_levelsas_levels_or_equivalent, # level of education - alevel
+         employment.o_levelsgcses_or_equivalent, # level of education - gcse
+         employment.cses_or_equivalent, # level of education - cse
+         employment.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+         employment.government_work_key_workers # key worker status
+         ) %>%
+  add_numeric(., exclude = exclude_cols_employment) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(nbr.employment.raw.id)
+# Inspect colnames
+colnames(nbr.employment.raw.id)
+#Differences
+dim(nbr.employment.raw)[1]-dim(nbr.employment.raw.id)[1]
+}
+```
 
 # Highest education
 Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
