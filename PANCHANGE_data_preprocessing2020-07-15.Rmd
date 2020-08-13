@@ -630,7 +630,7 @@ if(RAMP == TRUE){
   exclude_cols_emp <- c("ID",
                         "Sample")
 
-ramp.dem.raw$externalDataReference <- ramp.dem.raw$`Login ID` #move Login ID to external data reference
+ramp.emp.raw$externalDataReference <- ramp.emp.raw$`Login ID` #move Login ID to external data reference
   
 ramp.emp.raw.id <- ramp.emp.raw %>%
     drop_na(externalDataReference) %>% # Drop NAs
@@ -639,13 +639,9 @@ ramp.emp.raw.id <- ramp.emp.raw %>%
     mutate(ID = as.numeric(ID),
            startDate.ramp = startDate) %>% # Rename startDate
     select(
-      highest_education_ramp = employment.what_is_your_highest_level_of_education
+      highest_education_ramp = employment.what_is_your_highest_level_of_education,
       # EduYrs = employment.university_education_attend_school.txt, # Years in education - not in RAMP dataset
-      # employment.college_or_university_degree, # level of education - univeristy - level of education is in employment file
-      # employment.a_levelsas_levels_or_equivalent, # level of education - alevel
-      # employment.o_levelsgcses_or_equivalent, # level of education - gcse
-      # employment.cses_or_equivalent, # level of education - cse
-      # employment.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+      employment.government_work_key_workers
     ) %>%
     add_numeric(., exclude = exclude_cols_emp) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
