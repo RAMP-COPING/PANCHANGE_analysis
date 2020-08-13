@@ -1108,7 +1108,6 @@ if(EDGI == TRUE){
 }
 ```
 
-
 ```{r edgi gad cleaning}
 if(EDGI == TRUE){
 exclude_cols <- c("Sample",
@@ -1267,7 +1266,6 @@ colnames(glad.mhd.raw)
 }
 ```
 
-
 ```{r glad mhd cleaning}
 if(GLAD == TRUE) {
 glad.mhd.raw.id <- glad.mhd.raw %>%
@@ -1309,6 +1307,108 @@ if(GLAD == TRUE) {
 }
 ```
 
+## EDGI
+```{r edgi mhd cols}
+if(EDGI == TRUE) {
+edgi.mhd.raw <- readRDS(file = paste0(data.raw_path,"/edgi/mhd_edgi.rds"))
+dim(edgi.mhd.raw)
+colnames(edgi.mhd.raw)
+}
+```
+
+```{r edgi mhd cleaning}
+if(EDGI == TRUE) {
+edgi.mhd.raw.id <- edgi.mhd.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID),
+         startDate.prepandemic = startDate) %>% # Rename startDate
+  select(
+    Sample, # Sample
+    ID, # ID
+    starts_with("mhd.")
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(edgi.mhd.raw.id)
+# Inspect colnames
+colnames(edgi.mhd.raw.id)
+#Differences
+dim(edgi.mhd.raw)[1]-dim(edgi.mhd.raw.id)[1]
+}
+```
+
+```{r edgi mhd copy}
+if(EDGI == TRUE) {
+  mhd.raw.id <- edgi.mhd.raw.id
+}
+```
+
+## NBR
+```{r nbr mhd cols}
+if(NBR == TRUE) {
+nbr.mhd.raw <- readRDS(file = paste0(data.raw_path,"/nbr/mhd_nbr.rds"))
+dim(nbr.mhd.raw)
+colnames(nbr.mhd.raw)
+}
+```
+
+```{r nbr mhd cleaning}
+if(NBR == TRUE) {
+exclude_cols <- c("Sample",
+                  "ID")
+  
+nbr.mhd.raw.id <- nbr.mhd.raw %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID),
+         startDate.prepandemic = startDate) %>% # Rename startDate
+  select(
+    Sample, # Sample
+    ID, # ID
+    starts_with("mhd.")
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(nbr.mhd.raw.id)
+# Inspect colnames
+colnames(nbr.mhd.raw.id)
+#Differences
+dim(nbr.mhd.raw)[1]-dim(nbr.mhd.raw.id)[1]
+}
+```
+
+```{r nbr mhd copy}
+if(NBR == TRUE) {
+  mhd.raw.id <- nbr.mhd.raw.id
+}
+```
 
 # Grouping mental health disorders
 *#Disorder groupings - from COPING/RAMP analysis minutes*
@@ -1339,7 +1439,9 @@ No-diagnosis group
 2. Specific: breakdown by type of prior anxiety (& related) disorder diagnosis
 3. Breakdown by COVID or not (using COVIDENCE/Zoe algorithm)
 
-```{r glad mhd depressive_disorders}
+```{r mhd depressive_disorders}
+## CHECK THAT THIS CHUNK WORKS FOR EDGI AS WELL (confirmed that it works for NBR)
+if(GLAD = TRUE | EDGI = TRUE | NBR = TRUE)
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     depressive_disorders_numeric =
@@ -1382,6 +1484,7 @@ mhd.raw.id %>%
 
 Anxiety disorders group
 ```{r glad mhd anxiety_disorders}
+if(GLAD = TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     anxiety_disorders_numeric =
@@ -1414,6 +1517,44 @@ mhd.raw.id <- mhd.raw.id %>%
 mhd.raw.id %>%
   freq(anxiety_disorders,
        cumul = F)
+}
+```
+
+```{r nbr mhd anxiety_disorders}
+if(NBR = TRUE) {
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    anxiety_disorders_numeric =
+      case_when(
+        mhd.anxiety_nerves_or_generalised_anxiety_disorder_numeric == "1" ~ 1,
+        mhd.social_anxiety_or_social_phobia_numeric == "1" ~ 1,
+        mhd.specific_phobia_e.g._phobia_of_flying_numeric == "1" ~ 1,
+        mhd.agoraphobia_numeric == "1" ~ 1,
+        mhd.panic_disorder_numeric == "1" ~ 1,
+        mhd.panic_attacks_numeric == "1" ~ 1,
+        (mhd.anxiety_nerves_or_generalised_anxiety_disorder_numeric == "0" &
+        mhd.social_anxiety_or_social_phobia_numeric == "0" &
+        mhd.specific_phobia_e.g._phobia_of_flying_numeric == "0" &
+        mhd.agoraphobia_numeric == "0" &
+        mhd.panic_disorder_numeric == "0" &
+        mhd.panic_attacks_numeric == "0") ~ 0
+      )
+  )
+
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    anxiety_disorders =
+      recode_factor(anxiety_disorders_numeric,
+                    "0" = "No anxiety disorder",
+                    "1" = "Anxiety disorder",
+                    missing = NA_character_
+                    )
+  )
+
+mhd.raw.id %>%
+  freq(anxiety_disorders,
+       cumul = F)
+}
 ```
 
 ```{r Check anxiety_disorders}
