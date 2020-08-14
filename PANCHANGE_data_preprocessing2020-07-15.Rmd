@@ -53,8 +53,8 @@ date = Sys.Date()
 ```{r Specify cohort}
 GLAD = FALSE
 EDGI = FALSE
-NBR = TRUE
-RAMP = FALSE
+NBR = FALSE
+RAMP = TRUE
 ```
 
 
@@ -552,10 +552,85 @@ summarytools::dfSummary(
 }
 ```
 
+# RAMP demographics
+## Read in data
+```{r ramp dem cols}
+if(RAMP == TRUE){
+  ramp.dem.raw <- readRDS(file = paste0(data.raw_path, "/ramp/dem_ramp.rds"))
+  dim(ramp.dem.raw)
+  colnames(ramp.dem.raw)
+}
+```
+
+```{r}
+
+```
+
+
+
+# Select variables
+```{r ramp dem cleaning}
+if(RAMP == TRUE){
+  exclude_cols_dem <- c("ID",
+                        "Sample",
+                        "startDate.ramp")
+  
+ramp.dem.raw$externalDataReference <- ramp.dem.raw$`Login ID` #move Login ID to external data reference
+    
+  ramp.dem.raw.id <- ramp.dem.raw %>%
+    drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID),
+           startDate.ramp = startDate) %>% # Rename startDate
+    select(
+      Sample, # Sample
+      ID, # ID
+      startDate.ramp, #Date when participant signed up to ramp
+      age_category = demographics.how_old_are_you, # Age
+      Gender = demographics.which_gender_do_you_identify_with, # Gender (what [GLAD] vs which [RAMP])
+     # EduYrs = demographics.university_education_attend_school.txt, # Years in education - not in RAMP dataset
+     # demographics.college_or_university_degree, # level of education - univeristy - level of education is in employment file
+     # demographics.a_levelsas_levels_or_equivalent, # level of education - alevel
+    #  demographics.o_levelsgcses_or_equivalent, # level of education - gcse
+     # demographics.cses_or_equivalent, # level of education - cse
+     # demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+      Transgender_uncleaned = demographics.do_you_identify_as_transgender,
+      Ethnicity = demographics.what_is_your_ethnic_origin # Ethnicity
+    ) %>%
+    add_numeric(., exclude = exclude_cols_dem) %>%
+    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+    mutate_if(is.numeric, ~na_if(., -99)) %>%
+    mutate_if(is.numeric, ~na_if(., -77)) %>%
+    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+  
+  # Inspect dimensions
+  dim(ramp.dem.raw.id)
+  # Inspect colnames
+  colnames(ramp.dem.raw.id)
+  #Differences
+  dim(ramp.dem.raw)[1]-dim(ramp.dem.raw.id)[1]
+}
+```
+
+```{r ramp copy dem}
+if(RAMP == TRUE){
+  dem.raw.id <- ramp.dem.raw.id
+}
+```
+
 
 #Clean Age variable
 Age outlier
 ```{r age outlier}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
 # define age limits 
 age_upper_limit = 117 # oldest person in the world is 117 years
 age_lower_limit = 16
@@ -583,6 +658,7 @@ dem.raw.id <- dem.raw.id %>%
 
 # Inspect colnames
 colnames(dem.raw.id)
+}
 ```
 
 # Categorise age into groups 
@@ -610,10 +686,12 @@ dem.raw.id <- dem.raw.id %>%
           Age >= 101 & Age <= 120 ~ "13" # oldest person in the world is 117 years
                 )
       )
+}
+
 
 dem.raw.id <- dem.raw.id %>%
     mutate(
-      age_category =
+      age_category_full =
         recode_factor(
           age_category_numeric, 
           "1" = "16 to 18 years",
@@ -633,8 +711,69 @@ dem.raw.id <- dem.raw.id %>%
     )
 
 dem.raw.id %>%
-  freq(age_category)
+  freq(age_category_full)
 
+```
+
+# RAMP employment
+## Read in data
+```{r ramp emp cols}
+if(RAMP == TRUE){
+  ramp.employment.raw <- readRDS(file = paste0(data.raw_path, "/ramp/employment_ramp.rds"))
+  dim(ramp.employment.raw)
+  colnames(ramp.employment.raw)
+}
+```
+
+
+# Select variables
+```{r ramp employment cleaning}
+if(RAMP == TRUE){
+  exclude_cols_employment <- c("ID",
+                        "Sample",
+                        "startDate.ramp")
+
+ramp.employment.raw$externalDataReference <- ramp.employment.raw$`Login ID` #move Login ID to external data reference
+  
+ramp.employment.raw.id <- ramp.employment.raw %>%
+    drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID),
+           startDate.ramp = startDate) %>% # Rename startDate
+    select(
+      Sample,
+      ID,
+      startDate.ramp,
+      highest_education_ramp = employment.what_is_your_highest_level_of_education, #this is missing NVQ or equivalent which we have in GLAD-COPING
+      # EduYrs = employment.university_education_attend_school.txt, # Years in education - not in RAMP dataset
+      employment.government_work_key_workers
+    ) %>%
+    add_numeric(., exclude = exclude_cols_employment) %>%
+    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+    mutate_if(is.numeric, ~na_if(., -99)) %>%
+    mutate_if(is.numeric, ~na_if(., -77)) %>%
+    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+  
+  # Inspect dimensions
+  dim(ramp.employment.raw.id)
+  # Inspect colnames
+  colnames(ramp.employment.raw.id)
+  #Differences
+  dim(ramp.employment.raw)[1]-dim(ramp.employment.raw.id)[1]
+}
+```
+
+```{r ramp copy emp}
+if(RAMP == TRUE){
+  employment.raw.id <- ramp.employment.raw.id
 }
 ```
 
