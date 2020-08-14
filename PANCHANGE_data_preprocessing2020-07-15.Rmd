@@ -6013,7 +6013,7 @@ coping.glad.respiratory <- coping.glad.respiratory.raw.id
 dat.glad.coping <- left_join(
   x = dat.glad,
   y = coping.glad.respiratory,
-  by = ("Sample", "ID")
+  by = c("Sample", "ID")
 )
 ```
 
