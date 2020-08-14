@@ -1248,13 +1248,15 @@ if(EDGI == TRUE){
     mhd.panic_attacks = demographics.panic_attacks,
     mhd.obsessivecompulsive_disorder_ocd = demographics.obsessivecompulsive_disorder_ocd,
     mhd.obsessive_compulsive_related_disorders = demographics.obsessive_compulsive_related_disorders,
-    mhd.body_dysmorphic_disorder_bdd_numeric = demographics.body_dysmorphic_disorder,
+    mhd.body_dysmorphic_disorder_bdd = demographics.body_dysmorphic_disorder,
     mhd.mania_hypomania_bipolar_or_manicdepression = demographics.mania_hypomania_bipolar_or_manicdepression,
     mhd.schizophrenia = demographics.schizophrenia,
     mhd.type_psychosis_psychotic_illness = demographics.psychosis_type_psychotic_illness, # word type psychosis changed order compared to GLAD 
 #    mhd.personality_disorder_diagnosed = demographics.personality_disorder_diagnosed, # does not exist in EDGI because it is multiple choice in EDGI
     mhd.posttraumatic_stress_disorder_ptsd = demographics.posttraumatic_stress_disorder_ptsd,
     mhd.autism_aspergers_or_autistic_spectrum_disorder = demographics.autism_spectrum_disorder_asd, # different name in EDGI
+    mhd.personality_disorder = demographics.personality_disorder,
+    mhd.attention_deficit_hyperactivity_disorder = demographics.attention_deficit_hyperactivity_disorder
     ) %>%
     add_column(
       mhd.schizoaffective_disorder = NA_character_
@@ -1946,6 +1948,7 @@ Cluster A
 2. Schizoid                         15 ( 0.5%)
 3. Schizotypal                      14 ( 0.5%)
 ```{r mhd personality_cluster_a}
+if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     personality_cluster_a_numeric =
@@ -1977,9 +1980,11 @@ mhd.raw.id <- mhd.raw.id %>%
 mhd.raw.id %>%
   freq(personality_cluster_a,
        cumul = F)
+}
 ```
 
 ```{r Check personality_cluster_a}
+if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     personality_cluster_a,
@@ -1987,6 +1992,7 @@ mhd.raw.id %>%
     mhd.personality_disorder_diagnosed,
     mhd.personality_disorder_diagnosed_numeric
   )
+}
 ```
 
 Cluster B
@@ -1996,6 +2002,7 @@ Cluster B
 7. Narcissistic                      8 ( 0.3%)
 
 ```{r mhd personality_cluster_b}
+if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     personality_cluster_b_numeric =
@@ -2027,9 +2034,11 @@ mhd.raw.id <- mhd.raw.id %>%
 mhd.raw.id %>%
   freq(personality_cluster_b,
        cumul = F)
+}
 ```
 
 ```{r Check personality_cluster_b}
+if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     personality_cluster_b,
@@ -2037,6 +2046,7 @@ mhd.raw.id %>%
     mhd.personality_disorder_diagnosed,
     mhd.personality_disorder_diagnosed_numeric
   )
+}
 ```
 
 Cluster C
@@ -2044,6 +2054,7 @@ Cluster C
 9. Dependent                        29 ( 1.0%)
 10. Obsessive-compulsive
 ```{r glad mhd personality_cluster_c}
+if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     personality_cluster_c_numeric =
@@ -2075,9 +2086,11 @@ mhd.raw.id <- mhd.raw.id %>%
 mhd.raw.id %>%
   freq(personality_cluster_c,
        cumul = F)
+}
 ```
 
 ```{r Check personality_cluster_c}
+if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     personality_cluster_c,
@@ -2085,6 +2098,7 @@ mhd.raw.id %>%
     mhd.personality_disorder_diagnosed,
     mhd.personality_disorder_diagnosed_numeric
   )
+}
 ```
 
 ### Controls
