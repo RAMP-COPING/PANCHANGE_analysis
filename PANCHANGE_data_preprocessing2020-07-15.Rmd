@@ -250,7 +250,7 @@ if(EDGI == TRUE){
 }
 ```
 
-## Select variables
+### Select variables
 ```{r edgi dem cleaning}
 if(EDGI == TRUE){
   exclude_cols_dem <- c("ID",
@@ -277,7 +277,7 @@ if(EDGI == TRUE){
       demographics.o_levelsgcses_or_equivalent, # level of education - gcse
       demographics.cses_or_equivalent, # level of education - cse
       demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
-      Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
+      Ethnicity = demographics.what_is_your_ethnic_origin # Ethnicity (different to GLAD)
     ) %>%
     add_numeric(., exclude = exclude_cols_dem) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -317,8 +317,8 @@ summarytools::dfSummary(
 }
 ```
 
-# NBR demographics
-## Read in data
+## NBR
+### Read in data
 ```{r nbr dem cols}
 if(NBR == TRUE){
   nbr.dem.raw <- readRDS(file = paste0(data.raw_path, "/nbr/dem_nbr.rds"))
@@ -327,7 +327,7 @@ if(NBR == TRUE){
 }
 ```
 
-## Select variables
+### Select variables
 ```{r nbr dem cleaning}
 if(NBR == TRUE){
   exclude_cols_dem <- c("ID",
@@ -407,7 +407,7 @@ head(nbr.dem.raw.id$Birthdate)
 ```
 
 
-## Cohort information
+### Cohort information
 Information on INTERVAL, COMPARE, and STRIDES
 http://www.donorhealth-btru.nihr.ac.uk/studies/
 ```{r nbr cohort information}
@@ -556,11 +556,6 @@ if(RAMP == TRUE){
 }
 ```
 
-```{r}
-
-```
-
-
 
 # Select variables
 ```{r ramp dem cleaning}
@@ -623,8 +618,8 @@ if(RAMP == TRUE){
 Age outlier
 ```{r age outlier}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
-# define age limits 
-age_upper_limit = 117 # oldest person in the world is 117 years
+# Define age limits 
+age_upper_limit = 117 # The oldest person in the world is 117 years
 age_lower_limit = 16
 
 # identify number of outliers
@@ -648,8 +643,12 @@ dem.raw.id <- dem.raw.id %>%
       )
   )
 
-# Inspect colnames
-colnames(dem.raw.id)
+# Inspect variable
+dem.raw.id %>%
+  descr(
+    Age,
+    #stats = "common"
+    )
 }
 ```
 
@@ -788,7 +787,7 @@ dem.raw.id <- dem.raw.id %>%
   mutate(
     highest_education_prepan =
       recode_factor(
-        highest_education_numeric,
+        highest_education_prepan_numeric,
         `1` = "GCSE/CSE",
         `2` = "NVQ",
         `3` = "A-levels",
