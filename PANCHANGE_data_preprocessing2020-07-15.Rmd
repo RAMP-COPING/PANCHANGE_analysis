@@ -51,8 +51,8 @@ date = Sys.Date()
 
 # Specify cohort
 ```{r Specify cohort}
-GLAD = FALSE
-EDGI = TRUE
+GLAD = TRUE
+EDGI = FALSE
 NBR = FALSE
 RAMP = FALSE
 ```
@@ -1109,6 +1109,14 @@ employment.raw.id %>%
   freq(key_worker)
 }
 ```
+
+# Columns to exclude from add_numeric
+
+```{r cols to exclude}
+exclude_cols <- c("Sample",
+                  "ID")
+```
+
 
 # mhd
 
@@ -2342,13 +2350,6 @@ mhd.raw.categories <- mhd.raw.id %>%
 }
 ```
 
-
-# Columns to exclude from add_numeric
-
-```{r cols to exclude}
-exclude_cols <- c("Sample",
-                  "ID")
-```
 
 # Prepandemic
 
@@ -6012,7 +6013,7 @@ coping.glad.respiratory <- coping.glad.respiratory.raw.id
 dat.glad.coping <- left_join(
   x = dat.glad,
   y = coping.glad.respiratory,
-  by = "ID"
+  by = ("Sample", "ID")
 )
 ```
 
