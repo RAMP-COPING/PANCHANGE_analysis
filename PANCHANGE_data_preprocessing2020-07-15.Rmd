@@ -546,8 +546,8 @@ summarytools::dfSummary(
 }
 ```
 
-# RAMP demographics
-## Read in data
+## RAMP
+### Read in data
 ```{r ramp dem cols}
 if(RAMP == TRUE){
   ramp.dem.raw <- readRDS(file = paste0(data.raw_path, "/ramp/dem_ramp.rds"))
@@ -557,7 +557,7 @@ if(RAMP == TRUE){
 ```
 
 
-# Select variables
+### Select variables
 ```{r ramp dem cleaning}
 if(RAMP == TRUE){
   exclude_cols_dem <- c("ID",
@@ -614,7 +614,8 @@ if(RAMP == TRUE){
 ```
 
 
-#Clean Age variable
+# Demographics variable creation
+## Clean Age variable
 Age outlier
 ```{r age outlier}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
@@ -652,7 +653,7 @@ dem.raw.id %>%
 }
 ```
 
-# Categorise age into groups 
+## Categorise age into groups 
 In RAMP, age is indicated categorically: 16-18, 19-25, 26-35, 36-45, 46-55, 56-65, 66-70, 71-75, 76-80, 81-85, 86-90, 91-100, 100+
 Age categories in GLAD, EDGI and NBR have been created to reflect this
 ```{r Age groups}
@@ -706,64 +707,9 @@ dem.raw.id %>%
 
 ```
 
-# RAMP employment
-## Read in data
-```{r ramp emp cols}
-if(RAMP == TRUE){
-  ramp.employment.raw <- readRDS(file = paste0(data.raw_path, "/ramp/employment_ramp.rds"))
-  dim(ramp.employment.raw)
-  colnames(ramp.employment.raw)
-}
-```
+# employment
 
-
-# Select variables
-```{r ramp employment cleaning}
-if(RAMP == TRUE){
-  exclude_cols_employment <- c("ID",
-                        "Sample")
-
-ramp.employment.raw$externalDataReference <- ramp.employment.raw$`Login ID` #move Login ID to external data reference
-  
-ramp.employment.raw.id <- ramp.employment.raw %>%
-    drop_na(externalDataReference) %>% # Drop NAs
-    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-    mutate(ID = as.numeric(ID)) %>%
-    select(
-      Sample,
-      ID,
-      highest_education_ramp = employment.what_is_your_highest_level_of_education, #this is missing NVQ or equivalent which we have in GLAD-COPING
-      # EduYrs = employment.university_education_attend_school.txt, # Years in education - not in RAMP dataset
-      employment.government_work_key_workers
-    ) %>%
-    add_numeric(., exclude = exclude_cols_employment) %>%
-    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
-    mutate_if(is.numeric, ~na_if(., -99)) %>%
-    mutate_if(is.numeric, ~na_if(., -77)) %>%
-    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
-    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
-    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
-    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
-    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
-    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
-    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
-    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-  
-  # Inspect dimensions
-  dim(ramp.employment.raw.id)
-  # Inspect colnames
-  colnames(ramp.employment.raw.id)
-  #Differences
-  dim(ramp.employment.raw)[1]-dim(ramp.employment.raw.id)[1]
-}
-```
-
-```{r ramp copy emp}
-if(RAMP == TRUE){
-  employment.raw.id <- ramp.employment.raw.id
-}
-```
+## GLAD / EDGI
 
 # Highest education (prepandemic)
 Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
@@ -1229,6 +1175,9 @@ colnames(edgi.mhd.raw)
 
 ```{r edgi mhd cleaning}
 if(EDGI == TRUE) {
+  exclude_cols <- c("Sample",
+                  "ID")
+  
 edgi.mhd.raw.id <- edgi.mhd.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
