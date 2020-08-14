@@ -2227,6 +2227,7 @@ summarytools::dfSummary(
 Create new dataframe with the derived categories
 ++KT: do we want to keep individual diagnoses here as well?? 
 ```{r mhd categories}
+if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.categories <- mhd.raw.id %>%
   select(
     Sample,
@@ -2276,7 +2277,71 @@ mhd.raw.categories <- mhd.raw.id %>%
     comorbidity_total_count_factor_numeric,
     comorbidity_total_count_factor
     )
+}
 ```
+
+```{r mhd categories}
+if(EDGI == TRUE) {
+mhd.raw.categories <- mhd.raw.id %>%
+  select(
+    Sample,
+    ID,
+    anxiety_disorders_numeric,
+    anxiety_disorders,
+    mhd.specific_phobia_e.g._phobia_of_flying_numeric,
+    mhd.specific_phobia_e.g._phobia_of_flying,
+    mhd.social_anxiety_or_social_phobia_numeric,
+    mhd.social_anxiety_or_social_phobia,
+    agoraphobia_panic_disorder_numeric,
+    agoraphobia_panic_disorder,
+    depressive_disorders_numeric,
+    depressive_disorders,
+    eating_disorders_numeric,
+    eating_disorders,
+    obsessive_compulsive_disorders_numeric,
+    obsessive_compulsive_disorders,
+    psychotic_disorders_numeric,
+    psychotic_disorders,
+    mhd.mania_hypomania_bipolar_or_manicdepression_numeric,
+    mhd.mania_hypomania_bipolar_or_manicdepression,
+    mhd.posttraumatic_stress_disorder_ptsd_numeric,
+    mhd.posttraumatic_stress_disorder_ptsd,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder,
+    mhd.attention_deficit_hyperactivity_disorder_numeric,
+    mhd.attention_deficit_hyperactivity_disorder,
+    mhd.personality_disorder_numeric,
+    mhd.personality_disorder,
+#    personality_cluster_a_numeric,
+#    personality_cluster_a,
+#    personality_cluster_b_numeric,
+#    personality_cluster_b,
+#    personality_cluster_c_numeric,
+#    personality_cluster_c,
+    depression_and_anxiety_numeric,
+    depression_and_anxiety,
+    restricting_vs_binge_eating_eating_disorders_numeric,
+    restricting_vs_binge_eating_eating_disorders,
+    bipolar_and_schizophrenia_numeric,
+    bipolar_and_schizophrenia,
+    control_numeric,
+    control,
+    disorders_total_count,
+    comorbidity_total_count_numeric,
+    comorbidity_total_count_factor_numeric,
+    comorbidity_total_count_factor
+    ) %>%
+  add_column(
+    personality_cluster_a_numeric = NA_real_,
+    personality_cluster_a = NA_real_,
+    personality_cluster_b_numeric = NA_real_,
+    personality_cluster_b = NA_real_,
+    personality_cluster_c_numeric = NA_real_,
+    personality_cluster_c = NA_real_,    
+  )
+}
+```
+
 
 # Columns to exclude from add_numeric
 
@@ -2578,7 +2643,7 @@ if(EDGI == TRUE) {
       ID, # ID
       pcl.stressful_experience_repeated_images_prepan = pcl.stressful_experience_repeated_images,
       pcl.stressful_experience_upset_reminded_prepan = pcl.stressful_experience_upset_reminded,
-      pcl.stressful_situation_avoiding_activities_prepan = pcl.stressful_situation_avoiding_activities,
+      pcl.stressful_situation_avoiding_activities_prepan = pcl.stressful_situation_situations_reminded, # different to glad: pcl.stressful_situation_avoiding_activities,
       pcl.cut_people_feeling_distant_prepan = pcl.cut_people_feeling_distant,
       pcl.feeling_irritable_or_having_angry_outbursts_prepan = pcl.feeling_irritable_or_having_angry_outbursts,
       pcl.difficulty_concentrating_prepan = pcl.difficulty_concentrating
