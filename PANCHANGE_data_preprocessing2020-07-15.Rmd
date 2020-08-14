@@ -1833,7 +1833,7 @@ mhd.raw.id <- mhd.raw.id %>%
   mutate(
     obsessive_compulsive_disorders =
       recode_factor(obsessive_compulsive_disorders_numeric,
-                    "0" = "No obsessivecompulsive disorder",
+                    "0" = "No obsessive compulsive disorder",
                     "1" = "Obsessive compulsive disorder",
                     missing = NA_character_
                     )
@@ -3383,7 +3383,7 @@ if(NBR == TRUE) {
       Sample, # Sample
       ID, # ID
       startDate.coping = startDate, # Rename startDate
-      gad.problems_made_difficult_care, # Impairment
+      gad.problems_made_difficult_care = gad.problems_made_care_difficult, # Impairment (different from GLAD)
       gad.pandemic_felt_feelings, # Comparison to before the pandemic (retro)
       gad.feeling_nervous_anxious_or_on_edge_retro = gad.feeling_nervous_anxious_or_on_edge,
       gad.control_worrying_stop_retro = gad.control_worrying_stop,
@@ -3391,14 +3391,14 @@ if(NBR == TRUE) {
       gad.trouble_relaxing_retro = gad.trouble_relaxing,
       gad.sit_restless_hard_retro = gad.sit_restless_hard,
       gad.becoming_easily_annoyed_or_irritable_retro = gad.becoming_easily_annoyed_or_irritable,
-      gad.awful_feeling_afraid_happen_retro = gad.awful_feeling_afraid_happen,
+      gad.awful_feeling_afraid_happen_retro = gad.feeling_afraid_awful_happen, #Different from GLAD
       gad.feeling_nervous_anxious_or_on_edge_base = gad.feeling_nervous_anxious_or_on_edge.1,
       gad.control_worrying_stop_base = gad.control_worrying_stop.1,
       gad.worrying_too_much_about_different_things_base = gad.worrying_too_much_about_different_things.1,
       gad.trouble_relaxing_base = gad.trouble_relaxing.1,
       gad.sit_restless_hard_base = gad.sit_restless_hard.1,
       gad.becoming_easily_annoyed_or_irritable_base = gad.becoming_easily_annoyed_or_irritable.1,
-      gad.awful_feeling_afraid_happen_base = gad.awful_feeling_afraid_happen.1
+      gad.awful_feeling_afraid_happen_base = gad.feeling_afraid_awful_happen.1 #Different from GLAD
     ) %>%
     add_numeric(., exclude = exclude_cols_coping_nbr) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -3612,7 +3612,7 @@ coping.gad.raw.id %>%
   freq(na_per_person_gad_retro, cumul = F) #have a look at the frequency
 ```
 
-```{r coping gad base sum score if missigng items set to NA}
+```{r coping gad base sum score if missing items set to NA}
 coping.gad.raw.id <- coping.gad.raw.id %>%
   mutate(
     gad.sum_score_base =
@@ -3631,7 +3631,7 @@ coping.gad.raw.id %>%
 ```
 
 
-```{r coping gad retro sum score if missigng items set to NA}
+```{r coping gad retro sum score if missing items set to NA}
 coping.gad.raw.id <- coping.gad.raw.id %>%
   mutate(
     gad.sum_score_retro =
