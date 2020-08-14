@@ -4062,7 +4062,7 @@ coping.pcl.raw.id %>%
 ```
 
 
-```{r coping pcl base sum score if missigng items set to NA}
+```{r coping pcl base sum score if missing items set to NA}
 coping.pcl.raw.id <- coping.pcl.raw.id %>%
   mutate(
     pcl.sum_score_base =
@@ -4080,7 +4080,7 @@ coping.pcl.raw.id %>%
   descr(pcl.sum_score_base, stats = "common")
 ```
 
-```{r coping pcl retro sum score if missigng items set to NA}
+```{r coping pcl retro sum score if missing items set to NA}
 coping.pcl.raw.id <- coping.pcl.raw.id %>%
   mutate(
     pcl.sum_score_retro =
@@ -4310,14 +4310,14 @@ coping.nbr.phq.raw.id <- coping.nbr.phq.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    phq.problems_made_difficult_care,
+    phq.problems_made_difficult_care = phq.problems_made_care_difficult,
     phq.pandemic_felt_feelings,
     phq.little_interest_or_pleasure_in_doing_things_retro = phq.little_interest_or_pleasure_in_doing_things,
     phq.feeling_down_depressed_or_hopeless_retro = phq.feeling_down_depressed_or_hopeless,
     phq.staying_asleep_sleeping_trouble_retro = phq.staying_asleep_sleeping_trouble,
     phq.feeling_tired_or_having_little_energy_retro = phq.feeling_tired_or_having_little_energy,
     phq.poor_appetite_or_overeating_retro = phq.poor_appetite_or_overeating,
-    phq.feeling_bad_failure_family_retro = phq.feeling_bad_failure_family,
+    phq.feeling_bad_failure_family_retro = phq.family_feeling_bad_failure,
     phq.trouble_concentrating_reading_newspaper_retro = phq.trouble_concentrating_newspaper_reading, # differ NBR prepandemic
     phq.moving_fidgety_noticed_opposite_retro = phq.moving_fidgety_opposite_slowly, # differ NBR prepandemic
     phq.dead_hurting_thoughts_retro = phq.dead_hurting_thoughts,
@@ -4326,7 +4326,7 @@ coping.nbr.phq.raw.id <- coping.nbr.phq.raw %>%
     phq.staying_asleep_sleeping_trouble_base = phq.staying_asleep_sleeping_trouble.1,
     phq.feeling_tired_or_having_little_energy_base = phq.feeling_tired_or_having_little_energy.1,
     phq.poor_appetite_or_overeating_base = phq.poor_appetite_or_overeating.1,
-    phq.feeling_bad_failure_family_base = phq.feeling_bad_failure_family.1,
+    phq.feeling_bad_failure_family_base = phq.family_feeling_bad_failure.1,
     phq.trouble_concentrating_reading_newspaper_base = phq.trouble_concentrating_newspaper_reading.1, # differ NBR prepandemic
     phq.moving_fidgety_noticed_opposite_base = phq.moving_fidgety_opposite_slowly.1, # differ NBR prepandemic
     phq.dead_hurting_thoughts_base = phq.dead_hurting_thoughts.1
@@ -4589,7 +4589,7 @@ coping.phq.raw.id %>%
 ```
 
 
-```{r coping phq base sum score if missigng items set to NA}
+```{r coping phq base sum score if missing items set to NA}
 coping.phq.raw.id <- coping.phq.raw.id %>%
   mutate(
     phq.sum_score_base =
@@ -4608,7 +4608,7 @@ coping.phq.raw.id %>%
 ```
 
 8 items
-```{r phq base sum score if missigng items set to NA - 8 items}
+```{r phq base sum score if missing items set to NA - 8 items}
 coping.phq.raw.id <- coping.phq.raw.id %>%
   mutate(
     phq.sum_score_8items_base =
@@ -4625,7 +4625,7 @@ coping.phq.raw.id %>%
 ```
 
 
-```{r coping phq retro sum score if missigng items set to NA}
+```{r coping phq retro sum score if missing items set to NA}
 coping.phq.raw.id <- coping.phq.raw.id %>%
   mutate(
     phq.sum_score_retro =
@@ -4644,7 +4644,7 @@ coping.phq.raw.id %>%
 ```
 
 8 items
-```{r phq retro sum score if missigng items set to NA - 8 items}
+```{r phq retro sum score if missing items set to NA - 8 items}
 coping.phq.raw.id <- coping.phq.raw.id %>%
   mutate(
     phq.sum_score_8items_retro =
