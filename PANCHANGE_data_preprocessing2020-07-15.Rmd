@@ -707,11 +707,8 @@ dem.raw.id %>%
 
 ```
 
-# employment
+## Highest education (prepandemic, GLAD & EDGI)
 
-## GLAD / EDGI
-
-# Highest education (prepandemic)
 Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
 Assumes University degree > A level > NVQ > GCSE/O Level/CSE
 ```{r Highest education prepandemic}
@@ -769,7 +766,7 @@ summarytools::dfSummary(
 }
 ```
 
-# Employment/highest education (baseline)
+# Employment
 
 ## GLAD
 ### Read in data
@@ -1029,7 +1026,7 @@ if(RAMP == TRUE){
 }
 ```
 
-## Highest education (baseline)
+## Highest education (baseline, GLAD, EDGI, NBR, RAMP)
 Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
 Assumes University degree > A level > NVQ > GCSE/O Level/CSE
 ```{r Highest education baseline}
