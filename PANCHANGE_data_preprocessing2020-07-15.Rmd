@@ -1131,7 +1131,8 @@ glad.mhd.raw.id <- glad.mhd.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    starts_with("mhd.")
+    starts_with("mhd."),
+    mhd.bingeeating_disorder = mhd.psychological_overeating_or_bingeeating
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -1212,11 +1213,88 @@ dim(edgi.mhd.raw)[1]-dim(edgi.mhd.raw.id)[1]
 }
 ```
 
-```{r edgi mhd copy}
+```{r edgi mhd2 cols}
 if(EDGI == TRUE) {
-  mhd.raw.id <- edgi.mhd.raw.id
+edgi.mhd2.raw <- readRDS(file = paste0(data.raw_path,"/edgi/dem_edgi.rds"))
+dim(edgi.mhd2.raw)
+colnames(edgi.mhd2.raw)
 }
 ```
+
+```{r edgi mhd2 cleaning}
+if(EDGI == TRUE){
+  exclude_cols_mhd2 <- c("ID",
+                        "Sample",
+                        "startDate.prepandemic",
+                        "Age_uncleaned",
+                        "EduYrs")
+  
+  edgi.mhd2.raw.id <- edgi.mhd2.raw %>%
+    drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID)) %>%
+    select(
+      Sample, # Sample
+      ID, # ID
+    mhd.depression = demographics.depression,
+    mhd.pregnancy_depression = demographics.pregnancy_depression,
+    mhd.premenstrual_dysphoric_disorder_pmdd = demographics.premenstrual_dysphoric_disorder_pmdd,
+    mhd.anxiety_nerves_or_generalised_anxiety_disorder = demographics.anxiety_nerves_or_generalised_anxiety_disorder,
+    mhd.social_anxiety_or_social_phobia = demographics.social_anxiety_or_social_phobia,
+    mhd.specific_phobia_e.g._phobia_of_flying = demographics.specific_phobia_e.g._fear_of_flying, # fear instead of phobia
+    mhd.agoraphobia = demographics.agoraphobia,
+    mhd.panic_disorder = demographics.panic_disorder,
+    mhd.panic_attacks = demographics.panic_attacks,
+    mhd.obsessivecompulsive_disorder_ocd = demographics.obsessivecompulsive_disorder_ocd,
+    mhd.obsessive_compulsive_related_disorders = demographics.obsessive_compulsive_related_disorders,
+    mhd.mania_hypomania_bipolar_or_manicdepression = demographics.mania_hypomania_bipolar_or_manicdepression,
+    mhd.schizophrenia = demographics.schizophrenia,
+    mhd.type_psychosis_psychotic_illness = demographics.psychosis_type_psychotic_illness, # word type psychosis changed order compared to GLAD 
+#    mhd.personality_disorder_diagnosed = demographics.personality_disorder_diagnosed, # does not exist in EDGI because it is multiple choice in EDGI
+    mhd.posttraumatic_stress_disorder_ptsd = demographics.posttraumatic_stress_disorder_ptsd,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder = demographics.autism_spectrum_disorder_asd, # different name in EDGI
+    ) %>%
+    add_column(
+      mhd.schizoaffective_disorder = NA_character_
+    ) %>%
+    add_numeric(., exclude = exclude_cols_mhd2) %>%
+    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+    mutate_if(is.numeric, ~na_if(., -99)) %>%
+    mutate_if(is.numeric, ~na_if(., -77)) %>%
+    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+  
+  # Inspect dimensions
+  dim(edgi.mhd2.raw.id)
+  # Inspect colnames
+  colnames(edgi.mhd2.raw.id)
+  #Differences
+  dim(edgi.mhd2.raw)[1]-dim(edgi.mhd2.raw.id)[1]
+}
+```
+
+```{r edgi combine mhd copy}
+if(EDGI == TRUE){
+mhd.raw.id <- left_join(
+  x = edgi.mhd.raw.id,
+  y = edgi.mhd2.raw.id,
+  by = c("Sample", "ID")
+  )
+
+# Inspect dimensions
+dim(mhd.raw.id)
+# Inspect colnames
+colnames(mhd.raw.id)
+}
+```
+
 
 ## NBR
 ```{r nbr mhd cols}
@@ -1245,17 +1323,12 @@ nbr.mhd.raw.id <- nbr.mhd.raw %>%
     ID, # ID
     starts_with("mhd."),
     mhd.specific_phobia_e.g._phobia_of_flying = mhd.specific_phobia_e.g._fear_of_flying,
-    mhd.specific_phobia_e.g._phobia_of_flying_numeric = mhd.specific_phobia_e.g._fear_of_flying_numeric,
-    mhd.psychological_overeating_or_bingeeating = mhd.bingeeating_disorder,
-    mhd.psychological_overeating_or_bingeeating_numeric = mhd.bingeeating_disorder_numeric,
     mhd.type_psychosis_psychotic_illness = mhd.psychosis_type_psychotic_illness,
-    mhd.type_psychosis_psychotic_illness_numeric = mhd.psychosis_type_psychotic_illness_numeric,
     mhd.autism_aspergers_or_autistic_spectrum_disorder = mhd.autism_spectrum_disorder_asd,
-    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric = mhd.autism_spectrum_disorder_asd_numeric,
-    mhd.anorexia_nervosa_unc,
-    mhd.atypical_anorexia_nervosa_unc,
-    mhd.bulimia_nervosa_unc,
-    mhd.psychological_overeating_or_bingeeating_unc
+    mhd.anorexia_nervosa_unc = mhd.anorexia_nervosa,
+    mhd.atypical_anorexia_nervosa_unc = mhd.atypical_anorexia_nervosa,
+    mhd.bulimia_nervosa_unc = mhd.bulimia_nervosa,
+    mhd.psychological_overeating_or_bingeeating_unc = mhd.psychological_overeating_or_bingeeating
   ) %>%
   add_column(
     mhd.schizoaffective_disorder = NA, #NBR doesn't ask about schizoaffective disorder. This means the column das not exist in the data set
@@ -1526,17 +1599,17 @@ mhd.raw.id <- mhd.raw.id %>%
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
                 mhd.bulimia_nervosa_unc_numeric == "0" ~ 0,
                 mhd.bulimia_nervosa_unc_numeric == "1" ~ 1),
-    mhd.psychological_overeating_or_bingeeating_numeric =
+    mhd.bingeeating_disorder_numeric =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
-                mhd.psychological_overeating_or_bingeeating_unc_numeric == "0" ~ 0,
-                mhd.psychological_overeating_or_bingeeating_unc_numeric == "1" ~ 1)
+                mhd.bingeeating_disorder_numeric == "0" ~ 0,
+                mhd.bingeeating_disorder_numeric == "1" ~ 1)
     )
 }
 
 ```
 
 ```{r mhd eating_disorders}
-if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
+if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     eating_disorders_numeric =
@@ -1544,11 +1617,50 @@ mhd.raw.id <- mhd.raw.id %>%
         mhd.anorexia_nervosa_numeric == "1" ~ 1,
         mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1,
         mhd.bulimia_nervosa_numeric == "1" ~ 1,
-        mhd.psychological_overeating_or_bingeeating_numeric == "1" ~ 1,
+        mhd.bingeeating_disorder_numeric == "1" ~ 1,
         (mhd.anorexia_nervosa_numeric == "0" &
         mhd.atypical_anorexia_nervosa_numeric == "0" &
         mhd.bulimia_nervosa_numeric == "0" &
-        mhd.psychological_overeating_or_bingeeating_numeric == "0") ~ 0
+        mhd.bingeeating_disorder_numeric == "0") ~ 0
+      )
+  )
+
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    eating_disorders =
+      recode_factor(eating_disorders_numeric,
+                    "0" = "No eating disorder",
+                    "1" = "Eating disorder",
+                    missing = NA_character_
+                    )
+  )
+
+mhd.raw.id %>%
+  freq(eating_disorders,
+       cumul = F)
+}
+```
+
+For EDGI does not include other eating disorders, such as purging disorder, rumination disorder, ARFID, or Pica
+```{r edgi mhd eating_disorders}
+if(EDGI == TRUE) {
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    eating_disorders_numeric =
+      case_when(
+        mhd.anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.bulimia_nervosa_numeric == "1" ~ 1,
+        mhd.atypical_bulimia_nervosa_numeric == "1" ~ 1, # additional diagnosis in EDGI but not in GLAD
+        mhd.bingeeating_disorder_numeric == "1" ~ 1,
+        mhd.atypical_bingeeating_disorder_numeric == "1" ~ 1, # additional diagnosis in EDGI
+        (mhd.anorexia_nervosa_numeric == "0" &
+        mhd.atypical_anorexia_nervosa_numeric == "0" &
+          mhd.atypical_anorexia_nervosa_numeric == "0" &
+        mhd.bulimia_nervosa_numeric == "0" &
+          mhd.atypical_bulimia_nervosa_numeric == "0" &
+        mhd.bingeeating_disorder_numeric == "0" &
+          mhd.atypical_bingeeating_disorder_numeric == "0") ~ 0
       )
   )
 
@@ -1572,7 +1684,7 @@ mhd.raw.id %>%
 Eating disorders with binge eating vs eating disorders without
 Caveat: Anorexia nervosa can have binge eating as well. Therefore, this would need an additional variable from the ED100K
 ```{r mhd restricting_vs_binge_eating_eating_disorders}
-if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
+if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     restricting_vs_binge_eating_eating_disorders_numeric =
@@ -1580,11 +1692,11 @@ mhd.raw.id <- mhd.raw.id %>%
         mhd.anorexia_nervosa_numeric == "1" ~ 1,
         mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1,
         mhd.bulimia_nervosa_numeric == "1" ~ 2,
-        mhd.psychological_overeating_or_bingeeating_numeric == "1" ~ 2,
+        mhd.bingeeating_disorder_numeric == "1" ~ 2,
         (mhd.anorexia_nervosa_numeric == "0" &
         mhd.atypical_anorexia_nervosa_numeric == "0" &
         mhd.bulimia_nervosa_numeric == "0" &
-        mhd.psychological_overeating_or_bingeeating_numeric == "0") ~ 0
+        mhd.bingeeating_disorder_numeric == "0") ~ 0
       )
   )
 
@@ -1605,7 +1717,44 @@ mhd.raw.id %>%
 }
 ```
 
+```{r mhd restricting_vs_binge_eating_eating_disorders}
+if(EDGI == TRUE) {
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    restricting_vs_binge_eating_eating_disorders_numeric =
+      case_when(
+        mhd.anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.bulimia_nervosa_numeric == "1" ~ 2,
+        mhd.atypical_bulimia_nervosa_numeric == "1" ~ 2, # additional diagnosis in EDGI but not in GLAD
+        mhd.bingeeating_disorder_numeric == "1" ~ 2,
+        mhd.atypical_bingeeating_disorder_numeric == "1" ~ 2, # additional diagnosis in EDGI
+        (mhd.anorexia_nervosa_numeric == "0" &
+        mhd.atypical_anorexia_nervosa_numeric == "0" &
+          mhd.atypical_anorexia_nervosa_numeric == "0" &
+        mhd.bulimia_nervosa_numeric == "0" &
+          mhd.atypical_bulimia_nervosa_numeric == "0" &
+        mhd.bingeeating_disorder_numeric == "0" &
+          mhd.atypical_bingeeating_disorder_numeric == "0") ~ 0
+      )
+  )
 
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    restricting_vs_binge_eating_eating_disorders =
+      recode_factor(restricting_vs_binge_eating_eating_disorders_numeric,
+                    "0" = "No eating disorder",
+                    "1" = "Anorexia nervosa",
+                    "2" = "Eating disorder with binge eating",
+                    missing = NA_character_
+                    )
+  )
+
+mhd.raw.id %>%
+  freq(restricting_vs_binge_eating_eating_disorders,
+       cumul = F)
+}
+```
 
 ```{r Check eating_disorders}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
@@ -1618,11 +1767,33 @@ mhd.raw.id %>%
     mhd.anorexia_nervosa_numeric,
     mhd.atypical_anorexia_nervosa_numeric,
     mhd.bulimia_nervosa_numeric,
-    mhd.psychological_overeating_or_bingeeating_numeric,
+    mhd.bingeeating_disorder_numeric,
     mhd.anorexia_nervosa,
     mhd.atypical_anorexia_nervosa,
     mhd.bulimia_nervosa,
-    mhd.psychological_overeating_or_bingeeating
+    mhd.bingeeating_disorder
+  )
+}
+```
+
+```{r Check eating_disorders}
+if(EDGI == TRUE) {
+mhd.raw.id %>%
+  select(
+    eating_disorders,
+    eating_disorders_numeric,
+    restricting_vs_binge_eating_eating_disorders,
+    restricting_vs_binge_eating_eating_disorders_numeric,
+    mhd.anorexia_nervosa_numeric,
+    mhd.atypical_anorexia_nervosa_numeric,
+    mhd.bulimia_nervosa_numeric,
+    mhd.bingeeating_disorder_numeric,
+    mhd.anorexia_nervosa,
+    mhd.atypical_anorexia_nervosa,
+    mhd.bulimia_nervosa,
+    mhd.atypical_bulimia_nervosa,
+    mhd.bingeeating_disorder,
+    mhd.atypical_bingeeating_disorder,
   )
 }
 ```
