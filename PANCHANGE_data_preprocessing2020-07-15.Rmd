@@ -52,9 +52,9 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = FALSE
+EDGI = TRUE
 NBR = FALSE
-RAMP = TRUE
+RAMP = FALSE
 ```
 
 
@@ -72,8 +72,8 @@ Load packages
 library(knitr)
 library(summarytools)
 library(psych)
+library(eeptools) # Needed to calculate age from birthdate
 library(tidyverse)
-library(eeptools) #Needed to calculate age from birthdate
 ```
 
 # Colour palettes
@@ -162,8 +162,9 @@ Note: All COPING surveys are separate surveys
 source("../PANCHANGE_raw_path.R")
 ```
 
-# GLAD demographics
-## Read in data
+# Demographics
+## GLAD
+### Read in data
 ```{r glad dem cols}
 if(GLAD == TRUE){
 glad.dem.raw <- readRDS(file = paste0(data.raw_path, "/glad/dem_glad.rds"))
@@ -172,7 +173,7 @@ colnames(glad.dem.raw)
 }
 ```
 
-## Select variables
+### Select variables
 ```{r glad dem cleaning}
 if(GLAD == TRUE){
 exclude_cols_dem <- c("ID",
@@ -185,12 +186,11 @@ glad.dem.raw.id <- glad.dem.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.prepandemic = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
          Sample, # Sample
          ID, # ID
-         startDate.prepandemic, #Date when participant signed up to glad
+         startDate.prepandemic = startDate, #Date when participant signed up to glad
          Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
          Gender = demographics.which_gender_do_you_identify_with, # Gender
          Sex = demographics.select_questionnaire_items_medical, #Sex
@@ -240,8 +240,8 @@ summarytools::dfSummary(
 }
 ```
 
-# EDGI demographics
-## Read in data
+## EDGI
+### Read in data
 ```{r edgi dem cols}
 if(EDGI == TRUE){
   edgi.dem.raw <- readRDS(file = paste0(data.raw_path, "/edgi/dem_edgi.rds"))
@@ -250,7 +250,7 @@ if(EDGI == TRUE){
 }
 ```
 
-## Select variables
+### Select variables
 ```{r edgi dem cleaning}
 if(EDGI == TRUE){
   exclude_cols_dem <- c("ID",
@@ -263,12 +263,11 @@ if(EDGI == TRUE){
     drop_na(externalDataReference) %>% # Drop NAs
     distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
     separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-    mutate(ID = as.numeric(ID),
-           startDate.edgi = startDate) %>% # Rename startDate
+    mutate(ID = as.numeric(ID)) %>%
     select(
       Sample, # Sample
       ID, # ID
-      startDate.edgi, #Date when participant signed up to edgi
+      startDate.prepandemic = startDate, #Date when participant signed up to edgi
       Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
       Gender = demographics.what_gender_do_you_identify_with, # Gender (which [GLAD] vs what [EDGI])
       Sex = demographics.select_questionnaire_items_birth, #Sex (different to GLAD)
@@ -278,7 +277,7 @@ if(EDGI == TRUE){
       demographics.o_levelsgcses_or_equivalent, # level of education - gcse
       demographics.cses_or_equivalent, # level of education - cse
       demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
-      Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
+      Ethnicity = demographics.what_is_your_ethnic_origin # Ethnicity (different to GLAD)
     ) %>%
     add_numeric(., exclude = exclude_cols_dem) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -318,8 +317,8 @@ summarytools::dfSummary(
 }
 ```
 
-# NBR demographics
-## Read in data
+## NBR
+### Read in data
 ```{r nbr dem cols}
 if(NBR == TRUE){
   nbr.dem.raw <- readRDS(file = paste0(data.raw_path, "/nbr/dem_nbr.rds"))
@@ -328,12 +327,11 @@ if(NBR == TRUE){
 }
 ```
 
-## Select variables
+### Select variables
 ```{r nbr dem cleaning}
 if(NBR == TRUE){
   exclude_cols_dem <- c("ID",
                         "Sample",
-                        "startDate.nbr",
                         "Age_uncleaned",
                         "EduYrs")
   
@@ -342,12 +340,11 @@ if(NBR == TRUE){
     distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
     separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
     separate(ID.intm, into = "ID", sep = 7) %>%
-    mutate(ID = as.numeric(ID),
-           startDate.coping = startDate) %>% # Rename startDate
+    mutate(ID = as.numeric(ID)) %>%
     select(
       Sample, # Sample
       ID, # ID
-      startDate.coping, #Date when participant signed up to nbr
+#      startDate.coping, # Date when participant signed up to nbr (is in the coping gad chunk)
 #      Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
       Birthyear_unc = demographics.year, # Birthyear
       Birthmonth = demographics.month, #Birthmonth
@@ -410,7 +407,7 @@ head(nbr.dem.raw.id$Birthdate)
 ```
 
 
-## Cohort information
+### Cohort information
 Information on INTERVAL, COMPARE, and STRIDES
 http://www.donorhealth-btru.nihr.ac.uk/studies/
 ```{r nbr cohort information}
@@ -427,9 +424,8 @@ if(NBR == TRUE){
 
 ```{r nbr cohort cleaning}
 if(NBR == TRUE) {
-exclude_cols_dem <- c("ID",
+exclude_cols_cohort_nbr <- c("ID",
                   "Sample",
-                  "startDate.coping",
                   "Age_uncleaned",
                   "EduYrs")
 
@@ -439,14 +435,12 @@ nbr.cohort.raw.id <- nbr.cohort.raw %>%
   separate(`NBR ID`, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
   separate(ID.intm, into = "ID", sep = 7) %>%
   mutate(
-    ID = as.numeric(ID),
-#         startDate.coping = startDate
-         ) %>% # Rename startDate
+    ID = as.numeric(ID)) %>%
   select(
          Sample, # Sample
          ID, # ID
          Cohort = cohort, #cohort information
-#         startDate.coping, #Date when participant signed up to NBR COPING
+#         startDate.coping, #Date when participant signed up to NBR COPING (is in the coping gad chunk)
 #         Age_uncleaned = age, # Age
 #         Gender = gender, # Gender
 #         Sex = demographics.select_questionnaire_items_medical, #Sex
@@ -458,7 +452,7 @@ nbr.cohort.raw.id <- nbr.cohort.raw %>%
 #         demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
          Ethnicity.unc = ethnicity # Ethnicity
          ) %>%
-  add_numeric(., exclude = exclude_cols_dem) %>%
+  add_numeric(., exclude = exclude_cols_cohort_nbr) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -552,8 +546,8 @@ summarytools::dfSummary(
 }
 ```
 
-# RAMP demographics
-## Read in data
+## RAMP
+### Read in data
 ```{r ramp dem cols}
 if(RAMP == TRUE){
   ramp.dem.raw <- readRDS(file = paste0(data.raw_path, "/ramp/dem_ramp.rds"))
@@ -562,18 +556,12 @@ if(RAMP == TRUE){
 }
 ```
 
-```{r}
 
-```
-
-
-
-# Select variables
+### Select variables
 ```{r ramp dem cleaning}
 if(RAMP == TRUE){
   exclude_cols_dem <- c("ID",
-                        "Sample",
-                        "startDate.ramp")
+                        "Sample")
   
 ramp.dem.raw$externalDataReference <- ramp.dem.raw$`Login ID` #move Login ID to external data reference
     
@@ -581,20 +569,19 @@ ramp.dem.raw$externalDataReference <- ramp.dem.raw$`Login ID` #move Login ID to 
     drop_na(externalDataReference) %>% # Drop NAs
     distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
     separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-    mutate(ID = as.numeric(ID),
-           startDate.ramp = startDate) %>% # Rename startDate
+    mutate(ID = as.numeric(ID)) %>%
     select(
       Sample, # Sample
       ID, # ID
-      startDate.ramp, #Date when participant signed up to ramp
+#      startDate.coping, #Date when participant signed up to ramp  (is in the coping gad chunk)
       age_category = demographics.how_old_are_you, # Age
       Gender = demographics.which_gender_do_you_identify_with, # Gender (what [GLAD] vs which [RAMP])
-     # EduYrs = demographics.university_education_attend_school.txt, # Years in education - not in RAMP dataset
-     # demographics.college_or_university_degree, # level of education - univeristy - level of education is in employment file
-     # demographics.a_levelsas_levels_or_equivalent, # level of education - alevel
-    #  demographics.o_levelsgcses_or_equivalent, # level of education - gcse
-     # demographics.cses_or_equivalent, # level of education - cse
-     # demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+#     EduYrs = demographics.university_education_attend_school.txt, # Years in education - not in RAMP dataset
+#     demographics.college_or_university_degree, # level of education - univeristy - level of education is in employment file
+#     demographics.a_levelsas_levels_or_equivalent, # level of education - alevel
+#     demographics.o_levelsgcses_or_equivalent, # level of education - gcse
+#     demographics.cses_or_equivalent, # level of education - cse
+#     demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
       Transgender_uncleaned = demographics.do_you_identify_as_transgender,
       Ethnicity = demographics.what_is_your_ethnic_origin # Ethnicity
     ) %>%
@@ -627,12 +614,13 @@ if(RAMP == TRUE){
 ```
 
 
-#Clean Age variable
+# Demographics variable creation
+## Clean Age variable
 Age outlier
 ```{r age outlier}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
-# define age limits 
-age_upper_limit = 117 # oldest person in the world is 117 years
+# Define age limits 
+age_upper_limit = 117 # The oldest person in the world is 117 years
 age_lower_limit = 16
 
 # identify number of outliers
@@ -656,12 +644,16 @@ dem.raw.id <- dem.raw.id %>%
       )
   )
 
-# Inspect colnames
-colnames(dem.raw.id)
+# Inspect variable
+dem.raw.id %>%
+  descr(
+    Age,
+    #stats = "common"
+    )
 }
 ```
 
-# Categorise age into groups 
+## Categorise age into groups 
 In RAMP, age is indicated categorically: 16-18, 19-25, 26-35, 36-45, 46-55, 56-65, 66-70, 71-75, 76-80, 81-85, 86-90, 91-100, 100+
 Age categories in GLAD, EDGI and NBR have been created to reflect this
 ```{r Age groups}
@@ -715,69 +707,8 @@ dem.raw.id %>%
 
 ```
 
-# RAMP employment
-## Read in data
-```{r ramp emp cols}
-if(RAMP == TRUE){
-  ramp.employment.raw <- readRDS(file = paste0(data.raw_path, "/ramp/employment_ramp.rds"))
-  dim(ramp.employment.raw)
-  colnames(ramp.employment.raw)
-}
-```
+## Highest education (prepandemic, GLAD & EDGI)
 
-
-# Select variables
-```{r ramp employment cleaning}
-if(RAMP == TRUE){
-  exclude_cols_employment <- c("ID",
-                        "Sample",
-                        "startDate.ramp")
-
-ramp.employment.raw$externalDataReference <- ramp.employment.raw$`Login ID` #move Login ID to external data reference
-  
-ramp.employment.raw.id <- ramp.employment.raw %>%
-    drop_na(externalDataReference) %>% # Drop NAs
-    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-    mutate(ID = as.numeric(ID),
-           startDate.ramp = startDate) %>% # Rename startDate
-    select(
-      Sample,
-      ID,
-      startDate.ramp,
-      highest_education_ramp = employment.what_is_your_highest_level_of_education, #this is missing NVQ or equivalent which we have in GLAD-COPING
-      # EduYrs = employment.university_education_attend_school.txt, # Years in education - not in RAMP dataset
-      employment.government_work_key_workers
-    ) %>%
-    add_numeric(., exclude = exclude_cols_employment) %>%
-    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
-    mutate_if(is.numeric, ~na_if(., -99)) %>%
-    mutate_if(is.numeric, ~na_if(., -77)) %>%
-    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
-    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
-    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
-    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
-    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
-    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
-    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
-    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-  
-  # Inspect dimensions
-  dim(ramp.employment.raw.id)
-  # Inspect colnames
-  colnames(ramp.employment.raw.id)
-  #Differences
-  dim(ramp.employment.raw)[1]-dim(ramp.employment.raw.id)[1]
-}
-```
-
-```{r ramp copy emp}
-if(RAMP == TRUE){
-  employment.raw.id <- ramp.employment.raw.id
-}
-```
-
-# Highest education (prepandemic)
 Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
 Assumes University degree > A level > NVQ > GCSE/O Level/CSE
 ```{r Highest education prepandemic}
@@ -799,7 +730,7 @@ dem.raw.id <- dem.raw.id %>%
   mutate(
     highest_education_prepan =
       recode_factor(
-        highest_education_numeric,
+        highest_education_prepan_numeric,
         `1` = "GCSE/CSE",
         `2` = "NVQ",
         `3` = "A-levels",
@@ -835,7 +766,7 @@ summarytools::dfSummary(
 }
 ```
 
-# Employment/highest education (baseline)
+# Employment
 
 ## GLAD
 ### Read in data
@@ -984,10 +915,10 @@ exclude_cols_employment <- c("ID",
 nbr.employment.raw.id <- nbr.employment.raw %>%
   drop_na(subjectid) %>% # Drop NAs
   distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  #mutate(
-  #  ID = as.numeric(ID) ##NBR IDs have a letter at the end so can't be coerced to numeric
-  #  ) %>% 
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(
+    ID = as.numeric(ID)) %>%
   select(
          Sample, # Sample
          ID, # ID
@@ -1095,7 +1026,7 @@ if(RAMP == TRUE){
 }
 ```
 
-## Highest education (baseline)
+## Highest education (baseline, GLAD, EDGI, NBR, RAMP)
 Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
 Assumes University degree > A level > NVQ > GCSE/O Level/CSE
 ```{r Highest education baseline}
@@ -1196,12 +1127,12 @@ glad.mhd.raw.id <- glad.mhd.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.prepandemic = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
-    starts_with("mhd.")
+    starts_with("mhd."),
+    mhd.bingeeating_disorder = mhd.psychological_overeating_or_bingeeating
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -1242,16 +1173,23 @@ colnames(edgi.mhd.raw)
 
 ```{r edgi mhd cleaning}
 if(EDGI == TRUE) {
+  exclude_cols <- c("Sample",
+                  "ID")
+  
 edgi.mhd.raw.id <- edgi.mhd.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.prepandemic = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
-    starts_with("mhd.")
+    mhd.anorexia_nervosa,
+    mhd.atypical_anorexia_nervosa,
+    mhd.bulimia_nervosa,
+    mhd.atypical_bulimia_nervosa,
+    mhd.bingeeating_disorder,
+    mhd.atypical_bingeeating_disorder,
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -1275,11 +1213,88 @@ dim(edgi.mhd.raw)[1]-dim(edgi.mhd.raw.id)[1]
 }
 ```
 
-```{r edgi mhd copy}
+```{r edgi mhd2 cols}
 if(EDGI == TRUE) {
-  mhd.raw.id <- edgi.mhd.raw.id
+edgi.mhd2.raw <- readRDS(file = paste0(data.raw_path,"/edgi/dem_edgi.rds"))
+dim(edgi.mhd2.raw)
+colnames(edgi.mhd2.raw)
 }
 ```
+
+```{r edgi mhd2 cleaning}
+if(EDGI == TRUE){
+  exclude_cols_mhd2 <- c("ID",
+                        "Sample",
+                        "startDate.prepandemic",
+                        "Age_uncleaned",
+                        "EduYrs")
+  
+  edgi.mhd2.raw.id <- edgi.mhd2.raw %>%
+    drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID)) %>%
+    select(
+      Sample, # Sample
+      ID, # ID
+    mhd.depression = demographics.depression,
+    mhd.pregnancy_depression = demographics.pregnancy_depression,
+    mhd.premenstrual_dysphoric_disorder_pmdd = demographics.premenstrual_dysphoric_disorder_pmdd,
+    mhd.anxiety_nerves_or_generalised_anxiety_disorder = demographics.anxiety_nerves_or_generalised_anxiety_disorder,
+    mhd.social_anxiety_or_social_phobia = demographics.social_anxiety_or_social_phobia,
+    mhd.specific_phobia_e.g._phobia_of_flying = demographics.specific_phobia_e.g._fear_of_flying, # fear instead of phobia
+    mhd.agoraphobia = demographics.agoraphobia,
+    mhd.panic_disorder = demographics.panic_disorder,
+    mhd.panic_attacks = demographics.panic_attacks,
+    mhd.obsessivecompulsive_disorder_ocd = demographics.obsessivecompulsive_disorder_ocd,
+    mhd.obsessive_compulsive_related_disorders = demographics.obsessive_compulsive_related_disorders,
+    mhd.mania_hypomania_bipolar_or_manicdepression = demographics.mania_hypomania_bipolar_or_manicdepression,
+    mhd.schizophrenia = demographics.schizophrenia,
+    mhd.type_psychosis_psychotic_illness = demographics.psychosis_type_psychotic_illness, # word type psychosis changed order compared to GLAD 
+#    mhd.personality_disorder_diagnosed = demographics.personality_disorder_diagnosed, # does not exist in EDGI because it is multiple choice in EDGI
+    mhd.posttraumatic_stress_disorder_ptsd = demographics.posttraumatic_stress_disorder_ptsd,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder = demographics.autism_spectrum_disorder_asd, # different name in EDGI
+    ) %>%
+    add_column(
+      mhd.schizoaffective_disorder = NA_character_
+    ) %>%
+    add_numeric(., exclude = exclude_cols_mhd2) %>%
+    mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+    mutate_if(is.numeric, ~na_if(., -99)) %>%
+    mutate_if(is.numeric, ~na_if(., -77)) %>%
+    mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+    mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+    mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+    mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+  
+  # Inspect dimensions
+  dim(edgi.mhd2.raw.id)
+  # Inspect colnames
+  colnames(edgi.mhd2.raw.id)
+  #Differences
+  dim(edgi.mhd2.raw)[1]-dim(edgi.mhd2.raw.id)[1]
+}
+```
+
+```{r edgi combine mhd copy}
+if(EDGI == TRUE){
+mhd.raw.id <- left_join(
+  x = edgi.mhd.raw.id,
+  y = edgi.mhd2.raw.id,
+  by = c("Sample", "ID")
+  )
+
+# Inspect dimensions
+dim(mhd.raw.id)
+# Inspect colnames
+colnames(mhd.raw.id)
+}
+```
+
 
 ## NBR
 ```{r nbr mhd cols}
@@ -1290,6 +1305,7 @@ colnames(nbr.mhd.raw)
 }
 ```
 
+
 ```{r nbr mhd cleaning}
 if(NBR == TRUE) {
 exclude_cols <- c("Sample",
@@ -1298,14 +1314,26 @@ exclude_cols <- c("Sample",
 nbr.mhd.raw.id <- nbr.mhd.raw %>%
   drop_na(subjectid) %>% # Drop NAs
   distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(#ID = as.numeric(ID), ## NBR IDs end with letters so can't be numeric
-         startDate.prepandemic = startDate) %>% # Rename startDate
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(
+    ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
-    starts_with("mhd.")
+    starts_with("mhd."),
+    mhd.specific_phobia_e.g._phobia_of_flying = mhd.specific_phobia_e.g._fear_of_flying,
+    mhd.type_psychosis_psychotic_illness = mhd.psychosis_type_psychotic_illness,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder = mhd.autism_spectrum_disorder_asd,
+    mhd.anorexia_nervosa_unc = mhd.anorexia_nervosa,
+    mhd.atypical_anorexia_nervosa_unc = mhd.atypical_anorexia_nervosa,
+    mhd.bulimia_nervosa_unc = mhd.bulimia_nervosa,
+    mhd.psychological_overeating_or_bingeeating_unc = mhd.psychological_overeating_or_bingeeating
   ) %>%
+  add_column(
+    mhd.schizoaffective_disorder = NA, #NBR doesn't ask about schizoaffective disorder. This means the column das not exist in the data set
+    mhd.schizoaffective_disorder_numeric = NA
+  )
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
@@ -1319,29 +1347,12 @@ nbr.mhd.raw.id <- nbr.mhd.raw %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
 
-# Rename columns that differ from GLAD
-nbr.mhd.raw.id_renamed <- nbr.mhd.raw.id %>% 
-  mutate(
-    mhd.specific_phobia_e.g._phobia_of_flying = mhd.specific_phobia_e.g._fear_of_flying,
-    mhd.specific_phobia_e.g._phobia_of_flying_numeric = mhd.specific_phobia_e.g._fear_of_flying_numeric,
-    mhd.psychological_overeating_or_bingeeating = mhd.bingeeating_disorder,
-    mhd.psychological_overeating_or_bingeeating_numeric = mhd.bingeeating_disorder_numeric,
-    mhd.type_psychosis_psychotic_illness = mhd.psychosis_type_psychotic_illness,
-    mhd.type_psychosis_psychotic_illness_numeric = mhd.psychosis_type_psychotic_illness_numeric,
-    mhd.autism_aspergers_or_autistic_spectrum_disorder = mhd.autism_spectrum_disorder_asd,
-    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric = mhd.autism_spectrum_disorder_asd_numeric
-    ) %>% 
-  add_column(
-    mhd.schizoaffective_disorder = NA, #NBR doesn't ask about schizoaffective
-    mhd.schizoaffective_disorder_numeric = NA
-  )
-
 # Inspect dimensions
-dim(nbr.mhd.raw.id_renamed)
+dim(nbr.mhd.raw.id)
 # Inspect colnames
-colnames(nbr.mhd.raw.id_renamed)
+colnames(nbr.mhd.raw.id)
 #Differences
-dim(nbr.mhd.raw)[1]-dim(nbr.mhd.raw.id_renamed)[1]
+dim(nbr.mhd.raw)[1]-dim(nbr.mhd.raw.id)[1]
 }
 ```
 
@@ -1351,7 +1362,7 @@ if(NBR == TRUE) {
 }
 ```
 
-# Grouping mental health disorders
+## Grouping mental health disorders
 *#Disorder groupings - from COPING/RAMP analysis minutes*
 1. Depressive disorder group: major depression, antenatal/postnatal depression, premenstrual depression. The logic for this has been double checked for males - KT/MD. 
 2. Anxiety group: generalised anxiety, social anxiety, specific phobia, agoraphobia, panic_disorder, panic_attacks. 
@@ -1380,6 +1391,7 @@ No-diagnosis group
 2. Specific: breakdown by type of prior anxiety (& related) disorder diagnosis
 3. Breakdown by COVID or not (using COVIDENCE/Zoe algorithm)
 
+### Depressive disorders
 ```{r mhd depressive_disorders}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE)
 mhd.raw.id <- mhd.raw.id %>%
@@ -1424,7 +1436,7 @@ mhd.raw.id %>%
 }
 ```
 
-Anxiety disorders group
+### Anxiety disorders
 ```{r mhd anxiety_disorders}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
@@ -1567,8 +1579,9 @@ mhd.raw.id %>%
 }
 ```
 
-Eating disorders group
+### Eating disorders
 
+There is routing questionnaire if participants have been diagnosed with an eating disorder and afterwards they get asked the specific disorders. Therefore, mhd.suspected_eating_disorder_diagnosed_numeric needs to be recoded as 0 otherwise they would be NAs.
 ```{r nbr cleaning eating disorders}
 if(NBR == TRUE) {
 #Recode as 0 if ppt respnds no to screening question (mhd.suspected_eating_disorder_diagnosed_numeric)
@@ -1576,27 +1589,27 @@ mhd.raw.id <- mhd.raw.id %>%
   mutate(
     mhd.anorexia_nervosa_numeric =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
-                mhd.anorexia_nervosa_numeric == "0" ~ 0,
-                mhd.anorexia_nervosa_numeric == "1" ~ 1),
+                mhd.anorexia_nervosa_unc_numeric == "0" ~ 0,
+                mhd.anorexia_nervosa_unc_numeric == "1" ~ 1),
     mhd.atypical_anorexia_nervosa_numeric =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
-                mhd.atypical_anorexia_nervosa_numeric == "0" ~ 0,
-                mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1),
+                mhd.atypical_anorexia_nervosa_unc_numeric == "0" ~ 0,
+                mhd.atypical_anorexia_nervosa_unc_numeric == "1" ~ 1),
     mhd.bulimia_nervosa_numeric =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
-                mhd.bulimia_nervosa_numeric == "0" ~ 0,
-                mhd.bulimia_nervosa_numeric == "1" ~ 1),
-    mhd.psychological_overeating_or_bingeeating_numeric =
+                mhd.bulimia_nervosa_unc_numeric == "0" ~ 0,
+                mhd.bulimia_nervosa_unc_numeric == "1" ~ 1),
+    mhd.bingeeating_disorder_numeric =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
-                mhd.psychological_overeating_or_bingeeating_numeric == "0" ~ 0,
-                mhd.psychological_overeating_or_bingeeating_numeric == "1" ~ 1)
+                mhd.bingeeating_disorder_numeric == "0" ~ 0,
+                mhd.bingeeating_disorder_numeric == "1" ~ 1)
     )
 }
 
 ```
 
 ```{r mhd eating_disorders}
-if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
+if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     eating_disorders_numeric =
@@ -1604,11 +1617,50 @@ mhd.raw.id <- mhd.raw.id %>%
         mhd.anorexia_nervosa_numeric == "1" ~ 1,
         mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1,
         mhd.bulimia_nervosa_numeric == "1" ~ 1,
-        mhd.psychological_overeating_or_bingeeating_numeric == "1" ~ 1,
+        mhd.bingeeating_disorder_numeric == "1" ~ 1,
         (mhd.anorexia_nervosa_numeric == "0" &
         mhd.atypical_anorexia_nervosa_numeric == "0" &
         mhd.bulimia_nervosa_numeric == "0" &
-        mhd.psychological_overeating_or_bingeeating_numeric == "0") ~ 0
+        mhd.bingeeating_disorder_numeric == "0") ~ 0
+      )
+  )
+
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    eating_disorders =
+      recode_factor(eating_disorders_numeric,
+                    "0" = "No eating disorder",
+                    "1" = "Eating disorder",
+                    missing = NA_character_
+                    )
+  )
+
+mhd.raw.id %>%
+  freq(eating_disorders,
+       cumul = F)
+}
+```
+
+For EDGI does not include other eating disorders, such as purging disorder, rumination disorder, ARFID, or Pica
+```{r edgi mhd eating_disorders}
+if(EDGI == TRUE) {
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    eating_disorders_numeric =
+      case_when(
+        mhd.anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.bulimia_nervosa_numeric == "1" ~ 1,
+        mhd.atypical_bulimia_nervosa_numeric == "1" ~ 1, # additional diagnosis in EDGI but not in GLAD
+        mhd.bingeeating_disorder_numeric == "1" ~ 1,
+        mhd.atypical_bingeeating_disorder_numeric == "1" ~ 1, # additional diagnosis in EDGI
+        (mhd.anorexia_nervosa_numeric == "0" &
+        mhd.atypical_anorexia_nervosa_numeric == "0" &
+          mhd.atypical_anorexia_nervosa_numeric == "0" &
+        mhd.bulimia_nervosa_numeric == "0" &
+          mhd.atypical_bulimia_nervosa_numeric == "0" &
+        mhd.bingeeating_disorder_numeric == "0" &
+          mhd.atypical_bingeeating_disorder_numeric == "0") ~ 0
       )
   )
 
@@ -1632,7 +1684,7 @@ mhd.raw.id %>%
 Eating disorders with binge eating vs eating disorders without
 Caveat: Anorexia nervosa can have binge eating as well. Therefore, this would need an additional variable from the ED100K
 ```{r mhd restricting_vs_binge_eating_eating_disorders}
-if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
+if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     restricting_vs_binge_eating_eating_disorders_numeric =
@@ -1640,11 +1692,11 @@ mhd.raw.id <- mhd.raw.id %>%
         mhd.anorexia_nervosa_numeric == "1" ~ 1,
         mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1,
         mhd.bulimia_nervosa_numeric == "1" ~ 2,
-        mhd.psychological_overeating_or_bingeeating_numeric == "1" ~ 2,
+        mhd.bingeeating_disorder_numeric == "1" ~ 2,
         (mhd.anorexia_nervosa_numeric == "0" &
         mhd.atypical_anorexia_nervosa_numeric == "0" &
         mhd.bulimia_nervosa_numeric == "0" &
-        mhd.psychological_overeating_or_bingeeating_numeric == "0") ~ 0
+        mhd.bingeeating_disorder_numeric == "0") ~ 0
       )
   )
 
@@ -1665,7 +1717,44 @@ mhd.raw.id %>%
 }
 ```
 
+```{r mhd restricting_vs_binge_eating_eating_disorders}
+if(EDGI == TRUE) {
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    restricting_vs_binge_eating_eating_disorders_numeric =
+      case_when(
+        mhd.anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.bulimia_nervosa_numeric == "1" ~ 2,
+        mhd.atypical_bulimia_nervosa_numeric == "1" ~ 2, # additional diagnosis in EDGI but not in GLAD
+        mhd.bingeeating_disorder_numeric == "1" ~ 2,
+        mhd.atypical_bingeeating_disorder_numeric == "1" ~ 2, # additional diagnosis in EDGI
+        (mhd.anorexia_nervosa_numeric == "0" &
+        mhd.atypical_anorexia_nervosa_numeric == "0" &
+          mhd.atypical_anorexia_nervosa_numeric == "0" &
+        mhd.bulimia_nervosa_numeric == "0" &
+          mhd.atypical_bulimia_nervosa_numeric == "0" &
+        mhd.bingeeating_disorder_numeric == "0" &
+          mhd.atypical_bingeeating_disorder_numeric == "0") ~ 0
+      )
+  )
 
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    restricting_vs_binge_eating_eating_disorders =
+      recode_factor(restricting_vs_binge_eating_eating_disorders_numeric,
+                    "0" = "No eating disorder",
+                    "1" = "Anorexia nervosa",
+                    "2" = "Eating disorder with binge eating",
+                    missing = NA_character_
+                    )
+  )
+
+mhd.raw.id %>%
+  freq(restricting_vs_binge_eating_eating_disorders,
+       cumul = F)
+}
+```
 
 ```{r Check eating_disorders}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
@@ -1678,16 +1767,38 @@ mhd.raw.id %>%
     mhd.anorexia_nervosa_numeric,
     mhd.atypical_anorexia_nervosa_numeric,
     mhd.bulimia_nervosa_numeric,
-    mhd.psychological_overeating_or_bingeeating_numeric,
+    mhd.bingeeating_disorder_numeric,
     mhd.anorexia_nervosa,
     mhd.atypical_anorexia_nervosa,
     mhd.bulimia_nervosa,
-    mhd.psychological_overeating_or_bingeeating
+    mhd.bingeeating_disorder
   )
 }
 ```
 
-Obsessive compulsive disorders
+```{r Check eating_disorders}
+if(EDGI == TRUE) {
+mhd.raw.id %>%
+  select(
+    eating_disorders,
+    eating_disorders_numeric,
+    restricting_vs_binge_eating_eating_disorders,
+    restricting_vs_binge_eating_eating_disorders_numeric,
+    mhd.anorexia_nervosa_numeric,
+    mhd.atypical_anorexia_nervosa_numeric,
+    mhd.bulimia_nervosa_numeric,
+    mhd.bingeeating_disorder_numeric,
+    mhd.anorexia_nervosa,
+    mhd.atypical_anorexia_nervosa,
+    mhd.bulimia_nervosa,
+    mhd.atypical_bulimia_nervosa,
+    mhd.bingeeating_disorder,
+    mhd.atypical_bingeeating_disorder,
+  )
+}
+```
+
+### Obsessive compulsive disorders
 ```{r mhd obsessive_compulsive_disorders}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
@@ -1732,10 +1843,10 @@ mhd.raw.id %>%
 }
 ```
 
-Psychotic disorders group
-[63] "mhd.schizophrenia_numeric"                                 
-[64] "mhd.schizoaffective_disorder_numeric"                      
-[65] "mhd.type_psychosis_psychotic_illness_numeric" 
+### Psychotic disorders
+"mhd.schizophrenia_numeric"                                 
+"mhd.schizoaffective_disorder_numeric"                      
+"mhd.type_psychosis_psychotic_illness_numeric" 
 ```{r mhd psychotic_disorders}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
@@ -1825,7 +1936,7 @@ mhd.raw.id %>%
 }
 ```
 
-Personality disorder groups
+### Personality disorders
 ++KT: For all cluster coding chunks - have added other clusters as == 0, so that they are not coerced into NAs. 
 Cluster A
 1. Paranoid                         28 ( 1.0%)
@@ -1973,7 +2084,7 @@ mhd.raw.id %>%
   )
 ```
 
-Control grouping
+### Controls
 These individuals have no self report diagnosis of any kind that we measure. 
 ```{r mhd control}
 mhd.raw.id <- mhd.raw.id %>%
@@ -2010,7 +2121,7 @@ mhd.raw.id %>%
        cumul = F)
 ```
 
-Total disorder count
+## Total disorder count
 ```{r disorders_total_count}
 disorder_columns <- c(
     "depressive_disorders_numeric",
@@ -2037,7 +2148,7 @@ mhd.raw.id %>%
        cumul = F)
 ```
 
-Comorbidity count
+## Comorbidity count
 ```{r cormorbidity_total_count}
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
@@ -2083,6 +2194,7 @@ mhd.raw.id %>%
        cumul = F)
 ```
 
+## Inspection
 ```{r glad mhd head}
 head(mhd.raw.id)
 ```
@@ -2149,7 +2261,7 @@ mhd.raw.categories <- mhd.raw.id %>%
     )
 ```
 
-# exclude cols 
+# Columns to exclude from add_numeric
 
 ```{r cols to exclude}
 exclude_cols <- c("Sample",
@@ -2176,8 +2288,7 @@ glad.gad.raw.id <- glad.gad.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.prepandemic = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -2234,8 +2345,7 @@ edgi.gad.raw.id <- edgi.gad.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.edgi = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -2391,8 +2501,7 @@ glad.pcl.raw.id <- glad.pcl.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.prepandemic = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -2446,8 +2555,7 @@ if(EDGI == TRUE) {
     drop_na(externalDataReference) %>% # Drop NAs
     distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
     separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-    mutate(ID = as.numeric(ID),
-           startDate.prepandemic = startDate) %>% # Rename startDate
+    mutate(ID = as.numeric(ID)) %>%
     select(
       Sample, # Sample
       ID, # ID
@@ -2596,8 +2704,7 @@ glad.phq.raw.id <- glad.phq.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.prepandemic = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -2653,8 +2760,7 @@ if(EDGI == TRUE){
     drop_na(externalDataReference) %>% # Drop NAs
     distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
     separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-    mutate(ID = as.numeric(ID),
-           startDate.prepandemic = startDate) %>% # Rename startDate
+    mutate(ID = as.numeric(ID)) %>%
     select(
       Sample, # Sample
       ID, # ID
@@ -2855,8 +2961,7 @@ glad.ocir.raw.id <- glad.ocir.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.prepandemic = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID),) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -2921,8 +3026,7 @@ if(EDGI == TRUE){
     drop_na(externalDataReference) %>% # Drop NAs
     distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
     separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-    mutate(ID = as.numeric(ID),
-           startDate.prepandemic = startDate) %>% # Rename startDate
+    mutate(ID = as.numeric(ID)) %>%
     select(
       Sample, # Sample
       ID, # ID
@@ -3255,11 +3359,11 @@ if(NBR == TRUE) {
   )
   
   coping.nbr.gad.raw.id <- coping.nbr.gad.raw %>%
-    drop_na(externalDataReference) %>% # Drop NAs
-    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-    mutate(ID = as.numeric(ID)
-    ) %>% 
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(ID = as.numeric(ID)) %>% 
     select(
       Sample, # Sample
       ID, # ID
@@ -3573,8 +3677,7 @@ coping.glad.pcl.raw.id <- coping.glad.pcl.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.coping = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -3647,8 +3750,7 @@ coping.edgi.pcl.raw.id <- coping.edgi.pcl.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.coping = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -3718,11 +3820,11 @@ Note: Retro for the PCL does not mean retrospective
 ```{r coping nbr pcl cleaning}
 if(NBR == TRUE) {
 coping.nbr.pcl.raw.id <- coping.nbr.pcl.raw %>%
-  drop_na(externalDataReference) %>% # Drop NAs
-  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.coping = startDate) %>% # Rename startDate
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -3795,8 +3897,7 @@ coping.ramp.pcl.raw.id <- coping.ramp.pcl.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.coping = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -4186,11 +4287,11 @@ Will need to double check these namings once we have the new cleaned data -- KT.
 ```{r coping nbr phq cleaning}
 if(NBR == TRUE) {
 coping.nbr.phq.raw.id <- coping.nbr.phq.raw %>%
-  drop_na(externalDataReference) %>% # Drop NAs
-  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID)
-  ) %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -4588,8 +4689,7 @@ coping.glad.ocir.raw.id <- coping.glad.ocir.raw %>%
   drop_na(recipientFirstName) %>% # Drop NAs
   distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(recipientFirstName, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.coping = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -4686,8 +4786,7 @@ coping.edgi.ocir.raw.id <- coping.edgi.ocir.raw %>%
   drop_na(recipientFirstName) %>% # Drop NAs
   distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(recipientFirstName, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.coping = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -4783,9 +4882,9 @@ if(NBR == TRUE) {
 coping.nbr.ocir.raw.id <- coping.nbr.ocir.raw %>%
   drop_na(recipientFirstName) %>% # Drop NAs
   distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(recipientFirstName, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.coping = startDate) %>% # Rename startDate
+  separate(recipientFirstName, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -4882,8 +4981,7 @@ coping.ramp.ocir.raw.id <- coping.ramp.ocir.raw %>%
   drop_na(recipientFirstName) %>% # Drop NAs
   distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(recipientFirstName, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.coping = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
