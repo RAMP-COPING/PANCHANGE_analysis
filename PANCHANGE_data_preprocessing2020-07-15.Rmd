@@ -1765,7 +1765,7 @@ mhd.raw.id %>%
 }
 ```
 
-Personality disorder groups
+### Personality disorders
 ++KT: For all cluster coding chunks - have added other clusters as == 0, so that they are not coerced into NAs. 
 Cluster A
 1. Paranoid                         28 ( 1.0%)
@@ -1913,7 +1913,7 @@ mhd.raw.id %>%
   )
 ```
 
-Control grouping
+### Controls
 These individuals have no self report diagnosis of any kind that we measure. 
 ```{r mhd control}
 mhd.raw.id <- mhd.raw.id %>%
@@ -1950,7 +1950,7 @@ mhd.raw.id %>%
        cumul = F)
 ```
 
-Total disorder count
+## Total disorder count
 ```{r disorders_total_count}
 disorder_columns <- c(
     "depressive_disorders_numeric",
@@ -1977,7 +1977,7 @@ mhd.raw.id %>%
        cumul = F)
 ```
 
-Comorbidity count
+## Comorbidity count
 ```{r cormorbidity_total_count}
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
@@ -2023,6 +2023,7 @@ mhd.raw.id %>%
        cumul = F)
 ```
 
+## Inspection
 ```{r glad mhd head}
 head(mhd.raw.id)
 ```
@@ -2089,7 +2090,7 @@ mhd.raw.categories <- mhd.raw.id %>%
     )
 ```
 
-# exclude cols 
+# Columns to exclude from add_numeric
 
 ```{r cols to exclude}
 exclude_cols <- c("Sample",
