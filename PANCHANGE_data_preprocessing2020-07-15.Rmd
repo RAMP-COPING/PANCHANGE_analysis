@@ -1672,10 +1672,10 @@ mhd.raw.id %>%
 }
 ```
 
-Psychotic disorders group
-[63] "mhd.schizophrenia_numeric"                                 
-[64] "mhd.schizoaffective_disorder_numeric"                      
-[65] "mhd.type_psychosis_psychotic_illness_numeric" 
+### Psychotic disorders
+"mhd.schizophrenia_numeric"                                 
+"mhd.schizoaffective_disorder_numeric"                      
+"mhd.type_psychosis_psychotic_illness_numeric" 
 ```{r mhd psychotic_disorders}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
