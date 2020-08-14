@@ -52,9 +52,9 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = FALSE
+EDGI = TRUE
 NBR = FALSE
-RAMP = TRUE
+RAMP = FALSE
 ```
 
 
@@ -72,8 +72,8 @@ Load packages
 library(knitr)
 library(summarytools)
 library(psych)
+library(eeptools) # Needed to calculate age from birthdate
 library(tidyverse)
-library(eeptools) #Needed to calculate age from birthdate
 ```
 
 # Colour palettes
@@ -162,8 +162,9 @@ Note: All COPING surveys are separate surveys
 source("../PANCHANGE_raw_path.R")
 ```
 
-# GLAD demographics
-## Read in data
+# Demographics
+## GLAD
+### Read in data
 ```{r glad dem cols}
 if(GLAD == TRUE){
 glad.dem.raw <- readRDS(file = paste0(data.raw_path, "/glad/dem_glad.rds"))
@@ -172,7 +173,7 @@ colnames(glad.dem.raw)
 }
 ```
 
-## Select variables
+### Select variables
 ```{r glad dem cleaning}
 if(GLAD == TRUE){
 exclude_cols_dem <- c("ID",
@@ -240,8 +241,8 @@ summarytools::dfSummary(
 }
 ```
 
-# EDGI demographics
-## Read in data
+## EDGI
+### Read in data
 ```{r edgi dem cols}
 if(EDGI == TRUE){
   edgi.dem.raw <- readRDS(file = paste0(data.raw_path, "/edgi/dem_edgi.rds"))
@@ -264,11 +265,11 @@ if(EDGI == TRUE){
     distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
     separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
     mutate(ID = as.numeric(ID),
-           startDate.edgi = startDate) %>% # Rename startDate
+           startDate.prepandemic = startDate) %>% # Rename startDate
     select(
       Sample, # Sample
       ID, # ID
-      startDate.edgi, #Date when participant signed up to edgi
+      startDate.prepandemic, #Date when participant signed up to edgi
       Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
       Gender = demographics.what_gender_do_you_identify_with, # Gender (which [GLAD] vs what [EDGI])
       Sex = demographics.select_questionnaire_items_birth, #Sex (different to GLAD)
@@ -333,7 +334,7 @@ if(NBR == TRUE){
 if(NBR == TRUE){
   exclude_cols_dem <- c("ID",
                         "Sample",
-                        "startDate.nbr",
+                        "startDate.coping",
                         "Age_uncleaned",
                         "EduYrs")
   
@@ -427,9 +428,8 @@ if(NBR == TRUE){
 
 ```{r nbr cohort cleaning}
 if(NBR == TRUE) {
-exclude_cols_dem <- c("ID",
+exclude_cols_cohort_nbr <- c("ID",
                   "Sample",
-                  "startDate.coping",
                   "Age_uncleaned",
                   "EduYrs")
 
@@ -439,9 +439,7 @@ nbr.cohort.raw.id <- nbr.cohort.raw %>%
   separate(`NBR ID`, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
   separate(ID.intm, into = "ID", sep = 7) %>%
   mutate(
-    ID = as.numeric(ID),
-#         startDate.coping = startDate
-         ) %>% # Rename startDate
+    ID = as.numeric(ID)) %>%
   select(
          Sample, # Sample
          ID, # ID
@@ -458,7 +456,7 @@ nbr.cohort.raw.id <- nbr.cohort.raw %>%
 #         demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
          Ethnicity.unc = ethnicity # Ethnicity
          ) %>%
-  add_numeric(., exclude = exclude_cols_dem) %>%
+  add_numeric(., exclude = exclude_cols_cohort_nbr) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -573,7 +571,7 @@ if(RAMP == TRUE){
 if(RAMP == TRUE){
   exclude_cols_dem <- c("ID",
                         "Sample",
-                        "startDate.ramp")
+                        "startDate.coping")
   
 ramp.dem.raw$externalDataReference <- ramp.dem.raw$`Login ID` #move Login ID to external data reference
     
@@ -582,11 +580,11 @@ ramp.dem.raw$externalDataReference <- ramp.dem.raw$`Login ID` #move Login ID to 
     distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
     separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
     mutate(ID = as.numeric(ID),
-           startDate.ramp = startDate) %>% # Rename startDate
+           startDate.coping = startDate) %>% # Rename startDate
     select(
       Sample, # Sample
       ID, # ID
-      startDate.ramp, #Date when participant signed up to ramp
+      startDate.coping, #Date when participant signed up to ramp
       age_category = demographics.how_old_are_you, # Age
       Gender = demographics.which_gender_do_you_identify_with, # Gender (what [GLAD] vs which [RAMP])
      # EduYrs = demographics.university_education_attend_school.txt, # Years in education - not in RAMP dataset
@@ -730,8 +728,7 @@ if(RAMP == TRUE){
 ```{r ramp employment cleaning}
 if(RAMP == TRUE){
   exclude_cols_employment <- c("ID",
-                        "Sample",
-                        "startDate.ramp")
+                        "Sample")
 
 ramp.employment.raw$externalDataReference <- ramp.employment.raw$`Login ID` #move Login ID to external data reference
   
@@ -739,12 +736,10 @@ ramp.employment.raw.id <- ramp.employment.raw %>%
     drop_na(externalDataReference) %>% # Drop NAs
     distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
     separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-    mutate(ID = as.numeric(ID),
-           startDate.ramp = startDate) %>% # Rename startDate
+    mutate(ID = as.numeric(ID)) %>%
     select(
       Sample,
       ID,
-      startDate.ramp,
       highest_education_ramp = employment.what_is_your_highest_level_of_education, #this is missing NVQ or equivalent which we have in GLAD-COPING
       # EduYrs = employment.university_education_attend_school.txt, # Years in education - not in RAMP dataset
       employment.government_work_key_workers
@@ -984,10 +979,10 @@ exclude_cols_employment <- c("ID",
 nbr.employment.raw.id <- nbr.employment.raw %>%
   drop_na(subjectid) %>% # Drop NAs
   distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  #mutate(
-  #  ID = as.numeric(ID) ##NBR IDs have a letter at the end so can't be coerced to numeric
-  #  ) %>% 
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(
+    ID = as.numeric(ID)) %>%
   select(
          Sample, # Sample
          ID, # ID
@@ -1196,8 +1191,7 @@ glad.mhd.raw.id <- glad.mhd.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.prepandemic = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -1246,8 +1240,7 @@ edgi.mhd.raw.id <- edgi.mhd.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.prepandemic = startDate) %>% # Rename startDate
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -1298,9 +1291,10 @@ exclude_cols <- c("Sample",
 nbr.mhd.raw.id <- nbr.mhd.raw %>%
   drop_na(subjectid) %>% # Drop NAs
   distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(#ID = as.numeric(ID), ## NBR IDs end with letters so can't be numeric
-         startDate.prepandemic = startDate) %>% # Rename startDate
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(
+    ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -3255,11 +3249,11 @@ if(NBR == TRUE) {
   )
   
   coping.nbr.gad.raw.id <- coping.nbr.gad.raw %>%
-    drop_na(externalDataReference) %>% # Drop NAs
-    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-    mutate(ID = as.numeric(ID)
-    ) %>% 
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(ID = as.numeric(ID)) %>% 
     select(
       Sample, # Sample
       ID, # ID
@@ -3718,11 +3712,11 @@ Note: Retro for the PCL does not mean retrospective
 ```{r coping nbr pcl cleaning}
 if(NBR == TRUE) {
 coping.nbr.pcl.raw.id <- coping.nbr.pcl.raw %>%
-  drop_na(externalDataReference) %>% # Drop NAs
-  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.coping = startDate) %>% # Rename startDate
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -4186,11 +4180,11 @@ Will need to double check these namings once we have the new cleaned data -- KT.
 ```{r coping nbr phq cleaning}
 if(NBR == TRUE) {
 coping.nbr.phq.raw.id <- coping.nbr.phq.raw %>%
-  drop_na(externalDataReference) %>% # Drop NAs
-  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID)
-  ) %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -4783,9 +4777,9 @@ if(NBR == TRUE) {
 coping.nbr.ocir.raw.id <- coping.nbr.ocir.raw %>%
   drop_na(recipientFirstName) %>% # Drop NAs
   distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(recipientFirstName, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.coping = startDate) %>% # Rename startDate
+  separate(recipientFirstName, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
