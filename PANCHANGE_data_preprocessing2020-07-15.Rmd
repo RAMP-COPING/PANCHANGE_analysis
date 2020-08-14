@@ -1248,6 +1248,7 @@ if(EDGI == TRUE){
     mhd.panic_attacks = demographics.panic_attacks,
     mhd.obsessivecompulsive_disorder_ocd = demographics.obsessivecompulsive_disorder_ocd,
     mhd.obsessive_compulsive_related_disorders = demographics.obsessive_compulsive_related_disorders,
+    mhd.body_dysmorphic_disorder_bdd_numeric = demographics.body_dysmorphic_disorder,
     mhd.mania_hypomania_bipolar_or_manicdepression = demographics.mania_hypomania_bipolar_or_manicdepression,
     mhd.schizophrenia = demographics.schizophrenia,
     mhd.type_psychosis_psychotic_illness = demographics.psychosis_type_psychotic_illness, # word type psychosis changed order compared to GLAD 
@@ -1838,7 +1839,9 @@ mhd.raw.id %>%
     mhd.obsessivecompulsive_disorder_ocd,
     mhd.obsessivecompulsive_disorder_ocd_numeric,
     mhd.obsessive_compulsive_related_disorders,
-    mhd.obsessive_compulsive_related_disorders_numeric
+    mhd.obsessive_compulsive_related_disorders_numeric,
+    mhd.body_dysmorphic_disorder_bdd,
+    mhd.body_dysmorphic_disorder_bdd_numeric
   )
 }
 ```
