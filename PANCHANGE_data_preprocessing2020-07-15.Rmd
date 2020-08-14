@@ -3113,23 +3113,23 @@ if(EDGI == TRUE){
       Sample, # Sample
       ID, # ID
       ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan = ocir.i_repeatedly_check_doors_windows_drawers_etc.,
-      ocir.arranged_things_change_upset_prepan = ocir.arranged_things_change_upset,
-      ocir.repeat_feel_numbers_prepan = ocir.repeat_feel_numbers,
-      ocir.clean_simply_wash_feel_prepan = ocir.clean_simply_wash_feel,
-      ocir.mind_upset_unpleasant_thoughts_prepan = ocir.mind_upset_unpleasant_thoughts,
-      ocir.afraid_avoid_throwing_things_prepan = ocir.afraid_avoid_throwing_things,
-      ocir.light_switches_water_taps_prepan = ocir.light_switches_water_taps,
-      ocir.arranged_things_prepan = ocir.arranged_things,
-      ocir.good_feel_bad_numbers_prepan = ocir.good_feel_bad_numbers,
-      ocir.hands_longer_wash_prepan = ocir.hands_longer_wash,
+      ocir.arranged_things_change_upset_prepan = ocir.arranged_properly_objects_upset, # different GLAD: ocir.arranged_things_change_upset,
+      ocir.repeat_feel_numbers_prepan = ocir.repeat_feel_numbers.87, # ocir.repeat_feel_numbers,
+      ocir.clean_simply_wash_feel_prepan = ocir.clean_simply_wash_feel.9, # ocir.clean_simply_wash_feel,
+      ocir.mind_upset_unpleasant_thoughts_prepan = ocir.mind_upset_unpleasant_thoughts.11, # ocir.mind_upset_unpleasant_thoughts,
+      ocir.afraid_avoid_throwing_things_prepan = ocir.afraid_avoid_throwing_things.7, # ocir.afraid_avoid_throwing_things,
+      ocir.light_switches_water_taps_prepan = ocir.light_switches_water_taps.7, # ocir.light_switches_water_taps,
+      ocir.arranged_things_prepan = ocir.arranged_things.32, # ocir.arranged_things,
+      ocir.good_feel_bad_numbers_prepan = ocir.good_feel_bad_numbers.60, # ocir.good_feel_bad_numbers,
+      ocir.hands_longer_wash_prepan = ocir.hands_longer_wash.23, # ocir.hands_longer_wash,
       ocir.saved_things_prepan = ocir.saved_things,
-      ocir.frequently_difficulty_rid_nasty_prepan = ocir.frequently_difficulty_rid_nasty,
+      ocir.frequently_difficulty_rid_nasty_prepan = ocir.frequently_difficulty_rid_nasty.16, # ocir.frequently_difficulty_rid_nasty,
       ocir.i_check_things_more_often_than_necessary_prepan = ocir.i_check_things_more_often_than_necessary.,
       ocir.arranged_properly_objects_upset_prepan = ocir.arranged_properly_objects_upset,
-      ocir.feel_compelled_count_things_prepan = ocir.feel_compelled_count_things,
-      ocir.strangers_touch_touched_difficult_prepan = ocir.strangers_touch_touched_difficult,
-      ocir.control_difficult_find_thoughts_prepan = ocir.control_difficult_find_thoughts,
-      ocir.i_collect_things_i_dont_need_prepan = ocir.i_collect_things_i_dont_need
+      ocir.feel_compelled_count_things_prepan = ocir.feel_compelled_count_things.27, # ocir.feel_compelled_count_things,
+      ocir.strangers_touch_touched_difficult_prepan = ocir.strangers_touch_touched_difficult.33, # ocir.strangers_touch_touched_difficult,
+      ocir.control_difficult_find_thoughts_prepan = ocir.control_difficult_find_thoughts.30, #ocir.control_difficult_find_thoughts,
+      ocir.i_collect_things_i_dont_need_prepan = ocir.i_collect_things_i_dont_need.348, # ocir.i_collect_things_i_dont_need
     ) %>%
     add_numeric(., exclude = exclude_cols) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
