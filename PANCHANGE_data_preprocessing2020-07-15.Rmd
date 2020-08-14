@@ -1183,7 +1183,12 @@ edgi.mhd.raw.id <- edgi.mhd.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    starts_with("mhd.")
+    mhd.anorexia_nervosa,
+    mhd.atypical_anorexia_nervosa,
+    mhd.bulimia_nervosa,
+    mhd.atypical_bulimia_nervosa,
+    mhd.bingeeating_disorder,
+    mhd.atypical_bingeeating_disorder,
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -1222,6 +1227,7 @@ colnames(nbr.mhd.raw)
 }
 ```
 
+
 ```{r nbr mhd cleaning}
 if(NBR == TRUE) {
 exclude_cols <- c("Sample",
@@ -1237,8 +1243,24 @@ nbr.mhd.raw.id <- nbr.mhd.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    starts_with("mhd.")
+    starts_with("mhd."),
+    mhd.specific_phobia_e.g._phobia_of_flying = mhd.specific_phobia_e.g._fear_of_flying,
+    mhd.specific_phobia_e.g._phobia_of_flying_numeric = mhd.specific_phobia_e.g._fear_of_flying_numeric,
+    mhd.psychological_overeating_or_bingeeating = mhd.bingeeating_disorder,
+    mhd.psychological_overeating_or_bingeeating_numeric = mhd.bingeeating_disorder_numeric,
+    mhd.type_psychosis_psychotic_illness = mhd.psychosis_type_psychotic_illness,
+    mhd.type_psychosis_psychotic_illness_numeric = mhd.psychosis_type_psychotic_illness_numeric,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder = mhd.autism_spectrum_disorder_asd,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric = mhd.autism_spectrum_disorder_asd_numeric,
+    mhd.anorexia_nervosa_unc,
+    mhd.atypical_anorexia_nervosa_unc,
+    mhd.bulimia_nervosa_unc,
+    mhd.psychological_overeating_or_bingeeating_unc
   ) %>%
+  add_column(
+    mhd.schizoaffective_disorder = NA, #NBR doesn't ask about schizoaffective disorder. This means the column das not exist in the data set
+    mhd.schizoaffective_disorder_numeric = NA
+  )
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
@@ -1252,29 +1274,12 @@ nbr.mhd.raw.id <- nbr.mhd.raw %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
 
-# Rename columns that differ from GLAD
-nbr.mhd.raw.id_renamed <- nbr.mhd.raw.id %>% 
-  mutate(
-    mhd.specific_phobia_e.g._phobia_of_flying = mhd.specific_phobia_e.g._fear_of_flying,
-    mhd.specific_phobia_e.g._phobia_of_flying_numeric = mhd.specific_phobia_e.g._fear_of_flying_numeric,
-    mhd.psychological_overeating_or_bingeeating = mhd.bingeeating_disorder,
-    mhd.psychological_overeating_or_bingeeating_numeric = mhd.bingeeating_disorder_numeric,
-    mhd.type_psychosis_psychotic_illness = mhd.psychosis_type_psychotic_illness,
-    mhd.type_psychosis_psychotic_illness_numeric = mhd.psychosis_type_psychotic_illness_numeric,
-    mhd.autism_aspergers_or_autistic_spectrum_disorder = mhd.autism_spectrum_disorder_asd,
-    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric = mhd.autism_spectrum_disorder_asd_numeric
-    ) %>% 
-  add_column(
-    mhd.schizoaffective_disorder = NA, #NBR doesn't ask about schizoaffective
-    mhd.schizoaffective_disorder_numeric = NA
-  )
-
 # Inspect dimensions
-dim(nbr.mhd.raw.id_renamed)
+dim(nbr.mhd.raw.id)
 # Inspect colnames
-colnames(nbr.mhd.raw.id_renamed)
+colnames(nbr.mhd.raw.id)
 #Differences
-dim(nbr.mhd.raw)[1]-dim(nbr.mhd.raw.id_renamed)[1]
+dim(nbr.mhd.raw)[1]-dim(nbr.mhd.raw.id)[1]
 }
 ```
 
@@ -1284,7 +1289,7 @@ if(NBR == TRUE) {
 }
 ```
 
-# Grouping mental health disorders
+## Grouping mental health disorders
 *#Disorder groupings - from COPING/RAMP analysis minutes*
 1. Depressive disorder group: major depression, antenatal/postnatal depression, premenstrual depression. The logic for this has been double checked for males - KT/MD. 
 2. Anxiety group: generalised anxiety, social anxiety, specific phobia, agoraphobia, panic_disorder, panic_attacks. 
@@ -1313,6 +1318,7 @@ No-diagnosis group
 2. Specific: breakdown by type of prior anxiety (& related) disorder diagnosis
 3. Breakdown by COVID or not (using COVIDENCE/Zoe algorithm)
 
+### Depressive disorders
 ```{r mhd depressive_disorders}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE)
 mhd.raw.id <- mhd.raw.id %>%
@@ -1357,7 +1363,7 @@ mhd.raw.id %>%
 }
 ```
 
-Anxiety disorders group
+### Anxiety disorders
 ```{r mhd anxiety_disorders}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
@@ -1500,8 +1506,9 @@ mhd.raw.id %>%
 }
 ```
 
-Eating disorders group
+### Eating disorders
 
+There is routing questionnaire if participants have been diagnosed with an eating disorder and afterwards they get asked the specific disorders. Therefore, mhd.suspected_eating_disorder_diagnosed_numeric needs to be recoded as 0 otherwise they would be NAs.
 ```{r nbr cleaning eating disorders}
 if(NBR == TRUE) {
 #Recode as 0 if ppt respnds no to screening question (mhd.suspected_eating_disorder_diagnosed_numeric)
@@ -1509,20 +1516,20 @@ mhd.raw.id <- mhd.raw.id %>%
   mutate(
     mhd.anorexia_nervosa_numeric =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
-                mhd.anorexia_nervosa_numeric == "0" ~ 0,
-                mhd.anorexia_nervosa_numeric == "1" ~ 1),
+                mhd.anorexia_nervosa_unc_numeric == "0" ~ 0,
+                mhd.anorexia_nervosa_unc_numeric == "1" ~ 1),
     mhd.atypical_anorexia_nervosa_numeric =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
-                mhd.atypical_anorexia_nervosa_numeric == "0" ~ 0,
-                mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1),
+                mhd.atypical_anorexia_nervosa_unc_numeric == "0" ~ 0,
+                mhd.atypical_anorexia_nervosa_unc_numeric == "1" ~ 1),
     mhd.bulimia_nervosa_numeric =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
-                mhd.bulimia_nervosa_numeric == "0" ~ 0,
-                mhd.bulimia_nervosa_numeric == "1" ~ 1),
+                mhd.bulimia_nervosa_unc_numeric == "0" ~ 0,
+                mhd.bulimia_nervosa_unc_numeric == "1" ~ 1),
     mhd.psychological_overeating_or_bingeeating_numeric =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
-                mhd.psychological_overeating_or_bingeeating_numeric == "0" ~ 0,
-                mhd.psychological_overeating_or_bingeeating_numeric == "1" ~ 1)
+                mhd.psychological_overeating_or_bingeeating_unc_numeric == "0" ~ 0,
+                mhd.psychological_overeating_or_bingeeating_unc_numeric == "1" ~ 1)
     )
 }
 
@@ -1620,7 +1627,7 @@ mhd.raw.id %>%
 }
 ```
 
-Obsessive compulsive disorders
+### Obsessive compulsive disorders
 ```{r mhd obsessive_compulsive_disorders}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
