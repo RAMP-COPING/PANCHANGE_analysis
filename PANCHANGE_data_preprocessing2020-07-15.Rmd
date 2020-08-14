@@ -52,8 +52,8 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = TRUE
-NBR = FALSE
+EDGI = FALSE
+NBR = TRUE
 RAMP = FALSE
 ```
 
@@ -1251,9 +1251,11 @@ if(EDGI == TRUE){
     mhd.mania_hypomania_bipolar_or_manicdepression = demographics.mania_hypomania_bipolar_or_manicdepression,
     mhd.schizophrenia = demographics.schizophrenia,
     mhd.type_psychosis_psychotic_illness = demographics.psychosis_type_psychotic_illness, # word type psychosis changed order compared to GLAD 
-#    mhd.personality_disorder_diagnosed = demographics.personality_disorder_diagnosed, # does not exist in EDGI because it is multiple choice in EDGI
+#    mhd.personality_disorder_diagnosed = demographics.personality_disorder, # does not exist in EDGI because it is multiple choice in EDGI
     mhd.posttraumatic_stress_disorder_ptsd = demographics.posttraumatic_stress_disorder_ptsd,
     mhd.autism_aspergers_or_autistic_spectrum_disorder = demographics.autism_spectrum_disorder_asd, # different name in EDGI
+    mhd.body_dysmorphic_disorder_bdd = demographics.body_dysmorphic_disorder,
+    mhd.personality_disorder = demographics.personality_disorder, # routing variable in EDGI is named differently; renamed here to match GLAD
     ) %>%
     add_column(
       mhd.schizoaffective_disorder = NA_character_
@@ -4892,6 +4894,8 @@ summarytools::dfSummary(
 ```
 
 *Note that the COPING NBR OCI-R ID numbers are stored under recipientFirstName (rather than ExternalDataReference)
+
+++MD: One NBR ID is being converted to NA by the as.numeric(ID) line of code.
 ```{r coping nbr ocir cleaning}
 if(NBR == TRUE) {
 coping.nbr.ocir.raw.id <- coping.nbr.ocir.raw %>%
@@ -5955,6 +5959,12 @@ dim(coping.glad.respiratory.raw)[1]-dim(coping.glad.respiratory.raw.id)[1]
 }
 ```
 
+```{r coping glad respiratory copy}
+if(GLAD == TRUE){
+respiratory.raw.id <- coping.glad.respiratory.raw.id
+}
+```
+
 ## EDGI respiratory
 ```{r edgi coping respiratory cols}
 if(EDGI == TRUE){
@@ -6009,10 +6019,137 @@ dim(coping.edgi.respiratory.raw)[1]-dim(coping.edgi.respiratory.raw.id)[1]
 }
 ```
 
+```{r coping edgi respiratory copy}
+if(EDGI == TRUE){
+respiratory.raw.id <- coping.edgi.respiratory.raw.id
+}
+```
+
+## NBR respiratory
+```{r nbr coping respiratory cols}
+if(NBR == TRUE){
+coping.nbr.respiratory.raw <- readRDS(file = paste0(data.raw_path, "/nbr/respiratory_coping_nbr.rds"))
+dim(coping.nbr.respiratory.raw)
+colnames(coping.nbr.respiratory.raw)
+}
+```
+
+Select respiratory variables
+```{r coping nbr respiratory cleaning}
+if(NBR == TRUE){
+coping.nbr.respiratory.raw.id <- coping.nbr.respiratory.raw %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+    Sample, # Sample
+    ID, # ID
+    respiratory.breath_diarrhoea_fatigue_fever = respiratory.unusual_shortness_breath_diarrhoea,
+    respiratory.worst_ill_feel,
+    respiratory.persistent_cough,
+    respiratory.skipping_meals_because_you_felt_unwell,
+    respiratory.was_your_sense_of_smell_impaired,
+    respiratory.was_your_sense_of_taste_impaired,
+    respiratory.feeling_tiredfatigued,
+    respiratory.throat_swab_coronavirus_nose,
+    respiratory.throat_swab_test_nose,
+    respiratory.coronavirus_antibody_test,
+    respiratory.results_antibody_test
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(coping.nbr.respiratory.raw.id)
+# Inspect colnames
+colnames(coping.nbr.respiratory.raw.id)
+#Differences
+dim(coping.nbr.respiratory.raw)[1]-dim(coping.nbr.respiratory.raw.id)[1]
+}
+```
+
+```{r coping nbr respiratory copy}
+if(NBR == TRUE){
+respiratory.raw.id <- coping.nbr.respiratory.raw.id
+}
+```
+
+## RAMP respiratory
+```{r ramp coping respiratory cols}
+if(RAMP == TRUE){
+ramp.respiratory.raw <- readRDS(file = paste0(data.raw_path, "/ramp/respiratory_coping_ramp.rds"))
+dim(ramp.respiratory.raw)
+colnames(ramp.respiratory.raw)
+}
+```
+
+Select respiratory variables
+```{r coping ramp respiratory cleaning}
+if(RAMP == TRUE){
+ramp.respiratory.raw.id <- ramp.respiratory.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+    Sample, # Sample
+    ID, # ID
+    respiratory.breath_diarrhoea_fatigue_fever,
+    respiratory.worst_ill_feel,
+    respiratory.persistent_cough,
+    respiratory.skipping_meals_because_you_felt_unwell,
+    respiratory.was_your_sense_of_smell_impaired,
+    respiratory.was_your_sense_of_taste_impaired,
+    respiratory.feeling_tiredfatigued,
+    respiratory.throat_swab_coronavirus_nose,
+    respiratory.throat_swab_test_nose,
+    respiratory.coronavirus_antibody_test,
+    respiratory.results_antibody_test
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(ramp.respiratory.raw.id)
+# Inspect colnames
+colnames(ramp.respiratory.raw.id)
+#Differences
+dim(ramp.respiratory.raw)[1]-dim(ramp.respiratory.raw.id)[1]
+}
+```
+
+```{r ramp respiratory copy}
+if(RAMP == TRUE){
+respiratory.raw.id <- ramp.respiratory.raw.id
+}
+```
+
 #Distribution of likert scale COVID-19 symptoms in COPING
 ```{r distribution of COVID symptoms}
 #persistent cough
-coping.glad.respiratory.raw.id %>%
+respiratory.raw.id %>%
   ggplot(
     mapping = aes(
       y = respiratory.persistent_cough_numeric 
@@ -6024,7 +6161,7 @@ coping.glad.respiratory.raw.id %>%
   )
 
 #severe fatigue
-coping.glad.respiratory.raw.id %>%
+respiratory.raw.id %>%
   ggplot(
     mapping = aes(
         y = respiratory.feeling_tiredfatigued_numeric 
@@ -6036,7 +6173,7 @@ coping.glad.respiratory.raw.id %>%
   )
 
 #skipped meals
-coping.glad.respiratory.raw.id %>%
+respiratory.raw.id %>%
   ggplot(
     mapping = aes(
         y = respiratory.skipping_meals_because_you_felt_unwell_numeric
@@ -6064,21 +6201,21 @@ Skipped meals: "Moderate symptoms" as cut off
 #persistent cough
 percentage_pcough <- ((0.5673*6452) + (0.4556*9186) + (0.3017*2434931))/(6452+9186+2434931)
 percentage_pcough    # 0.3029762% of Menni et al(2020) have fatigue
-quantile(x = coping.glad.respiratory.raw.id$respiratory.persistent_cough_numeric, 
+quantile(x = respiratory.raw.id$respiratory.persistent_cough_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_pcough) # this gives 0.3029762% of the sample reporting fatigue when using the "mild symptoms" persistent cough response
 
 #fatigue
 percentage_fatigue <- ((0.298*6452) + (0.1556*9186) + (0.0871*2434931))/(6452+9186+2434931) 
 percentage_fatigue   # 0.08791204% of Menni et al(2020) have fatigue
-quantile(x = coping.glad.respiratory.raw.id$respiratory.feeling_tiredfatigued_numeric, 
+quantile(x = respiratory.raw.id$respiratory.feeling_tiredfatigued_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_fatigue) #this gives 8% of the sample reporting fatigue when using the "severe symptoms" fatigue response
 
 #skipped meals 
 percentage_skipped_meals <- ((0.4203*6452) + (0.2493*9186) + (0.1912*2434931))/(6452+9186+2434931) 
 percentage_skipped_meals    # 0.192021% of Menni et al(2020) have fatigue
-quantile(x = coping.glad.respiratory.raw.id$respiratory.skipping_meals_because_you_felt_unwell_numeric, 
+quantile(x = respiratory.raw.id$respiratory.skipping_meals_because_you_felt_unwell_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_skipped_meals) # this gives 0.192021% of the sample reporting fatigue when using the "moderate symptoms" persistent cough response
 ```
@@ -6086,7 +6223,7 @@ quantile(x = coping.glad.respiratory.raw.id$respiratory.skipping_meals_because_y
 Creating binary groups for COVID symptoms
 ```{r creating binary groups for COVID symptoms}
 #loss or smell or taste
-coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
+respiratory.raw.id <- respiratory.raw.id %>%
   mutate(
     respiratory.anosmia_binary =
       if_else(
@@ -6097,7 +6234,7 @@ coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
   )
 
 #persistent cough
-coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
+respiratory.raw.id <- respiratory.raw.id %>%
   mutate(
     respiratory.pcough_binary =
       if_else(
@@ -6108,7 +6245,7 @@ coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
   )
 
 #fatigue
-coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
+respiratory.raw.id <- respiratory.raw.id %>%
   mutate(
     respiratory.fatigue_binary =
       if_else(
@@ -6119,7 +6256,7 @@ coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
   )
 
 #skipped meals
-coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
+respiratory.raw.id <- respiratory.raw.id %>%
   mutate(
     respiratory.skipped_meals_binary =
       if_else(
@@ -6132,21 +6269,25 @@ coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
 
 Frequencies of binary COVID symptoms
 ```{r frequencies of COVID binary symptoms}
-freq(coping.glad.respiratory.raw.id$respiratory.anosmia_binary)
-freq(coping.glad.respiratory.raw.id$respiratory.pcough_binary)
-freq(coping.glad.respiratory.raw.id$respiratory.fatigue_binary)
-freq(coping.glad.respiratory.raw.id$respiratory.skipped_meals_binary)
+freq(respiratory.raw.id$respiratory.anosmia_binary)
+freq(respiratory.raw.id$respiratory.pcough_binary)
+freq(respiratory.raw.id$respiratory.fatigue_binary)
+freq(respiratory.raw.id$respiratory.skipped_meals_binary)
 ```
 
 Rename respiratory dataset joined to main dataset
+
+++MD: Do we want to name the RAMP dataset something different, if the algorithm will need to be changed because they have categorical age and gender not sex? (otherwise can remove the if statement and rename the dataset 'dat.full' instead of dat.coping)
 ```{r clean respiratory dataset}
-coping.glad.respiratory <- coping.glad.respiratory.raw.id
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE){
+respiratory <- respiratory.raw.id
 
 dat.coping <- left_join(
   x = dat,
-  y = coping.glad.respiratory,
+  y = respiratory,
   by = "ID"
 )
+}
 ```
 
 # Probable COVID-19 case identification
@@ -6174,7 +6315,7 @@ dat.coping <- dat.coping %>%
   )
 ```
 
-```{r how many people expereinced all symptoms}
+```{r how many people experinced all symptoms}
 dat.coping <- dat.coping %>%
   mutate(
     covid_symptoms =
@@ -6250,7 +6391,7 @@ freq(dat.coping$covid_odds_ratio_50,
 ```
 
 Probable COVID case including the routing question
-```{r}
+```{r recoding probable covid to account for screening question}
 dat.coping <- dat.coping %>%
   mutate(
     covid_probable_case_incl_screening_numeric =
