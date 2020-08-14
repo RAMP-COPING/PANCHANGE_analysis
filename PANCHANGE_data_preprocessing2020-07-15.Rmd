@@ -51,9 +51,9 @@ date = Sys.Date()
 
 # Specify cohort
 ```{r Specify cohort}
-GLAD = TRUE
+GLAD = FALSE
 EDGI = FALSE
-NBR = FALSE
+NBR = TRUE
 RAMP = FALSE
 ```
 
@@ -64,7 +64,7 @@ Install packages (if they are not available in your version of R)
 #install.packages("summarytools")
 #install.packages("tidyverse")
 #install.packages("psych")
-#install.packages("dplyr")
+#install.packages("eeptools")
 ```
 
 Load packages
@@ -72,8 +72,8 @@ Load packages
 library(knitr)
 library(summarytools)
 library(psych)
-library(dplyr)
 library(tidyverse)
+library(eeptools) #Needed to calculate age from birthdate
 ```
 
 # Colour palettes
@@ -172,7 +172,7 @@ colnames(glad.dem.raw)
 }
 ```
 
-# Select variables
+## Select variables
 ```{r glad dem cleaning}
 if(GLAD == TRUE){
 exclude_cols_dem <- c("ID",
@@ -230,6 +230,16 @@ dem.raw.id <- glad.dem.raw.id
 }
 ```
 
+```{r glad dem summary}
+if(GLAD == TRUE) {
+summarytools::dfSummary(
+  dem.raw.id,
+  graph.col = F,
+  valid.col = F,
+  labels.col = F)
+}
+```
+
 # EDGI demographics
 ## Read in data
 ```{r edgi dem cols}
@@ -240,7 +250,7 @@ if(EDGI == TRUE){
 }
 ```
 
-# Select variables
+## Select variables
 ```{r edgi dem cleaning}
 if(EDGI == TRUE){
   exclude_cols_dem <- c("ID",
@@ -298,7 +308,15 @@ if(EDGI == TRUE){
 }
 ```
 
-
+```{r edgi dem summary}
+if(EDGI == TRUE) {
+summarytools::dfSummary(
+  dem.raw.id,
+  graph.col = F,
+  valid.col = F,
+  labels.col = F)
+}
+```
 
 # NBR demographics
 ## Read in data
@@ -310,7 +328,7 @@ if(NBR == TRUE){
 }
 ```
 
-# Select variables
+## Select variables
 ```{r nbr dem cleaning}
 if(NBR == TRUE){
   exclude_cols_dem <- c("ID",
@@ -331,16 +349,12 @@ if(NBR == TRUE){
       ID, # ID
       startDate.coping, #Date when participant signed up to nbr
 #      Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
-      Birthyear = demographics.year, # Birthyear
+      Birthyear_unc = demographics.year, # Birthyear
+      Birthmonth = demographics.month, #Birthmonth
+      Birthday = demographics.day, #Birthday
       Gender = demographics.which_gender_do_you_identify_with, # Gender
       Sex = demographics.select_questionnaire_items_medical, #Sex
-      EduYrs = demographics.school_education_school_years.txt, # Years in education
-      demographics.college_or_university_degree, # level of education - univeristy
-      demographics.a_levelsas_levels_or_equivalent, # level of education - alevel
-      demographics.o_levelsgcses_or_equivalent, # level of education - gcse
-      demographics.cses_or_equivalent, # level of education - cse
-      demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
-      Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
+#      Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
     ) %>%
     add_numeric(., exclude = exclude_cols_dem) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -364,6 +378,37 @@ if(NBR == TRUE){
 }
 ```
 
+```{r nbr dem calculating age from birthday}
+if(NBR == TRUE) {
+#add 1900 to birthyear
+nbr.dem.raw.id$Birthyear_numeric <- nbr.dem.raw.id$Birthyear_unc_numeric + 1900
+  
+#create dob as date format
+nbr.dem.raw.id$Birthdate <- as.Date(paste(nbr.dem.raw.id$Birthyear_numeric,
+                                  nbr.dem.raw.id$Birthmonth_numeric,
+                                  nbr.dem.raw.id$Birthday_numeric,
+                                  sep = "-"))
+
+head(nbr.dem.raw.id$Birthdate)
+
+#Calculate dem.age(remove NAs as it throws an error)
+ages <- age_calc(na.omit(nbr.dem.raw.id$Birthdate), enddate = Sys.Date(), units = "years")
+
+#Create dem.agecolumn
+nbr.dem.raw.id$Age_uncleaned<- NA
+
+#Populate with values (excluding NAs)
+nbr.dem.raw.id$Age_uncleaned[!is.na(nbr.dem.raw.id$Birthdate)] <- ages
+
+#Round age down
+nbr.dem.raw.id$Age_uncleaned <- floor(nbr.dem.raw.id$Age_uncleaned)
+
+#Visualise
+head(nbr.dem.raw.id$Age_uncleaned)
+head(nbr.dem.raw.id$Birthdate)
+}
+```
+
 
 ## Cohort information
 Information on INTERVAL, COMPARE, and STRIDES
@@ -380,7 +425,7 @@ if(NBR == TRUE){
 ```
 
 
-```{r nbr dem cleaning}
+```{r nbr cohort cleaning}
 if(NBR == TRUE) {
 exclude_cols_dem <- c("ID",
                   "Sample",
@@ -400,9 +445,10 @@ nbr.cohort.raw.id <- nbr.cohort.raw %>%
   select(
          Sample, # Sample
          ID, # ID
+         Cohort = cohort, #cohort information
 #         startDate.coping, #Date when participant signed up to NBR COPING
-         Age_uncleaned = age, # Age
-         Gender = gender, # Gender
+#         Age_uncleaned = age, # Age
+#         Gender = gender, # Gender
 #         Sex = demographics.select_questionnaire_items_medical, #Sex
 #         EduYrs = demographics.school_education_school_years.txt, # Years in education
 #         demographics.college_or_university_degree, # level of education - univeristy
@@ -410,7 +456,7 @@ nbr.cohort.raw.id <- nbr.cohort.raw %>%
 #         demographics.o_levelsgcses_or_equivalent, # level of education - gcse
 #         demographics.cses_or_equivalent, # level of education - cse
 #         demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
-         Ethnicity = ethnicity # Ethnicity
+         Ethnicity.unc = ethnicity # Ethnicity
          ) %>%
   add_numeric(., exclude = exclude_cols_dem) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -434,18 +480,72 @@ dim(nbr.cohort.raw)[1]-dim(nbr.cohort.raw.id)[1]
 }
 ```
 
-```{r nbr copy dem}
-if(NBR == TRUE){
-dem.raw.id <- nbr.dem.raw.id
+```{r nbr cohort recode ethnicity}
+if(NBR == TRUE) {
+#Recode details ethnicity info
+nbr.cohort.raw.id$Ethnicity_full <- recode_factor(nbr.cohort.raw.id$Ethnicity.unc,
+                                             "A" = "White - British",
+                                             "B" = "White - Irish",
+                                             "C" = "White - Other",
+                                             "D" = "Mixed - White & Black Caribbean",
+                                             "E" = "Mixed - White & Black African",
+                                             "F" = "Mixed - White & Asian",
+                                             "G" = "Mixed - Other",
+                                             "H" = "Asian - Indian",
+                                             "J" = "Asian - Pakistani",
+                                             "K" = "Asian - Bangladeshi",
+                                             "L" = "Asian - Other",
+                                             "M" = "Black - Caribbean",
+                                             "N" = "Black - African",
+                                             "P" = "Black - Other",
+                                             "R" = "Chinese - Chinese",
+                                             "S" = "Chinese - Other",
+                                             "W" = NULL, ## Asking NBR what this level means
+                                             "Z" = NULL,
+                                             "99" = NULL)
+
+#Match GLAD/EDGI/RAMP categories
+nbr.cohort.raw.id$Ethnicity <- recode_factor(nbr.cohort.raw.id$Ethnicity.unc,
+                                             "A" = "White, white European or Caucasian",
+                                             "B" = "White, white European or Caucasian",
+                                             "C" = "White, white European or Caucasian",
+                                             "D" = "Mixed or multiple ethnic origins",
+                                             "E" = "Mixed or multiple ethnic origins",
+                                             "F" = "Mixed or multiple ethnic origins",
+                                             "G" = "Mixed or multiple ethnic origins",
+                                             "H" = "Asian or Asian British (including Chinese)",
+                                             "J" = "Asian or Asian British (including Chinese)",
+                                             "K" = "Asian or Asian British (including Chinese)",
+                                             "L" = "Asian or Asian British (including Chinese)",
+                                             "M" = "Black or Black British",
+                                             "N" = "Black or Black British",
+                                             "P" = "Black or Black British",
+                                             "R" = "Asian or Asian British (including Chinese)",
+                                             "S" = "Asian or Asian British (including Chinese)",
+                                             "W" = NULL, ## Asking NBR what this level means
+                                             "Z" = NULL,
+                                             "99" = NULL)
 }
 ```
 
 
+```{r nbr combine demographics}
+if(NBR == TRUE){
+dem.raw.id <- left_join(nbr.dem.raw.id, nbr.cohort.raw.id, by = c("Sample", "ID"))
 
-```{r nbr demo summary}
+# Inspect dimensions
+dim(dem.raw.id)
+# Inspect colnames
+colnames(dem.raw.id)
+#Differences
+dim(nbr.dem.raw.id)[1]-dim(dem.raw.id)[1]
+}
+```
+
+```{r nbr dem summary}
 if(NBR == TRUE) {
 summarytools::dfSummary(
-  nbr.cohort.raw.id,
+  dem.raw.id,
   graph.col = F,
   valid.col = F,
   labels.col = F)
@@ -490,7 +590,6 @@ In RAMP, age is indicated categorically: 16-18, 19-25, 26-35, 36-45, 46-55, 56-6
 Age categories in GLAD, EDGI and NBR have been created to reflect this
 ```{r Age groups}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
-
 # Create categorical age groups per 10 years
 dem.raw.id <- dem.raw.id %>%
   mutate(
@@ -539,15 +638,15 @@ dem.raw.id %>%
 }
 ```
 
-# Highest education
+# Highest education (prepandemic)
 Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
 Assumes University degree > A level > NVQ > GCSE/O Level/CSE
-```{r Highest education}
+```{r Highest education prepandemic}
 if(GLAD == TRUE | EDGI == TRUE) {
 #create numeric version of the highest education variable
 dem.raw.id <- dem.raw.id %>%
   mutate(
-    highest_education_numeric =
+    highest_education_prepan_numeric =
       case_when(
         demographics.college_or_university_degree_numeric == "1" ~ 4,
         demographics.a_levelsas_levels_or_equivalent_numeric == "1" ~ 3,
@@ -559,7 +658,7 @@ dem.raw.id <- dem.raw.id %>%
 #recode the numeric version into a factor
 dem.raw.id <- dem.raw.id %>%
   mutate(
-    highest_education =
+    highest_education_prepan =
       recode_factor(
         highest_education_numeric,
         `1` = "GCSE/CSE",
@@ -569,15 +668,15 @@ dem.raw.id <- dem.raw.id %>%
     )
 
 dem.raw.id %>%
-  freq(highest_education)
+  freq(highest_education_prepan)
 }
 ```
 
 Check highest education coding
-```{r Highest education check}
+```{r Highest education prepandemic check}
 if(GLAD == TRUE | EDGI == TRUE) {
 dem.raw.id %>%
-  select(highest_education,
+  select(highest_education_prepan,
         demographics.college_or_university_degree_numeric,
         demographics.a_levelsas_levels_or_equivalent_numeric,
         demographics.nvq_or_hnd_or_hnc_or_equivalent_numeric,
@@ -587,23 +686,21 @@ dem.raw.id %>%
 }
 ```
 
-
-```{r glad dem head}
-head(dem.raw.id)
-```
-
-
-```{r glad dem summary}
+```{r dem summary}
+if(GLAD == TRUE | EDGI == TRUE) {
 summarytools::dfSummary(
   dem.raw.id,
   graph.col = F,
   valid.col = F,
   labels.col = F)
+}
 ```
 
-# GLAD employment
-## Read in data
-```{r glad dem cols}
+# Employment/highest education (baseline)
+
+## GLAD
+### Read in data
+```{r glad employment cols}
 if(GLAD == TRUE){
 glad.employment.raw <- readRDS(file = paste0(data.raw_path, "/glad/employment_coping_glad.rds"))
 dim(glad.employment.raw)
@@ -611,7 +708,7 @@ colnames(glad.employment.raw)
 }
 ```
 
-# Select variables
+### Select variables
 ```{r glad employment cleaning}
 if(GLAD == TRUE){
 exclude_cols_employment <- c("ID",
@@ -659,14 +756,213 @@ dim(glad.employment.raw)[1]-dim(glad.employment.raw.id)[1]
 }
 ```
 
+```{r glad copy employment}
+if(GLAD == TRUE){
+  employment.raw.id <- glad.employment.raw.id
+}
+```
 
-# Highest education
+## EDGI
+### Read in data
+```{r edgi employment cols}
+if(EDGI == TRUE){
+edgi.employment.raw <- readRDS(file = paste0(data.raw_path, "/edgi/employment_coping_edgi.rds"))
+dim(edgi.employment.raw)
+colnames(edgi.employment.raw)
+}
+```
+
+### Select variables
+```{r edgi employment cleaning}
+if(EDGI == TRUE){
+exclude_cols_employment <- c("ID",
+                  "Sample")
+
+edgi.employment.raw.id <- edgi.employment.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(
+    ID = as.numeric(ID)
+    ) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         employment.phd, # level of education - univeristy
+         employment.masters_degree_or_equivalent, # level of education - univeristy
+         employment.postgraduate_degree_or_equivalent, # level of education - univeristy
+         employment.bachelors_degree_or_equivalent, # level of education - univeristy
+         employment.a_levelsas_levels_or_equivalent, # level of education - alevel
+         employment.o_levelsgcses_or_equivalent, # level of education - gcse
+         employment.cses_or_equivalent, # level of education - cse
+         employment.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+         employment.government_work_key_workers # key worker status
+         ) %>%
+  add_numeric(., exclude = exclude_cols_employment) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(edgi.employment.raw.id)
+# Inspect colnames
+colnames(edgi.employment.raw.id)
+#Differences
+dim(edgi.employment.raw)[1]-dim(edgi.employment.raw.id)[1]
+}
+```
+
+```{r edgi copy employment}
+if(EDGI == TRUE){
+  employment.raw.id <- edgi.employment.raw.id
+}
+```
+
+## NBR
+### Read in data
+```{r nbr employment cols}
+if(NBR == TRUE){
+nbr.employment.raw <- readRDS(file = paste0(data.raw_path, "/nbr/employment_coping_nbr.rds"))
+dim(nbr.employment.raw)
+colnames(nbr.employment.raw)
+}
+```
+
+### Select variables
+```{r nbr employment cleaning}
+if(NBR == TRUE){
+exclude_cols_employment <- c("ID",
+                  "Sample")
+
+nbr.employment.raw.id <- nbr.employment.raw %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  #mutate(
+  #  ID = as.numeric(ID) ##NBR IDs have a letter at the end so can't be coerced to numeric
+  #  ) %>% 
+  select(
+         Sample, # Sample
+         ID, # ID
+         employment.phd, # level of education - univeristy
+         employment.masters_degree_or_equivalent, # level of education - univeristy
+         employment.postgraduate_degree_or_equivalent, # level of education - univeristy
+         employment.bachelors_degree_or_equivalent, # level of education - univeristy
+         employment.a_levelsas_levels_or_equivalent, # level of education - alevel
+         employment.o_levelsgcses_or_equivalent, # level of education - gcse
+         employment.cses_or_equivalent, # level of education - cse
+         employment.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+         employment.government_work_key_workers # key worker status
+         ) %>%
+  add_numeric(., exclude = exclude_cols_employment) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(nbr.employment.raw.id)
+# Inspect colnames
+colnames(nbr.employment.raw.id)
+#Differences
+dim(nbr.employment.raw)[1]-dim(nbr.employment.raw.id)[1]
+head(nbr.employment.raw.id
+     )
+}
+```
+
+```{r nbr copy employment}
+if(NBR == TRUE){
+  employment.raw.id <- nbr.employment.raw.id
+}
+```
+
+## RAMP
+### Read in data
+```{r ramp employment cols}
+if(RAMP == TRUE){
+ramp.employment.raw <- readRDS(file = paste0(data.raw_path, "/ramp/employment_coping_ramp.rds"))
+dim(ramp.employment.raw)
+colnames(ramp.employment.raw)
+}
+```
+
+### Select variables
+```{r ramp employment cleaning}
+if(RAMP == TRUE){
+exclude_cols_employment <- c("ID",
+                  "Sample")
+
+ramp.employment.raw.id <- ramp.employment.raw %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(
+    ID = as.numeric(ID)
+    ) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         employment.phd, # level of education - univeristy
+         employment.masters_degree_or_equivalent, # level of education - univeristy
+         employment.postgraduate_degree_or_equivalent, # level of education - univeristy
+         employment.bachelors_degree_or_equivalent, # level of education - univeristy
+         employment.a_levelsas_levels_or_equivalent, # level of education - alevel
+         employment.o_levelsgcses_or_equivalent, # level of education - gcse
+         employment.cses_or_equivalent, # level of education - cse
+         employment.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
+         employment.government_work_key_workers # key worker status
+         ) %>%
+  add_numeric(., exclude = exclude_cols_employment) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(ramp.employment.raw.id)
+# Inspect colnames
+colnames(ramp.employment.raw.id)
+#Differences
+dim(ramp.employment.raw)[1]-dim(ramp.employment.raw.id)[1]
+}
+```
+
+```{r ramp copy employment}
+if(RAMP == TRUE){
+  employment.raw.id <- ramp.employment.raw.id
+}
+```
+
+## Highest education (baseline)
 Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
 Assumes University degree > A level > NVQ > GCSE/O Level/CSE
-```{r Highest education}
-if(GLAD == TRUE | EDGI == TRUE) {
+```{r Highest education baseline}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 #create numeric version of the highest education variable
-glad.employment.raw.id <- glad.employment.raw.id %>%
+employment.raw.id <- employment.raw.id %>%
   mutate(
     highest_education_numeric =
       case_when(
@@ -682,7 +978,7 @@ glad.employment.raw.id <- glad.employment.raw.id %>%
     )
 
 #recode the numeric version into a factor
-glad.employment.raw.id <- glad.employment.raw.id %>%
+employment.raw.id <- employment.raw.id %>%
   mutate(
     highest_education =
       recode_factor(
@@ -693,15 +989,15 @@ glad.employment.raw.id <- glad.employment.raw.id %>%
         `4` = "University")
     )
 
-glad.employment.raw.id %>%
+employment.raw.id %>%
   freq(highest_education)
 }
 ```
 
 Check highest education coding
 ```{r Highest education check}
-if(GLAD == TRUE | EDGI == TRUE) {
-glad.employment.raw.id %>%
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
+employment.raw.id %>%
   select(highest_education,
          employment.phd_numeric,
          employment.masters_degree_or_equivalent_numeric,
@@ -715,11 +1011,11 @@ glad.employment.raw.id %>%
 }
 ```
 
-# Key worker status
+## Key worker status
 ```{r Key worker}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 #create numeric version of the variable
-glad.employment.raw.id <- glad.employment.raw.id %>%
+employment.raw.id <- employment.raw.id %>%
   mutate(
     key_worker_numeric =
       case_when(
@@ -729,7 +1025,7 @@ glad.employment.raw.id <- glad.employment.raw.id %>%
     )
 
 #recode the numeric version into a factor
-glad.employment.raw.id <- glad.employment.raw.id %>%
+employment.raw.id <- employment.raw.id %>%
   mutate(
     key_worker =
       recode_factor(
@@ -739,224 +1035,8 @@ glad.employment.raw.id <- glad.employment.raw.id %>%
         )
     )
 
-glad.employment.raw.id %>%
+employment.raw.id %>%
   freq(key_worker)
-}
-```
-
-# glad gad
-
-```{r glad gad cols}
-if(GLAD == TRUE){
-glad.gad.raw <- readRDS(file = paste0(data.raw_path, "/glad/gad_glad.rds"))
-dim(glad.gad.raw)
-colnames(glad.gad.raw)
-}
-```
-
-
-```{r glad gad cleaning}
-if(GLAD ==TRUE){
-exclude_cols <- c("Sample",
-                  "ID")
-glad.gad.raw.id <- glad.gad.raw %>%
-  drop_na(externalDataReference) %>% # Drop NAs
-  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.prepandemic = startDate) %>% # Rename startDate
-  select(
-    Sample, # Sample
-    ID, # ID
-    gad.feeling_nervous_anxious_or_on_edge_prepan = gad.feeling_nervous_anxious_or_on_edge,
-    gad.control_worrying_stop_prepan = gad.control_worrying_stop,
-    gad.worrying_too_much_about_different_things_prepan = gad.worrying_too_much_about_different_things,
-    gad.trouble_relaxing_prepan = gad.trouble_relaxing,
-    gad.sit_restless_hard_prepan = gad.sit_restless_hard,
-    gad.becoming_easily_annoyed_or_irritable_prepan = gad.becoming_easily_annoyed_or_irritable,
-    gad.awful_feeling_afraid_happen_prepan = gad.awful_feeling_afraid_happen
-  ) %>%
-  add_numeric(., exclude = exclude_cols) %>%
-  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
-  mutate_if(is.numeric, ~na_if(., -99)) %>%
-  mutate_if(is.numeric, ~na_if(., -77)) %>%
-  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
-  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
-  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
-  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
-  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
-  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
-  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
-  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-
-# Inspect dimensions
-dim(glad.gad.raw.id)
-# Inspect colnames
-colnames(glad.gad.raw.id)
-#Differences
-dim(glad.gad.raw)[1]-dim(glad.gad.raw.id)[1]
-}
-```
-
-```{r glad copy gad}
-if(GLAD == TRUE){
-prepan.gad.raw.id <- glad.gad.raw.id
-}
-```
-
-```{r edgi gad cols}
-if(EDGI == TRUE){
-  edgi.gad.raw <- readRDS(file = paste0(data.raw_path, "/edgi/gad_edgi.rds"))
-  dim(edgi.gad.raw)
-  colnames(edgi.gad.raw)
-}
-```
-
-
-```{r edgi gad cleaning}
-if(EDGI == TRUE){
-exclude_cols <- c("Sample",
-                  "ID")
-
-edgi.gad.raw.id <- edgi.gad.raw %>%
-  drop_na(externalDataReference) %>% # Drop NAs
-  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID),
-         startDate.edgi = startDate) %>% # Rename startDate
-  select(
-    Sample, # Sample
-    ID, # ID
-    gad.feeling_nervous_anxious_or_on_edge_prepan = gad.feeling_nervous_anxious_or_on_edge,
-    gad.control_worrying_stop_prepan = gad.control_worrying_stop,
-    gad.worrying_too_much_about_different_things_prepan = gad.worrying_too_much_about_different_things,
-    gad.trouble_relaxing_prepan = gad.trouble_relaxing,
-    gad.sit_restless_hard_prepan = gad.sit_restless_hard,
-    gad.becoming_easily_annoyed_or_irritable_prepan = gad.becoming_easily_annoyed_or_irritable,
-    gad.awful_feeling_afraid_happen_prepan = gad.awful_feeling_afraid_happen
-  ) %>%
-  add_numeric(., exclude = exclude_cols) %>%
-  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
-  mutate_if(is.numeric, ~na_if(., -99)) %>%
-  mutate_if(is.numeric, ~na_if(., -77)) %>%
-  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
-  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
-  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
-  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
-  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
-  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
-  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
-  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-
-# Inspect dimensions
-dim(edgi.gad.raw.id)
-# Inspect colnames
-colnames(edgi.gad.raw.id)
-#Differences
-dim(edgi.gad.raw)[1]-dim(edgi.gad.raw.id)[1]
-}
-```
-
-```{r nbr copy gad}
-if(EDGI == TRUE){
-  prepan.gad.raw.id <- edgi.gad.raw.id
-}
-```
-
-
-Calculate sum score for GAD-7
-Max should be 21.
-
-*Note that scores with missingness will be changed to NA later in the script
-```{r gad sum score prepan raw}
-if(GLAD ==TRUE | EDGI == TRUE){
-# Create vector with scoring key: If the item is reversed coded use -1. 
-# There needs to be the correct number of values for each item in the questionnaire. 
-gad.items_key_prepan <- c(1,1,1,1,1,1,1)
-
-# Create vector with items that are included in total score
-gad.items_prepan <- c(
-  "gad.feeling_nervous_anxious_or_on_edge_prepan_numeric",
-  "gad.control_worrying_stop_prepan_numeric",
-  "gad.worrying_too_much_about_different_things_prepan_numeric",
-  "gad.trouble_relaxing_prepan_numeric",
-  "gad.sit_restless_hard_prepan_numeric",
-  "gad.becoming_easily_annoyed_or_irritable_prepan_numeric",
-  "gad.awful_feeling_afraid_happen_prepan_numeric"
-  )
-
-# Calulate total score
-gad.scored_items_prepan <- scoreItems(keys = gad.items_key_prepan,
-                                        items = prepan.gad.raw.id[gad.items_prepan],
-                                        totals = TRUE, 
-                                        missing = TRUE, 
-                                        impute = 'none', 
-                                        min = 0, 
-                                        max = 3)
-# Add in column to tibble
-prepan.gad.raw.id$gad.sum_score_prepan_raw <- gad.scored_items_prepan$scores
-
-# Look at values
-prepan.gad.raw.id %>%
-  descr(gad.sum_score_prepan_raw,
-        stats = "common"
-        )
-}
-```
-
-missingness (NAs per person)
-
-prepandemic
-```{r gad prepan missingness}
-if(GLAD ==TRUE | EDGI == TRUE){
-prepan.gad.raw.id <- prepan.gad.raw.id %>%
-  mutate(
-    na_per_person_gad_prepan =         # variable for NA per person
-      rowSums(                       
-        is.na(.[gad.items_prepan])
-      )
-  )
-
-prepan.gad.raw.id %>%
-  freq(na_per_person_gad_prepan,
-       cumul = F)
-}
-```
-
-
-```{r gad prepan sum score if missigng items set to NA}
-if(GLAD ==TRUE | EDGI == TRUE){
-prepan.gad.raw.id <- prepan.gad.raw.id %>%
-  mutate(
-    gad.sum_score_prepan =
-      if_else(condition = na_per_person_gad_prepan > 0,
-              true = NA_real_,
-              false = gad.sum_score_prepan_raw,
-              missing = NA_real_
-              )
-  )
-
-prepan.gad.raw.id %>%
-  descr(gad.sum_score_prepan_raw, stats = "common")
-
-prepan.gad.raw.id %>%
-  descr(gad.sum_score_prepan, stats = "common")
-}
-```
-
-```{r glad gad head}
-if(GLAD ==TRUE | EDGI == TRUE){
-head(prepan.gad.raw.id)
-}
-```
-
-```{r glad gad summary}
-if(GLAD ==TRUE | EDGI == TRUE){
-summarytools::dfSummary(
-  prepan.gad.raw.id,
-  graph.col = F,
-  valid.col = F,
-  labels.col = F)
 }
 ```
 
@@ -970,7 +1050,6 @@ dim(glad.mhd.raw)
 colnames(glad.mhd.raw)
 }
 ```
-
 
 ```{r glad mhd cleaning}
 if(GLAD == TRUE) {
@@ -1013,6 +1092,125 @@ if(GLAD == TRUE) {
 }
 ```
 
+## EDGI
+```{r edgi mhd cols}
+if(EDGI == TRUE) {
+edgi.mhd.raw <- readRDS(file = paste0(data.raw_path,"/edgi/mhd_edgi.rds"))
+dim(edgi.mhd.raw)
+colnames(edgi.mhd.raw)
+}
+```
+
+```{r edgi mhd cleaning}
+if(EDGI == TRUE) {
+edgi.mhd.raw.id <- edgi.mhd.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID),
+         startDate.prepandemic = startDate) %>% # Rename startDate
+  select(
+    Sample, # Sample
+    ID, # ID
+    starts_with("mhd.")
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(edgi.mhd.raw.id)
+# Inspect colnames
+colnames(edgi.mhd.raw.id)
+#Differences
+dim(edgi.mhd.raw)[1]-dim(edgi.mhd.raw.id)[1]
+}
+```
+
+```{r edgi mhd copy}
+if(EDGI == TRUE) {
+  mhd.raw.id <- edgi.mhd.raw.id
+}
+```
+
+## NBR
+```{r nbr mhd cols}
+if(NBR == TRUE) {
+nbr.mhd.raw <- readRDS(file = paste0(data.raw_path,"/nbr/mhd_nbr.rds"))
+dim(nbr.mhd.raw)
+colnames(nbr.mhd.raw)
+}
+```
+
+```{r nbr mhd cleaning}
+if(NBR == TRUE) {
+exclude_cols <- c("Sample",
+                  "ID")
+  
+nbr.mhd.raw.id <- nbr.mhd.raw %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(#ID = as.numeric(ID), ## NBR IDs end with letters so can't be numeric
+         startDate.prepandemic = startDate) %>% # Rename startDate
+  select(
+    Sample, # Sample
+    ID, # ID
+    starts_with("mhd.")
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Rename columns that differ from GLAD
+nbr.mhd.raw.id_renamed <- nbr.mhd.raw.id %>% 
+  mutate(
+    mhd.specific_phobia_e.g._phobia_of_flying = mhd.specific_phobia_e.g._fear_of_flying,
+    mhd.specific_phobia_e.g._phobia_of_flying_numeric = mhd.specific_phobia_e.g._fear_of_flying_numeric,
+    mhd.psychological_overeating_or_bingeeating = mhd.bingeeating_disorder,
+    mhd.psychological_overeating_or_bingeeating_numeric = mhd.bingeeating_disorder_numeric,
+    mhd.type_psychosis_psychotic_illness = mhd.psychosis_type_psychotic_illness,
+    mhd.type_psychosis_psychotic_illness_numeric = mhd.psychosis_type_psychotic_illness_numeric,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder = mhd.autism_spectrum_disorder_asd,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric = mhd.autism_spectrum_disorder_asd_numeric
+    ) %>% 
+  add_column(
+    mhd.schizoaffective_disorder = NA, #NBR doesn't ask about schizoaffective
+    mhd.schizoaffective_disorder_numeric = NA
+  )
+
+# Inspect dimensions
+dim(nbr.mhd.raw.id_renamed)
+# Inspect colnames
+colnames(nbr.mhd.raw.id_renamed)
+#Differences
+dim(nbr.mhd.raw)[1]-dim(nbr.mhd.raw.id_renamed)[1]
+}
+```
+
+```{r nbr mhd copy}
+if(NBR == TRUE) {
+  mhd.raw.id <- nbr.mhd.raw.id_renamed
+}
+```
 
 # Grouping mental health disorders
 *#Disorder groupings - from COPING/RAMP analysis minutes*
@@ -1043,7 +1241,8 @@ No-diagnosis group
 2. Specific: breakdown by type of prior anxiety (& related) disorder diagnosis
 3. Breakdown by COVID or not (using COVIDENCE/Zoe algorithm)
 
-```{r glad mhd depressive_disorders}
+```{r mhd depressive_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE)
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     depressive_disorders_numeric =
@@ -1071,6 +1270,7 @@ mhd.raw.id %>%
 ```
 
 ```{r Check depressive_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     depressive_disorders,
@@ -1082,10 +1282,12 @@ mhd.raw.id %>%
     mhd.pregnancy_depression,
     mhd.premenstrual_dysphoric_disorder_pmdd
   )
+}
 ```
 
 Anxiety disorders group
-```{r glad mhd anxiety_disorders}
+```{r mhd anxiety_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     anxiety_disorders_numeric =
@@ -1118,9 +1320,11 @@ mhd.raw.id <- mhd.raw.id %>%
 mhd.raw.id %>%
   freq(anxiety_disorders,
        cumul = F)
+}
 ```
 
 ```{r Check anxiety_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     anxiety_disorders,
@@ -1138,10 +1342,12 @@ mhd.raw.id %>%
     mhd.panic_disorder,
     mhd.panic_attacks
   )
+}
 ```
 
 Agoraphonia and panic disorder group
-```{r glad mhd agoraphobia_panic_disorder}
+```{r mhd agoraphobia_panic_disorder}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     agoraphobia_panic_disorder_numeric =
@@ -1167,9 +1373,11 @@ mhd.raw.id <- mhd.raw.id %>%
 
 mhd.raw.id %>%
   freq(agoraphobia_panic_disorder)
+}
 ```
 
 ```{r Check agoraphobia_panic_disorder}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     agoraphobia_panic_disorder,
@@ -1181,10 +1389,12 @@ mhd.raw.id %>%
     mhd.panic_disorder,
     mhd.panic_attacks
   )
+}
 ```
 
 Depression and anxiety comorbidity
-```{r glad mhd depression_anxiety}
+```{r mhd depression_anxiety}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     depression_and_anxiety_numeric =
@@ -1207,7 +1417,7 @@ mhd.raw.id <- mhd.raw.id %>%
                     "0" = "No depressive or anxiety disorder",
                     "1" = "Depressive and anxiety disorder",
                     "2" = "Only depressive disorder",
-                    "2" = "Only anxiety disorder",
+                    "3" = "Only anxiety disorder",
                     missing = NA_character_
                     )
   )
@@ -1215,12 +1425,39 @@ mhd.raw.id <- mhd.raw.id %>%
 mhd.raw.id %>%
   freq(depression_and_anxiety,
        cumul = F)
+}
 ```
 
-
-
 Eating disorders group
-```{r glad mhd eating_disorders}
+
+```{r nbr cleaning eating disorders}
+if(NBR == TRUE) {
+#Recode as 0 if ppt respnds no to screening question (mhd.suspected_eating_disorder_diagnosed_numeric)
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    mhd.anorexia_nervosa_numeric =
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
+                mhd.anorexia_nervosa_numeric == "0" ~ 0,
+                mhd.anorexia_nervosa_numeric == "1" ~ 1),
+    mhd.atypical_anorexia_nervosa_numeric =
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
+                mhd.atypical_anorexia_nervosa_numeric == "0" ~ 0,
+                mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1),
+    mhd.bulimia_nervosa_numeric =
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
+                mhd.bulimia_nervosa_numeric == "0" ~ 0,
+                mhd.bulimia_nervosa_numeric == "1" ~ 1),
+    mhd.psychological_overeating_or_bingeeating_numeric =
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
+                mhd.psychological_overeating_or_bingeeating_numeric == "0" ~ 0,
+                mhd.psychological_overeating_or_bingeeating_numeric == "1" ~ 1)
+    )
+}
+
+```
+
+```{r mhd eating_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     eating_disorders_numeric =
@@ -1249,16 +1486,19 @@ mhd.raw.id <- mhd.raw.id %>%
 mhd.raw.id %>%
   freq(eating_disorders,
        cumul = F)
+}
 ```
+
 
 Eating disorders with binge eating vs eating disorders without
 Caveat: Anorexia nervosa can have binge eating as well. Therefore, this would need an additional variable from the ED100K
-```{r glad mhd restricting_vs_binge_eating_eating_disorders}
+```{r mhd restricting_vs_binge_eating_eating_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     restricting_vs_binge_eating_eating_disorders_numeric =
       case_when(
-                mhd.anorexia_nervosa_numeric == "1" ~ 1,
+        mhd.anorexia_nervosa_numeric == "1" ~ 1,
         mhd.atypical_anorexia_nervosa_numeric == "1" ~ 1,
         mhd.bulimia_nervosa_numeric == "1" ~ 2,
         mhd.psychological_overeating_or_bingeeating_numeric == "1" ~ 2,
@@ -1283,11 +1523,13 @@ mhd.raw.id <- mhd.raw.id %>%
 mhd.raw.id %>%
   freq(restricting_vs_binge_eating_eating_disorders,
        cumul = F)
+}
 ```
 
 
 
 ```{r Check eating_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     eating_disorders,
@@ -1303,10 +1545,12 @@ mhd.raw.id %>%
     mhd.bulimia_nervosa,
     mhd.psychological_overeating_or_bingeeating
   )
+}
 ```
 
 Obsessive compulsive disorders
-```{r glad mhd obsessive_compulsive_disorders}
+```{r mhd obsessive_compulsive_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     obsessive_compulsive_disorders_numeric =
@@ -1332,9 +1576,11 @@ mhd.raw.id <- mhd.raw.id %>%
 
 mhd.raw.id %>%
   freq(obsessive_compulsive_disorders)
+}
 ```
 
 ```{r Check obsessive_compulsive_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     obsessive_compulsive_disorders,
@@ -1344,13 +1590,15 @@ mhd.raw.id %>%
     mhd.obsessive_compulsive_related_disorders,
     mhd.obsessive_compulsive_related_disorders_numeric
   )
+}
 ```
 
 Psychotic disorders group
 [63] "mhd.schizophrenia_numeric"                                 
 [64] "mhd.schizoaffective_disorder_numeric"                      
 [65] "mhd.type_psychosis_psychotic_illness_numeric" 
-```{r glad mhd psychotic_disorders}
+```{r mhd psychotic_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     psychotic_disorders_numeric =
@@ -1359,10 +1607,10 @@ mhd.raw.id <- mhd.raw.id %>%
         mhd.schizoaffective_disorder_numeric == "1" ~ 1,
         mhd.type_psychosis_psychotic_illness_numeric == "1" ~ 1,
         (mhd.schizophrenia_numeric == "0" &
-        mhd.schizoaffective_disorder_numeric == "0" &
-        mhd.type_psychosis_psychotic_illness_numeric == "0") ~ 0
-      )
-  )
+        (mhd.schizoaffective_disorder_numeric == "0" | is.na(mhd.schizoaffective_disorder_numeric == "0") & #NA included because some cohorts don't have schizoaffective disorder
+        mhd.type_psychosis_psychotic_illness_numeric == "0") ~ 0)
+        )
+    )
 
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
@@ -1376,25 +1624,27 @@ mhd.raw.id <- mhd.raw.id %>%
 
 mhd.raw.id %>%
   freq(psychotic_disorders)
+}
 ```
 
 
 Overlap between self-report schizophrenia and bipolar disorder
 +++CH: Check overlap between schizophrenia group and bipolar disorder
 ++KT: Only 63 with comorbid self-report bipolar disorder and schizophrenia. More likely to have shared symptoms, less likely to have confirmed diagnoses of both. Could be too severe to be in GLAD?
-```{r glad mhd bipolar_and_schizophrenia_numeric}
+```{r mhd bipolar_and_schizophrenia_numeric}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     bipolar_and_schizophrenia_numeric =
       case_when(
         psychotic_disorders_numeric == 0 &
           mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 0 ~ 0,
-                psychotic_disorders_numeric == 1 &
+        psychotic_disorders_numeric == 1 &
+          mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 1,
+        psychotic_disorders_numeric == 1 &
           mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 0 ~ 2,
         psychotic_disorders_numeric == 0 &
-          mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 3,
-                psychotic_disorders_numeric == 1 &
-          mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 1
+          mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 3
       )
   )
 
@@ -1413,9 +1663,11 @@ mhd.raw.id <- mhd.raw.id %>%
 mhd.raw.id %>%
   freq(bipolar_and_schizophrenia,
        cumul = F)
+}
 ```
 
 ```{r Check psychotic_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     psychotic_disorders,
@@ -1431,6 +1683,7 @@ mhd.raw.id %>%
     mhd.schizoaffective_disorder,
     mhd.type_psychosis_psychotic_illness
   )
+}
 ```
 
 Personality disorder groups
@@ -1439,7 +1692,7 @@ Cluster A
 1. Paranoid                         28 ( 1.0%)
 2. Schizoid                         15 ( 0.5%)
 3. Schizotypal                      14 ( 0.5%)
-```{r glad mhd personality_cluster_a}
+```{r mhd personality_cluster_a}
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     personality_cluster_a_numeric =
@@ -1489,7 +1742,7 @@ Cluster B
 6. Histrionic                        7 ( 0.2%)
 7. Narcissistic                      8 ( 0.3%)
 
-```{r glad mhd personality_cluster_b}
+```{r mhd personality_cluster_b}
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     personality_cluster_b_numeric =
@@ -1583,8 +1836,7 @@ mhd.raw.id %>%
 
 Control grouping
 These individuals have no self report diagnosis of any kind that we measure. 
-Controls = 784
-```{r glad mhd control}
+```{r mhd control}
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     control_numeric =
@@ -1696,7 +1948,7 @@ mhd.raw.id %>%
 head(mhd.raw.id)
 ```
 
-```{r glad mhd summary}
+```{r mhd summary}
 summarytools::dfSummary(
   mhd.raw.id,
   graph.col = F,
@@ -1706,7 +1958,7 @@ summarytools::dfSummary(
 
 Create new dataframe with the derived categories
 ++KT: do we want to keep individual diagnoses here as well?? 
-```{r glad mhd categories}
+```{r mhd categories}
 mhd.raw.categories <- mhd.raw.id %>%
   select(
     Sample,
@@ -1758,14 +2010,230 @@ mhd.raw.categories <- mhd.raw.id %>%
     )
 ```
 
-# eclude cols 
+# exclude cols 
 
 ```{r cols to exclude}
 exclude_cols <- c("Sample",
                   "ID")
 ```
 
-# glad pcl
+# Prepandemic
+
+## gad (prepan)
+
+```{r glad gad prepan cols}
+if(GLAD == TRUE){
+glad.gad.raw <- readRDS(file = paste0(data.raw_path, "/glad/gad_glad.rds"))
+dim(glad.gad.raw)
+colnames(glad.gad.raw)
+}
+```
+
+```{r glad gad prepan cleaning}
+if(GLAD ==TRUE){
+exclude_cols <- c("Sample",
+                  "ID")
+glad.gad.raw.id <- glad.gad.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID),
+         startDate.prepandemic = startDate) %>% # Rename startDate
+  select(
+    Sample, # Sample
+    ID, # ID
+    gad.feeling_nervous_anxious_or_on_edge_prepan = gad.feeling_nervous_anxious_or_on_edge,
+    gad.control_worrying_stop_prepan = gad.control_worrying_stop,
+    gad.worrying_too_much_about_different_things_prepan = gad.worrying_too_much_about_different_things,
+    gad.trouble_relaxing_prepan = gad.trouble_relaxing,
+    gad.sit_restless_hard_prepan = gad.sit_restless_hard,
+    gad.becoming_easily_annoyed_or_irritable_prepan = gad.becoming_easily_annoyed_or_irritable,
+    gad.awful_feeling_afraid_happen_prepan = gad.awful_feeling_afraid_happen
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(glad.gad.raw.id)
+# Inspect colnames
+colnames(glad.gad.raw.id)
+#Differences
+dim(glad.gad.raw)[1]-dim(glad.gad.raw.id)[1]
+}
+```
+
+```{r glad copy prepan gad}
+if(GLAD == TRUE){
+prepan.gad.raw.id <- glad.gad.raw.id
+}
+```
+
+```{r edgi gad prepan cols}
+if(EDGI == TRUE){
+  edgi.gad.raw <- readRDS(file = paste0(data.raw_path, "/edgi/gad_edgi.rds"))
+  dim(edgi.gad.raw)
+  colnames(edgi.gad.raw)
+}
+```
+
+```{r edgi gad prepan cleaning}
+if(EDGI == TRUE){
+exclude_cols <- c("Sample",
+                  "ID")
+
+edgi.gad.raw.id <- edgi.gad.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID),
+         startDate.edgi = startDate) %>% # Rename startDate
+  select(
+    Sample, # Sample
+    ID, # ID
+    gad.feeling_nervous_anxious_or_on_edge_prepan = gad.feeling_nervous_anxious_or_on_edge,
+    gad.control_worrying_stop_prepan = gad.control_worrying_stop,
+    gad.worrying_too_much_about_different_things_prepan = gad.worrying_too_much_about_different_things,
+    gad.trouble_relaxing_prepan = gad.trouble_relaxing,
+    gad.sit_restless_hard_prepan = gad.sit_restless_hard,
+    gad.becoming_easily_annoyed_or_irritable_prepan = gad.becoming_easily_annoyed_or_irritable,
+    gad.awful_feeling_afraid_happen_prepan = gad.awful_feeling_afraid_happen
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(edgi.gad.raw.id)
+# Inspect colnames
+colnames(edgi.gad.raw.id)
+#Differences
+dim(edgi.gad.raw)[1]-dim(edgi.gad.raw.id)[1]
+}
+```
+
+```{r edgi copy prepan gad}
+if(EDGI == TRUE){
+  prepan.gad.raw.id <- edgi.gad.raw.id
+}
+```
+
+Calculate sum score for GAD-7
+Max should be 21.
+
+*Note that scores with missingness will be changed to NA later in the script
+```{r gad sum score prepan raw}
+if(GLAD ==TRUE | EDGI == TRUE){
+# Create vector with scoring key: If the item is reversed coded use -1. 
+# There needs to be the correct number of values for each item in the questionnaire. 
+gad.items_key_prepan <- c(1,1,1,1,1,1,1)
+
+# Create vector with items that are included in total score
+gad.items_prepan <- c(
+  "gad.feeling_nervous_anxious_or_on_edge_prepan_numeric",
+  "gad.control_worrying_stop_prepan_numeric",
+  "gad.worrying_too_much_about_different_things_prepan_numeric",
+  "gad.trouble_relaxing_prepan_numeric",
+  "gad.sit_restless_hard_prepan_numeric",
+  "gad.becoming_easily_annoyed_or_irritable_prepan_numeric",
+  "gad.awful_feeling_afraid_happen_prepan_numeric"
+  )
+
+# Calulate total score
+gad.scored_items_prepan <- scoreItems(keys = gad.items_key_prepan,
+                                        items = prepan.gad.raw.id[gad.items_prepan],
+                                        totals = TRUE, 
+                                        missing = TRUE, 
+                                        impute = 'none', 
+                                        min = 0, 
+                                        max = 3)
+# Add in column to tibble
+prepan.gad.raw.id$gad.sum_score_prepan_raw <- gad.scored_items_prepan$scores
+
+# Look at values
+prepan.gad.raw.id %>%
+  descr(gad.sum_score_prepan_raw,
+        stats = "common"
+        )
+}
+```
+
+missingness (NAs per person)
+
+prepandemic
+```{r gad prepan missingness}
+if(GLAD ==TRUE | EDGI == TRUE){
+prepan.gad.raw.id <- prepan.gad.raw.id %>%
+  mutate(
+    na_per_person_gad_prepan =         # variable for NA per person
+      rowSums(                       
+        is.na(.[gad.items_prepan])
+      )
+  )
+
+prepan.gad.raw.id %>%
+  freq(na_per_person_gad_prepan,
+       cumul = F)
+}
+```
+
+
+```{r gad prepan sum score if missigng items set to NA}
+if(GLAD ==TRUE | EDGI == TRUE){
+prepan.gad.raw.id <- prepan.gad.raw.id %>%
+  mutate(
+    gad.sum_score_prepan =
+      if_else(condition = na_per_person_gad_prepan > 0,
+              true = NA_real_,
+              false = gad.sum_score_prepan_raw,
+              missing = NA_real_
+              )
+  )
+
+prepan.gad.raw.id %>%
+  descr(gad.sum_score_prepan_raw, stats = "common")
+
+prepan.gad.raw.id %>%
+  descr(gad.sum_score_prepan, stats = "common")
+}
+```
+
+```{r glad prepan gad head}
+if(GLAD ==TRUE | EDGI == TRUE){
+head(prepan.gad.raw.id)
+}
+```
+
+```{r glad prepan gad summary}
+if(GLAD ==TRUE | EDGI == TRUE){
+summarytools::dfSummary(
+  prepan.gad.raw.id,
+  graph.col = F,
+  valid.col = F,
+  labels.col = F)
+}
+```
+
+
+## pcl (prepan)
 
 ```{r glad prepandemic pcl cols}
 if(GLAD == TRUE) {
@@ -1823,8 +2291,6 @@ if(GLAD == TRUE) {
   prepan.pcl.raw.id <- glad.pcl.raw.id
 }
 ```
-
-# edgi pcl
 
 ```{r edgi pcl cols}
 if(EDGI == TRUE) {
@@ -1960,13 +2426,13 @@ prepan.pcl.raw.id %>%
 }
 ```
 
-```{r glad pcl head}
+```{r pcl prepan head}
 if(GLAD == TRUE | EDGI == TRUE){
 head(prepan.pcl.raw.id)
 }
 ```
 
-```{r glad pcl summary}
+```{r pcl prepan summary}
 if(GLAD == TRUE | EDGI == TRUE){
 summarytools::dfSummary(
   prepan.pcl.raw.id,
@@ -1975,7 +2441,7 @@ summarytools::dfSummary(
 }
 ```
 
-# glad phq
+## phq (prepan)
 
 ```{r glad phq cols}
 if(GLAD == TRUE){
@@ -1984,7 +2450,6 @@ dim(glad.phq.raw)
 colnames(glad.phq.raw)
 }
 ```
-
 
 ```{r glad phq cleaning}
 if(GLAD == TRUE){
@@ -2035,8 +2500,6 @@ if(GLAD == TRUE) {
 }
 ```
 
-# edgi phq
-
 ```{r edgi phq cols}
 if(EDGI == TRUE){
   edgi.phq.raw <- readRDS(file = paste0(data.raw_path, "/edgi/phq_edgi.rds"))
@@ -2044,7 +2507,6 @@ if(EDGI == TRUE){
   colnames(edgi.phq.raw)
 }
 ```
-
 
 ```{r edgi phq cleaning}
 if(EDGI == TRUE){
@@ -2222,13 +2684,13 @@ prepan.phq.raw.id %>%
 ```
 
 
-```{r glad phq head}
+```{r phq prepan head}
 if(GLAD == TRUE | EDGI == TRUE) {
 head(prepan.phq.raw.id)
 }
 ```
 
-```{r glad phq summary}
+```{r phq prepan summary}
 if(GLAD == TRUE | EDGI == TRUE) {
 summarytools::dfSummary(
   prepan.phq.raw.id,
@@ -2238,9 +2700,9 @@ summarytools::dfSummary(
 }
 ```
 
-# glad ocir
+## ocir (prepan)
 
-```{r glad ocir cols}
+```{r glad ocir prepan cols}
 if(GLAD == TRUE){
 glad.ocir.raw <- readRDS(file = paste0(data.raw_path, "/glad/ocir_glad.rds"))
 dim(glad.ocir.raw)
@@ -2248,7 +2710,7 @@ colnames(glad.ocir.raw)
 }
 ```
 
-```{r glad ocir cleaning}
+```{r glad ocir prepan cleaning}
 if(GLAD == TRUE){
 glad.ocir.raw.id <- glad.ocir.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
@@ -2306,9 +2768,7 @@ if(GLAD == TRUE) {
 }
 ```
 
-# edgi ocir
-
-```{r edgi ocir cols}
+```{r edgi ocir prepan cols}
 if(EDGI == TRUE){
   edgi.ocir.raw <- readRDS(file = paste0(data.raw_path, "/edgi/ocir_edgi.rds"))
   dim(edgi.ocir.raw)
@@ -2316,7 +2776,7 @@ if(EDGI == TRUE){
 }
 ```
 
-```{r edgi ocir cleaning}
+```{r edgi ocir prepan cleaning}
 if(EDGI == TRUE){
   edgi.ocir.raw.id <- edgi.ocir.raw %>%
     drop_na(externalDataReference) %>% # Drop NAs
@@ -2441,13 +2901,13 @@ prepan.ocir.raw.id %>%
 }
 ```
 
-```{r glad ocir head}
+```{r ocir prepan head}
 if(GLAD == TRUE | EDGI == TRUE) {
 head(prepan.ocir.raw.id)
 }
 ```
 
-```{r glad ocir summary}
+```{r ocir prepan summary}
 if(GLAD == TRUE | EDGI == TRUE) {
 summarytools::dfSummary(
   prepan.ocir.raw.id,
