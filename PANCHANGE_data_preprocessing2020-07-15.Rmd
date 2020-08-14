@@ -52,8 +52,8 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = FALSE
-NBR = TRUE
+EDGI = TRUE
+NBR = FALSE
 RAMP = FALSE
 ```
 
@@ -1251,11 +1251,12 @@ if(EDGI == TRUE){
     mhd.mania_hypomania_bipolar_or_manicdepression = demographics.mania_hypomania_bipolar_or_manicdepression,
     mhd.schizophrenia = demographics.schizophrenia,
     mhd.type_psychosis_psychotic_illness = demographics.psychosis_type_psychotic_illness, # word type psychosis changed order compared to GLAD 
-#    mhd.personality_disorder_diagnosed = demographics.personality_disorder, # does not exist in EDGI because it is multiple choice in EDGI
+    mhd.personality_disorder_diagnosed = demographics.diagnosed_personality_disorder, # named differently in EDGI
     mhd.posttraumatic_stress_disorder_ptsd = demographics.posttraumatic_stress_disorder_ptsd,
     mhd.autism_aspergers_or_autistic_spectrum_disorder = demographics.autism_spectrum_disorder_asd, # different name in EDGI
     mhd.body_dysmorphic_disorder_bdd = demographics.body_dysmorphic_disorder,
     mhd.personality_disorder = demographics.personality_disorder, # routing variable in EDGI is named differently; renamed here to match GLAD
+    mhd.attention_deficit_hyperactivity_disorder = demographics.attention_deficit_hyperactivity_disorder
     ) %>%
     add_column(
       mhd.schizoaffective_disorder = NA_character_
