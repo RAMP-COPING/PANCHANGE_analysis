@@ -563,12 +563,10 @@ if(RAMP == TRUE){
   exclude_cols_dem <- c("ID",
                         "Sample")
   
-ramp.dem.raw$externalDataReference <- ramp.dem.raw$`Login ID` #move Login ID to external data reference
-    
   ramp.dem.raw.id <- ramp.dem.raw %>%
-    drop_na(externalDataReference) %>% # Drop NAs
-    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    drop_na(`Login ID`) %>% # Drop NAs
+    distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(`Login ID`, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
     mutate(ID = as.numeric(ID)) %>%
     select(
       Sample, # Sample
@@ -979,7 +977,7 @@ exclude_cols_employment <- c("ID",
                   "Sample")
 
 ramp.employment.raw.id <- ramp.employment.raw %>%
-  drop_na(subjectid) %>% # Drop NAs
+  drop_na('Login ID') %>% # Drop NAs
   distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(
