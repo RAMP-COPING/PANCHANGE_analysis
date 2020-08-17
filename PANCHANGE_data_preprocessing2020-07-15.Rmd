@@ -5219,16 +5219,16 @@ if(NBR == TRUE) {
 ## RAMP
 ```{r coping ramp ocir cols}
 if(RAMP == TRUE) {
-coping.ramp.ocir.raw <- readRDS(file = paste0(data.raw_path, "/ramp/ocir_coping_ramp.rds"))
-dim(coping.ramp.ocir.raw)
-colnames(coping.ramp.ocir.raw)
+ramp.ocir.raw <- readRDS(file = paste0(data.raw_path, "/ramp/ocir_ramp.rds"))
+dim(ramp.ocir.raw)
+colnames(ramp.ocir.raw)
 }
 ```
 
 ```{r coping ramp ocir summary labels}
 if(RAMP == TRUE) {
 summarytools::dfSummary(
-  coping.ramp.ocir.raw,
+  ramp.ocir.raw,
   graph.col = F,
   valid.col = F
   #labels.col = F
@@ -5239,33 +5239,34 @@ summarytools::dfSummary(
 *Note that the COPING RAMP OCI-R ID numbers are stored under recipientFirstName (rather than ExternalDataReference)
 ```{r coping ramp ocir cleaning}
 if(RAMP == TRUE) {
-coping.ramp.ocir.raw.id <- coping.ramp.ocir.raw %>%
-  drop_na(recipientFirstName) %>% # Drop NAs
-  distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(recipientFirstName, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+ramp.ocir.raw.id <- ramp.ocir.raw %>%
+  drop_na(`Login ID`) %>% # Drop NAs
+  distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(`Login ID`, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID)) %>%
   select(
     Sample, # Sample
     ID, # ID
-    ocir.felt_pandemic_feelings, # Comparison to before the pandemic
-    ocir.i_repeatedly_check_doors_windows_drawers_etc_retro = ocir.i_repeatedly_check_doors_windows_drawers_etc.,
-    ocir.arranged_things_change_upset_retro = ocir.arranged_things_change_upset,
-    ocir.repeat_feel_numbers_retro = ocir.numbers_repeat_feel, ## Different from RAMP prepandemic
-    ocir.clean_simply_wash_feel_retro = ocir.feel_contaminated_clean_simply, ## Different from RAMP prepandemic
-    ocir.mind_upset_unpleasant_thoughts_retro = ocir.mind_upset_unpleasant_thoughts,
-    ocir.afraid_avoid_throwing_things_retro = ocir.afraid_avoid_throwing_things,
-    ocir.light_switches_water_taps_retro = ocir.light_switches_water_taps,
-    ocir.arranged_things_retro = ocir.arranged_things,
-    ocir.good_feel_bad_numbers_retro = ocir.bad_numbers_good_feel, ## Different from RAMP prepandemic
-    ocir.hands_longer_wash_retro = ocir.longer_hands_wash, ## Different from RAMP prepandemic
-    ocir.saved_things_retro = ocir.saved_things,
-    ocir.frequently_difficulty_rid_nasty_retro = ocir.frequently_rid_difficulty_nasty, ## Different from RAMP prepandemic
-    ocir.i_check_things_more_often_than_necessary_retro = ocir.i_check_things_more_often_than_necessary.,
+    ocir.felt_pandemic_feelings = ocir.feelings_pandemic_felt, # Comparison to before the pandemic
+    ocir.saved_things_retro = ocir.saved_things.1,
+    ocir.i_check_things_more_often_than_necessary_retro = ocir.i_check_things_more_often_than_necessary..1,
+    ocir.i_repeatedly_check_doors_windows_drawers_etc_retro = ocir.i_repeatedly_check_doors_windows_drawers_etc..1,
+    ocir.arranged_things_change_upset_retro = ocir.arranged_things_change_upset.1,
+    ocir.repeat_feel_numbers_retro = ocir.numbers_repeat_feel.1, 
+    ocir.clean_simply_wash_feel_retro = ocir.feel_contaminated_clean_simply.1, 
+    ocir.mind_upset_unpleasant_thoughts_retro = ocir.unpleasant_thoughts_mind_upset.1,
+    ocir.afraid_avoid_throwing_things_retro = ocir.afraid_avoid_throwing_things.1,
+    ocir.light_switches_water_taps_retro = ocir.repeatedly_check_gas_water.1,
+    ocir.arranged_things_retro = ocir.arranged_things.1,
+    ocir.good_feel_bad_numbers_retro = ocir.bad_numbers_good_feel.1, 
+    ocir.hands_longer_wash_retro = ocir.longer_hands_wash.1, 
+    ocir.frequently_difficulty_rid_nasty_retro = ocir.difficulty_rid_frequently_nasty.1, 
+    
     ocir.arranged_properly_objects_upset_retro = ocir.arranged_properly_objects_upset,
     ocir.feel_compelled_count_things_retro = ocir.feel_compelled_count_things,
-    ocir.strangers_touch_touched_difficult_retro = ocir.strangers_touch_touched_object, ## Different from RAMP prepandemic
-    ocir.control_difficult_find_thoughts_retro = ocir.control_find_difficult_thoughts, ## Different from RAMP prepandemic
-    ocir.i_collect_things_i_dont_need_retro = ocir.i_collect_things_i_dont_need., ## Different from RAMP prepandemic
+    ocir.strangers_touch_touched_difficult_retro = ocir.strangers_touch_touched_object, 
+    ocir.control_difficult_find_thoughts_retro = ocir.control_find_difficult_thoughts, 
+    ocir.i_collect_things_i_dont_need_retro = ocir.i_collect_things_i_dont_need., 
     ocir.i_repeatedly_check_doors_windows_drawers_etc_base = ocir.i_repeatedly_check_doors_windows_drawers_etc..1,
     ocir.arranged_things_change_upset_base = ocir.arranged_things_change_upset.1,
     ocir.repeat_feel_numbers_base = ocir.numbers_repeat_feel.1, ## Different from RAMP prepandemic
@@ -5299,11 +5300,11 @@ coping.ramp.ocir.raw.id <- coping.ramp.ocir.raw %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
 
 # Inspect dimensions
-dim(coping.ramp.ocir.raw.id)
+dim(ramp.ocir.raw.id)
 # Inspect colnames
-colnames(coping.ramp.ocir.raw.id)
+colnames(ramp.ocir.raw.id)
 #Differences
-dim(coping.ramp.ocir.raw)[1]-dim(coping.ramp.ocir.raw.id)[1]
+dim(ramp.ocir.raw)[1]-dim(ramp.ocir.raw.id)[1]
 }
 ```
 
