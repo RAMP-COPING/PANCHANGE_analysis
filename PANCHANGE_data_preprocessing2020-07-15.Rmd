@@ -51,8 +51,8 @@ date = Sys.Date()
 
 # Specify cohort
 ```{r Specify cohort}
-GLAD = FALSE
-EDGI = TRUE
+GLAD = TRUE
+EDGI = FALSE
 NBR = FALSE
 RAMP = FALSE
 ```
@@ -2514,7 +2514,7 @@ gad.scored_items_prepan <- scoreItems(keys = gad.items_key_prepan,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-prepan.gad.raw.id$gad.sum_score_prepan_raw <- as.numeric(gad.scored_items_prepan$scores)
+prepan.gad.raw.id$gad.sum_score_prepan_raw <- gad.scored_items_prepan$scores
 
 # Look at values
 prepan.gad.raw.id %>%
@@ -2723,7 +2723,7 @@ pcl.scored_items_prepan <- scoreItems(keys = pcl.items_key_prepan,
                                         min = 1, 
                                         max = 5)
 # Add in column to tibble
-prepan.pcl.raw.id$pcl.sum_score_prepan_raw <- as.numeric(pcl.scored_items_prepan$scores)
+prepan.pcl.raw.id$pcl.sum_score_prepan_raw <- pcl.scored_items_prepan$scores
 
 # Look at values
 prepan.pcl.raw.id %>%
@@ -2932,7 +2932,7 @@ phq.scored_items_prepan <- scoreItems(keys = phq.items_key_prepan,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-prepan.phq.raw.id$phq.sum_score_prepan_raw <- as.numeric(phq.scored_items_prepan$scores)
+prepan.phq.raw.id$phq.sum_score_prepan_raw <- phq.scored_items_prepan$scores
 
 # Look at values
 prepan.phq.raw.id %>%
@@ -3623,7 +3623,7 @@ gad.scored_items_retro <- scoreItems(keys = gad.items_key_retro,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-coping.gad.raw.id$gad.sum_score_retro_raw <- as.numeric(gad.scored_items_retro$scores)
+coping.gad.raw.id$gad.sum_score_retro_raw <- gad.scored_items_retro$scores
 
 # Look at values
 coping.gad.raw.id %>%
@@ -3658,7 +3658,7 @@ gad.scored_items_base <- scoreItems(keys = gad.items_key_base,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-coping.gad.raw.id$gad.sum_score_base_raw <- as.numeric(gad.scored_items_base$scores)
+coping.gad.raw.id$gad.sum_score_base_raw <- gad.scored_items_base$scores
 
 # Look at values
 coping.gad.raw.id %>%
@@ -4067,7 +4067,7 @@ pcl.scored_items_retro <- scoreItems(keys = pcl.items_key_retro,
                                      min = 0, 
                                      max = 1)
 # Add in column to tibble
-coping.pcl.raw.id$pcl.sum_score_retro_raw <- as.numeric(pcl.scored_items_retro$scores)
+coping.pcl.raw.id$pcl.sum_score_retro_raw <- pcl.scored_items_retro$scores
 
 # Look at values
 coping.pcl.raw.id %>%
@@ -4103,7 +4103,7 @@ pcl.scored_items_base <- scoreItems(keys = pcl.items_key_base,
                                     min = 1, 
                                     max = 5)
 # Add in column to tibble
-coping.pcl.raw.id$pcl.sum_score_base_raw <- as.numeric(pcl.scored_items_base$scores)
+coping.pcl.raw.id$pcl.sum_score_base_raw <- pcl.scored_items_base$scores
 
 # Look at values
 coping.pcl.raw.id %>%
@@ -4555,7 +4555,7 @@ phq.scored_items_retro <- scoreItems(keys = phq.items_key_retro,
                                      min = 0, 
                                      max = 3)
 # Add in column to tibble
-coping.phq.raw.id$phq.sum_score_retro_raw <- as.numeric(phq.scored_items_retro$scores)
+coping.phq.raw.id$phq.sum_score_retro_raw <- phq.scored_items_retro$scores
 
 # Look at values
 coping.phq.raw.id %>%
@@ -4592,7 +4592,7 @@ phq.scored_items_base <- scoreItems(keys = phq.items_key_base,
                                     min = 0, 
                                     max = 3)
 # Add in column to tibble
-coping.phq.raw.id$phq.sum_score_base_raw <- as.numeric(phq.scored_items_base$scores)
+coping.phq.raw.id$phq.sum_score_base_raw <- phq.scored_items_base$scores
 
 # Look at values
 coping.phq.raw.id %>%
@@ -5192,7 +5192,7 @@ ocir.scored_items_retro <- scoreItems(keys = ocir.items_key_retro,
                                      min = 0, 
                                      max = 4)
 # Add in column to tibble
-coping.ocir.raw.id$ocir.sum_score_retro_raw <- as.numeric(ocir.scored_items_retro$scores)
+coping.ocir.raw.id$ocir.sum_score_retro_raw <- ocir.scored_items_retro$scores
 
 # Look at values
 coping.ocir.raw.id %>%
@@ -5238,7 +5238,7 @@ ocir.scored_items_base <- scoreItems(keys = ocir.items_key_base,
                                     min = 0, 
                                     max = 4)
 # Add in column to tibble
-coping.ocir.raw.id$ocir.sum_score_base_raw <- as.numeric(ocir.scored_items_base$scores)
+coping.ocir.raw.id$ocir.sum_score_base_raw <- ocir.scored_items_base$scores
 
 # Look at values
 coping.ocir.raw.id %>%
