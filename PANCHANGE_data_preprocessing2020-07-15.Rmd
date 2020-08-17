@@ -6554,20 +6554,62 @@ Variables required:
 - "respiratory.fatigue_binary": Severe fatigue
 - "respiratory.skipped_meals_binary": Skipped meals
 
-++KT: Needs to be developed further for RAMP dataset
-COVID prediction model for COPING
 The COVID prediction model has coded the sexes opposite to our data set
 ```{r create numeric sex variable with male=1}
-
+if(GLAD == TRUE | NBR == TRUE | EDGI == TRUE){
 dat.coping <- dat.coping %>%
   mutate(
     Sex_respiratory =
       if_else(
         Sex == "Male",
         true = 1,
-        false = 0
+        false = 0,
+        missing = NA_real_
       )
   )
+}
+```
+
+Sex is no available in the RAMP dataset, therefore a proxy sex variable is created whereby Gender = Male and Transgender = No. 
+```{r create numeric sex variable with male=1 for ramp}
+if(RAMP == TRUE){
+dat.coping <- dat.coping %>%
+  mutate(
+    Sex_respiratory =
+      if_else(
+        Gender == "Male" &
+        Transgender_uncleaned == "No",
+        true = 1,
+        false = 0,
+        missing = NA_real_
+      )
+  )
+}
+```
+
+Age is not available in RAMP, only categorical age. We will assign each individual the middle value of each age category. 
+```{r create age - proxy variable for ramp}
+if(RAMP == TRUE){
+dat.coping <- dat.coping %>%
+  mutate(
+    Age =
+      case_when(
+        age_category_full == "16-18" ~ 17,
+        age_category_full == "19-25" ~ 22,
+        age_category_full == "26-35" ~ 30.5,
+        age_category_full == "36-45" ~ 40.5,
+        age_category_full == "46-55" ~ 50.5,
+        age_category_full == "56-65" ~ 60.5,
+        age_category_full == "66-70" ~ 68,
+        age_category_full == "71-75" ~ 73,
+        age_category_full == "76-80" ~ 78,
+        age_category_full == "81-85" ~ 83,
+        age_category_full == "86-90" ~ 88,
+        age_category_full == "91-100" ~ 93,
+      age_category_full == "100+" ~ 100
+      )
+  )
+}
 ```
 
 ```{r how many people experinced all symptoms}
@@ -6588,7 +6630,7 @@ dat.coping %>%
   freq(covid_symptoms, cumul = F)
 ```
 
-
+#COVID prediction model
 ```{r COVID prediction model}
 # linear model of covid symptoms
 dat.coping <- dat.coping %>%
@@ -6643,7 +6685,9 @@ descr(x = dat.coping[,covid_variables],
 ## looking at cases over 0.5
 freq(dat.coping$covid_odds_ratio_50, 
      cumul = FALSE) 
+
 ```
+
 
 Probable COVID case including the routing question
 ```{r recoding probable covid to account for screening question}
