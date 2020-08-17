@@ -1260,10 +1260,11 @@ if(EDGI == TRUE){
     mhd.mania_hypomania_bipolar_or_manicdepression = demographics.mania_hypomania_bipolar_or_manicdepression,
     mhd.schizophrenia = demographics.schizophrenia,
     mhd.type_psychosis_psychotic_illness = demographics.psychosis_type_psychotic_illness, # word type psychosis changed order compared to GLAD 
-#    mhd.personality_disorder_diagnosed = demographics.personality_disorder_diagnosed, # does not exist in EDGI because it is multiple choice in EDGI
+    mhd.personality_disorder_diagnosed = demographics.diagnosed_personality_disorder, # named differently in EDGI
     mhd.posttraumatic_stress_disorder_ptsd = demographics.posttraumatic_stress_disorder_ptsd,
     mhd.autism_aspergers_or_autistic_spectrum_disorder = demographics.autism_spectrum_disorder_asd, # different name in EDGI
-    mhd.personality_disorder = demographics.personality_disorder,
+    mhd.body_dysmorphic_disorder_bdd = demographics.body_dysmorphic_disorder,
+    mhd.personality_disorder = demographics.personality_disorder, # routing variable in EDGI is named differently; renamed here to match GLAD
     mhd.attention_deficit_hyperactivity_disorder = demographics.attention_deficit_hyperactivity_disorder
     ) %>%
     add_column(
@@ -1339,12 +1340,11 @@ nbr.mhd.raw.id <- nbr.mhd.raw %>%
     mhd.anorexia_nervosa_unc = mhd.anorexia_nervosa,
     mhd.atypical_anorexia_nervosa_unc = mhd.atypical_anorexia_nervosa,
     mhd.bulimia_nervosa_unc = mhd.bulimia_nervosa,
-    mhd.psychological_overeating_or_bingeeating_unc = mhd.psychological_overeating_or_bingeeating
+    mhd.bingeeating_disorder_unc = mhd.bingeeating_disorder
   ) %>%
   add_column(
-    mhd.schizoaffective_disorder = NA, #NBR doesn't ask about schizoaffective disorder. This means the column das not exist in the data set
-    mhd.schizoaffective_disorder_numeric = NA
-  )
+    mhd.schizoaffective_disorder = NA #NBR doesn't ask about schizoaffective disorder. This means the column das not exist in the data set
+  ) %>% 
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
@@ -1369,7 +1369,7 @@ dim(nbr.mhd.raw)[1]-dim(nbr.mhd.raw.id)[1]
 
 ```{r nbr mhd copy}
 if(NBR == TRUE) {
-  mhd.raw.id <- nbr.mhd.raw.id_renamed
+  mhd.raw.id <- nbr.mhd.raw.id
 }
 ```
 
@@ -1595,7 +1595,7 @@ mhd.raw.id %>%
 There is routing questionnaire if participants have been diagnosed with an eating disorder and afterwards they get asked the specific disorders. Therefore, mhd.suspected_eating_disorder_diagnosed_numeric needs to be recoded as 0 otherwise they would be NAs.
 ```{r nbr cleaning eating disorders}
 if(NBR == TRUE) {
-#Recode as 0 if ppt respnds no to screening question (mhd.suspected_eating_disorder_diagnosed_numeric)
+#Recode as 0 if ppt responds no to screening question (mhd.suspected_eating_disorder_diagnosed_numeric)
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     mhd.anorexia_nervosa_numeric =
@@ -1612,8 +1612,24 @@ mhd.raw.id <- mhd.raw.id %>%
                 mhd.bulimia_nervosa_unc_numeric == "1" ~ 1),
     mhd.bingeeating_disorder_numeric =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
-                mhd.bingeeating_disorder_numeric == "0" ~ 0,
-                mhd.bingeeating_disorder_numeric == "1" ~ 1)
+                mhd.bingeeating_disorder_unc_numeric == "0" ~ 0,
+                mhd.bingeeating_disorder_unc_numeric == "1" ~ 1),
+    mhd.anorexia_nervosa =
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not Anorexia nervosa",
+                mhd.anorexia_nervosa_unc_numeric == "0" ~ "Not Anorexia nervosa",
+                mhd.anorexia_nervosa_unc_numeric == "1" ~ "Anorexia nervosa"),
+    mhd.atypical_anorexia_nervosa =
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not Atypical anorexia nervosa",
+                mhd.atypical_anorexia_nervosa_unc_numeric == "0" ~ "Not Atypical anorexia nervosa",
+                mhd.atypical_anorexia_nervosa_unc_numeric == "1" ~ "Atypical anorexia nervosa"),
+    mhd.bulimia_nervosa =
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not Bulimia nervosa",
+                mhd.bulimia_nervosa_unc_numeric == "0" ~ "Not Bulimia nervosa",
+                mhd.bulimia_nervosa_unc_numeric == "1" ~ "Bulimia nervosa"),
+    mhd.bingeeating_disorder =
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not Binge-eating disorder",
+                mhd.bingeeating_disorder_unc_numeric == "0" ~ "Not Binge-eating disorder",
+                mhd.bingeeating_disorder_unc_numeric == "1" ~ "Binge-eating disorder")
     )
 }
 
@@ -1829,7 +1845,7 @@ mhd.raw.id <- mhd.raw.id %>%
   mutate(
     obsessive_compulsive_disorders =
       recode_factor(obsessive_compulsive_disorders_numeric,
-                    "0" = "No obsessivecompulsive disorder",
+                    "0" = "No obsessive compulsive disorder",
                     "1" = "Obsessive compulsive disorder",
                     missing = NA_character_
                     )
@@ -3451,7 +3467,7 @@ if(NBR == TRUE) {
       Sample, # Sample
       ID, # ID
       startDate.coping = startDate, # Rename startDate
-      gad.problems_made_difficult_care, # Impairment
+      gad.problems_made_difficult_care = gad.problems_made_care_difficult, # Impairment (different from GLAD)
       gad.pandemic_felt_feelings, # Comparison to before the pandemic (retro)
       gad.feeling_nervous_anxious_or_on_edge_retro = gad.feeling_nervous_anxious_or_on_edge,
       gad.control_worrying_stop_retro = gad.control_worrying_stop,
@@ -3459,14 +3475,14 @@ if(NBR == TRUE) {
       gad.trouble_relaxing_retro = gad.trouble_relaxing,
       gad.sit_restless_hard_retro = gad.sit_restless_hard,
       gad.becoming_easily_annoyed_or_irritable_retro = gad.becoming_easily_annoyed_or_irritable,
-      gad.awful_feeling_afraid_happen_retro = gad.awful_feeling_afraid_happen,
+      gad.awful_feeling_afraid_happen_retro = gad.feeling_afraid_awful_happen, #Different from GLAD
       gad.feeling_nervous_anxious_or_on_edge_base = gad.feeling_nervous_anxious_or_on_edge.1,
       gad.control_worrying_stop_base = gad.control_worrying_stop.1,
       gad.worrying_too_much_about_different_things_base = gad.worrying_too_much_about_different_things.1,
       gad.trouble_relaxing_base = gad.trouble_relaxing.1,
       gad.sit_restless_hard_base = gad.sit_restless_hard.1,
       gad.becoming_easily_annoyed_or_irritable_base = gad.becoming_easily_annoyed_or_irritable.1,
-      gad.awful_feeling_afraid_happen_base = gad.awful_feeling_afraid_happen.1
+      gad.awful_feeling_afraid_happen_base = gad.feeling_afraid_awful_happen.1 #Different from GLAD
     ) %>%
     add_numeric(., exclude = exclude_cols_coping_nbr) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -3680,7 +3696,7 @@ coping.gad.raw.id %>%
   freq(na_per_person_gad_retro, cumul = F) #have a look at the frequency
 ```
 
-```{r coping gad base sum score if missigng items set to NA}
+```{r coping gad base sum score if missing items set to NA}
 coping.gad.raw.id <- coping.gad.raw.id %>%
   mutate(
     gad.sum_score_base =
@@ -3699,7 +3715,7 @@ coping.gad.raw.id %>%
 ```
 
 
-```{r coping gad retro sum score if missigng items set to NA}
+```{r coping gad retro sum score if missing items set to NA}
 coping.gad.raw.id <- coping.gad.raw.id %>%
   mutate(
     gad.sum_score_retro =
@@ -4130,7 +4146,7 @@ coping.pcl.raw.id %>%
 ```
 
 
-```{r coping pcl base sum score if missigng items set to NA}
+```{r coping pcl base sum score if missing items set to NA}
 coping.pcl.raw.id <- coping.pcl.raw.id %>%
   mutate(
     pcl.sum_score_base =
@@ -4148,7 +4164,7 @@ coping.pcl.raw.id %>%
   descr(pcl.sum_score_base, stats = "common")
 ```
 
-```{r coping pcl retro sum score if missigng items set to NA}
+```{r coping pcl retro sum score if missing items set to NA}
 coping.pcl.raw.id <- coping.pcl.raw.id %>%
   mutate(
     pcl.sum_score_retro =
@@ -4378,14 +4394,14 @@ coping.nbr.phq.raw.id <- coping.nbr.phq.raw %>%
   select(
     Sample, # Sample
     ID, # ID
-    phq.problems_made_difficult_care,
+    phq.problems_made_difficult_care = phq.problems_made_care_difficult,
     phq.pandemic_felt_feelings,
     phq.little_interest_or_pleasure_in_doing_things_retro = phq.little_interest_or_pleasure_in_doing_things,
     phq.feeling_down_depressed_or_hopeless_retro = phq.feeling_down_depressed_or_hopeless,
     phq.staying_asleep_sleeping_trouble_retro = phq.staying_asleep_sleeping_trouble,
     phq.feeling_tired_or_having_little_energy_retro = phq.feeling_tired_or_having_little_energy,
     phq.poor_appetite_or_overeating_retro = phq.poor_appetite_or_overeating,
-    phq.feeling_bad_failure_family_retro = phq.feeling_bad_failure_family,
+    phq.feeling_bad_failure_family_retro = phq.family_feeling_bad_failure,
     phq.trouble_concentrating_reading_newspaper_retro = phq.trouble_concentrating_newspaper_reading, # differ NBR prepandemic
     phq.moving_fidgety_noticed_opposite_retro = phq.moving_fidgety_opposite_slowly, # differ NBR prepandemic
     phq.dead_hurting_thoughts_retro = phq.dead_hurting_thoughts,
@@ -4394,7 +4410,7 @@ coping.nbr.phq.raw.id <- coping.nbr.phq.raw %>%
     phq.staying_asleep_sleeping_trouble_base = phq.staying_asleep_sleeping_trouble.1,
     phq.feeling_tired_or_having_little_energy_base = phq.feeling_tired_or_having_little_energy.1,
     phq.poor_appetite_or_overeating_base = phq.poor_appetite_or_overeating.1,
-    phq.feeling_bad_failure_family_base = phq.feeling_bad_failure_family.1,
+    phq.feeling_bad_failure_family_base = phq.family_feeling_bad_failure.1,
     phq.trouble_concentrating_reading_newspaper_base = phq.trouble_concentrating_newspaper_reading.1, # differ NBR prepandemic
     phq.moving_fidgety_noticed_opposite_base = phq.moving_fidgety_opposite_slowly.1, # differ NBR prepandemic
     phq.dead_hurting_thoughts_base = phq.dead_hurting_thoughts.1
@@ -4657,7 +4673,7 @@ coping.phq.raw.id %>%
 ```
 
 
-```{r coping phq base sum score if missigng items set to NA}
+```{r coping phq base sum score if missing items set to NA}
 coping.phq.raw.id <- coping.phq.raw.id %>%
   mutate(
     phq.sum_score_base =
@@ -4676,7 +4692,7 @@ coping.phq.raw.id %>%
 ```
 
 8 items
-```{r phq base sum score if missigng items set to NA - 8 items}
+```{r phq base sum score if missing items set to NA - 8 items}
 coping.phq.raw.id <- coping.phq.raw.id %>%
   mutate(
     phq.sum_score_8items_base =
@@ -4693,7 +4709,7 @@ coping.phq.raw.id %>%
 ```
 
 
-```{r coping phq retro sum score if missigng items set to NA}
+```{r coping phq retro sum score if missing items set to NA}
 coping.phq.raw.id <- coping.phq.raw.id %>%
   mutate(
     phq.sum_score_retro =
@@ -4712,7 +4728,7 @@ coping.phq.raw.id %>%
 ```
 
 8 items
-```{r phq retro sum score if missigng items set to NA - 8 items}
+```{r phq retro sum score if missing items set to NA - 8 items}
 coping.phq.raw.id <- coping.phq.raw.id %>%
   mutate(
     phq.sum_score_8items_retro =
@@ -4960,6 +4976,8 @@ summarytools::dfSummary(
 ```
 
 *Note that the COPING NBR OCI-R ID numbers are stored under recipientFirstName (rather than ExternalDataReference)
+
+++MD: One NBR ID is being converted to NA by the as.numeric(ID) line of code.
 ```{r coping nbr ocir cleaning}
 if(NBR == TRUE) {
 coping.nbr.ocir.raw.id <- coping.nbr.ocir.raw %>%
@@ -4974,39 +4992,39 @@ coping.nbr.ocir.raw.id <- coping.nbr.ocir.raw %>%
     ocir.felt_pandemic_feelings, # Comparison to before the pandemic
     ocir.i_repeatedly_check_doors_windows_drawers_etc_retro = ocir.i_repeatedly_check_doors_windows_drawers_etc.,
     ocir.arranged_things_change_upset_retro = ocir.arranged_things_change_upset,
-    ocir.repeat_feel_numbers_retro = ocir.numbers_repeat_feel, ## Different from NBR prepandemic
-    ocir.clean_simply_wash_feel_retro = ocir.feel_contaminated_clean_simply, ## Different from NBR prepandemic
+    ocir.repeat_feel_numbers_retro = ocir.repeat_numbers_feel, ## Different from GLAD
+    ocir.clean_simply_wash_feel_retro = ocir.feel_contaminated_clean_simply,
     ocir.mind_upset_unpleasant_thoughts_retro = ocir.mind_upset_unpleasant_thoughts,
     ocir.afraid_avoid_throwing_things_retro = ocir.afraid_avoid_throwing_things,
-    ocir.light_switches_water_taps_retro = ocir.light_switches_water_taps,
+    ocir.light_switches_water_taps_retro = ocir.water_taps_light_switches, ## Different from GLAD
     ocir.arranged_things_retro = ocir.arranged_things,
-    ocir.good_feel_bad_numbers_retro = ocir.bad_numbers_good_feel, ## Different from NBR prepandemic
-    ocir.hands_longer_wash_retro = ocir.longer_hands_wash, ## Different from NBR prepandemic
+    ocir.good_feel_bad_numbers_retro = ocir.bad_numbers_good_feel,
+    ocir.hands_longer_wash_retro = ocir.longer_hands_wash, 
     ocir.saved_things_retro = ocir.saved_things,
-    ocir.frequently_difficulty_rid_nasty_retro = ocir.frequently_rid_difficulty_nasty, ## Different from NBR prepandemic
+    ocir.frequently_difficulty_rid_nasty_retro = ocir.frequently_rid_difficulty_nasty, 
     ocir.i_check_things_more_often_than_necessary_retro = ocir.i_check_things_more_often_than_necessary.,
     ocir.arranged_properly_objects_upset_retro = ocir.arranged_properly_objects_upset,
     ocir.feel_compelled_count_things_retro = ocir.feel_compelled_count_things,
-    ocir.strangers_touch_touched_difficult_retro = ocir.strangers_touch_touched_object, ## Different from NBR prepandemic
-    ocir.control_difficult_find_thoughts_retro = ocir.control_find_difficult_thoughts, ## Different from NBR prepandemic
-    ocir.i_collect_things_i_dont_need_retro = ocir.i_collect_things_i_dont_need., ## Different from NBR prepandemic
+    ocir.strangers_touch_touched_difficult_retro = ocir.strangers_touch_touched_object, 
+    ocir.control_difficult_find_thoughts_retro = ocir.control_difficult_thoughts_find, ## Different from GLAD 
+    ocir.i_collect_things_i_dont_need_retro = ocir.i_collect_things_i_dont_need., 
     ocir.i_repeatedly_check_doors_windows_drawers_etc_base = ocir.i_repeatedly_check_doors_windows_drawers_etc..1,
     ocir.arranged_things_change_upset_base = ocir.arranged_things_change_upset.1,
-    ocir.repeat_feel_numbers_base = ocir.numbers_repeat_feel.1, ## Different from NBR prepandemic
-    ocir.clean_simply_wash_feel_base = ocir.feel_contaminated_clean_simply.1, ## Different from NBR prepandemic
+    ocir.repeat_feel_numbers_base = ocir.repeat_numbers_feel.1, ## Different from GLAD
+    ocir.clean_simply_wash_feel_base = ocir.feel_contaminated_clean_simply.1,
     ocir.mind_upset_unpleasant_thoughts_base = ocir.mind_upset_unpleasant_thoughts.1,
     ocir.afraid_avoid_throwing_things_base = ocir.afraid_avoid_throwing_things.1,
-    ocir.light_switches_water_taps_base = ocir.light_switches_water_taps.1,
+    ocir.light_switches_water_taps_base = ocir.water_taps_light_switches.1, ## Different from GLAD
     ocir.arranged_things_base = ocir.arranged_things.1,
-    ocir.good_feel_bad_numbers_base = ocir.bad_numbers_good_feel.1, ## Different from NBR prepandemic
-    ocir.hands_longer_wash_base = ocir.longer_hands_wash.1, ## Different from NBR prepandemic
+    ocir.good_feel_bad_numbers_base = ocir.bad_numbers_good_feel.1, 
+    ocir.hands_longer_wash_base = ocir.longer_hands_wash.1, 
     ocir.saved_things_base = ocir.saved_things.1,
-    ocir.frequently_difficulty_rid_nasty_base = ocir.frequently_rid_difficulty_nasty.1, ## Different from NBR prepandemic
+    ocir.frequently_difficulty_rid_nasty_base = ocir.frequently_rid_difficulty_nasty.1, 
     ocir.i_check_things_more_often_than_necessary_base = ocir.i_check_things_more_often_than_necessary..1,
     ocir.arranged_properly_objects_upset_base = ocir.arranged_properly_objects_upset.1,
     ocir.feel_compelled_count_things_base = ocir.feel_compelled_count_things.1,
-    ocir.strangers_touch_touched_difficult_base = ocir.strangers_touch_touched_object.1, ## Different from NBR prepandemic
-    ocir.control_difficult_find_thoughts_base = ocir.control_find_difficult_thoughts.1, ## Different from NBR prepandemic
+    ocir.strangers_touch_touched_difficult_base = ocir.strangers_touch_touched_object.1, 
+    ocir.control_difficult_find_thoughts_base = ocir.control_difficult_thoughts_find.1,
     ocir.i_collect_things_i_dont_need_base = ocir.i_collect_things_i_dont_need..1
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
@@ -5312,9 +5330,10 @@ summarytools::dfSummary(
 
 # Join tibbles together
 
-glad data frame list
-```{r glad data frame list}
-glad.dfs.list <- list(
+glad/edgi data frame list
+```{r glad/edgi data frame list}
+if(GLAD == TRUE | EDGI == TRUE) {
+dfs.list <- list(
   dem.raw.id,
   prepan.gad.raw.id,
   mhd.raw.categories,
@@ -5326,31 +5345,46 @@ glad.dfs.list <- list(
   coping.phq.raw.id,
   coping.ocir.raw.id
 )
+}
 ```
 
+Removing all prepandemic dataframes from NBR/RAMP (prepandemic measures don't exist for these cohorts)
+```{r nbr/ramp data frame list}
+if(NBR == TRUE | RAMP == TRUE) {
+dfs.list <- list(
+  dem.raw.id,
+  mhd.raw.categories,
+  coping.gad.raw.id,
+  coping.pcl.raw.id,
+  coping.phq.raw.id,
+  coping.ocir.raw.id
+)
+}
+```
 
-```{r Join all questionnaires for glad}
-dat.glad.raw <- plyr::join_all(
-  glad.dfs.list,
+```{r Join all questionnaires}
+dat.raw <- plyr::join_all(
+  dfs.list,
   by = c("ID", "Sample") # Alternatively you can join by several columns EDGI -> "Age", "Sex", "Birthyear"
   )
 
 #look at the data
-skimr::skim(dat.glad.raw)
+skimr::skim(dat.raw)
 ```
 
 Check duplicates again to be saved
 +++KLP: RAMP: More than one column: Age, Sex, Login ID; if they match on all 3 then we treat them as a duplicate; otherwise we are going to rename the Login ID
 +++KT: No duplicates identified by ID in GLAD. 
-```{r glad Check duplicates}
-dat.glad.raw$ID.dup <- duplicated(dat.glad.raw$ID)
++++MD: Duplicates have been removed in cleaning script for NBR. No duplicates at this stage.
+```{r Check duplicates}
+dat.raw$ID.dup <- duplicated(dat.raw$ID)
 
-summary(as.factor(dat.glad.raw$ID.dup))
+summary(as.factor(dat.raw$ID.dup))
 
-dat.dup <- dat.glad.raw %>%
+dat.dup <- dat.raw %>%
   filter(ID.dup == TRUE)
 
-dat.glad.raw.no.dup <- dat.glad.raw %>%
+dat.raw.no.dup <- dat.raw %>%
   filter(ID.dup == FALSE)
 ```
 
@@ -5358,12 +5392,12 @@ dat.glad.raw.no.dup <- dat.glad.raw %>%
 Exclude those without sex, gender, age and incomplete PHQ/GAD items
 Create a new new object for each exclusion step, e.g., data.no_sex, data.no_gender and data.no_sex.no_age
 ```{r Exclude participants that do not report sex}
-dim(dat.glad.raw)
-dat.no.sex <- dat.glad.raw %>%
+dim(dat.raw)
+dat.no.sex <- dat.raw %>%
   drop_na(Sex)
 dim(dat.no.sex)
 
-dim(dat.glad.raw)[1]-dim(dat.no.sex)[1]
+dim(dat.raw)[1]-dim(dat.no.sex)[1]
 ```
 `r dim(dat.glad.raw)[1]-dim(dat.no.sex)[1]` were excluded because they did not report their sex
 
@@ -5390,26 +5424,30 @@ dim(dat.no.sex.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]
 `r dim(dat.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]` were excluded because they did not report their age
 
 Exclusion of inflammatory bowel disease (IBD) BioResource (BR) cohort
+++MD: 3,410 participants from NBR IBD cohort excluded
 ```{r COVID exclusion of IBD}
-#dim(dat.no.sex.no.age)
-#
-#dat.no.sex.no.age <- dat.no.sex.no.age %>%
-#  filter(NBR.IBD == 0)
-#
-#dim(dat.no.sex.no.age.no.ibd)
-#
-#dim(dat.no.sex.no.age)[1]-dim(dat.no.sex.no.age.no.ibd)[1]
+if(NBR == TRUE) {
+dim(dat.no.sex.no.gender.no.age)
 
+dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age %>%
+  filter(Cohort != "IBD")
+
+dim(dat.no.sex.no.gender.no.age.no.ibd)
+dim(dat.no.sex.no.gender.no.age)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd)[1]
+}
+
+if(GLAD == TRUE | EDGI == TRUE | RAMP == TRUE) {
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age
+}
 ```
 
 
 ##Create tidy data on which the exclusion criteria have been applied
 Complete sex, gender, age and missingness information applied. 
 ```{r Tidy data}
-dat.glad <- dat.no.sex.no.gender.no.age.no.ibd
+dat <- dat.no.sex.no.gender.no.age.no.ibd
 
-skimr::skim(dat.glad)
+skimr::skim(dat)
 ```
 
 # Definition of prepandemic and baseline 
@@ -5436,7 +5474,8 @@ date_uk_lockdown_march_23 <- as.POSIXct("2020-03-23")
 
 
 ```{r Prepandemic definitions january_31}
-dat.glad <- dat.glad %>%
+if(GLAD == TRUE | EDGI == TRUE){
+dat <- dat %>%
   mutate(
     prepandemic_january_31_numeric =
       if_else(
@@ -5447,7 +5486,7 @@ dat.glad <- dat.glad %>%
       )
   )
 
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     prepandemic_january_31 =
       recode_factor(
@@ -5457,13 +5496,15 @@ dat.glad <- dat.glad %>%
       )
   )
 
-dat.glad %>%
+dat %>%
   freq(prepandemic_january_31)
+}
 ```
 
 
 ```{r Prepandemic definitions march_1}
-dat.glad <- dat.glad %>%
+if(GLAD == TRUE | EDGI == TRUE){
+dat <- dat %>%
   mutate(
     prepandemic_march_1_numeric =
       if_else(
@@ -5474,7 +5515,7 @@ dat.glad <- dat.glad %>%
       )
   )
 
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     prepandemic_march_1 =
       recode_factor(
@@ -5484,12 +5525,14 @@ dat.glad <- dat.glad %>%
       )
   )
 
-dat.glad %>%
+dat %>%
   freq(prepandemic_march_1)
+}
 ```
 
 ```{r Prepandemic definitions march_23}
-dat.glad <- dat.glad %>%
+if(GLAD == TRUE | EDGI == TRUE){
+dat <- dat %>%
   mutate(
     prepandemic_march_23_numeric =
       if_else(
@@ -5500,7 +5543,7 @@ dat.glad <- dat.glad %>%
       )
   )
 
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     prepandemic_march_23 =
       recode_factor(
@@ -5510,13 +5553,15 @@ dat.glad <- dat.glad %>%
       )
   )
 
-dat.glad %>%
+dat %>%
   freq(prepandemic_march_23)
+}
 ```
 
 Calculate the time difference between time difference between sign up questionnaire and COPING questionnaire
 ```{r time difference between sign up questionnaire and COPING questionnaire}
-dat.glad <- dat.glad %>%
+if(GLAD == TRUE | EDGI == TRUE){
+dat <- dat %>%
   mutate(
     time_diff_sign_up_coping =
         as.numeric(
@@ -5527,16 +5572,18 @@ dat.glad <- dat.glad %>%
           )
         )
 
-dat.glad %>%
+dat %>%
   descr(
     var = time_diff_sign_up_coping,
     stats = "common"
     )
+}
 ```
 
 Proportion of people signed up over one year ago
-```{r eval=FALSE, include=FALSE}
-dat.glad <- dat.glad %>%
+```{r glad/edgi ppts signed up over one year ago, eval=FALSE, include=FALSE}
+if(GLAD == TRUE | EDGI == TRUE){
+dat <- dat %>%
   mutate(
     over_one_year_time_diff_sign_up_coping_numeric =
       as.numeric(
@@ -5545,7 +5592,7 @@ dat.glad <- dat.glad %>%
       )
   )
 
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     over_one_year_time_diff_sign_up_coping =
       recode_factor(
@@ -5555,13 +5602,15 @@ dat.glad <- dat.glad %>%
       )
   )
 
-dat.glad %>%
+dat %>%
   freq(over_one_year_time_diff_sign_up_coping, cumul = F)
+}
 ```
 
-Proportion of people signed up over one year ago
-```{r eval=FALSE, include=FALSE}
-dat.glad <- dat.glad %>%
+Proportion of people signed up over half a year ago
+```{r glad/edgi ppts signed up over half a year ago, r eval=FALSE, include=FALSE}
+if(GLAD == TRUE | EDGI == TRUE){
+dat <- dat %>%
   mutate(
     over_half_a_year_time_diff_sign_up_coping_numeric =
       as.numeric(
@@ -5570,7 +5619,7 @@ dat.glad <- dat.glad %>%
       )
   )
 
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     over_half_a_year_time_diff_sign_up_coping =
       recode_factor(
@@ -5580,8 +5629,9 @@ dat.glad <- dat.glad %>%
       )
   )
 
-dat.glad %>%
+dat %>%
   freq(over_half_a_year_time_diff_sign_up_coping, cumul = F)
+}
 ```
 
 
@@ -5589,8 +5639,9 @@ dat.glad %>%
 #Total score comparison between PHQ, PCL and GAD, prepandemic, retrospecive and baseline
 PHQ difference scores
 ```{r phq difference scores}
+if(GLAD == TRUE | EDGI == TRUE){
 # Difference score for prepandemic and retrospective phq sum scores
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     phq.diff_score_prepan_retro =
       as.numeric(
@@ -5598,10 +5649,10 @@ dat.glad <- dat.glad %>%
       )
   )
 
-summary(dat.glad$phq.diff_score_prepan_retro)
+summary(dat$phq.diff_score_prepan_retro)
 
 # Difference score for prepandemic and baseline phq sum scores
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     phq.diff_score_prepan_base =
       as.numeric(
@@ -5609,10 +5660,10 @@ dat.glad <- dat.glad %>%
       )
   )
 
-summary(dat.glad$phq.diff_score_prepan_base)
-
+summary(dat$phq.diff_score_prepan_base)
+}
 # Difference score for retrospective and baseline phq sum scores
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     phq.diff_score_base_retro =
       as.numeric(
@@ -5620,14 +5671,15 @@ dat.glad <- dat.glad %>%
       )
   )
 
-summary(dat.glad$phq.diff_score_base_retro)
+summary(dat$phq.diff_score_base_retro)
 
 ```
 
 GAD difference scores
 ```{r gad difference scores}
+if(GLAD == TRUE | EDGI == TRUE){
 # Difference score for prepandemic and retrospective gad sum scores
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     gad.diff_score_prepan_retro =
       as.numeric(
@@ -5635,10 +5687,10 @@ dat.glad <- dat.glad %>%
       )
   )
 
-summary(dat.glad$gad.diff_score_prepan_retro)
+summary(dat$gad.diff_score_prepan_retro)
 
 # Difference score for prepandemic and baseline gad sum scores
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     gad.diff_score_prepan_base =
       as.numeric(
@@ -5646,10 +5698,10 @@ dat.glad <- dat.glad %>%
       )
   )
 
-summary(dat.glad$gad.diff_score_prepan_base)
-
+summary(dat$gad.diff_score_prepan_base)
+}
 # Difference score for retrospective and baseline gad sum scores
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     gad.diff_score_base_retro =
       as.numeric(
@@ -5657,15 +5709,16 @@ dat.glad <- dat.glad %>%
       )
   )
 
-summary(dat.glad$gad.diff_score_base_retro)
+summary(dat$gad.diff_score_base_retro)
 
 ```
 
 PCL difference scores
 NOTE: Only computed baseline and prepandemic differences as the retro account here isn't actually retrospective, but whether the reported baseline scores are due to the pandemic. 
 ```{r pcl difference scores}
+if(GLAD == TRUE | EDGI == TRUE){
 # Difference score for prepandemic and baseline pcl sum scores
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     pcl.diff_score_prepan_base =
       as.numeric(
@@ -5673,24 +5726,26 @@ dat.glad <- dat.glad %>%
       )
   )
 
-summary(dat.glad$pcl.diff_score_prepan_base)
+summary(dat$pcl.diff_score_prepan_base)
+}
 ```
 
 ```{r frequency of those who reported "due to pandemic" in retro PCL}
-summary(dat.glad$pcl.sum_score_retro)
+summary(dat$pcl.sum_score_retro)
 
-freq(dat.glad$pcl.stressful_experience_repeated_images_retro)
-freq(dat.glad$pcl.stressful_situation_avoiding_activities_retro)
-freq(dat.glad$pcl.feeling_irritable_or_having_angry_outbursts_retro)
-freq(dat.glad$pcl.stressful_experience_upset_reminded_retro)
-freq(dat.glad$pcl.cut_people_feeling_distant_retro)
-freq(dat.glad$pcl.difficulty_concentrating_retro)
+freq(dat$pcl.stressful_experience_repeated_images_retro)
+freq(dat$pcl.stressful_situation_avoiding_activities_retro)
+freq(dat$pcl.feeling_irritable_or_having_angry_outbursts_retro)
+freq(dat$pcl.stressful_experience_upset_reminded_retro)
+freq(dat$pcl.cut_people_feeling_distant_retro)
+freq(dat$pcl.difficulty_concentrating_retro)
 ```
 
 OCI-R difference scores
 ```{r ocir difference scores}
+if(GLAD == TRUE | EDGI == TRUE){
 # Difference score for prepandemic and retrospective oci-r sum scores
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     ocir.diff_score_prepan_retro =
       as.numeric(
@@ -5698,10 +5753,10 @@ dat.glad <- dat.glad %>%
       )
   )
 
-summary(dat.glad$ocir.diff_score_prepan_retro)
+summary(dat$ocir.diff_score_prepan_retro)
 
 # Difference score for prepandemic and baseline ocir sum scores
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     ocir.diff_score_prepan_base =
       as.numeric(
@@ -5709,10 +5764,10 @@ dat.glad <- dat.glad %>%
       )
   )
 
-summary(dat.glad$ocir.diff_score_prepan_base)
-
+summary(dat$ocir.diff_score_prepan_base)
+}
 # Difference score for retrospective and baseline ocir sum scores
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     ocir.diff_score_base_retro =
       as.numeric(
@@ -5720,14 +5775,15 @@ dat.glad <- dat.glad %>%
       )
   )
 
-summary(dat.glad$ocir.diff_score_base_retro)
+summary(dat$ocir.diff_score_base_retro)
 
 ```
 
 #Data level groups
 Identify which data (prepan, retro and baseline) each participant has.
-```{r data level groups PHQ}
-dat.glad <- dat.glad %>%
+```{r glad/edgi data level groups PHQ}
+if(GLAD == TRUE | EDGI == TRUE){
+dat <- dat %>%
   mutate(
     data_group_phq_numeric =
       case_when(
@@ -5740,7 +5796,7 @@ dat.glad <- dat.glad %>%
       )
   )
 
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     data_group_phq = 
       recode_factor(
@@ -5755,14 +5811,48 @@ dat.glad <- dat.glad %>%
   )
 
 
-table(dat.glad$data_group_phq)
+table(dat$data_group_phq)
+}
 ```
 
+```{r nbr/ramp data level groups PHQ}
+if(NBR == TRUE | RAMP == TRUE){
+dat <- dat %>%
+  mutate(
+    data_group_phq_numeric =
+      case_when(
+#        na_per_person_phq_base == 0 & na_per_person_phq_prepan == 0 & na_per_person_phq_retro == 0 ~ 5, #all complete baseline, prepan and retro
+        na_per_person_phq_base != 0 & na_per_person_phq_retro == 0  ~ 4, #retro data only
+        na_per_person_phq_base == 0 & na_per_person_phq_retro != 0  ~ 3, #baseline data only
+#        na_per_person_phq_base == 0 & na_per_person_phq_prepan == 0 & na_per_person_phq_retro != 0  ~ 2, #prepan and baseline data only
+        na_per_person_phq_base == 0 & na_per_person_phq_retro == 0 ~ 1,  #baseline and retro data only
+#        na_per_person_phq_base != 0 & na_per_person_phq_prepan == 0 & na_per_person_phq_retro != 0  ~ 0  #prepan data only
+      )
+  )
 
+dat <- dat %>%
+  mutate(
+    data_group_phq = 
+      recode_factor(
+        data_group_phq_numeric,
+        "0" = "Only prepandemic data",
+        "1" = "Baseline and retrospective data",
+        "2" = "Prepandemic and baseline data",
+        "3" = "Baseline data only",
+        "4" = "Retrospective data only",
+        "5" = "All prepandemic, baseline and retrospective data"
+      )
+  )
+
+
+table(dat$data_group_phq)
+}
+```
 
 GAD
-```{r data level groups GAD}
-dat.glad <- dat.glad %>%
+```{r glad/edgi data level groups GAD}
+if(GLAD == TRUE | EDGI == TRUE){
+dat <- dat %>%
   mutate(
     data_group_gad_numeric =
       case_when(
@@ -5775,7 +5865,7 @@ dat.glad <- dat.glad %>%
       )
   )
 
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     data_group_gad = 
       recode_factor(
@@ -5789,12 +5879,48 @@ dat.glad <- dat.glad %>%
       )
   )
 
-table(dat.glad$data_group_gad)
+table(dat$data_group_gad)
+}
+```
+
+```{r nbr/ramp data level groups GAD}
+if(NBR == TRUE | RAMP == TRUE){
+dat <- dat %>%
+  mutate(
+    data_group_gad_numeric =
+      case_when(
+#        na_per_person_gad_base == 0 & na_per_person_gad_prepan == 0 & na_per_person_gad_retro == 0 ~ 5, #all complete baseline, prepan and retro
+        na_per_person_gad_base != 0 & na_per_person_gad_retro == 0  ~ 4, #retro data only
+        na_per_person_gad_base == 0 & na_per_person_gad_retro != 0  ~ 3, #baseline data only
+#        na_per_person_gad_base == 0 & na_per_person_gad_prepan == 0 & na_per_person_gad_retro != 0  ~ 2, #prepan and baseline data only
+        na_per_person_gad_base == 0 & na_per_person_gad_retro == 0 ~ 1,  #baseline and retro data only
+#        na_per_person_gad_base != 0 & na_per_person_gad_prepan == 0 & na_per_person_gad_retro != 0  ~ 0  #prepan data only
+      )
+  )
+
+dat <- dat %>%
+  mutate(
+    data_group_gad = 
+      recode_factor(
+        data_group_gad_numeric,
+        "0" = "Only prepandemic data",
+        "1" = "Baseline and retrospective data",
+        "2" = "Prepandemic and baseline data",
+        "3" = "Baseline data only",
+        "4" = "Retrospective data only",
+        "5" = "All prepandemic, baseline and retrospective data"
+      )
+  )
+
+
+table(dat$data_group_gad)
+}
 ```
 
 PCL
-```{r data level groups PCL}
-dat.glad <- dat.glad %>%
+```{r glad/edgi data level groups PCL}
+if(GLAD == TRUE | EDGI == TRUE){
+dat <- dat %>%
   mutate(
     data_group_pcl_numeric =
       case_when(
@@ -5807,7 +5933,7 @@ dat.glad <- dat.glad %>%
       )
   )
 
-dat.glad <- dat.glad %>%
+dat <- dat %>%
   mutate(
     data_group_pcl = 
       recode_factor(
@@ -5821,20 +5947,58 @@ dat.glad <- dat.glad %>%
       )
   )
 
-table(dat.glad$data_group_pcl)
+table(dat$data_group_pcl)
+}
 ```
 
+```{r nbr/ramp data level groups PCL}
+if(NBR == TRUE | RAMP == TRUE){
+dat <- dat %>%
+  mutate(
+    data_group_pcl_numeric =
+      case_when(
+#        na_per_person_pcl_base == 0 & na_per_person_pcl_prepan == 0 & na_per_person_pcl_retro == 0 ~ 5, #all complete baseline, prepan and retro
+        na_per_person_pcl_base != 0 & na_per_person_pcl_retro == 0  ~ 4, #retro data only
+        na_per_person_pcl_base == 0 & na_per_person_pcl_retro != 0  ~ 3, #baseline data only
+#        na_per_person_pcl_base == 0 & na_per_person_pcl_prepan == 0 & na_per_person_pcl_retro != 0  ~ 2, #prepan and baseline data only
+        na_per_person_pcl_base == 0 & na_per_person_pcl_retro == 0 ~ 1,  #baseline and retro data only
+#        na_per_person_pcl_base != 0 & na_per_person_pcl_prepan == 0 & na_per_person_pcl_retro != 0  ~ 0  #prepan data only
+      )
+  )
+
+dat <- dat %>%
+  mutate(
+    data_group_pcl = 
+      recode_factor(
+        data_group_pcl_numeric,
+        "0" = "Only prepandemic data",
+        "1" = "Baseline and retrospective data",
+        "2" = "Prepandemic and baseline data",
+        "3" = "Baseline data only",
+        "4" = "Retrospective data only",
+        "5" = "All prepandemic, baseline and retrospective data"
+      )
+  )
+
+
+table(dat$data_group_pcl)
+}
+```
 
 #Read in respiratory data
-```{r coping resp cols}
+
+## GLAD respiratory
+```{r glad coping respiratory cols}
+if(GLAD == TRUE){
 coping.glad.respiratory.raw <- readRDS(file = paste0(data.raw_path, "/glad/respiratory_coping_glad.rds"))
 dim(coping.glad.respiratory.raw)
 colnames(coping.glad.respiratory.raw)
+}
 ```
 
-
 Select respiratory variables
-```{r read in respiratory data}
+```{r coping glad respiratory cleaning}
+if(GLAD == TRUE){
 coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -5874,13 +6038,200 @@ dim(coping.glad.respiratory.raw.id)
 colnames(coping.glad.respiratory.raw.id)
 #Differences
 dim(coping.glad.respiratory.raw)[1]-dim(coping.glad.respiratory.raw.id)[1]
+}
+```
 
+```{r coping glad respiratory copy}
+if(GLAD == TRUE){
+respiratory.raw.id <- coping.glad.respiratory.raw.id
+}
+```
+
+## EDGI respiratory
+```{r edgi coping respiratory cols}
+if(EDGI == TRUE){
+coping.edgi.respiratory.raw <- readRDS(file = paste0(data.raw_path, "/edgi/respiratory_coping_edgi.rds"))
+dim(coping.edgi.respiratory.raw)
+colnames(coping.edgi.respiratory.raw)
+}
+```
+
+Select respiratory variables
+```{r coping edgi respiratory cleaning}
+if(EDGI == TRUE){
+coping.edgi.respiratory.raw.id <- coping.edgi.respiratory.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+    Sample, # Sample
+    ID, # ID
+    respiratory.breath_diarrhoea_fatigue_fever,
+    respiratory.worst_ill_feel,
+    respiratory.persistent_cough,
+    respiratory.skipping_meals_because_you_felt_unwell,
+    respiratory.was_your_sense_of_smell_impaired,
+    respiratory.was_your_sense_of_taste_impaired,
+    respiratory.feeling_tiredfatigued,
+    respiratory.throat_swab_coronavirus_nose,
+    respiratory.throat_swab_test_nose,
+    respiratory.coronavirus_antibody_test,
+    respiratory.results_antibody_test
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(coping.edgi.respiratory.raw.id)
+# Inspect colnames
+colnames(coping.edgi.respiratory.raw.id)
+#Differences
+dim(coping.edgi.respiratory.raw)[1]-dim(coping.edgi.respiratory.raw.id)[1]
+}
+```
+
+```{r coping edgi respiratory copy}
+if(EDGI == TRUE){
+respiratory.raw.id <- coping.edgi.respiratory.raw.id
+}
+```
+
+## NBR respiratory
+```{r nbr coping respiratory cols}
+if(NBR == TRUE){
+coping.nbr.respiratory.raw <- readRDS(file = paste0(data.raw_path, "/nbr/respiratory_coping_nbr.rds"))
+dim(coping.nbr.respiratory.raw)
+colnames(coping.nbr.respiratory.raw)
+}
+```
+
+Select respiratory variables
+```{r coping nbr respiratory cleaning}
+if(NBR == TRUE){
+coping.nbr.respiratory.raw.id <- coping.nbr.respiratory.raw %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+    Sample, # Sample
+    ID, # ID
+    respiratory.breath_diarrhoea_fatigue_fever = respiratory.unusual_shortness_breath_diarrhoea,
+    respiratory.worst_ill_feel,
+    respiratory.persistent_cough,
+    respiratory.skipping_meals_because_you_felt_unwell,
+    respiratory.was_your_sense_of_smell_impaired,
+    respiratory.was_your_sense_of_taste_impaired,
+    respiratory.feeling_tiredfatigued,
+    respiratory.throat_swab_coronavirus_nose,
+    respiratory.throat_swab_test_nose,
+    respiratory.coronavirus_antibody_test,
+    respiratory.results_antibody_test
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(coping.nbr.respiratory.raw.id)
+# Inspect colnames
+colnames(coping.nbr.respiratory.raw.id)
+#Differences
+dim(coping.nbr.respiratory.raw)[1]-dim(coping.nbr.respiratory.raw.id)[1]
+}
+```
+
+```{r coping nbr respiratory copy}
+if(NBR == TRUE){
+respiratory.raw.id <- coping.nbr.respiratory.raw.id
+}
+```
+
+## RAMP respiratory
+```{r ramp coping respiratory cols}
+if(RAMP == TRUE){
+ramp.respiratory.raw <- readRDS(file = paste0(data.raw_path, "/ramp/respiratory_coping_ramp.rds"))
+dim(ramp.respiratory.raw)
+colnames(ramp.respiratory.raw)
+}
+```
+
+Select respiratory variables
+```{r coping ramp respiratory cleaning}
+if(RAMP == TRUE){
+ramp.respiratory.raw.id <- ramp.respiratory.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+    Sample, # Sample
+    ID, # ID
+    respiratory.breath_diarrhoea_fatigue_fever,
+    respiratory.worst_ill_feel,
+    respiratory.persistent_cough,
+    respiratory.skipping_meals_because_you_felt_unwell,
+    respiratory.was_your_sense_of_smell_impaired,
+    respiratory.was_your_sense_of_taste_impaired,
+    respiratory.feeling_tiredfatigued,
+    respiratory.throat_swab_coronavirus_nose,
+    respiratory.throat_swab_test_nose,
+    respiratory.coronavirus_antibody_test,
+    respiratory.results_antibody_test
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(ramp.respiratory.raw.id)
+# Inspect colnames
+colnames(ramp.respiratory.raw.id)
+#Differences
+dim(ramp.respiratory.raw)[1]-dim(ramp.respiratory.raw.id)[1]
+}
+```
+
+```{r ramp respiratory copy}
+if(RAMP == TRUE){
+respiratory.raw.id <- ramp.respiratory.raw.id
+}
 ```
 
 #Distribution of likert scale COVID-19 symptoms in COPING
 ```{r distribution of COVID symptoms}
 #persistent cough
-coping.glad.respiratory.raw.id %>%
+respiratory.raw.id %>%
   ggplot(
     mapping = aes(
       y = respiratory.persistent_cough_numeric 
@@ -5892,7 +6243,7 @@ coping.glad.respiratory.raw.id %>%
   )
 
 #severe fatigue
-coping.glad.respiratory.raw.id %>%
+respiratory.raw.id %>%
   ggplot(
     mapping = aes(
         y = respiratory.feeling_tiredfatigued_numeric 
@@ -5904,7 +6255,7 @@ coping.glad.respiratory.raw.id %>%
   )
 
 #skipped meals
-coping.glad.respiratory.raw.id %>%
+respiratory.raw.id %>%
   ggplot(
     mapping = aes(
         y = respiratory.skipping_meals_because_you_felt_unwell_numeric
@@ -5932,21 +6283,21 @@ Skipped meals: "Moderate symptoms" as cut off
 #persistent cough
 percentage_pcough <- ((0.5673*6452) + (0.4556*9186) + (0.3017*2434931))/(6452+9186+2434931)
 percentage_pcough    # 0.3029762% of Menni et al(2020) have fatigue
-quantile(x = coping.glad.respiratory.raw.id$respiratory.persistent_cough_numeric, 
+quantile(x = respiratory.raw.id$respiratory.persistent_cough_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_pcough) # this gives 0.3029762% of the sample reporting fatigue when using the "mild symptoms" persistent cough response
 
 #fatigue
 percentage_fatigue <- ((0.298*6452) + (0.1556*9186) + (0.0871*2434931))/(6452+9186+2434931) 
 percentage_fatigue   # 0.08791204% of Menni et al(2020) have fatigue
-quantile(x = coping.glad.respiratory.raw.id$respiratory.feeling_tiredfatigued_numeric, 
+quantile(x = respiratory.raw.id$respiratory.feeling_tiredfatigued_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_fatigue) #this gives 8% of the sample reporting fatigue when using the "severe symptoms" fatigue response
 
 #skipped meals 
 percentage_skipped_meals <- ((0.4203*6452) + (0.2493*9186) + (0.1912*2434931))/(6452+9186+2434931) 
 percentage_skipped_meals    # 0.192021% of Menni et al(2020) have fatigue
-quantile(x = coping.glad.respiratory.raw.id$respiratory.skipping_meals_because_you_felt_unwell_numeric, 
+quantile(x = respiratory.raw.id$respiratory.skipping_meals_because_you_felt_unwell_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_skipped_meals) # this gives 0.192021% of the sample reporting fatigue when using the "moderate symptoms" persistent cough response
 ```
@@ -5954,7 +6305,7 @@ quantile(x = coping.glad.respiratory.raw.id$respiratory.skipping_meals_because_y
 Creating binary groups for COVID symptoms
 ```{r creating binary groups for COVID symptoms}
 #loss or smell or taste
-coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
+respiratory.raw.id <- respiratory.raw.id %>%
   mutate(
     respiratory.anosmia_binary =
       if_else(
@@ -5965,7 +6316,7 @@ coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
   )
 
 #persistent cough
-coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
+respiratory.raw.id <- respiratory.raw.id %>%
   mutate(
     respiratory.pcough_binary =
       if_else(
@@ -5976,7 +6327,7 @@ coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
   )
 
 #fatigue
-coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
+respiratory.raw.id <- respiratory.raw.id %>%
   mutate(
     respiratory.fatigue_binary =
       if_else(
@@ -5987,7 +6338,7 @@ coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
   )
 
 #skipped meals
-coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
+respiratory.raw.id <- respiratory.raw.id %>%
   mutate(
     respiratory.skipped_meals_binary =
       if_else(
@@ -6000,21 +6351,26 @@ coping.glad.respiratory.raw.id <- coping.glad.respiratory.raw.id %>%
 
 Frequencies of binary COVID symptoms
 ```{r frequencies of COVID binary symptoms}
-freq(coping.glad.respiratory.raw.id$respiratory.anosmia_binary)
-freq(coping.glad.respiratory.raw.id$respiratory.pcough_binary)
-freq(coping.glad.respiratory.raw.id$respiratory.fatigue_binary)
-freq(coping.glad.respiratory.raw.id$respiratory.skipped_meals_binary)
+freq(respiratory.raw.id$respiratory.anosmia_binary)
+freq(respiratory.raw.id$respiratory.pcough_binary)
+freq(respiratory.raw.id$respiratory.fatigue_binary)
+freq(respiratory.raw.id$respiratory.skipped_meals_binary)
 ```
 
 Rename respiratory dataset joined to main dataset
-```{r clean respiratory dataset}
-coping.glad.respiratory <- coping.glad.respiratory.raw.id
 
-dat.glad.coping <- left_join(
-  x = dat.glad,
-  y = coping.glad.respiratory,
-  by = c("Sample", "ID")
+++MD: Do we want to name the RAMP dataset something different, if the algorithm will need to be changed because they have categorical age and gender not sex? (otherwise can remove the if statement and rename the dataset 'dat.full' instead of dat.coping)
+```{r clean respiratory dataset}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE){
+respiratory <- respiratory.raw.id
+
+
+dat.coping <- left_join(
+  x = dat,
+  y = respiratory,
+  by = "ID"
 )
+}
 ```
 
 # Probable COVID-19 case identification
@@ -6031,7 +6387,7 @@ Variables required:
 COVID prediction model for COPING
 The COVID prediction model has coded the sexes opposite to our data set
 ```{r create numeric sex variable with male=1}
-dat.glad.coping <- dat.glad.coping %>%
+dat.coping <- dat.coping %>%
   mutate(
     Sex_respiratory =
       if_else(
@@ -6042,8 +6398,8 @@ dat.glad.coping <- dat.glad.coping %>%
   )
 ```
 
-```{r how many people expereinced all symptoms}
-dat.glad.coping <- dat.glad.coping %>%
+```{r how many people experinced all symptoms}
+dat.coping <- dat.coping %>%
   mutate(
     covid_symptoms =
       if_else(
@@ -6056,14 +6412,14 @@ dat.glad.coping <- dat.glad.coping %>%
        )
   )
 
-dat.glad.coping %>%
+dat.coping %>%
   freq(covid_symptoms, cumul = F)
 ```
 
 
 ```{r COVID prediction model}
 # linear model of covid symptoms
-dat.glad.coping <- dat.glad.coping %>%
+dat.coping <- dat.coping %>%
 		  mutate(
 		    covid_probability = 
 		      (-1.32) - 
@@ -6076,14 +6432,14 @@ dat.glad.coping <- dat.glad.coping %>%
 		         )
 
 # Calcualte the odds ratios 
-dat.glad.coping <- dat.glad.coping %>%
+dat.coping <- dat.coping %>%
   mutate(
     covid_odds_ratio = 
       (exp(covid_probability) / (1 + exp(covid_probability)))
   )
 
 # generate binary cutt off variable for risk of COVID 
-dat.glad.coping <- dat.glad.coping %>%
+dat.coping <- dat.coping %>%
 		  mutate(
 		    covid_odds_ratio_50_numeric = 
 		      case_when(
@@ -6093,7 +6449,7 @@ dat.glad.coping <- dat.glad.coping %>%
 		  )
 		      
 #create factor with labels
-dat.glad.coping <- dat.glad.coping %>%
+dat.coping <- dat.coping %>%
   mutate(
     covid_odds_ratio_50 =
       recode_factor(
@@ -6108,18 +6464,18 @@ covid_variables <- c("covid_odds_ratio",
                       "covid_probability"
                     )
 
-descr(x = dat.glad.coping[,covid_variables],
+descr(x = dat.coping[,covid_variables],
       round.digits = 2,
       transpose = TRUE)
 
 ## looking at cases over 0.5
-freq(dat.glad.coping$covid_odds_ratio_50, 
+freq(dat.coping$covid_odds_ratio_50, 
      cumul = FALSE) 
 ```
 
 Probable COVID case including the routing question
-```{r}
-dat.glad.coping <- dat.glad.coping %>%
+```{r recoding probable covid to account for screening question}
+dat.coping <- dat.coping %>%
   mutate(
     covid_probable_case_incl_screening_numeric =
       case_when(
@@ -6130,7 +6486,7 @@ dat.glad.coping <- dat.glad.coping %>%
   )
 
 #create factor with labels
-dat.glad.coping <- dat.glad.coping %>%
+dat.coping <- dat.coping %>%
   mutate(
     covid_probable_case_incl_screening =
       recode_factor(
@@ -6140,7 +6496,7 @@ dat.glad.coping <- dat.glad.coping %>%
       )
   )
 
-dat.glad.coping %>%
+dat.coping %>%
   freq(covid_probable_case_incl_screening, 
      cumul = FALSE) 
 ```
