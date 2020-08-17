@@ -663,19 +663,19 @@ dem.raw.id <- dem.raw.id %>%
   mutate(
     age_category_numeric =
       case_when(
-          Age >= 16 & Age <= 18 ~ "1",
-          Age >= 19 & Age <= 25 ~ "2",
-          Age >= 26 & Age <= 35 ~ "3",
-          Age >= 36 & Age <= 45 ~ "4",
-          Age >= 46 & Age <= 55 ~ "5",
-          Age >= 56 & Age <= 65 ~ "6",
-          Age >= 66 & Age <= 70 ~ "7",
-          Age >= 71 & Age <= 75 ~ "8",
-          Age >= 76 & Age <= 80 ~ "9",
-          Age >= 81 & Age <= 85 ~ "10",
-          Age >= 86 & Age <= 90 ~ "11",
-          Age >= 91 & Age <= 100 ~ "12",
-          Age >= 101 & Age <= 120 ~ "13" # oldest person in the world is 117 years
+          Age >= 16 & Age <= 18 ~ 1,
+          Age >= 19 & Age <= 25 ~ 2,
+          Age >= 26 & Age <= 35 ~ 3,
+          Age >= 36 & Age <= 45 ~ 4,
+          Age >= 46 & Age <= 55 ~ 5,
+          Age >= 56 & Age <= 65 ~ 6,
+          Age >= 66 & Age <= 70 ~ 7,
+          Age >= 71 & Age <= 75 ~ 8,
+          Age >= 76 & Age <= 80 ~ 9,
+          Age >= 81 & Age <= 85 ~ 10,
+          Age >= 86 & Age <= 90 ~ 11,
+          Age >= 91 & Age <= 100 ~ 12,
+          Age >= 101 & Age <= 120 ~ 13 # oldest person in the world is 117 years
                 )
       )
 
@@ -2225,7 +2225,7 @@ mhd.raw.id <- mhd.raw.id %>%
                     "0" = "No comorbidity",
                     "1" = "1 comorbid disoder",
                     "2" = "2 comorbid disoders",
-                    "3" = "3+ comorbid disoder",
+                    "3" = "3+ comorbid disoders",
                     missing = NA_character_
                     )
   )
@@ -2514,7 +2514,7 @@ gad.scored_items_prepan <- scoreItems(keys = gad.items_key_prepan,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-prepan.gad.raw.id$gad.sum_score_prepan_raw <- gad.scored_items_prepan$scores
+prepan.gad.raw.id$gad.sum_score_prepan_raw <- as.numeric(gad.scored_items_prepan$scores)
 
 # Look at values
 prepan.gad.raw.id %>%
@@ -2723,7 +2723,7 @@ pcl.scored_items_prepan <- scoreItems(keys = pcl.items_key_prepan,
                                         min = 1, 
                                         max = 5)
 # Add in column to tibble
-prepan.pcl.raw.id$pcl.sum_score_prepan_raw <- pcl.scored_items_prepan$scores
+prepan.pcl.raw.id$pcl.sum_score_prepan_raw <- as.numeric(pcl.scored_items_prepan$scores)
 
 # Look at values
 prepan.pcl.raw.id %>%
@@ -2932,7 +2932,7 @@ phq.scored_items_prepan <- scoreItems(keys = phq.items_key_prepan,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-prepan.phq.raw.id$phq.sum_score_prepan_raw <- phq.scored_items_prepan$scores
+prepan.phq.raw.id$phq.sum_score_prepan_raw <- as.numeric(phq.scored_items_prepan$scores)
 
 # Look at values
 prepan.phq.raw.id %>%
@@ -3623,7 +3623,7 @@ gad.scored_items_retro <- scoreItems(keys = gad.items_key_retro,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-coping.gad.raw.id$gad.sum_score_retro_raw <- gad.scored_items_retro$scores
+coping.gad.raw.id$gad.sum_score_retro_raw <- as.numeric(gad.scored_items_retro$scores)
 
 # Look at values
 coping.gad.raw.id %>%
@@ -3658,7 +3658,7 @@ gad.scored_items_base <- scoreItems(keys = gad.items_key_base,
                                         min = 0, 
                                         max = 3)
 # Add in column to tibble
-coping.gad.raw.id$gad.sum_score_base_raw <- gad.scored_items_base$scores
+coping.gad.raw.id$gad.sum_score_base_raw <- as.numeric(gad.scored_items_base$scores)
 
 # Look at values
 coping.gad.raw.id %>%
@@ -4067,7 +4067,7 @@ pcl.scored_items_retro <- scoreItems(keys = pcl.items_key_retro,
                                      min = 0, 
                                      max = 1)
 # Add in column to tibble
-coping.pcl.raw.id$pcl.sum_score_retro_raw <- pcl.scored_items_retro$scores
+coping.pcl.raw.id$pcl.sum_score_retro_raw <- as.numeric(pcl.scored_items_retro$scores)
 
 # Look at values
 coping.pcl.raw.id %>%
@@ -4103,7 +4103,7 @@ pcl.scored_items_base <- scoreItems(keys = pcl.items_key_base,
                                     min = 1, 
                                     max = 5)
 # Add in column to tibble
-coping.pcl.raw.id$pcl.sum_score_base_raw <- pcl.scored_items_base$scores
+coping.pcl.raw.id$pcl.sum_score_base_raw <- as.numeric(pcl.scored_items_base$scores)
 
 # Look at values
 coping.pcl.raw.id %>%
@@ -4555,7 +4555,7 @@ phq.scored_items_retro <- scoreItems(keys = phq.items_key_retro,
                                      min = 0, 
                                      max = 3)
 # Add in column to tibble
-coping.phq.raw.id$phq.sum_score_retro_raw <- phq.scored_items_retro$scores
+coping.phq.raw.id$phq.sum_score_retro_raw <- as.numeric(phq.scored_items_retro$scores)
 
 # Look at values
 coping.phq.raw.id %>%
@@ -4592,7 +4592,7 @@ phq.scored_items_base <- scoreItems(keys = phq.items_key_base,
                                     min = 0, 
                                     max = 3)
 # Add in column to tibble
-coping.phq.raw.id$phq.sum_score_base_raw <- phq.scored_items_base$scores
+coping.phq.raw.id$phq.sum_score_base_raw <- as.numeric(phq.scored_items_base$scores)
 
 # Look at values
 coping.phq.raw.id %>%
@@ -5192,7 +5192,7 @@ ocir.scored_items_retro <- scoreItems(keys = ocir.items_key_retro,
                                      min = 0, 
                                      max = 4)
 # Add in column to tibble
-coping.ocir.raw.id$ocir.sum_score_retro_raw <- ocir.scored_items_retro$scores
+coping.ocir.raw.id$ocir.sum_score_retro_raw <- as.numeric(ocir.scored_items_retro$scores)
 
 # Look at values
 coping.ocir.raw.id %>%
@@ -5238,7 +5238,7 @@ ocir.scored_items_base <- scoreItems(keys = ocir.items_key_base,
                                     min = 0, 
                                     max = 4)
 # Add in column to tibble
-coping.ocir.raw.id$ocir.sum_score_base_raw <- ocir.scored_items_base$scores
+coping.ocir.raw.id$ocir.sum_score_base_raw <- as.numeric(ocir.scored_items_base$scores)
 
 # Look at values
 coping.ocir.raw.id %>%
