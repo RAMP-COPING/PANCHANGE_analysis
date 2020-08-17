@@ -48,8 +48,8 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = FALSE
-NBR = TRUE
+EDGI = TRUE
+NBR = FALSE
 RAMP = FALSE
 ```
 
@@ -2515,11 +2515,11 @@ mhd.raw.categories <- mhd.raw.id %>%
     ) %>%
   add_column(
     personality_cluster_a_numeric = NA_real_,
-    personality_cluster_a = NA_real_,
+    personality_cluster_a = NA_character_,
     personality_cluster_b_numeric = NA_real_,
-    personality_cluster_b = NA_real_,
+    personality_cluster_b = NA_character_,
     personality_cluster_c_numeric = NA_real_,
-    personality_cluster_c = NA_real_    
+    personality_cluster_c = NA_character_
   )
 }
 ```
