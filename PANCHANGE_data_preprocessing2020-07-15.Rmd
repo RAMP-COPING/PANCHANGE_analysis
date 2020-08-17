@@ -1155,7 +1155,6 @@ exclude_cols <- c("Sample",
                   "ID")
 ```
 
-
 # mhd
 
 ## GLAD
@@ -1235,7 +1234,7 @@ edgi.mhd.raw.id <- edgi.mhd.raw %>%
     mhd.bulimia_nervosa,
     mhd.atypical_bulimia_nervosa,
     mhd.bingeeating_disorder,
-    mhd.atypical_bingeeating_disorder,
+    mhd.atypical_bingeeating_disorder
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -1408,6 +1407,85 @@ dim(nbr.mhd.raw)[1]-dim(nbr.mhd.raw.id)[1]
 ```{r nbr mhd copy}
 if(NBR == TRUE) {
   mhd.raw.id <- nbr.mhd.raw.id
+}
+```
+
+
+## RAMP
+```{r ramp mhd cols}
+if(RAMP == TRUE) {
+ramp.mhd.raw <- readRDS(file = paste0(data.raw_path,"/ramp/mhd_ramp.rds"))
+dim(ramp.mhd.raw)
+colnames(ramp.mhd.raw)
+}
+```
+
+```{r ramp mhd cleaning}
+if(RAMP == TRUE) {
+exclude_cols <- c("Sample",
+                  "ID")
+  
+ramp.mhd.raw.id <- ramp.mhd.raw %>%
+  drop_na(`Login ID`) %>% # Drop NAs
+  distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(`Login ID`, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  separate(ID, into = "ID", sep = 7) %>%
+  mutate(
+    ID = as.numeric(ID)) %>%
+  select(
+    Sample, # Sample
+    ID, # ID
+    mhd.depression = NA.30.depression,
+    mhd.pregnancy_depression = NA.30.pregnancy_depression,
+    mhd.premenstrual_dysphoric_disorder_pmdd = NA.30.premenstrual_dysphoric_disorder_pmdd,
+    mhd.mania_hypomania_bipolar_or_manicdepression = NA.30.mania_hypomania_bipolar_or_manicdepression,
+    mhd.anxiety_nerves_or_generalised_anxiety_disorder = NA.30.anxiety_nerves_or_generalised_anxiety_disorder,
+    mhd.social_anxiety_or_social_phobia = NA.30.social_anxiety_or_social_phobia,
+    mhd.specific_phobia_e.g._phobia_of_flying = NA.30.specific_phobia_e.g._phobia_of_flying,
+    mhd.agoraphobia = NA.30.agoraphobia,
+    mhd.panic_disorder = NA.30.panic_disorder,
+    mhd.panic_attacks = NA.30.panic_attacks,
+    mhd.posttraumatic_stress_disorder_ptsd = NA.30.posttraumatic_stress_disorder_ptsd,
+    mhd.obsessivecompulsive_disorder_ocd = NA.30.obsessivecompulsive_disorder_ocd, 
+    mhd.body_dysmorphic_disorder_bdd = NA.30.body_dysmorphic_disorder_bdd,
+    mhd.skin_picking_obsessive_compulsive = NA.30.skin_picking_obsessive_compulsive,
+    mhd.anorexia_nervosa = NA.30.anorexia_nervosa,
+    mhd.atypical_anorexia_nervosa = NA.30.atypical_anorexia_nervosa,
+    mhd.bulimia_nervosa = NA.30.bulimia_nervosa,
+    mhd.bingeeating_disorder = NA.30.psychological_overeating_or_bingeeating_disorder,
+    mhd.schizophrenia = NA.30.schizophrenia,
+    mhd.schizoaffective_disorder = NA.30.schizoaffective_disorder,
+    mhd.type_psychosis_psychotic_illness = NA.30.psychosis_type_psychotic_illness,
+    mhd.personality_disorder = NA.30.personality_disorder,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder = NA.30.autism_aspergers_or_autistic_spectrum_disorder,
+    mhd.attention_deficit_hyperactivity_disorder = NA.30.attention_deficit_hyperactivity_disorder,
+    mhd.personality_disorder_diagnosed = NA.30.personality_disorder_diagnosed
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(ramp.mhd.raw.id)
+# Inspect colnames
+colnames(ramp.mhd.raw.id)
+#Differences
+dim(ramp.mhd.raw)[1]-dim(ramp.mhd.raw.id)[1]
+}
+```
+
+```{r ramp mhd copy}
+if(RAMP == TRUE) {
+  mhd.raw.id <- ramp.mhd.raw.id
 }
 ```
 
@@ -1858,14 +1936,14 @@ mhd.raw.id %>%
     mhd.bulimia_nervosa,
     mhd.atypical_bulimia_nervosa,
     mhd.bingeeating_disorder,
-    mhd.atypical_bingeeating_disorder,
+    mhd.atypical_bingeeating_disorder
   )
 }
 ```
 
 ### Obsessive compulsive disorders
 ```{r mhd obsessive_compulsive_disorders}
-if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     obsessive_compulsive_disorders_numeric =
@@ -1894,8 +1972,38 @@ mhd.raw.id %>%
 }
 ```
 
+```{r mhd obsessive_compulsive_disorders for ramp}
+if(RAMP == TRUE) {
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    obsessive_compulsive_disorders_numeric =
+      case_when(
+        mhd.obsessivecompulsive_disorder_ocd_numeric == "1" ~ 1,
+        mhd.skin_picking_obsessive_compulsive_numeric == "1" ~ 1,
+        mhd.body_dysmorphic_disorder_bdd_numeric == "1" ~ 1,
+        (mhd.obsessivecompulsive_disorder_ocd_numeric == "0" &
+        mhd.skin_picking_obsessive_compulsive_numeric == "0" &
+        mhd.body_dysmorphic_disorder_bdd_numeric == "0") ~ 0
+      )
+  )
+
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    obsessive_compulsive_disorders =
+      recode_factor(obsessive_compulsive_disorders_numeric,
+                    "0" = "No obsessive compulsive disorder",
+                    "1" = "Obsessive compulsive disorder",
+                    missing = NA_character_
+                    )
+  )
+
+mhd.raw.id %>%
+  freq(obsessive_compulsive_disorders)
+}
+```
+
 ```{r Check obsessive_compulsive_disorders}
-if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE) {
 mhd.raw.id %>%
   select(
     obsessive_compulsive_disorders,
@@ -1904,6 +2012,22 @@ mhd.raw.id %>%
     mhd.obsessivecompulsive_disorder_ocd_numeric,
     mhd.obsessive_compulsive_related_disorders,
     mhd.obsessive_compulsive_related_disorders_numeric,
+    mhd.body_dysmorphic_disorder_bdd,
+    mhd.body_dysmorphic_disorder_bdd_numeric
+  )
+}
+```
+
+```{r Check obsessive_compulsive_disorders ramp}
+if(RAMP == TRUE) {
+mhd.raw.id %>%
+  select(
+    obsessive_compulsive_disorders,
+    obsessive_compulsive_disorders_numeric,
+    mhd.obsessivecompulsive_disorder_ocd,
+    mhd.obsessivecompulsive_disorder_ocd_numeric,
+    mhd.skin_picking_obsessive_compulsive,
+    mhd.skin_picking_obsessive_compulsive_numeric,
     mhd.body_dysmorphic_disorder_bdd,
     mhd.body_dysmorphic_disorder_bdd_numeric
   )
@@ -2287,7 +2411,6 @@ summarytools::dfSummary(
 ```
 
 Create new dataframe with the derived categories
-++KT: do we want to keep individual diagnoses here as well?? 
 ```{r mhd categories}
 if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.categories <- mhd.raw.id %>%
@@ -2399,7 +2522,7 @@ mhd.raw.categories <- mhd.raw.id %>%
     personality_cluster_b_numeric = NA_real_,
     personality_cluster_b = NA_real_,
     personality_cluster_c_numeric = NA_real_,
-    personality_cluster_c = NA_real_,    
+    personality_cluster_c = NA_real_    
   )
 }
 ```
