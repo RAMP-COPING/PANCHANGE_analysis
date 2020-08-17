@@ -6531,8 +6531,6 @@ freq(respiratory.raw.id$respiratory.skipped_meals_binary)
 
 Rename respiratory dataset joined to main dataset
 
-++MD: Do we want to name the RAMP dataset something different, if the algorithm will need to be changed because they have categorical age and gender not sex? (otherwise can remove the if statement and rename the dataset 'dat.full' instead of dat.coping)
-++KT: this is not the bit that needs changing for RAMP so have taken this out. 
 ```{r clean respiratory dataset}
 respiratory <- respiratory.raw.id
 
@@ -6541,10 +6539,10 @@ dat.coping <- left_join(
   y = respiratory,
   by = "ID"
 )
-
 ```
 
 # Probable COVID-19 case identification
+
 Algorithm from Menni et al. to identify probable COVID-19
 Variables required:
 - Sex: 	0 Female, 1 Male
@@ -6687,7 +6685,6 @@ freq(dat.coping$covid_odds_ratio_50,
      cumul = FALSE) 
 
 ```
-
 
 Probable COVID case including the routing question
 ```{r recoding probable covid to account for screening question}
