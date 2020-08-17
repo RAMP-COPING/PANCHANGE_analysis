@@ -51,10 +51,10 @@ date = Sys.Date()
 
 # Specify cohort
 ```{r Specify cohort}
-GLAD = TRUE
+GLAD = FALSE
 EDGI = FALSE
 NBR = FALSE
-RAMP = FALSE
+RAMP = TRUE
 ```
 
 
@@ -657,7 +657,7 @@ dem.raw.id %>%
 In RAMP, age is indicated categorically: 16-18, 19-25, 26-35, 36-45, 46-55, 56-65, 66-70, 71-75, 76-80, 81-85, 86-90, 91-100, 100+
 Age categories in GLAD, EDGI and NBR have been created to reflect this
 ```{r Age groups}
-if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE) {
 # Create categorical age groups per 10 years
 dem.raw.id <- dem.raw.id %>%
   mutate(
@@ -678,7 +678,7 @@ dem.raw.id <- dem.raw.id %>%
           Age >= 101 & Age <= 120 ~ "13" # oldest person in the world is 117 years
                 )
       )
-}
+
 
 
 dem.raw.id <- dem.raw.id %>%
@@ -704,7 +704,7 @@ dem.raw.id <- dem.raw.id %>%
 
 dem.raw.id %>%
   freq(age_category_full)
-
+}
 ```
 
 ## Highest education (prepandemic, GLAD & EDGI)
