@@ -1,0 +1,86 @@
+---
+title: "PANCHANGE_data_merging"
+author: "Christopher Huebel"
+date: "17/08/2020"
+output: html_document
+---
+
+This is the preprocessing script to prepare the data to run analyses for the project "Anxiety, depression and trauma symptom change during the COVID-19 pandemic: retrospective versus objective assessment" - Young et al (2020)
+
+Script written by K Purves, K Thompson, C Huebel and M Davies.
+Email: kirstin.purves@kcl.ac.uk, katie.thompson@kcl.ac.uk, christopher.1.huebel@kcl.ac.uk, molly.davies@kcl.ac.uk
+
+
+
+#Set up
+```{r Setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      comment=NA,
+                      prompt=FALSE,
+                      cache=FALSE)
+
+
+options(bitmapType = 'quartz') # to render fonts better
+```
+
+Clear global environment
+```{r Clear global environment}
+remove(list = ls())
+```
+
+Retrieve the current date to use it for file endings to not overwrite files when one exports files
+```{r Recent date}
+date = Sys.Date()
+```
+
+
+Load packages
+```{r}
+library(tidyverse)
+library(skimr)
+```
+
+# Source data file paths 
+
+```{r source file path}
+#source raw data directory: data.raw_path
+source("../PANCHANGE_raw_path.R")
+```
+
+
+
+# Import data
+```{r export data}
+glad <- read_rds(path = paste0(data_path, "/glad.rds"))
+
+edgi <- read_rds(path = paste0(data_path, "/edgi.rds"))
+
+nbr <- read_rds(path = paste0(data_path, "/nbr.rds"))
+
+ramp <- read_rds(path = paste0(data_path, "/ramp.rds"))
+```
+
+glad/edgi data frame list
+```{r glad/edgi data frame list}
+dfs.list <- list(
+  glad,
+  edgi,
+  nbr,
+  ramp
+)
+```
+
+```{r Join all questionnaires}
+dat <- plyr::join_all(
+  dfs.list,
+  by = c("ID", "Sample") # Alternatively you can join by several columns EDGI -> "Age", "Sex", "Birthyear"
+  )
+
+#look at the data
+skimr::skim(dat)
+```
+
+```{r Save four cohorts as rds file}
+saveRDS(object = dat, file = paste0(data_path, "/four_cohorts.rds"))
+```
+
