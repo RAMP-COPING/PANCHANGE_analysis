@@ -4607,16 +4607,16 @@ if(NBR == TRUE) {
 ## RAMP
 ```{r coping ramp phq cols}
 if(RAMP == TRUE) {
-coping.ramp.phq.raw <- readRDS(file = paste0(data.raw_path, "/ramp/phq_coping_ramp.rds"))
-dim(coping.ramp.phq.raw)
-colnames(coping.ramp.phq.raw)
+ramp.phq.raw <- readRDS(file = paste0(data.raw_path, "/ramp/phq_ramp.rds"))
+dim(ramp.phq.raw)
+colnames(ramp.phq.raw)
 }
 ```
 
 ```{r coping ramp phq summary labels}
 if(RAMP == TRUE) {
 summarytools::dfSummary(
-  coping.ramp.phq.raw,
+  ramp.phq.raw,
   graph.col = F,
   valid.col = F
   #labels.col = F
@@ -4628,35 +4628,35 @@ summarytools::dfSummary(
 Will need to double check these namings once we have the new cleaned data -- KT. 
 ```{r coping ramp phq cleaning}
 if(RAMP == TRUE) {
-coping.ramp.phq.raw.id <- coping.ramp.phq.raw %>%
-  drop_na(externalDataReference) %>% # Drop NAs
-  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+ramp.phq.raw.id <- ramp.phq.raw %>%
+  drop_na(`Login ID`) %>% # Drop NAs
+  distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(`Login ID`, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID)
   ) %>%
   select(
     Sample, # Sample
     ID, # ID
-    phq.problems_made_difficult_care,
-    phq.pandemic_felt_feelings,
-    phq.little_interest_or_pleasure_in_doing_things_retro = phq.little_interest_or_pleasure_in_doing_things,
-    phq.feeling_down_depressed_or_hopeless_retro = phq.feeling_down_depressed_or_hopeless,
-    phq.staying_asleep_sleeping_trouble_retro = phq.staying_asleep_sleeping_trouble,
-    phq.feeling_tired_or_having_little_energy_retro = phq.feeling_tired_or_having_little_energy,
-    phq.poor_appetite_or_overeating_retro = phq.poor_appetite_or_overeating,
-    phq.feeling_bad_failure_family_retro = phq.feeling_bad_failure_family,
-    phq.trouble_concentrating_reading_newspaper_retro = phq.trouble_concentrating_newspaper_reading, # differ RAMP prepandemic
-    phq.moving_fidgety_noticed_opposite_retro = phq.moving_fidgety_opposite_slowly, # differ RAMP prepandemic
-    phq.dead_hurting_thoughts_retro = phq.dead_hurting_thoughts,
-    phq.little_interest_or_pleasure_in_doing_things_base = phq.little_interest_or_pleasure_in_doing_things.1,
-    phq.feeling_down_depressed_or_hopeless_base = phq.feeling_down_depressed_or_hopeless.1,
-    phq.staying_asleep_sleeping_trouble_base = phq.staying_asleep_sleeping_trouble.1,
-    phq.feeling_tired_or_having_little_energy_base = phq.feeling_tired_or_having_little_energy.1,
-    phq.poor_appetite_or_overeating_base = phq.poor_appetite_or_overeating.1,
-    phq.feeling_bad_failure_family_base = phq.feeling_bad_failure_family.1,
-    phq.trouble_concentrating_reading_newspaper_base = phq.trouble_concentrating_newspaper_reading.1, # differ RAMP prepandemic
-    phq.moving_fidgety_noticed_opposite_base = phq.moving_fidgety_opposite_slowly.1, # differ RAMP prepandemic
-    phq.dead_hurting_thoughts_base = phq.dead_hurting_thoughts.1
+    phq.problems_made_difficult_care = phq.issues_made_carrying_daily, #impact
+    phq.pandemic_felt_feelings = phq.feelings_pandemic_felt, #before the pandemic question
+    phq.little_interest_or_pleasure_in_doing_things_retro = phq.little_interest_or_pleasure_in_doing_things.1,
+    phq.feeling_down_depressed_or_hopeless_retro = phq.feeling_down_depression_or_hopeless, #THIS IS CORRECT - strange naming in raw dataset
+    phq.staying_asleep_sleeping_trouble_retro = phq.staying_asleep_sleeping_trouble.1,
+    phq.feeling_tired_or_having_little_energy_retro = phq.feeling_tired_or_having_little_energy.1,
+    phq.poor_appetite_or_overeating_retro = phq.poor_appetite_or_overeating.1,
+    phq.feeling_bad_failure_family_retro = phq.failure_family_feeling_bad.1,
+    phq.trouble_concentrating_reading_newspaper_retro = phq.trouble_concentrating_newspaper_reading.1, 
+    phq.moving_fidgety_noticed_opposite_retro = phq.moving_fidgety_opposite_slowly.1, 
+    phq.dead_hurting_thoughts_retro = phq.dead_hurting_thoughts.1,
+    phq.little_interest_or_pleasure_in_doing_things_base = phq.little_interest_or_pleasure_in_doing_things,
+    phq.feeling_down_depressed_or_hopeless_base = phq.feeling_down_depressed_or_hopeless,
+    phq.staying_asleep_sleeping_trouble_base = phq.staying_asleep_sleeping_trouble,
+    phq.feeling_tired_or_having_little_energy_base = phq.feeling_tired_or_having_little_energy,
+    phq.poor_appetite_or_overeating_base = phq.poor_appetite_or_overeating,
+    phq.feeling_bad_failure_family_base = phq.failure_family_feeling_bad,
+    phq.trouble_concentrating_reading_newspaper_base = phq.trouble_concentrating_newspaper_reading, # differ RAMP prepandemic
+    phq.moving_fidgety_noticed_opposite_base = phq.moving_fidgety_opposite_slowly, # differ RAMP prepandemic
+    phq.dead_hurting_thoughts_base = phq.dead_hurting_thoughts
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -4672,17 +4672,17 @@ coping.ramp.phq.raw.id <- coping.ramp.phq.raw %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
 
 # Inspect dimensions
-dim(coping.ramp.phq.raw.id)
+dim(ramp.phq.raw.id)
 # Inspect colnames
-colnames(coping.ramp.phq.raw.id)
+colnames(ramp.phq.raw.id)
 #Differences
-dim(coping.ramp.phq.raw)[1]-dim(coping.ramp.phq.raw.id)[1]
+dim(ramp.phq.raw)[1]-dim(ramp.phq.raw.id)[1]
 }
 ```
 
 ```{r coping ramp gad copy}
 if(RAMP == TRUE) {
-  coping.phq.raw.id <- coping.ramp.phq.raw.id
+  coping.phq.raw.id <- ramp.phq.raw.id
 }
 ```
 
