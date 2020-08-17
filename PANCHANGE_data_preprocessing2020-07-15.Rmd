@@ -3753,7 +3753,7 @@ if(RAMP == TRUE) {
 
 ```{r coping ramp gad copy}
 if(RAMP == TRUE) {
-  coping.gad.raw.id <- coping.ramp.gad.raw.id
+  coping.gad.raw.id <- ramp.gad.raw.id
 }
 ```
 
@@ -4129,77 +4129,77 @@ if(NBR == TRUE) {
 }
 ```
 
-## RAMP
+## RAMP - NOT YET HAVE THE RAMP PCL DATA READY
 ```{r coping ramp pcl cols}
-if(RAMP == TRUE) {
-coping.ramp.pcl.raw <- readRDS(file = paste0(data.raw_path,"/ramp/pcl_coping_ramp.rds"))
-dim(coping.ramp.pcl.raw)
-colnames(coping.ramp.pcl.raw)
-}
+# if(RAMP == TRUE) {
+# coping.ramp.pcl.raw <- readRDS(file = paste0(data.raw_path,"/ramp/pcl_ramp.rds"))
+# dim(coping.ramp.pcl.raw)
+# colnames(coping.ramp.pcl.raw)
+# }
 ```
 
 ```{r coping ramp pcl summary labels}
-if(RAMP == TRUE) {
-summarytools::dfSummary(
-  coping.ramp.pcl.raw,
-  graph.col = F,
-  valid.col = F,
-  labels.col = F
-)
-}
+# if(RAMP == TRUE) {
+# summarytools::dfSummary(
+#   coping.ramp.pcl.raw,
+#   graph.col = F,
+#   valid.col = F,
+#   labels.col = F
+# )
+# }
 ```
 
 Note: Retro for the PCL does not mean retrospective
 
 ```{r coping ramp pcl cleaning}
-if(RAMP == TRUE) {
-coping.ramp.pcl.raw.id <- coping.ramp.pcl.raw %>%
-  drop_na(externalDataReference) %>% # Drop NAs
-  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID)) %>%
-  select(
-    Sample, # Sample
-    ID, # ID
-    pcl.stressful_experience_repeated_images_base = pcl.stressful_experience_repeated_images,
-    pcl.stressful_experience_upset_reminded_base = pcl.stressful_experience_upset_reminded, # differ to RAMP prepan
-    pcl.stressful_situation_avoiding_activities_base = pcl.avoiding_activities_stressful_experience, # differ to RAMP prepan
-    pcl.cut_people_feeling_distant_base = pcl.cut_people_feeling_distant,
-    pcl.feeling_irritable_or_having_angry_outbursts_base = pcl.feeling_irritable_or_having_angry_outbursts,
-    pcl.difficulty_concentrating_base = pcl.difficulty_concentrating,
-    pcl.stressful_experience_repeated_images_retro = pcl.stressful_experience_repeated_images.1,
-    pcl.stressful_experience_upset_reminded_retro = pcl.stressful_experience_upset_reminded.1,
-    pcl.stressful_situation_avoiding_activities_retro = pcl.avoiding_activities_stressful_experience.1,
-    pcl.cut_people_feeling_distant_retro = pcl.cut_people_feeling_distant.1,
-    pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl.feeling_irritable_or_having_angry_outbursts.1,
-    pcl.difficulty_concentrating_retro = pcl.difficulty_concentrating.1
-  ) %>%
-  add_numeric(., exclude = exclude_cols) %>%
-  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
-  mutate_if(is.numeric, ~na_if(., -99)) %>%
-  mutate_if(is.numeric, ~na_if(., -77)) %>%
-  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
-  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
-  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
-  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
-  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
-  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
-  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
-  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-
-# Inspect dimensions
-dim(coping.ramp.pcl.raw.id)
-# Inspect colnames
-colnames(coping.ramp.pcl.raw.id)
-#Differences
-dim(coping.ramp.pcl.raw)[1]-dim(coping.ramp.pcl.raw.id)[1]
-}
+# if(RAMP == TRUE) {
+# coping.ramp.pcl.raw.id <- coping.ramp.pcl.raw %>%
+#   drop_na(externalDataReference) %>% # Drop NAs
+#   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+#   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+#   mutate(ID = as.numeric(ID)) %>%
+#   select(
+#     Sample, # Sample
+#     ID, # ID
+#     pcl.stressful_experience_repeated_images_base = pcl.stressful_experience_repeated_images,
+#     pcl.stressful_experience_upset_reminded_base = pcl.stressful_experience_upset_reminded, # differ to RAMP prepan
+#     pcl.stressful_situation_avoiding_activities_base = pcl.avoiding_activities_stressful_experience, # differ to RAMP prepan
+#     pcl.cut_people_feeling_distant_base = pcl.cut_people_feeling_distant,
+#     pcl.feeling_irritable_or_having_angry_outbursts_base = pcl.feeling_irritable_or_having_angry_outbursts,
+#     pcl.difficulty_concentrating_base = pcl.difficulty_concentrating,
+#     pcl.stressful_experience_repeated_images_retro = pcl.stressful_experience_repeated_images.1,
+#     pcl.stressful_experience_upset_reminded_retro = pcl.stressful_experience_upset_reminded.1,
+#     pcl.stressful_situation_avoiding_activities_retro = pcl.avoiding_activities_stressful_experience.1,
+#     pcl.cut_people_feeling_distant_retro = pcl.cut_people_feeling_distant.1,
+#     pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl.feeling_irritable_or_having_angry_outbursts.1,
+#     pcl.difficulty_concentrating_retro = pcl.difficulty_concentrating.1
+#   ) %>%
+#   add_numeric(., exclude = exclude_cols) %>%
+#   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+#   mutate_if(is.numeric, ~na_if(., -99)) %>%
+#   mutate_if(is.numeric, ~na_if(., -77)) %>%
+#   mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+#   mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+#   mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+#   mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+#   mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+#   mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+#   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+#   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+# 
+# # Inspect dimensions
+# dim(coping.ramp.pcl.raw.id)
+# # Inspect colnames
+# colnames(coping.ramp.pcl.raw.id)
+# #Differences
+# dim(coping.ramp.pcl.raw)[1]-dim(coping.ramp.pcl.raw.id)[1]
+# }
 ```
 
 ```{r coping ramp pcl copy}
-if(RAMP == TRUE) {
-  coping.pcl.raw.id <- coping.ramp.pcl.raw.id
-}
+# if(RAMP == TRUE) {
+#   coping.pcl.raw.id <- coping.ramp.pcl.raw.id
+# }
 ```
 
 ## Sum scores
