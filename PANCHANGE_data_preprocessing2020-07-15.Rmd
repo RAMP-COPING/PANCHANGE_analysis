@@ -3676,16 +3676,16 @@ if(NBR == TRUE) {
 ## RAMP
 ```{r coping ramp gad cols}
 if(RAMP == TRUE) {
-  coping.ramp.gad.raw <- readRDS(file = paste0(data.raw_path,"/ramp/gad_coping_ramp.rds"))
-  dim(coping.ramp.gad.raw)
-  colnames(coping.ramp.gad.raw)
+  ramp.gad.raw <- readRDS(file = paste0(data.raw_path,"/ramp/gad_ramp.rds"))
+  dim(ramp.gad.raw)
+  colnames(ramp.gad.raw)
 }
 ```
 
 ```{r coping ramp gad summary}
 if(RAMP == TRUE) {
   summarytools::dfSummary(
-    coping.ramp.gad.raw,
+    ramp.gad.raw,
     graph.col = F,
     valid.col = F,
     labels.col = F
@@ -3696,38 +3696,38 @@ if(RAMP == TRUE) {
 
 ```{r coping ramp gad cleaning}
 if(RAMP == TRUE) {
-  exclude_cols_coping_ramp <- c(
+  exclude_cols_ramp <- c(
     "Sample",
     "ID",
-    "startDate.coping"
+    "startDate.ramp"
   )
   
-  coping.ramp.gad.raw.id <- coping.ramp.gad.raw %>%
-    drop_na(externalDataReference) %>% # Drop NAs
-    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  ramp.gad.raw.id <- ramp.gad.raw %>%
+    drop_na(`Login ID`) %>% # Drop NAs
+    distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(`Login ID`, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
     mutate(ID = as.numeric(ID)
     ) %>% 
     select(
       Sample, # Sample
       ID, # ID
-      startDate.coping = startDate, # Rename startDate
-      gad.problems_made_difficult_care, # Impairment
-      gad.pandemic_felt_feelings, # Comparison to before the pandemic (retro)
-      gad.feeling_nervous_anxious_or_on_edge_retro = gad.feeling_nervous_anxious_or_on_edge,
-      gad.control_worrying_stop_retro = gad.control_worrying_stop,
-      gad.worrying_too_much_about_different_things_retro = gad.worrying_too_much_about_different_things,
-      gad.trouble_relaxing_retro = gad.trouble_relaxing,
-      gad.sit_restless_hard_retro = gad.sit_restless_hard,
-      gad.becoming_easily_annoyed_or_irritable_retro = gad.becoming_easily_annoyed_or_irritable,
-      gad.awful_feeling_afraid_happen_retro = gad.awful_feeling_afraid_happen,
-      gad.feeling_nervous_anxious_or_on_edge_base = gad.feeling_nervous_anxious_or_on_edge.1,
-      gad.control_worrying_stop_base = gad.control_worrying_stop.1,
-      gad.worrying_too_much_about_different_things_base = gad.worrying_too_much_about_different_things.1,
-      gad.trouble_relaxing_base = gad.trouble_relaxing.1,
-      gad.sit_restless_hard_base = gad.sit_restless_hard.1,
-      gad.becoming_easily_annoyed_or_irritable_base = gad.becoming_easily_annoyed_or_irritable.1,
-      gad.awful_feeling_afraid_happen_base = gad.awful_feeling_afraid_happen.1
+      startDate.ramp = startDate, # Rename startDate
+      gad.problems_made_difficult_care = gad.issues_made_carrying_daily, # Impairment
+      gad.pandemic_felt_feelings = gad.feelings_pandemic_felt, # Comparison to before the pandemic (retro)
+      gad.feeling_nervous_anxious_or_on_edge_retro = gad.feeling_nervous_anxious_or_on_edge.1, #retro and baseline coding are reversed for RAMP
+      gad.control_worrying_stop_retro = gad.control_worrying_stop.1, #.1 = retro
+      gad.worrying_too_much_about_different_things_retro = gad.worrying_too_much_about_different_things.1,
+      gad.trouble_relaxing_retro = gad.trouble_relaxing.1,
+      gad.sit_restless_hard_retro = gad.sit_hard_restless.1,
+      gad.becoming_easily_annoyed_or_irritable_retro = gad.becoming_easily_annoyed_or_irritable.1,
+      gad.awful_feeling_afraid_happen_retro = gad.awful_feeling_afraid_happen.1,
+      gad.feeling_nervous_anxious_or_on_edge_base = gad.feeling_nervous_anxious_or_on_edge,
+      gad.control_worrying_stop_base = gad.control_worrying_stop,
+      gad.worrying_too_much_about_different_things_base = gad.worrying_too_much_about_different_things,
+      gad.trouble_relaxing_base = gad.trouble_relaxing,
+      gad.sit_restless_hard_base = gad.sit_hard_restless,
+      gad.becoming_easily_annoyed_or_irritable_base = gad.becoming_easily_annoyed_or_irritable,
+      gad.awful_feeling_afraid_happen_base = gad.awful_feeling_afraid_happen
     ) %>%
     add_numeric(., exclude = exclude_cols_coping_ramp) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -3743,11 +3743,11 @@ if(RAMP == TRUE) {
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
   
   # Inspect dimensions
-  dim(coping.ramp.gad.raw.id)
+  dim(ramp.gad.raw.id)
   # Inspect colnames
-  colnames(coping.ramp.gad.raw.id)
+  colnames(ramp.gad.raw.id)
   #Differences
-  dim(coping.ramp.gad.raw)[1]-dim(coping.ramp.gad.raw.id)[1]
+  dim(ramp.gad.raw)[1]-dim(ramp.gad.raw.id)[1]
 }
 ```
 
