@@ -6368,7 +6368,7 @@ respiratory <- respiratory.raw.id
 dat.coping <- left_join(
   x = dat,
   y = respiratory,
-  by = "ID"
+  by = c("Sample", "ID")
 )
 }
 ```
