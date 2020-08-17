@@ -1017,7 +1017,7 @@ if(RAMP == TRUE){
 }
 ```
 
-## Highest education (baseline, GLAD, EDGI, NBR, RAMP)
+## Highest education (baseline, GLAD, EDGI, NBR)
 Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
 Assumes University degree > A level > NVQ > GCSE/O Level/CSE
 ```{r Highest education baseline}
@@ -1071,6 +1071,53 @@ employment.raw.id %>%
   )
 }
 ```
+
+## Highest education (baseline, RAMP)
+```{r highest level of education for ramp}
+if(RAMP == TRUE) {
+#create numeric version of the highest education variable
+employment.raw.id <- employment.raw.id %>%
+  mutate(
+    highest_education_numeric =
+      case_when(
+        employment.what_is_your_highest_level_of_education == "PhD" ~ 4,
+        employment.what_is_your_highest_level_of_education == "Postgraduate degree or equivalent" ~ 4,
+        employment.what_is_your_highest_level_of_education == "Master's degree or equivalent" ~ 4,
+        employment.what_is_your_highest_level_of_education == "Bachelor's degree or equivalent" ~ 4,
+        employment.what_is_your_highest_level_of_education == "A-level or equivalent" ~ 3,
+        employment.what_is_your_highest_level_of_education == "GCSE or equivalent" ~ 2,
+        employment.what_is_your_highest_level_of_education == "None of these" ~ 1
+      )
+    )
+
+#recode the numeric version into a factor
+employment.raw.id <- employment.raw.id %>%
+  mutate(
+    highest_education =
+      recode_factor(
+        highest_education_numeric,
+        `1` = "None",
+        `2` = "GCSE/CSE",
+        `3` = "A-levels",
+        `4` = "University")
+    )
+
+employment.raw.id %>%
+  freq(highest_education)
+}
+```
+
+Check highest education coding for RAMP
+```{r Highest education check for RAMP}
+if(RAMP == TRUE) {
+employment.raw.id %>%
+  select(highest_education,
+         employment.what_is_your_highest_level_of_education,
+         employment.what_is_your_highest_level_of_education_numeric
+  )
+}
+```
+
 
 ## Key worker status
 ```{r Key worker}
