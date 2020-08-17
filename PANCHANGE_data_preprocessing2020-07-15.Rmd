@@ -966,7 +966,7 @@ if(NBR == TRUE){
 ### Read in data
 ```{r ramp employment cols}
 if(RAMP == TRUE){
-ramp.employment.raw <- readRDS(file = paste0(data.raw_path, "/ramp/employment_coping_ramp.rds"))
+ramp.employment.raw <- readRDS(file = paste0(data.raw_path, "/ramp/employment_ramp.rds"))
 dim(ramp.employment.raw)
 colnames(ramp.employment.raw)
 }
