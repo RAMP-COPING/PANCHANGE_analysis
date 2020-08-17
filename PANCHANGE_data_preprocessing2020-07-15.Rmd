@@ -48,9 +48,9 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = TRUE
+EDGI = FALSE
 NBR = FALSE
-RAMP = FALSE
+RAMP = TRUE
 ```
 
 
@@ -3726,7 +3726,7 @@ if(RAMP == TRUE) {
       gad.becoming_easily_annoyed_or_irritable_base = gad.becoming_easily_annoyed_or_irritable,
       gad.awful_feeling_afraid_happen_base = gad.awful_feeling_afraid_happen
     ) %>%
-    add_numeric(., exclude = exclude_cols_coping_ramp) %>%
+    add_numeric(., exclude = exclude_cols_ramp) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
     mutate_if(is.numeric, ~na_if(., -99)) %>%
     mutate_if(is.numeric, ~na_if(., -77)) %>%
