@@ -52,17 +52,21 @@ source("../PANCHANGE_raw_path.R")
 # Import data
 ```{r export data}
 glad <- read_rds(path = paste0(data_path, "/glad.rds"))
+dim(glad)
 
 edgi <- read_rds(path = paste0(data_path, "/edgi.rds"))
+dim(edgi)
 
 nbr <- read_rds(path = paste0(data_path, "/nbr.rds"))
+dim(nbr)
 
 ramp <- read_rds(path = paste0(data_path, "/ramp.rds"))
+dim(ramp)
 ```
 
 glad/edgi data frame list
 ```{r glad/edgi data frame list}
-dfs.list <- list(
+dat <- bind_rows(
   glad,
   edgi,
   nbr,
@@ -70,12 +74,7 @@ dfs.list <- list(
 )
 ```
 
-```{r Join all questionnaires}
-dat <- plyr::join_all(
-  dfs.list,
-  by = c("ID", "Sample") # Alternatively you can join by several columns EDGI -> "Age", "Sex", "Birthyear"
-  )
-
+```{r Skim data}
 #look at the data
 skimr::skim(dat)
 ```

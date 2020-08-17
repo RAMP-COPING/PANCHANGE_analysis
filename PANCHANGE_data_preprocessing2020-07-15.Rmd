@@ -49,8 +49,8 @@ date = Sys.Date()
 ```{r Specify cohort}
 GLAD = FALSE
 EDGI = FALSE
-NBR = FALSE
-RAMP = TRUE
+NBR = TRUE
+RAMP = FALSE
 ```
 
 
@@ -5514,7 +5514,7 @@ dfs.list <- list(
   dem.raw.id,
   mhd.raw.categories,
   coping.gad.raw.id,
- # coping.pcl.raw.id, #WAITING FOR PCL DATA FOR RAMP
+#  coping.pcl.raw.id, #WAITING FOR PCL DATA FOR RAMP
   coping.phq.raw.id,
   coping.ocir.raw.id
 )
