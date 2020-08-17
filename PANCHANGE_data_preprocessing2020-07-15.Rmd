@@ -52,9 +52,9 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = FALSE
+EDGI = TRUE
 NBR = FALSE
-RAMP = TRUE
+RAMP = FALSE
 ```
 
 
@@ -6501,6 +6501,35 @@ dat.coping %>%
      cumul = FALSE) 
 ```
 
+```{r dat.coping summary}
+summarytools::dfSummary(
+  dat.coping,
+  graph.col = F,
+  valid.col = F,
+  labels.col = F)
+```
+
+
+
+# Export data
+```{r export data}
+if(GLAD == TRUE){
+saveRDS(object = dat.coping, file = paste0(data_path, "/glad.rds"))
+}
+
+if(EDGI == TRUE){
+saveRDS(object = dat.coping, file = paste0(data_path, "/edgi.rds"))
+}
+
+if(NBR == TRUE){
+saveRDS(object = dat.coping, file = paste0(data_path, "/nbr.rds"))
+}
+
+if(RAMP == TRUE){
+saveRDS(object = dat.coping, file = paste0(data_path, "/ramp.rds"))
+}
+
+```
 
 
 
