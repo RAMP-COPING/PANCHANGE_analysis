@@ -48,9 +48,9 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = TRUE
+EDGI = FALSE
 NBR = FALSE
-RAMP = FALSE
+RAMP = TRUE
 ```
 
 
@@ -2515,11 +2515,11 @@ mhd.raw.categories <- mhd.raw.id %>%
     ) %>%
   add_column(
     personality_cluster_a_numeric = NA_real_,
-    personality_cluster_a = NA_real_,
+    personality_cluster_a = NA_character_,
     personality_cluster_b_numeric = NA_real_,
-    personality_cluster_b = NA_real_,
+    personality_cluster_b = NA_character_,
     personality_cluster_c_numeric = NA_real_,
-    personality_cluster_c = NA_real_    
+    personality_cluster_c = NA_character_
   )
 }
 ```
@@ -3696,7 +3696,7 @@ if(RAMP == TRUE) {
   exclude_cols_ramp <- c(
     "Sample",
     "ID",
-    "startDate.ramp"
+    "startDate.coping"
   )
   
   ramp.gad.raw.id <- ramp.gad.raw %>%
@@ -3708,7 +3708,7 @@ if(RAMP == TRUE) {
     select(
       Sample, # Sample
       ID, # ID
-      startDate.ramp = startDate, # Rename startDate
+      startDate.coping = startDate, # Rename startDate
       gad.problems_made_difficult_care = gad.issues_made_carrying_daily, # Impairment
       gad.pandemic_felt_feelings = gad.feelings_pandemic_felt, # Comparison to before the pandemic (retro)
       gad.feeling_nervous_anxious_or_on_edge_retro = gad.feeling_nervous_anxious_or_on_edge.1, #retro and baseline coding are reversed for RAMP
@@ -3726,7 +3726,7 @@ if(RAMP == TRUE) {
       gad.becoming_easily_annoyed_or_irritable_base = gad.becoming_easily_annoyed_or_irritable,
       gad.awful_feeling_afraid_happen_base = gad.awful_feeling_afraid_happen
     ) %>%
-    add_numeric(., exclude = exclude_cols_coping_ramp) %>%
+    add_numeric(., exclude = exclude_cols_ramp) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
     mutate_if(is.numeric, ~na_if(., -99)) %>%
     mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -4128,75 +4128,75 @@ if(NBR == TRUE) {
 
 ## RAMP - NOT YET HAVE THE RAMP PCL DATA READY
 ```{r coping ramp pcl cols}
-# if(RAMP == TRUE) {
-# coping.ramp.pcl.raw <- readRDS(file = paste0(data.raw_path,"/ramp/pcl_ramp.rds"))
-# dim(coping.ramp.pcl.raw)
-# colnames(coping.ramp.pcl.raw)
-# }
+if(RAMP == TRUE) {
+coping.ramp.pcl.raw <- readRDS(file = paste0(data.raw_path,"/ramp/pcl_ramp.rds"))
+dim(coping.ramp.pcl.raw)
+colnames(coping.ramp.pcl.raw)
+}
 ```
 
 ```{r coping ramp pcl summary labels}
-# if(RAMP == TRUE) {
-# summarytools::dfSummary(
-#   coping.ramp.pcl.raw,
-#   graph.col = F,
-#   valid.col = F,
-#   labels.col = F
-# )
-# }
+if(RAMP == TRUE) {
+summarytools::dfSummary(
+  coping.ramp.pcl.raw,
+  graph.col = F,
+  valid.col = F,
+  labels.col = T
+)
+}
 ```
 
 Note: Retro for the PCL does not mean retrospective
 
 ```{r coping ramp pcl cleaning}
-# if(RAMP == TRUE) {
-# coping.ramp.pcl.raw.id <- coping.ramp.pcl.raw %>%
-#   drop_na(externalDataReference) %>% # Drop NAs
-#   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-#   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-#   mutate(ID = as.numeric(ID)) %>%
-#   select(
-#     Sample, # Sample
-#     ID, # ID
-#     pcl.stressful_experience_repeated_images_base = pcl.stressful_experience_repeated_images,
-#     pcl.stressful_experience_upset_reminded_base = pcl.stressful_experience_upset_reminded, # differ to RAMP prepan
-#     pcl.stressful_situation_avoiding_activities_base = pcl.avoiding_activities_stressful_experience, # differ to RAMP prepan
-#     pcl.cut_people_feeling_distant_base = pcl.cut_people_feeling_distant,
-#     pcl.feeling_irritable_or_having_angry_outbursts_base = pcl.feeling_irritable_or_having_angry_outbursts,
-#     pcl.difficulty_concentrating_base = pcl.difficulty_concentrating,
-#     pcl.stressful_experience_repeated_images_retro = pcl.stressful_experience_repeated_images.1,
-#     pcl.stressful_experience_upset_reminded_retro = pcl.stressful_experience_upset_reminded.1,
-#     pcl.stressful_situation_avoiding_activities_retro = pcl.avoiding_activities_stressful_experience.1,
-#     pcl.cut_people_feeling_distant_retro = pcl.cut_people_feeling_distant.1,
-#     pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl.feeling_irritable_or_having_angry_outbursts.1,
-#     pcl.difficulty_concentrating_retro = pcl.difficulty_concentrating.1
-#   ) %>%
-#   add_numeric(., exclude = exclude_cols) %>%
-#   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
-#   mutate_if(is.numeric, ~na_if(., -99)) %>%
-#   mutate_if(is.numeric, ~na_if(., -77)) %>%
-#   mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
-#   mutate_if(is.factor, ~na_if(., "Don't know")) %>%
-#   mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
-#   mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
-#   mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
-#   mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
-#   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
-#   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-# 
-# # Inspect dimensions
-# dim(coping.ramp.pcl.raw.id)
-# # Inspect colnames
-# colnames(coping.ramp.pcl.raw.id)
-# #Differences
-# dim(coping.ramp.pcl.raw)[1]-dim(coping.ramp.pcl.raw.id)[1]
-# }
+if(RAMP == TRUE) {
+coping.ramp.pcl.raw.id <- coping.ramp.pcl.raw %>%
+  drop_na(`Login ID`) %>% # Drop NAs
+  distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(`Login ID`, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+    Sample, # Sample
+    ID, # ID
+    pcl.stressful_experience_repeated_images_base = pcl.stressful_experience_repeated_images,
+    pcl.stressful_experience_upset_reminded_base = pcl.stressful_experience_reminded_upset, # differ to RAMP prepan
+    pcl.stressful_situation_avoiding_activities_base = pcl.stressful_experience_avoiding_activities, # differ to RAMP prepan
+    pcl.cut_people_feeling_distant_base = pcl.feeling_distant_cut_people, # differ
+    pcl.feeling_irritable_or_having_angry_outbursts_base = pcl.feeling_irritable_or_having_angry_outbursts,
+    pcl.difficulty_concentrating_base = pcl.difficulty_concentrating,
+    pcl.stressful_experience_repeated_images_retro = pcl.stressful_experience_repeated_images.1,
+    pcl.stressful_experience_upset_reminded_retro = pcl.stressful_experience_reminded_upset.1, # differ
+    pcl.stressful_situation_avoiding_activities_retro = pcl.stressful_experience_avoiding_activities.1, # differ
+    pcl.cut_people_feeling_distant_retro = pcl.feeling_distant_cut_people.1, # differ
+    pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl.feeling_irritable_or_having_angry_outbursts.1,
+    pcl.difficulty_concentrating_retro = pcl.difficulty_concentrating.1
+  ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(coping.ramp.pcl.raw.id)
+# Inspect colnames
+colnames(coping.ramp.pcl.raw.id)
+#Differences
+dim(coping.ramp.pcl.raw)[1]-dim(coping.ramp.pcl.raw.id)[1]
+}
 ```
 
 ```{r coping ramp pcl copy}
-# if(RAMP == TRUE) {
-#   coping.pcl.raw.id <- coping.ramp.pcl.raw.id
-# }
+if(RAMP == TRUE) {
+  coping.pcl.raw.id <- coping.ramp.pcl.raw.id
+}
 ```
 
 ## Sum scores
@@ -5493,11 +5493,12 @@ glad/edgi data frame list
 if(GLAD == TRUE | EDGI == TRUE) {
 dfs.list <- list(
   dem.raw.id,
-  prepan.gad.raw.id,
+  employment.raw.id,
   mhd.raw.categories,
-  prepan.ocir.raw.id,
+  prepan.gad.raw.id,
   prepan.pcl.raw.id,
   prepan.phq.raw.id,
+  prepan.ocir.raw.id,
   coping.gad.raw.id,
   coping.pcl.raw.id,
   coping.phq.raw.id,
@@ -5513,7 +5514,7 @@ dfs.list <- list(
   dem.raw.id,
   mhd.raw.categories,
   coping.gad.raw.id,
- # coping.pcl.raw.id, #WAITING FOR PCL DATA FOR RAMP
+  coping.pcl.raw.id,
   coping.phq.raw.id,
   coping.ocir.raw.id
 )
