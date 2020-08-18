@@ -144,10 +144,32 @@ dim(dat)
 colnames(dat)
 ```
 
-```{r dat.coping summary}
+```{r dat.coping summary, eval=FALSE, include=FALSE}
 summarytools::dfSummary(
   dat,
   graph.col = F,
   valid.col = F,
   labels.col = F)
+```
+
+Data availability
+```{r gad availability}
+dat %>%
+  freq(
+    data_group_gad,
+    cumul = F)
+```
+
+```{r phq availability}
+dat %>%
+  freq(
+    data_group_phq,
+    cumul = F)
+```
+
+```{r pcl availability}
+dat %>%
+  freq(
+    data_group_pcl,
+    cumul = F)
 ```
