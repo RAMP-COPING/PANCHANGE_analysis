@@ -3696,7 +3696,7 @@ if(RAMP == TRUE) {
   exclude_cols_ramp <- c(
     "Sample",
     "ID",
-    "startDate.ramp"
+    "startDate.coping"
   )
   
   ramp.gad.raw.id <- ramp.gad.raw %>%
@@ -3708,7 +3708,7 @@ if(RAMP == TRUE) {
     select(
       Sample, # Sample
       ID, # ID
-      startDate.ramp = startDate, # Rename startDate
+      startDate.coping = startDate, # Rename startDate
       gad.problems_made_difficult_care = gad.issues_made_carrying_daily, # Impairment
       gad.pandemic_felt_feelings = gad.feelings_pandemic_felt, # Comparison to before the pandemic (retro)
       gad.feeling_nervous_anxious_or_on_edge_retro = gad.feeling_nervous_anxious_or_on_edge.1, #retro and baseline coding are reversed for RAMP
