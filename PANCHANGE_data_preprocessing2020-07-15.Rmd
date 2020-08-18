@@ -6586,7 +6586,7 @@ Age is not available in RAMP, only categorical age. We will assign each individu
 if(RAMP == TRUE){
 dat.coping <- dat.coping %>%
   mutate(
-    Age =
+    Age_respiratory =
       case_when(
         age_category_full == "16-18" ~ 17,
         age_category_full == "19-25" ~ 22,
@@ -6602,6 +6602,13 @@ dat.coping <- dat.coping %>%
         age_category_full == "91-100" ~ 93,
       age_category_full == "100+" ~ 100
       )
+  )
+}
+
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE){
+dat.coping <- dat.coping %>%
+  mutate(
+    Age_respiratory = Age
   )
 }
 ```
@@ -6626,12 +6633,12 @@ dat.coping %>%
 
 #COVID prediction model
 ```{r COVID prediction model}
-# linear model of covid symptoms
+# linear model of COVID symptoms
 dat.coping <- dat.coping %>%
 		  mutate(
 		    covid_probability = 
 		      (-1.32) - 
-		      (0.01*Age) + 
+		      (0.01*Age_respiratory) + 
 		      (0.44*Sex_respiratory) + 
 		      (1.75*respiratory.anosmia_binary) + 
 		      (0.31*respiratory.pcough_binary) +  
@@ -6639,14 +6646,14 @@ dat.coping <- dat.coping %>%
 		      (0.39*respiratory.skipped_meals_binary) 
 		         )
 
-# Calcualte the odds ratios 
+# Calculate the odds ratios 
 dat.coping <- dat.coping %>%
   mutate(
     covid_odds_ratio = 
       (exp(covid_probability) / (1 + exp(covid_probability)))
   )
 
-# generate binary cutt off variable for risk of COVID 
+# generate binary cut off variable for risk of COVID 
 dat.coping <- dat.coping %>%
 		  mutate(
 		    covid_odds_ratio_50_numeric = 
