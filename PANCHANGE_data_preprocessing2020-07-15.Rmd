@@ -49,8 +49,8 @@ date = Sys.Date()
 ```{r Specify cohort}
 GLAD = FALSE
 EDGI = FALSE
-NBR = FALSE
-RAMP = TRUE
+NBR = TRUE
+RAMP = FALSE
 ```
 
 
@@ -840,19 +840,23 @@ colnames(edgi.employment.raw)
 ### Select variables
 ```{r edgi employment cleaning}
 if(EDGI == TRUE){
-exclude_cols_employment <- c("ID",
-                  "Sample")
+exclude_cols_employment_edgi <- c("ID",
+                  "Sample",
+                  "COPING_ID")
 
 edgi.employment.raw.id <- edgi.employment.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  separate("Login ID", into = c("COPING_Sample", "COPING_ID"), sep = 6) %>% # Split ID in Sample and Number
+  mutate(COPING_ID = as.numeric(COPING_ID)) %>%
   mutate(
     ID = as.numeric(ID)
     ) %>%
   select(
          Sample, # Sample
          ID, # ID
+         COPING_ID,
          employment.phd, # level of education - univeristy
          employment.masters_degree_or_equivalent, # level of education - univeristy
          employment.postgraduate_degree_or_equivalent, # level of education - univeristy
@@ -863,7 +867,7 @@ edgi.employment.raw.id <- edgi.employment.raw %>%
          employment.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
          employment.government_work_key_workers # key worker status
          ) %>%
-  add_numeric(., exclude = exclude_cols_employment) %>%
+  add_numeric(., exclude = exclude_cols_employment_edgi) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -1057,6 +1061,7 @@ Check highest education coding
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE) {
 employment.raw.id %>%
   select(highest_education,
+         highest_education_numeric,
          employment.phd_numeric,
          employment.masters_degree_or_equivalent_numeric,
          employment.postgraduate_degree_or_equivalent_numeric,
@@ -1082,8 +1087,8 @@ employment.raw.id <- employment.raw.id %>%
         employment.what_is_your_highest_level_of_education == "Master's degree or equivalent" ~ 4,
         employment.what_is_your_highest_level_of_education == "Bachelor's degree or equivalent" ~ 4,
         employment.what_is_your_highest_level_of_education == "A-level or equivalent" ~ 3,
-        employment.what_is_your_highest_level_of_education == "GCSE or equivalent" ~ 2,
-        employment.what_is_your_highest_level_of_education == "None of these" ~ 1
+        employment.what_is_your_highest_level_of_education == "GCSE or equivalent" ~ 1,
+        employment.what_is_your_highest_level_of_education == "None of these" ~ 5
       )
     )
 
@@ -1093,10 +1098,11 @@ employment.raw.id <- employment.raw.id %>%
     highest_education =
       recode_factor(
         highest_education_numeric,
-        `1` = "None",
-        `2` = "GCSE/CSE",
+        `1` = "GCSE/CSE",
+        `2` = NA_character_,
         `3` = "A-levels",
-        `4` = "University")
+        `4` = "University",
+        `5` = NA_character_)
     )
 
 employment.raw.id %>%
@@ -1109,6 +1115,7 @@ Check highest education coding for RAMP
 if(RAMP == TRUE) {
 employment.raw.id %>%
   select(highest_education,
+         highest_education_numeric,
          employment.what_is_your_highest_level_of_education,
          employment.what_is_your_highest_level_of_education_numeric
   )
@@ -4126,7 +4133,7 @@ if(NBR == TRUE) {
 }
 ```
 
-## RAMP - NOT YET HAVE THE RAMP PCL DATA READY
+## RAMP
 ```{r coping ramp pcl cols}
 if(RAMP == TRUE) {
 coping.ramp.pcl.raw <- readRDS(file = paste0(data.raw_path,"/ramp/pcl_ramp.rds"))
@@ -4942,6 +4949,9 @@ summarytools::dfSummary(
 *Note that the COPING GLAD OCI-R ID numbers are stored under recipientFirstName (rather than ExternalDataReference)
 ```{r coping glad ocir cleaning}
 if(GLAD == TRUE) {
+  
+  
+  
 coping.glad.ocir.raw.id <- coping.glad.ocir.raw %>%
   drop_na(recipientFirstName) %>% # Drop NAs
   distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -5038,15 +5048,17 @@ summarytools::dfSummary(
 
 *Note that the COPING EDGI OCI-R ID numbers are stored under recipientFirstName (rather than ExternalDataReference)
 ```{r coping edgi ocir cleaning}
+exclude_cols_coping_edgi_ocir <- c("COPING_Sample", "COPING_ID")
+
 if(EDGI == TRUE) {
 coping.edgi.ocir.raw.id <- coping.edgi.ocir.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(externalDataReference, into = c("Sample", "ID"), sep = 6) %>% # Split ID in Sample and Number
-  mutate(ID = as.numeric(ID)) %>%
+  separate(externalDataReference, into = c("COPING_Sample", "COPING_ID"), sep = 6) %>% # Split ID in Sample and Number
+  mutate(COPING_ID = as.numeric(COPING_ID)) %>%
   select(
-    Sample, # Sample
-    ID, # ID
+#    Sample, # Sample
+    COPING_ID, # ID
     ocir.felt_pandemic_feelings, # Comparison to before the pandemic
     ocir.i_repeatedly_check_doors_windows_drawers_etc_retro = ocir.i_repeatedly_check_doors_windows_drawers_etc.,
     ocir.arranged_things_change_upset_retro = ocir.arranged_things_change_upset,
@@ -5085,7 +5097,8 @@ coping.edgi.ocir.raw.id <- coping.edgi.ocir.raw %>%
     ocir.control_difficult_find_thoughts_base = ocir.control_difficult_thoughts_find.1, ## Different from EDGI prepandemic
     ocir.i_collect_things_i_dont_need_base = ocir.i_collect_things_i_dont_need..1
   ) %>%
-  add_numeric(., exclude = exclude_cols) %>%
+  add_column(Sample = "EDGI") %>%
+  add_numeric(., exclude = exclude_cols_coping_edgi_ocir) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -5488,9 +5501,46 @@ summarytools::dfSummary(
 
 # Join tibbles together
 
-glad/edgi data frame list
+```{r edgi employment and coping ocir}
+if(EDGI == TRUE){
+  dim(employment.raw.id)
+  dim(coping.ocir.raw.id)
+  
+  
+edgi.employment.coping.ocir <-  full_join(
+    x = employment.raw.id,
+    y = coping.ocir.raw.id,
+    by = 
+      c("Sample",
+        "COPING_ID")
+)
+    
+    dim(edgi.employment.coping.ocir)
+}
+```
+
+edgi data frame list
+```{r edgi data frame list}
+if(EDGI == TRUE) {
+dfs.list <- list(
+  dem.raw.id,
+  edgi.employment.coping.ocir,
+  mhd.raw.categories,
+  prepan.gad.raw.id,
+  prepan.pcl.raw.id,
+  prepan.phq.raw.id,
+  prepan.ocir.raw.id,
+  coping.gad.raw.id,
+  coping.pcl.raw.id,
+  coping.phq.raw.id
+#  coping.ocir.raw.id
+)
+}
+```
+
+glad data frame list
 ```{r glad/edgi data frame list}
-if(GLAD == TRUE | EDGI == TRUE) {
+if(GLAD == TRUE) {
 dfs.list <- list(
   dem.raw.id,
   employment.raw.id,
@@ -5507,11 +5557,16 @@ dfs.list <- list(
 }
 ```
 
+
+
+
+
 Removing all prepandemic dataframes from NBR/RAMP (prepandemic measures don't exist for these cohorts)
 ```{r nbr/ramp data frame list}
 if(NBR == TRUE | RAMP == TRUE) {
 dfs.list <- list(
   dem.raw.id,
+  employment.raw.id,
   mhd.raw.categories,
   coping.gad.raw.id,
   coping.pcl.raw.id,
@@ -6452,23 +6507,26 @@ Skipped meals: "Moderate symptoms" as cut off
 #persistent cough
 percentage_pcough <- ((0.5673*6452) + (0.4556*9186) + (0.3017*2434931))/(6452+9186+2434931)
 percentage_pcough    # 0.3029762% of Menni et al(2020) have fatigue
-quantile(x = respiratory.raw.id$respiratory.persistent_cough_numeric, 
+pcough_cutoff <- quantile(x = respiratory.raw.id$respiratory.persistent_cough_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_pcough) # this gives 0.3029762% of the sample reporting fatigue when using the "mild symptoms" persistent cough response
+pcough_cutoff
 
 #fatigue
 percentage_fatigue <- ((0.298*6452) + (0.1556*9186) + (0.0871*2434931))/(6452+9186+2434931) 
 percentage_fatigue   # 0.08791204% of Menni et al(2020) have fatigue
-quantile(x = respiratory.raw.id$respiratory.feeling_tiredfatigued_numeric, 
+fatigue_cutoff <- quantile(x = respiratory.raw.id$respiratory.feeling_tiredfatigued_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_fatigue) #this gives 8% of the sample reporting fatigue when using the "severe symptoms" fatigue response
+fatigue_cutoff
 
 #skipped meals 
 percentage_skipped_meals <- ((0.4203*6452) + (0.2493*9186) + (0.1912*2434931))/(6452+9186+2434931) 
 percentage_skipped_meals    # 0.192021% of Menni et al(2020) have fatigue
-quantile(x = respiratory.raw.id$respiratory.skipping_meals_because_you_felt_unwell_numeric, 
+skipped_meals_cutoff <- quantile(x = respiratory.raw.id$respiratory.skipping_meals_because_you_felt_unwell_numeric, 
          na.rm = TRUE, 
          probs = 1-percentage_skipped_meals) # this gives 0.192021% of the sample reporting fatigue when using the "moderate symptoms" persistent cough response
+skipped_meals_cutoff
 ```
 
 Creating binary groups for COVID symptoms
@@ -6489,7 +6547,7 @@ respiratory.raw.id <- respiratory.raw.id %>%
   mutate(
     respiratory.pcough_binary =
       if_else(
-        respiratory.persistent_cough_numeric >= 1, #those who score 1 or above (mild or above)
+        respiratory.persistent_cough_numeric >= pcough_cutoff, #those who score 1 or above (mild or above)
         1,
         0
       )
@@ -6500,7 +6558,7 @@ respiratory.raw.id <- respiratory.raw.id %>%
   mutate(
     respiratory.fatigue_binary =
       if_else(
-        respiratory.feeling_tiredfatigued_numeric >= 3, #those who score 3 (severe symptoms)
+        respiratory.feeling_tiredfatigued_numeric >= fatigue_cutoff, #those who score 3 (severe symptoms)
         1,
         0
       )
@@ -6511,7 +6569,7 @@ respiratory.raw.id <- respiratory.raw.id %>%
   mutate(
     respiratory.skipped_meals_binary =
       if_else(
-        respiratory.skipping_meals_because_you_felt_unwell_numeric >= 2,
+        respiratory.skipping_meals_because_you_felt_unwell_numeric >= skipped_meals_cutoff,
         1,
         0
       )
@@ -6745,10 +6803,6 @@ saveRDS(object = dat.coping, file = paste0(data_path, "/ramp.rds"))
 }
 
 ```
-
-
-
-
 
 
 

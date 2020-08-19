@@ -60,7 +60,8 @@ Load packages
 library(knitr)
 library(summarytools)
 library(psych)
-library(eeptools) # Needed to calculate age from birthdate
+library(patchwork)
+library(broom)
 library(tidyverse)
 ```
 
@@ -144,6 +145,44 @@ dim(dat)
 colnames(dat)
 ```
 
+Filter data frame to exclude participants that never answered COPING
+```{r}
+
+```
+
+
+
+```{r Vectors with diff_score_cols}
+diff_score_cols <- dat %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+diff_score_cols
+
+phq.diff_score_cols <- dat %>%
+  select(contains("phq")) %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+phq.diff_score_cols
+
+gad.diff_score_cols <- dat %>%
+  select(contains("gad")) %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+gad.diff_score_cols
+
+ocir.diff_score_cols <- dat %>%
+  select(contains("ocir")) %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+ocir.diff_score_cols
+```
+
+
+
 ```{r dat.coping summary, eval=FALSE, include=FALSE}
 summarytools::dfSummary(
   dat,
@@ -173,3 +212,399 @@ dat %>%
     data_group_pcl,
     cumul = F)
 ```
+
+Data availability OCI-R
+```{r}
+
+```
+
+Descriptives of age
+```{r}
+
+```
+
+
+```{r vector with psychiatric disorders}
+disorder_columns <- c(
+    "depressive_disorders_numeric",
+    "anxiety_disorders_numeric",
+    "eating_disorders_numeric",
+    "obsessive_compulsive_disorders_numeric",
+    "psychotic_disorders_numeric",
+    "mhd.mania_hypomania_bipolar_or_manicdepression_numeric",
+    "mhd.posttraumatic_stress_disorder_ptsd_numeric",
+    "mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric",
+    "mhd.attention_deficit_hyperactivity_disorder_numeric",
+    "mhd.personality_disorder_numeric",
+    "control_numeric"
+)
+```
+
+
+
+```{r gather to long format Disorder}
+dat.long <- dat %>%
+  gather(
+    key = "Disorder",
+    value = "Diagnosis",
+    all_of(disorder_columns)) %>%
+  select(
+    ID,
+    Sample,
+    Gender,
+    Ethnicity,
+    all_of(diff_score_cols),
+    Disorder,
+    Diagnosis
+  )
+
+head(dat.long)
+```
+
+Define disorder columns in vector
+
+```{r Disorder by Gender}
+dat.long %>%
+  filter(Diagnosis == 1) %>%
+  group_by(Disorder, Gender) %>%
+  count(Disorder)
+```
+
+
+
+```{r Disorder by Sample}
+dat.long %>%
+  filter(Diagnosis == 1) %>%
+  group_by(Disorder, Sample) %>%
+  count(Disorder)
+```
+
+Ethnicity should be recoded
+European
+Mixed or multiplce ethnic origins
+Africian or African British
+Asian or Asian British
+Arab
+```{r Disorder by Ethnicity}
+dat.long %>%
+  filter(Diagnosis == 1) %>%
+  group_by(Disorder, Ethnicity) %>%
+  count(Disorder)
+```
+
+
+Compare the GLAD/EDGI and COPING cohorts as a whole
++++CH: Diagnosis, ethnicity, gender, 
++++MD: May not be possible for NBR; potentially send them code to run it for us
+
+Ethnicity
+```{r}
+dat %>%
+  group_by(Ethnicity, Sample) %>%
+  count(Ethnicity)
+```
+
+
+Gender
+```{r}
+dat %>%
+  group_by(Gender, Sample) %>%
+  count(Gender)
+```
+
+highest_education
+```{r}
+dat %>%
+  group_by(highest_education, Sample) %>%
+  count(highest_education)
+```
+
+Key worker status
+```{r}
+dat %>%
+  group_by(key_worker, Sample) %>%
+  count(key_worker)
+```
+
+COVID test positive
+```{r}
+dat %>%
+  group_by(respiratory.throat_swab_test_nose, Sample) %>%
+  count(respiratory.throat_swab_test_nose)
+```
+
+```{r}
+dat %>%
+  group_by(respiratory.results_antibody_test, Sample) %>%
+  count(respiratory.results_antibody_test)
+```
+
+
+COVID probable diagnosis
+```{r}
+dat %>%
+  group_by(covid_probable_case_incl_screening, Sample) %>%
+  count(covid_probable_case_incl_screening)
+```
+
+
+
+```{r gather to long format Time_points}
+dat.long.gad.diff <- dat %>%
+  gather(
+    key = "Time_point_raw",
+    value = "gad.diff_score",
+    all_of(gad.diff_score_cols)) %>%
+  select(
+    ID,
+    Sample,
+    Gender,
+    Ethnicity,
+    Time_point_raw,
+    gad.diff_score
+  ) %>%
+  mutate(Time_point = str_replace(Time_point_raw, "gad.diff_score_", "")) %>%
+  select(-Time_point_raw)
+
+head(dat.long.gad.diff)
+```
+
+makes this into percentages
+```{r}
+dat.long.gad.diff %>%
+  ggplot(mapping = aes(y = gad.diff_score)) +
+  geom_bar() +
+  theme_minimal() +
+  facet_wrap(facets = vars(Time_point))
+```
+
+```{r gather to long format Time_points}
+dat.long.phq.diff <- dat %>%
+  gather(
+    key = "Time_point_raw",
+    value = "phq.diff_score",
+    all_of(phq.diff_score_cols)) %>%
+  select(
+    ID,
+    Sample,
+    Gender,
+    Ethnicity,
+    Time_point_raw,
+    phq.diff_score
+  ) %>%
+  mutate(Time_point = str_replace(Time_point_raw, "phq.diff_score_", "")) %>%
+  select(-Time_point_raw) %>%
+  drop_na(phq.diff_score)
+
+head(dat.long.phq.diff)
+```
+
+
+```{r}
+dat.long.phq.diff %>%
+  filter(Time_point != "prepan_retro") %>%
+  ggplot(mapping = aes(
+    x = phq.diff_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+   geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+    ) +
+  theme_minimal()
+```
+
+```{r}
+dat.long.phq.diff %>%
+  filter(Time_point == "prepan_retro") %>%
+  ggplot(mapping = aes(
+    x = phq.diff_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+   geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+    ) +
+  theme_minimal()
+```
+
+
+
+
+```{r gather to long format Time_points}
+dat.long.ocir.diff <- dat %>%
+  gather(
+    key = "Time_point_raw",
+    value = "ocir.diff_score",
+    all_of(ocir.diff_score_cols)) %>%
+  select(
+    ID,
+    Sample,
+    Gender,
+    Ethnicity,
+    Time_point_raw,
+    ocir.diff_score
+  ) %>%
+  mutate(Time_point = str_replace(Time_point_raw, "ocir.diff_score_", "")) %>%
+  select(-Time_point_raw)
+
+head(dat.long.ocir.diff)
+```
+
+```{r}
+dat.long.ocir.diff %>%
+  ggplot(mapping = aes(y = ocir.diff_score)) +
+  geom_bar() +
+  theme_minimal() +
+  facet_wrap(facets = vars(Time_point))
+```
+
+
+```{r}
+gad.diff_score_prepan_base_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_prepan_base)) +
+  geom_bar() +
+  theme_minimal()
+
+gad.diff_score_prepan_retro_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_prepan_retro)) +
+  geom_bar() +
+  theme_minimal()
+
+gad.diff_score_prepan_base_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_prepan_base)) +
+  geom_bar() +
+  theme_minimal()
+
+```
+
+```{r fig.height=5, fig.width=5}
+gad.diff_score_prepan_base_plot /
+  gad.diff_score_prepan_retro_plot /
+  gad.diff_score_prepan_base_plot +
+  plot_layout(guides = "collect", heights = c(1,1,1)) +
+  plot_annotation(tag_levels = "A")
+```
+
+
+Calculate mean change per disorder group 
+Disorders (9) 
+Sex 
+Age (13; RAMP; potentially collapse above 65 depending on group sizes) 
+Ethnicity groups (5; White European, Black (British), Asian, Arab, Mixed) 
+
+```{r}
+dat.long %>%
+  filter(Diagnosis == 1) %>%
+  group_by(Disorder) %>%
+  summarise(
+    gad_base_retro = mean(gad.diff_score_base_retro, na.rm = T),
+    gad_prepan_retro = mean(gad.diff_score_prepan_retro, na.rm = T),
+    gad_prepan_base = mean(gad.diff_score_prepan_base, na.rm = T),
+    phq_base_retro = mean(phq.diff_score_base_retro, na.rm = T),
+    phq_prepan_retro = mean(phq.diff_score_prepan_retro, na.rm = T),
+    phq_prepan_base = mean(phq.diff_score_prepan_base, na.rm = T),
+    ocir_base_retro = mean(ocir.diff_score_base_retro, na.rm = T),
+    ocir_prepan_retro = mean(ocir.diff_score_prepan_retro, na.rm = T),
+    ocir_prepan_base = mean(ocir.diff_score_prepan_base, na.rm = T)
+    )
+```
+
+
+Rank the disorders by the size of the change 
+
+
+# Regression
+Regress covariates out of the change? Which? 
+
+Model 0: Disorders
+```{r}
+model0 <- lm(
+  formula = gad.diff_score_base_retro ~ Disorder,
+  data = dat.long)
+
+summary(model0)
+```
+
+```{r}
+tidy(model0)
+```
+
+```{r}
+model1 <- lm(
+  formula = gad.diff_score_base_retro ~ time_diff_sign_up_coping,
+  data = dat)
+
+summary(model1)
+```
+
+
+
+Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
+```{r}
+model1 <- lm(
+  formula = gad.diff_score_base_retro ~ Gender + Age + Ethnicity + time_diff_sign_up_coping + Sample,
+  data = dat)
+
+summary(model1)
+```
+
+
+Re-calculate change
+```{r}
+
+```
+
+
+Re-rank the change again
+```{r}
+
+```
+
+
+PCL:  
+Calculate the total GLAD, COPING, RAMP baseline 
+```{r}
+
+```
+
+
+For each item 
+present percentages of how say that this is due to the pandemic 
+```{r}
+
+```
+
+
+Calculate a variable PCL pandemic score 
+```{r}
+
+```
+
+
+If one item is highly endorsed due to pandemic -> exclude in sensitivity analysis 
+```{r}
+
+```
+
+ 
+
+
+Descriptives for reporting: "How different are these feelings to how you felt before the pandemic?’ on a 5-point scale (much worse, a little worse, no different, a little better, much better)."
++++KLP: Discuss during the meeting if we use 3 or 5 categories
+```{r}
+
+```
+
+
+Replicate chunk above for retrospective reports. This will only be for people who say that have reported that there is a change in their scores. 
+*Discuss if we should include people who reported "no change" as repition of their current GAD, PHQ, PCL report*
+```{r}
+
+```
+
+
+```{r}
+
+```
+
