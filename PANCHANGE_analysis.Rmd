@@ -61,6 +61,7 @@ library(knitr)
 library(summarytools)
 library(psych)
 library(patchwork)
+library(broom)
 library(tidyverse)
 ```
 
@@ -321,15 +322,18 @@ dat %>%
 ```{r}
 gad.diff_score_prepan_base_plot <- dat %>%
   ggplot(mapping = aes(y = gad.diff_score_prepan_base)) +
-  geom_bar()
+  geom_bar() +
+  theme_minimal()
 
 gad.diff_score_prepan_retro_plot <- dat %>%
   ggplot(mapping = aes(y = gad.diff_score_prepan_retro)) +
-  geom_bar()
+  geom_bar() +
+  theme_minimal()
 
 gad.diff_score_prepan_base_plot <- dat %>%
   ggplot(mapping = aes(y = gad.diff_score_prepan_base)) +
-  geom_bar()
+  geom_bar() +
+  theme_minimal()
 
 ```
 
@@ -371,13 +375,34 @@ Regress covariates out of the change? Which?
 
 Model 0: Disorders
 ```{r}
+model0 <- lm(
+  formula = gad.diff_score_base_retro ~ Disorder,
+  data = dat.long)
 
+summary(model0)
 ```
+
+```{r}
+tidy(model0)
+```
+
+```{r}
+model1 <- lm(
+  formula = gad.diff_score_base_retro ~ time_diff_sign_up_coping,
+  data = dat)
+
+summary(model1)
+```
+
 
 
 Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
 ```{r}
+model1 <- lm(
+  formula = gad.diff_score_base_retro ~ Gender + Age + Ethnicity + time_diff_sign_up_coping + Sample,
+  data = dat)
 
+summary(model1)
 ```
 
 
