@@ -138,20 +138,109 @@ source("../PANCHANGE_raw_path.R")
 ```
 
 
-### Read in data
+## Read in data
 ```{r read in data}
-dat <- readRDS(file = paste0(data_path, "/four_cohorts.rds"))
-dim(dat)
-colnames(dat)
+dat.raw <- readRDS(file = paste0(data_path, "/four_cohorts.rds"))
+dim(dat.raw)
+colnames(dat.raw)
 ```
 
+
+```{r dat.coping summary, eval=FALSE, include=FALSE}
+summarytools::dfSummary(
+  dat.raw,
+  graph.col = F,
+  valid.col = F,
+  labels.col = F)
+```
+
+# Data availability
+```{r gad availability}
+dat.raw %>%
+  freq(
+    data_group_gad,
+    cumul = F)
+```
+
+```{r phq availability}
+dat.raw %>%
+  freq(
+    data_group_phq,
+    cumul = F)
+```
+
+```{r pcl availability}
+dat.raw %>%
+  freq(
+    data_group_pcl,
+    cumul = F)
+```
+
+Data availability OCI-R
+```{r ocir availability}
+dat.raw %>%
+  freq(
+    data_group_ocir,
+    cumul = F)
+```
+
+
+# Exclusion
 Filter data frame to exclude participants that never answered COPING
-```{r}
+```{r exclusion criteria dat}
+dat <- dat.raw %>%
+  filter(
+    (data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "Prepandemic and baseline data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "Prepandemic and baseline data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data")
+  )
+```
 
+```{r dimensions of total dat}
+dim(dat)
+```
+
+# ggplot theme
+```{r ggplot theme}
+theme_personal <-  theme(
+    text = element_text(color = "black"),
+    axis.title = element_text(color = "black"),
+    axis.text = element_text(color = "black"),
+    axis.title.y = element_blank(), 
+    legend.background = element_blank(),
+    legend.box.background = element_blank(),
+    panel.background = element_blank(), 
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.x = element_line(
+      colour = "gray",
+      linetype = "dashed",
+      size = 0.2
+      ),
+    axis.ticks = element_blank()
+    )
 ```
 
 
+# Age
+```{r descriptives Ages}
+dat %>%
+  group_by(Sample) %>%
+  summarise(Mean = mean(Age),
+            SD = sd(Age),
+            Min = min(Age),
+            Max = max(Age))
+```
 
+# Vectors for diff_score
 ```{r Vectors with diff_score_cols}
 diff_score_cols <- dat %>%
   select(contains("diff_score")) %>% 
@@ -182,48 +271,7 @@ ocir.diff_score_cols
 ```
 
 
-
-```{r dat.coping summary, eval=FALSE, include=FALSE}
-summarytools::dfSummary(
-  dat,
-  graph.col = F,
-  valid.col = F,
-  labels.col = F)
-```
-
-Data availability
-```{r gad availability}
-dat %>%
-  freq(
-    data_group_gad,
-    cumul = F)
-```
-
-```{r phq availability}
-dat %>%
-  freq(
-    data_group_phq,
-    cumul = F)
-```
-
-```{r pcl availability}
-dat %>%
-  freq(
-    data_group_pcl,
-    cumul = F)
-```
-
-Data availability OCI-R
-```{r}
-
-```
-
-Descriptives of age
-```{r}
-
-```
-
-
+# Psychiatric disorders
 ```{r vector with psychiatric disorders}
 disorder_columns <- c(
     "depressive_disorders_numeric",
@@ -243,9 +291,9 @@ disorder_columns <- c(
 
 
 ```{r gather to long format Disorder}
-dat.long <- dat %>%
+dat.long.psych <- dat %>%
   gather(
-    key = "Disorder",
+    key = "Disorder_raw",
     value = "Diagnosis",
     all_of(disorder_columns)) %>%
   select(
@@ -254,30 +302,98 @@ dat.long <- dat %>%
     Gender,
     Ethnicity,
     all_of(diff_score_cols),
-    Disorder,
+    Disorder_raw,
     Diagnosis
-  )
+  ) %>%
+  mutate(Disorder =
+           recode_factor(
+             Disorder_raw,
+             anxiety_disorders_numeric = "Anxiety disorders",
+             depressive_disorders_numeric = "Depressive disorders",
+             eating_disorders_numeric = "Eating disorders",
+             obsessive_compulsive_disorders_numeric = "OCDs",
+             psychotic_disorders_numeric = "Psychotic disorders",
+             mhd.mania_hypomania_bipolar_or_manicdepression_numeric = "Bipolar disorders",
+             mhd.posttraumatic_stress_disorder_ptsd_numeric = "PTSD",
+             mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric = "Autism",
+             mhd.attention_deficit_hyperactivity_disorder_numeric = "ADHD",
+             mhd.personality_disorder_numeric = "Personality disorders",
+             control_numeric = "Controls"
+           ))
 
-head(dat.long)
+head(dat.long.psych)
 ```
 
 Define disorder columns in vector
 
 ```{r Disorder by Gender}
-dat.long %>%
+Disorder_by_Gender <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
   group_by(Disorder, Gender) %>%
   count(Disorder)
+
+Disorder_by_Gender
+```
+
+```{r Disorder by Gender plot}
+Disorder_by_Gender %>%
+  ggplot(mapping = aes(
+    x = Disorder,
+    y = n)
+    ) +
+  geom_bar(
+    aes(fill = Gender),
+#    position = "dodge",
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Disorder",
+    y = "Number of participants",
+    fill = "Gender") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette4,
+#    labels = c("Prepandemic", "Retrospective")
+    ) +
+  coord_flip()
 ```
 
 
-
 ```{r Disorder by Sample}
-dat.long %>%
+Disorder_by_Sample <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
   group_by(Disorder, Sample) %>%
   count(Disorder)
 ```
+
+```{r Disorder by Sample plot}
+Disorder_by_Sample %>%
+  ggplot(mapping = aes(
+    x = Disorder,
+    y = n)
+    ) +
+  geom_bar(
+    aes(fill = Sample),
+#    position = "dodge",
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Disorder",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette4,
+#    labels = c("Prepandemic", "Retrospective")
+    ) +
+  coord_flip()
+```
+
+
 
 Ethnicity should be recoded
 European
@@ -286,10 +402,35 @@ African or African British
 Asian or Asian British
 Arab
 ```{r Disorder by Ethnicity}
-dat.long %>%
+Disorder_by_Ethnicity <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
   group_by(Disorder, Ethnicity) %>%
   count(Disorder)
+```
+
+```{r Disorder by Ethnicity plot}
+Disorder_by_Ethnicity %>%
+  ggplot(mapping = aes(
+    x = Disorder,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Ethnicity),
+    #    position = "dodge",
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Disorder",
+    y = "Number of participants",
+    fill = "Ethnicity") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6,
+    #    labels = c("Prepandemic", "Retrospective")
+  ) +
+  coord_flip()
 ```
 
 
@@ -297,59 +438,89 @@ Compare the GLAD/EDGI and COPING cohorts as a whole
 +++CH: Diagnosis, ethnicity, gender, 
 +++MD: May not be possible for NBR; potentially send them code to run it for us
 
-Ethnicity
-```{r}
-dat %>%
+# Ethnicity
+```{r Ethnicity per Sample}
+Ethnicity_by_Sample <- dat %>%
   group_by(Ethnicity, Sample) %>%
   count(Ethnicity)
+
+Ethnicity_by_Sample
 ```
 
+```{r Ethnicity by Sample plot}
+Ethnicity_by_Sample %>%
+  ggplot(mapping = aes(
+    x = Ethnicity,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    #    position = "dodge",
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Ethnicity",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6,
+    #    labels = c("Prepandemic", "Retrospective")
+  ) +
+  coord_flip()
+```
 
-Gender
-```{r}
+# Gender
+```{r Gender per Sample}
 dat %>%
   group_by(Gender, Sample) %>%
   count(Gender)
 ```
 
-highest_education
-```{r}
+# highest_education
+```{r highest_education per Sample}
 dat %>%
   group_by(highest_education, Sample) %>%
   count(highest_education)
 ```
 
-Key worker status
-```{r}
+# Key worker status
+```{r Key worker status per sample}
 dat %>%
   group_by(key_worker, Sample) %>%
   count(key_worker)
 ```
 
-COVID test positive
-```{r}
+# COVID
+## COVID swab test positive
+```{r COVID positive swap}
 dat %>%
   group_by(respiratory.throat_swab_test_nose, Sample) %>%
   count(respiratory.throat_swab_test_nose)
 ```
 
-```{r}
+## antibody test
+```{r COVID positive antibody test}
 dat %>%
   group_by(respiratory.results_antibody_test, Sample) %>%
   count(respiratory.results_antibody_test)
 ```
 
 
-COVID probable diagnosis
-```{r}
+## COVID probable diagnosis
+```{r COVID probable diagnosis}
 dat %>%
   group_by(covid_probable_case_incl_screening, Sample) %>%
   count(covid_probable_case_incl_screening)
 ```
 
 
+# Questionnaire comparions
 
-```{r gather to long format Time_points}
+## gad
+```{r gad gather to long format Time_points}
 dat.long.gad.diff <- dat %>%
   gather(
     key = "Time_point_raw",
@@ -370,7 +541,7 @@ head(dat.long.gad.diff)
 ```
 
 makes this into percentages
-```{r}
+```{r gad absolut plot}
 dat.long.gad.diff %>%
   ggplot(mapping = aes(y = gad.diff_score)) +
   geom_bar() +
@@ -378,7 +549,49 @@ dat.long.gad.diff %>%
   facet_wrap(facets = vars(Time_point))
 ```
 
-```{r gather to long format Time_points}
+```{r gad percentage plot prepan_retro}
+dat.long.gad.diff %>%
+  filter(Time_point != "prepan_retro") %>%
+  ggplot(mapping = aes(
+    x = gad.diff_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Difference GAD7 score",
+    y = "Percentage of participants",
+    fill = "Comparison:\nBaseline vs") +
+  theme_personal +
+  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective"))
+```
+
+```{r gad plot prepan_retro diff}
+dat.long.gad.diff %>%
+  filter(Time_point == "prepan_retro") %>%
+  ggplot(mapping = aes(
+    x = gad.diff_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Difference GAD7 score",
+    y = "Percentage of participants",
+    fill = "Comparison:\nPrepandemic vs") +
+  theme_personal +
+  scale_fill_manual(values = palette, labels = c("Retrospective"))
+```
+
+
+
+# phq
+
+```{r phq gather to long format Time_points}
 dat.long.phq.diff <- dat %>%
   gather(
     key = "Time_point_raw",
