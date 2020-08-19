@@ -49,8 +49,8 @@ date = Sys.Date()
 ```{r Specify cohort}
 GLAD = FALSE
 EDGI = FALSE
-NBR = FALSE
-RAMP = TRUE
+NBR = TRUE
+RAMP = FALSE
 ```
 
 
@@ -612,7 +612,7 @@ if(RAMP == TRUE){
 ## Demographics variable creation
 
 # Gender categories synchronised
-
+RAMP has the correct Gender categories so does not need editing. 
 ```{r gender recoding for GLAD}
 if(GLAD == TRUE | NBR == TRUE) {
 
@@ -5992,7 +5992,7 @@ summary(dat$phq.diff_score_prepan_retro)
 # Difference score for prepandemic and baseline phq sum scores
 dat <- dat %>%
   mutate(
-    phq.diff_score_prepan_base =
+    phq.diff_score_base_prepan =
       as.numeric(
         phq.sum_score_base - phq.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
       )
@@ -6031,7 +6031,7 @@ summary(dat$gad.diff_score_prepan_retro)
 # Difference score for prepandemic and baseline gad sum scores
 dat <- dat %>%
   mutate(
-    gad.diff_score_prepan_base =
+    gad.diff_score_base_prepan =
       as.numeric(
         gad.sum_score_base - gad.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
       )
@@ -6060,7 +6060,7 @@ if(GLAD == TRUE | EDGI == TRUE){
 # Difference score for prepandemic and baseline pcl sum scores
 dat <- dat %>%
   mutate(
-    pcl.diff_score_prepan_base =
+    pcl.diff_score_base_prepan =
       as.numeric(
         pcl.sum_score_base - pcl.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
       )
@@ -6969,6 +6969,17 @@ summarytools::dfSummary(
   valid.col = F,
   labels.col = F)
 ```
+
+# Rename NBR Sample ID 
+```{r rename NBR sample ID}
+if(NBR == TRUE){
+dat.coping <- dat.coping %>%
+  recode(Sample,
+         "SP0068" = "NBR"
+         )
+}
+```
+
 
 # Export data
 ```{r export data}
