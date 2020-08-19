@@ -6974,9 +6974,13 @@ summarytools::dfSummary(
 ```{r rename NBR sample ID}
 if(NBR == TRUE){
 dat.coping <- dat.coping %>%
-  recode(Sample,
-         "SP0068" = "NBR"
-         )
+  mutate(
+    Sample = 
+    recode(
+      Sample, 
+      "SP0068" = "NBR"
+    )
+  )
 }
 ```
 
