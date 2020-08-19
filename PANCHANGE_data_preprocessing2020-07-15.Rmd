@@ -48,8 +48,8 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = FALSE
-NBR = TRUE
+EDGI = TRUE
+NBR = FALSE
 RAMP = FALSE
 ```
 
@@ -189,7 +189,7 @@ glad.dem.raw.id <- glad.dem.raw %>%
          ID, # ID
          startDate.prepandemic = startDate, #Date when participant signed up to glad
          Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
-         Gender = demographics.which_gender_do_you_identify_with, # Gender
+         Gender_unc = demographics.which_gender_do_you_identify_with, # Gender
          Sex = demographics.select_questionnaire_items_medical, #Sex
          EduYrs = demographics.school_education_school_years.txt, # Years in education
          demographics.college_or_university_degree, # level of education - univeristy
@@ -266,7 +266,7 @@ if(EDGI == TRUE){
       ID, # ID
       startDate.prepandemic = startDate, #Date when participant signed up to edgi
       Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
-      Gender = demographics.what_gender_do_you_identify_with, # Gender (which [GLAD] vs what [EDGI])
+      Gender_unc = demographics.what_gender_do_you_identify_with, # Gender (which [GLAD] vs what [EDGI])
       Sex = demographics.select_questionnaire_items_birth, #Sex (different to GLAD)
       EduYrs = demographics.university_education_attend_school.txt, # Years in education (different to GLAD)
       demographics.college_or_university_degree, # level of education - univeristy
@@ -346,7 +346,7 @@ if(NBR == TRUE){
       Birthyear_unc = demographics.year, # Birthyear
       Birthmonth = demographics.month, #Birthmonth
       Birthday = demographics.day, #Birthday
-      Gender = demographics.which_gender_do_you_identify_with, # Gender
+      Gender_unc = demographics.which_gender_do_you_identify_with, # Gender
       Sex = demographics.select_questionnaire_items_medical, #Sex
 #      Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
     ) %>%
@@ -609,8 +609,59 @@ if(RAMP == TRUE){
 ```
 
 
-# Demographics variable creation
-## Clean Age variable
+## Demographics variable creation
+
+# Gender categories synchronised
+
+```{r gender recoding for GLAD}
+if(GLAD == TRUE) {
+
+dem.raw.id <- dem.raw.id %>%
+  mutate(
+    Gender = 
+      recode_factor(Gender_unc,
+        "Male" = "Male",
+        "Female" = "Female",
+        "Non-binary" = "Non-binary",
+        "Prefer to self-define (please tell us more)" = "Prefer to self-define"
+      )
+  )
+}
+```
+
+```{r gender recoding for EDGI}
+if(EDGI == TRUE) {
+
+dem.raw.id <- dem.raw.id %>%
+  mutate(
+    Gender = 
+      recode_factor(Gender_unc,
+        "Male" = "Male",
+        "Female" = "Female",
+        "Non-binary" = "Non-binary",
+        "Prefer to self-define (please tell us more):" = "Prefer to self-define"
+      )
+  )
+}
+```
+
+```{r gender recoding for NBR}
+if(NBR == TRUE ) {
+
+dem.raw.id <- dem.raw.id %>%
+  mutate(
+    Gender = 
+      recode_factor(Gender_unc,
+        "Male" = "Male",
+        "Female" = "Female",
+        "Non-binary" = "Non-binary",
+        "Prefer to self-define (please tell us more)" = "Prefer to self-define"
+      )
+  )
+}
+```
+
+# Clean Age variable
 Age outlier
 ```{r age outlier}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
