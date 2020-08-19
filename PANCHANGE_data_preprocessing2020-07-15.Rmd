@@ -48,8 +48,8 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = FALSE
-NBR = TRUE
+EDGI = TRUE
+NBR = FALSE
 RAMP = FALSE
 ```
 
@@ -848,15 +848,15 @@ edgi.employment.raw.id <- edgi.employment.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
-  separate("Login ID", into = c("COPING_Sample", "COPING_ID"), sep = 6) %>% # Split ID in Sample and Number
-  mutate(COPING_ID = as.numeric(COPING_ID)) %>%
+#  separate("Login ID", into = c("COPING_Sample", "COPING_ID"), sep = 6) %>% # Split ID in Sample and Number
   mutate(
-    ID = as.numeric(ID)
+    ID = as.numeric(ID),
+#    COPING_ID = as.numeric(COPING_ID)
     ) %>%
   select(
          Sample, # Sample
          ID, # ID
-         COPING_ID,
+         COPING_ID = "Login ID",
          employment.phd, # level of education - univeristy
          employment.masters_degree_or_equivalent, # level of education - univeristy
          employment.postgraduate_degree_or_equivalent, # level of education - univeristy
@@ -5054,11 +5054,11 @@ if(EDGI == TRUE) {
 coping.edgi.ocir.raw.id <- coping.edgi.ocir.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(externalDataReference, into = c("COPING_Sample", "COPING_ID"), sep = 6) %>% # Split ID in Sample and Number
-  mutate(COPING_ID = as.numeric(COPING_ID)) %>%
+#  separate(externalDataReference, into = c("COPING_Sample", "COPING_ID"), sep = 6) %>% # Split ID in Sample and Number
+#  mutate(COPING_ID = as.numeric(COPING_ID)) %>%
   select(
 #    Sample, # Sample
-    COPING_ID, # ID
+    COPING_ID = externalDataReference, # ID
     ocir.felt_pandemic_feelings, # Comparison to before the pandemic
     ocir.i_repeatedly_check_doors_windows_drawers_etc_retro = ocir.i_repeatedly_check_doors_windows_drawers_etc.,
     ocir.arranged_things_change_upset_retro = ocir.arranged_things_change_upset,
@@ -5507,12 +5507,12 @@ if(EDGI == TRUE){
   dim(coping.ocir.raw.id)
   
   
-edgi.employment.coping.ocir <-  full_join(
+edgi.employment.coping.ocir <- left_join(
     x = employment.raw.id,
     y = coping.ocir.raw.id,
-    by = 
-      c("Sample",
-        "COPING_ID")
+    by = c(
+      "COPING_ID",
+      "Sample")
 )
     
     dim(edgi.employment.coping.ocir)
