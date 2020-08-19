@@ -144,6 +144,16 @@ dim(dat)
 colnames(dat)
 ```
 
+```{r}
+diff_score_cols <- dat %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+diff_score_cols
+```
+
+
+
 ```{r dat.coping summary, eval=FALSE, include=FALSE}
 summarytools::dfSummary(
   dat,
@@ -200,6 +210,9 @@ dat.long <- dat %>%
   select(
     ID,
     Sample,
+    Gender,
+    Ethnicity,
+    all_of(diff_score_cols),
     Disorder,
     Diagnosis
   )
@@ -208,18 +221,36 @@ head(dat.long)
 ```
 
 Define disorder columns in vector
-```{r}
+
+```{r Disorder by Gender}
 dat.long %>%
-  group_by(Disorder) %>%
-  count()
+  filter(Diagnosis == 1) %>%
+  group_by(Disorder, Gender) %>%
+  count(Disorder)
+```
+
+
+
+```{r Disorder by Sample}
+dat.long %>%
+  filter(Diagnosis == 1) %>%
+  group_by(Disorder, Sample) %>%
+  count(Disorder)
+```
+
+```{r Disorder by Ethnicity}
+dat.long %>%
+  filter(Diagnosis == 1) %>%
+  group_by(Disorder, Ethnicity) %>%
+  count(Disorder)
 ```
 
 
 ## Disorders - Frequencies *use this as example to convert chunk above*
 ```{r Disorders - Frequencies}
 #0 = No to disorder; 1 = Yes to disorder
-PMAD_na_drop_Dx %>%
-  select(ID, #need to add columns for which you want summaries for - ASK GB & KY what they want in descriptives table
+dat.long %>%
+  select(ID, #need to add columns for which you want summaries for 
          dem.sex,
          starts_with("mhd.") & ends_with("numeric")) %>%
   gather(
@@ -239,33 +270,52 @@ Compare the GLAD/EDGI and COPING cohorts as a whole
 
 Ethnicity
 ```{r}
-
+dat %>%
+  group_by(Ethnicity, Sample) %>%
+  count(Ethnicity)
 ```
 
 
 Gender
 ```{r}
-
+dat %>%
+  group_by(Gender, Sample) %>%
+  count(Gender)
 ```
 
-Education
+highest_education
 ```{r}
-
+dat %>%
+  group_by(highest_education, Sample) %>%
+  count(highest_education)
 ```
 
 Key worker status
 ```{r}
-
+dat %>%
+  group_by(key_worker, Sample) %>%
+  count(key_worker)
 ```
 
 COVID test positive
 ```{r}
-
+dat %>%
+  group_by(respiratory.throat_swab_test_nose, Sample) %>%
+  count(respiratory.throat_swab_test_nose)
 ```
+
+```{r}
+dat %>%
+  group_by(respiratory.results_antibody_test, Sample) %>%
+  count(respiratory.results_antibody_test)
+```
+
 
 COVID probable diagnosis
 ```{r}
-
+dat %>%
+  group_by(covid_probable_case_incl_screening, Sample) %>%
+  count(covid_probable_case_incl_screening)
 ```
 
 
@@ -275,6 +325,21 @@ Disorders (9)
 Sex 
 Age (13; RAMP; potentially collapse above 65 depending on group sizes) 
 Ethnicity groups (5; White European, Black (British), Asian, Arab, Mixed) 
+
+```{r}
+dat.long %>%
+  filter(Diagnosis == 1) %>%
+  group_by(Disorder) %>%
+  summarise(
+    gad_base_retro = mean(gad.diff_score_base_retro, na.rm = T),
+    gad_prepan_retro = mean(gad.diff_score_prepan_retro, na.rm = T),
+    gad_prepan_base = mean(gad.diff_score_prepan_base, na.rm = T),
+    phq_base_retro = mean(phq.diff_score_base_retro, na.rm = T),
+    phq_prepan_retro = mean(phq.diff_score_prepan_retro, na.rm = T),
+    phq_prepan_base = mean(phq.diff_score_prepan_base, na.rm = T)
+    )
+```
+
 
 Rank the disorders by the size of the change 
 
