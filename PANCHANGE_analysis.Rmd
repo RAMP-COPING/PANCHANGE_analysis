@@ -145,6 +145,13 @@ dim(dat)
 colnames(dat)
 ```
 
+Filter data frame to exclude participants that never answered COPING
+```{r}
+
+```
+
+
+
 ```{r Vectors with diff_score_cols}
 diff_score_cols <- dat %>%
   select(contains("diff_score")) %>% 
@@ -206,6 +213,16 @@ dat %>%
     cumul = F)
 ```
 
+Data availability OCI-R
+```{r}
+
+```
+
+Descriptives of age
+```{r}
+
+```
+
 
 ```{r vector with psychiatric disorders}
 disorder_columns <- c(
@@ -262,6 +279,12 @@ dat.long %>%
   count(Disorder)
 ```
 
+Ethnicity should be recoded
+European
+Mixed or multiplce ethnic origins
+Africian or African British
+Asian or Asian British
+Arab
 ```{r Disorder by Ethnicity}
 dat.long %>%
   filter(Diagnosis == 1) %>%
@@ -324,12 +347,6 @@ dat %>%
   count(covid_probable_case_incl_screening)
 ```
 
-Questionnaire columns
-```{r Questionnaire columns}
-
-```
-
-
 
 
 ```{r gather to long format Time_points}
@@ -352,6 +369,7 @@ dat.long.gad.diff <- dat %>%
 head(dat.long.gad.diff)
 ```
 
+makes this into percentages
 ```{r}
 dat.long.gad.diff %>%
   ggplot(mapping = aes(y = gad.diff_score)) +
@@ -375,18 +393,43 @@ dat.long.phq.diff <- dat %>%
     phq.diff_score
   ) %>%
   mutate(Time_point = str_replace(Time_point_raw, "phq.diff_score_", "")) %>%
-  select(-Time_point_raw)
+  select(-Time_point_raw) %>%
+  drop_na(phq.diff_score)
 
 head(dat.long.phq.diff)
 ```
 
+
 ```{r}
 dat.long.phq.diff %>%
-  ggplot(mapping = aes(y = phq.diff_score)) +
-  geom_bar() +
-  theme_minimal() +
-  facet_wrap(facets = vars(Time_point))
+  filter(Time_point != "prepan_retro") %>%
+  ggplot(mapping = aes(
+    x = phq.diff_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+   geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+    ) +
+  theme_minimal()
 ```
+
+```{r}
+dat.long.phq.diff %>%
+  filter(Time_point == "prepan_retro") %>%
+  ggplot(mapping = aes(
+    x = phq.diff_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+   geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+    ) +
+  theme_minimal()
+```
+
+
+
 
 ```{r gather to long format Time_points}
 dat.long.ocir.diff <- dat %>%
