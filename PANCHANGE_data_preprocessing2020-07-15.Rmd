@@ -6209,6 +6209,76 @@ table(dat$data_group_pcl)
 }
 ```
 
+
+
+OCI-R
+```{r glad/edgi data level groups ocir}
+if(GLAD == TRUE | EDGI == TRUE){
+dat <- dat %>%
+  mutate(
+    data_group_ocir_numeric =
+      case_when(
+        na_per_person_ocir_base == 0 & na_per_person_ocir_prepan == 0 & na_per_person_ocir_retro == 0 ~ 5, #all complete baseline, prepan and retro
+        na_per_person_ocir_base != 0 & na_per_person_ocir_prepan != 0 & na_per_person_ocir_retro == 0  ~ 4, #retro data only
+        na_per_person_ocir_base == 0 & na_per_person_ocir_prepan != 0 & na_per_person_ocir_retro != 0  ~ 3, #baseline data only
+        na_per_person_ocir_base == 0 & na_per_person_ocir_prepan == 0 & na_per_person_ocir_retro != 0  ~ 2, #prepan and baseline data only
+        na_per_person_ocir_base == 0 & na_per_person_ocir_prepan != 0 & na_per_person_ocir_retro == 0 ~ 1,  #baseline and retro data only
+        na_per_person_ocir_base != 0 & na_per_person_ocir_prepan == 0 & na_per_person_ocir_retro != 0  ~ 0  #prepan data only
+      )
+  )
+
+dat <- dat %>%
+  mutate(
+    data_group_ocir = 
+      recode_factor(
+        data_group_ocir_numeric,
+        "0" = "Only prepandemic data",
+        "1" = "Baseline and retrospective data",
+        "2" = "Prepandemic and baseline data",
+        "3" = "Baseline data only",
+        "4" = "Retrospective data only",
+        "5" = "All prepandemic, baseline and retrospective data"
+      )
+  )
+
+table(dat$data_group_ocir)
+}
+```
+
+```{r nbr/ramp data level groups ocir}
+if(NBR == TRUE | RAMP == TRUE){
+dat <- dat %>%
+  mutate(
+    data_group_ocir_numeric =
+      case_when(
+#        na_per_person_ocir_base == 0 & na_per_person_ocir_prepan == 0 & na_per_person_ocir_retro == 0 ~ 5, #all complete baseline, prepan and retro
+        na_per_person_ocir_base != 0 & na_per_person_ocir_retro == 0  ~ 4, #retro data only
+        na_per_person_ocir_base == 0 & na_per_person_ocir_retro != 0  ~ 3, #baseline data only
+#        na_per_person_ocir_base == 0 & na_per_person_ocir_prepan == 0 & na_per_person_ocir_retro != 0  ~ 2, #prepan and baseline data only
+        na_per_person_ocir_base == 0 & na_per_person_ocir_retro == 0 ~ 1  #baseline and retro data only
+#        na_per_person_ocir_base != 0 & na_per_person_ocir_prepan == 0 & na_per_person_ocir_retro != 0  ~ 0  #prepan data only
+      )
+  )
+
+dat <- dat %>%
+  mutate(
+    data_group_ocir = 
+      recode_factor(
+        data_group_ocir_numeric,
+        "0" = "Only prepandemic data",
+        "1" = "Baseline and retrospective data",
+        "2" = "Prepandemic and baseline data",
+        "3" = "Baseline data only",
+        "4" = "Retrospective data only",
+        "5" = "All prepandemic, baseline and retrospective data"
+      )
+  )
+
+
+table(dat$data_group_ocir)
+}
+```
+
 #Read in respiratory data
 
 ## GLAD respiratory
