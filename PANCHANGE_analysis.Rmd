@@ -281,8 +281,8 @@ dat.long %>%
 
 Ethnicity should be recoded
 European
-Mixed or multiplce ethnic origins
-Africian or African British
+Mixed or multiple ethnic origins
+African or African British
 Asian or Asian British
 Arab
 ```{r Disorder by Ethnicity}

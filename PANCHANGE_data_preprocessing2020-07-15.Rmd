@@ -48,9 +48,9 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = TRUE
+EDGI = FALSE
 NBR = FALSE
-RAMP = FALSE
+RAMP = TRUE
 ```
 
 
@@ -197,7 +197,7 @@ glad.dem.raw.id <- glad.dem.raw %>%
          demographics.o_levelsgcses_or_equivalent, # level of education - gcse
          demographics.cses_or_equivalent, # level of education - cse
          demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
-         Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
+         Ethnicity_unc = demographics.questions_based_ethnic_origin # Ethnicity
          ) %>%
   add_numeric(., exclude = exclude_cols_dem) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -274,7 +274,7 @@ if(EDGI == TRUE){
       demographics.o_levelsgcses_or_equivalent, # level of education - gcse
       demographics.cses_or_equivalent, # level of education - cse
       demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
-      Ethnicity = demographics.what_is_your_ethnic_origin # Ethnicity (different to GLAD)
+      Ethnicity_unc = demographics.what_is_your_ethnic_origin # Ethnicity (different to GLAD)
     ) %>%
     add_numeric(., exclude = exclude_cols_dem) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -496,7 +496,7 @@ nbr.cohort.raw.id$Ethnicity_full <- recode_factor(nbr.cohort.raw.id$Ethnicity.un
                                              "99" = NULL)
 
 #Match GLAD/EDGI/RAMP categories
-nbr.cohort.raw.id$Ethnicity <- recode_factor(nbr.cohort.raw.id$Ethnicity.unc,
+nbr.cohort.raw.id$Ethnicity_unc <- recode_factor(nbr.cohort.raw.id$Ethnicity.unc,
                                              "A" = "White, white European or Caucasian",
                                              "B" = "White, white European or Caucasian",
                                              "C" = "White, white European or Caucasian",
@@ -578,7 +578,7 @@ if(RAMP == TRUE){
 #     demographics.cses_or_equivalent, # level of education - cse
 #     demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
       Transgender_uncleaned = demographics.do_you_identify_as_transgender,
-      Ethnicity = demographics.what_is_your_ethnic_origin # Ethnicity
+      Ethnicity_unc = demographics.what_is_your_ethnic_origin # Ethnicity
     ) %>%
     add_numeric(., exclude = exclude_cols_dem) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -614,7 +614,7 @@ if(RAMP == TRUE){
 # Gender categories synchronised
 
 ```{r gender recoding for GLAD}
-if(GLAD == TRUE) {
+if(GLAD == TRUE | NBR == TRUE) {
 
 dem.raw.id <- dem.raw.id %>%
   mutate(
@@ -625,6 +625,9 @@ dem.raw.id <- dem.raw.id %>%
         "Non-binary" = "Non-binary",
         "Prefer to self-define (please tell us more)" = "Prefer to self-define"
       )
+  ) %>%
+  rename(
+    Gender_numeric = Gender_unc_numeric
   )
 }
 ```
@@ -641,25 +644,87 @@ dem.raw.id <- dem.raw.id %>%
         "Non-binary" = "Non-binary",
         "Prefer to self-define (please tell us more):" = "Prefer to self-define"
       )
+  ) %>%
+  rename(
+    Gender_numeric = Gender_unc_numeric
   )
 }
 ```
 
-```{r gender recoding for NBR}
-if(NBR == TRUE ) {
+# Ethnicity recoding
+
+```{r ethnicity recoding for EDGI}
+if(EDGI == TRUE) {
 
 dem.raw.id <- dem.raw.id %>%
   mutate(
-    Gender = 
-      recode_factor(Gender_unc,
-        "Male" = "Male",
-        "Female" = "Female",
-        "Non-binary" = "Non-binary",
-        "Prefer to self-define (please tell us more)" = "Prefer to self-define"
+    Ethnicity = 
+      recode_factor(Ethnicity_unc,
+        "White" = "European",
+        "Mixed" = "Mixed or multiple ethnic origins",
+        "Asian or Asian British" = "Asian or Asian British",
+        "Black or Black British" = "African or African British",
+        "Arab" = "Arab",
+        "Other ethnic group:" = "Other ethnic group"
+      )
+  ) %>%
+  rename(
+    Ethnicity_numeric = Ethnicity_unc_numeric
+  )
+}
+```
+
+```{r ethnicity recoding for GLAD and RAMP}
+if(GLAD == TRUE | RAMP == TRUE) {
+
+dem.raw.id <- dem.raw.id %>%
+  mutate(
+    Ethnicity = 
+      recode_factor(Ethnicity_unc,
+        "White, white European or Caucasian" = "European",
+        "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+        "Asian or Asian British (including Chinese)" = "Asian or Asian British",
+        "Black or Black British" = "African or African British",
+        "Arab" = "Arab",
+        "Other ethnic group (please specify)" = "Other ethnic group"
+      )
+  ) %>%
+  rename(
+    Ethnicity_numeric = Ethnicity_unc_numeric
+  )
+}
+```
+
+```{r ethnicity recoding for NBR}
+if(NBR == TRUE) {
+
+dem.raw.id <- dem.raw.id %>%
+  mutate(
+    Ethnicity = 
+      recode_factor(Ethnicity_unc,
+        "White, white European or Caucasian" = "European",
+        "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+        "Asian or Asian British (including Chinese)" = "Asian or Asian British",
+        "Black or Black British" = "African or African British",
+        "Arab" = "Arab",
+        "Other ethnic group (please specify)" = "Other ethnic group"
+      )
+  ) %>%
+  mutate(
+    Ethnicity_numeric = 
+      recode(Ethnicity_unc,
+        "European" = 1,
+        "Mixed or multiple ethnic origins" = 2,
+        "Asian or Asian British" = 3,
+        "African or African British" = 4,
+        "Arab" = 5,
+        "Other ethnic group" = 6
       )
   )
 }
 ```
+
+
 
 # Clean Age variable
 Age outlier
