@@ -189,7 +189,7 @@ glad.dem.raw.id <- glad.dem.raw %>%
          ID, # ID
          startDate.prepandemic = startDate, #Date when participant signed up to glad
          Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
-         Gender = demographics.which_gender_do_you_identify_with, # Gender
+         Gender_unc = demographics.which_gender_do_you_identify_with, # Gender
          Sex = demographics.select_questionnaire_items_medical, #Sex
          EduYrs = demographics.school_education_school_years.txt, # Years in education
          demographics.college_or_university_degree, # level of education - univeristy
@@ -197,7 +197,7 @@ glad.dem.raw.id <- glad.dem.raw %>%
          demographics.o_levelsgcses_or_equivalent, # level of education - gcse
          demographics.cses_or_equivalent, # level of education - cse
          demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
-         Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
+         Ethnicity_unc = demographics.questions_based_ethnic_origin # Ethnicity
          ) %>%
   add_numeric(., exclude = exclude_cols_dem) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -266,7 +266,7 @@ if(EDGI == TRUE){
       ID, # ID
       startDate.prepandemic = startDate, #Date when participant signed up to edgi
       Age_uncleaned = demographics.how_old_are_you_now.txt, # Age
-      Gender = demographics.what_gender_do_you_identify_with, # Gender (which [GLAD] vs what [EDGI])
+      Gender_unc = demographics.what_gender_do_you_identify_with, # Gender (which [GLAD] vs what [EDGI])
       Sex = demographics.select_questionnaire_items_birth, #Sex (different to GLAD)
       EduYrs = demographics.university_education_attend_school.txt, # Years in education (different to GLAD)
       demographics.college_or_university_degree, # level of education - univeristy
@@ -274,7 +274,7 @@ if(EDGI == TRUE){
       demographics.o_levelsgcses_or_equivalent, # level of education - gcse
       demographics.cses_or_equivalent, # level of education - cse
       demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
-      Ethnicity = demographics.what_is_your_ethnic_origin # Ethnicity (different to GLAD)
+      Ethnicity_unc = demographics.what_is_your_ethnic_origin # Ethnicity (different to GLAD)
     ) %>%
     add_numeric(., exclude = exclude_cols_dem) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -346,7 +346,7 @@ if(NBR == TRUE){
       Birthyear_unc = demographics.year, # Birthyear
       Birthmonth = demographics.month, #Birthmonth
       Birthday = demographics.day, #Birthday
-      Gender = demographics.which_gender_do_you_identify_with, # Gender
+      Gender_unc = demographics.which_gender_do_you_identify_with, # Gender
       Sex = demographics.select_questionnaire_items_medical, #Sex
 #      Ethnicity = demographics.questions_based_ethnic_origin # Ethnicity
     ) %>%
@@ -496,7 +496,7 @@ nbr.cohort.raw.id$Ethnicity_full <- recode_factor(nbr.cohort.raw.id$Ethnicity.un
                                              "99" = NULL)
 
 #Match GLAD/EDGI/RAMP categories
-nbr.cohort.raw.id$Ethnicity <- recode_factor(nbr.cohort.raw.id$Ethnicity.unc,
+nbr.cohort.raw.id$Ethnicity_unc <- recode_factor(nbr.cohort.raw.id$Ethnicity.unc,
                                              "A" = "White, white European or Caucasian",
                                              "B" = "White, white European or Caucasian",
                                              "C" = "White, white European or Caucasian",
@@ -578,7 +578,7 @@ if(RAMP == TRUE){
 #     demographics.cses_or_equivalent, # level of education - cse
 #     demographics.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
       Transgender_uncleaned = demographics.do_you_identify_as_transgender,
-      Ethnicity = demographics.what_is_your_ethnic_origin # Ethnicity
+      Ethnicity_unc = demographics.what_is_your_ethnic_origin # Ethnicity
     ) %>%
     add_numeric(., exclude = exclude_cols_dem) %>%
     mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -609,8 +609,124 @@ if(RAMP == TRUE){
 ```
 
 
-# Demographics variable creation
-## Clean Age variable
+## Demographics variable creation
+
+# Gender categories synchronised
+RAMP has the correct Gender categories so does not need editing. 
+```{r gender recoding for GLAD}
+if(GLAD == TRUE | NBR == TRUE) {
+
+dem.raw.id <- dem.raw.id %>%
+  mutate(
+    Gender = 
+      recode_factor(Gender_unc,
+        "Male" = "Male",
+        "Female" = "Female",
+        "Non-binary" = "Non-binary",
+        "Prefer to self-define (please tell us more)" = "Prefer to self-define"
+      )
+  ) %>%
+  rename(
+    Gender_numeric = Gender_unc_numeric
+  )
+}
+```
+
+```{r gender recoding for EDGI}
+if(EDGI == TRUE) {
+
+dem.raw.id <- dem.raw.id %>%
+  mutate(
+    Gender = 
+      recode_factor(Gender_unc,
+        "Male" = "Male",
+        "Female" = "Female",
+        "Non-binary" = "Non-binary",
+        "Prefer to self-define (please tell us more):" = "Prefer to self-define"
+      )
+  ) %>%
+  rename(
+    Gender_numeric = Gender_unc_numeric
+  )
+}
+```
+
+# Ethnicity recoding
+
+```{r ethnicity recoding for EDGI}
+if(EDGI == TRUE) {
+
+dem.raw.id <- dem.raw.id %>%
+  mutate(
+    Ethnicity = 
+      recode_factor(Ethnicity_unc,
+        "White" = "European",
+        "Mixed" = "Mixed or multiple ethnic origins",
+        "Asian or Asian British" = "Asian or Asian British",
+        "Black or Black British" = "African or African British",
+        "Arab" = "Arab",
+        "Other ethnic group:" = "Other ethnic group"
+      )
+  ) %>%
+  rename(
+    Ethnicity_numeric = Ethnicity_unc_numeric
+  )
+}
+```
+
+```{r ethnicity recoding for GLAD and RAMP}
+if(GLAD == TRUE | RAMP == TRUE) {
+
+dem.raw.id <- dem.raw.id %>%
+  mutate(
+    Ethnicity = 
+      recode_factor(Ethnicity_unc,
+        "White, white European or Caucasian" = "European",
+        "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+        "Asian or Asian British (including Chinese)" = "Asian or Asian British",
+        "Black or Black British" = "African or African British",
+        "Arab" = "Arab",
+        "Other ethnic group (please specify)" = "Other ethnic group"
+      )
+  ) %>%
+  rename(
+    Ethnicity_numeric = Ethnicity_unc_numeric
+  )
+}
+```
+
+```{r ethnicity recoding for NBR}
+if(NBR == TRUE) {
+
+dem.raw.id <- dem.raw.id %>%
+  mutate(
+    Ethnicity = 
+      recode_factor(Ethnicity_unc,
+        "White, white European or Caucasian" = "European",
+        "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+        "Asian or Asian British (including Chinese)" = "Asian or Asian British",
+        "Black or Black British" = "African or African British",
+        "Arab" = "Arab",
+        "Other ethnic group (please specify)" = "Other ethnic group"
+      )
+  ) %>%
+  mutate(
+    Ethnicity_numeric = 
+      recode(Ethnicity_unc,
+        "European" = 1,
+        "Mixed or multiple ethnic origins" = 2,
+        "Asian or Asian British" = 3,
+        "African or African British" = 4,
+        "Arab" = 5,
+        "Other ethnic group" = 6
+      )
+  )
+}
+```
+
+
+
+# Clean Age variable
 Age outlier
 ```{r age outlier}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
@@ -5645,14 +5761,16 @@ dim(dat.no.sex.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]
 ```
 `r dim(dat.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]` were excluded because they did not report their age
 
-Exclusion of inflammatory bowel disease (IBD) BioResource (BR) cohort
+Exclusion of inflammatory bowel disease (IBD) and GLAD BioResource (NBR) cohort
 ++MD: 3,410 participants from NBR IBD cohort excluded
-```{r COVID exclusion of IBD}
+++KT: 3 duplicated GLAD participants are excluded
+```{r COVID exclusion of IBD and GLAD from NBR sample}
 if(NBR == TRUE) {
 dim(dat.no.sex.no.gender.no.age)
 
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age %>%
-  filter(Cohort != "IBD")
+  filter(Cohort != "IBD") %>%
+  filter(Cohort != "GLAD")
 
 dim(dat.no.sex.no.gender.no.age.no.ibd)
 dim(dat.no.sex.no.gender.no.age)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd)[1]
@@ -5876,7 +5994,7 @@ summary(dat$phq.diff_score_prepan_retro)
 # Difference score for prepandemic and baseline phq sum scores
 dat <- dat %>%
   mutate(
-    phq.diff_score_prepan_base =
+    phq.diff_score_base_prepan =
       as.numeric(
         phq.sum_score_base - phq.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
       )
@@ -5915,7 +6033,7 @@ summary(dat$gad.diff_score_prepan_retro)
 # Difference score for prepandemic and baseline gad sum scores
 dat <- dat %>%
   mutate(
-    gad.diff_score_prepan_base =
+    gad.diff_score_base_prepan =
       as.numeric(
         gad.sum_score_base - gad.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
       )
@@ -5944,7 +6062,7 @@ if(GLAD == TRUE | EDGI == TRUE){
 # Difference score for prepandemic and baseline pcl sum scores
 dat <- dat %>%
   mutate(
-    pcl.diff_score_prepan_base =
+    pcl.diff_score_base_prepan =
       as.numeric(
         pcl.sum_score_base - pcl.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
       )
@@ -6206,6 +6324,76 @@ dat <- dat %>%
 
 
 table(dat$data_group_pcl)
+}
+```
+
+
+
+OCI-R
+```{r glad/edgi data level groups ocir}
+if(GLAD == TRUE | EDGI == TRUE){
+dat <- dat %>%
+  mutate(
+    data_group_ocir_numeric =
+      case_when(
+        na_per_person_ocir_base == 0 & na_per_person_ocir_prepan == 0 & na_per_person_ocir_retro == 0 ~ 5, #all complete baseline, prepan and retro
+        na_per_person_ocir_base != 0 & na_per_person_ocir_prepan != 0 & na_per_person_ocir_retro == 0  ~ 4, #retro data only
+        na_per_person_ocir_base == 0 & na_per_person_ocir_prepan != 0 & na_per_person_ocir_retro != 0  ~ 3, #baseline data only
+        na_per_person_ocir_base == 0 & na_per_person_ocir_prepan == 0 & na_per_person_ocir_retro != 0  ~ 2, #prepan and baseline data only
+        na_per_person_ocir_base == 0 & na_per_person_ocir_prepan != 0 & na_per_person_ocir_retro == 0 ~ 1,  #baseline and retro data only
+        na_per_person_ocir_base != 0 & na_per_person_ocir_prepan == 0 & na_per_person_ocir_retro != 0  ~ 0  #prepan data only
+      )
+  )
+
+dat <- dat %>%
+  mutate(
+    data_group_ocir = 
+      recode_factor(
+        data_group_ocir_numeric,
+        "0" = "Only prepandemic data",
+        "1" = "Baseline and retrospective data",
+        "2" = "Prepandemic and baseline data",
+        "3" = "Baseline data only",
+        "4" = "Retrospective data only",
+        "5" = "All prepandemic, baseline and retrospective data"
+      )
+  )
+
+table(dat$data_group_ocir)
+}
+```
+
+```{r nbr/ramp data level groups ocir}
+if(NBR == TRUE | RAMP == TRUE){
+dat <- dat %>%
+  mutate(
+    data_group_ocir_numeric =
+      case_when(
+#        na_per_person_ocir_base == 0 & na_per_person_ocir_prepan == 0 & na_per_person_ocir_retro == 0 ~ 5, #all complete baseline, prepan and retro
+        na_per_person_ocir_base != 0 & na_per_person_ocir_retro == 0  ~ 4, #retro data only
+        na_per_person_ocir_base == 0 & na_per_person_ocir_retro != 0  ~ 3, #baseline data only
+#        na_per_person_ocir_base == 0 & na_per_person_ocir_prepan == 0 & na_per_person_ocir_retro != 0  ~ 2, #prepan and baseline data only
+        na_per_person_ocir_base == 0 & na_per_person_ocir_retro == 0 ~ 1  #baseline and retro data only
+#        na_per_person_ocir_base != 0 & na_per_person_ocir_prepan == 0 & na_per_person_ocir_retro != 0  ~ 0  #prepan data only
+      )
+  )
+
+dat <- dat %>%
+  mutate(
+    data_group_ocir = 
+      recode_factor(
+        data_group_ocir_numeric,
+        "0" = "Only prepandemic data",
+        "1" = "Baseline and retrospective data",
+        "2" = "Prepandemic and baseline data",
+        "3" = "Baseline data only",
+        "4" = "Retrospective data only",
+        "5" = "All prepandemic, baseline and retrospective data"
+      )
+  )
+
+
+table(dat$data_group_ocir)
 }
 ```
 
@@ -6783,6 +6971,21 @@ summarytools::dfSummary(
   valid.col = F,
   labels.col = F)
 ```
+
+# Rename NBR Sample ID 
+```{r rename NBR sample ID}
+if(NBR == TRUE){
+dat.coping <- dat.coping %>%
+  mutate(
+    Sample = 
+    recode(
+      Sample, 
+      "SP0068" = "NBR"
+    )
+  )
+}
+```
+
 
 # Export data
 ```{r export data}
