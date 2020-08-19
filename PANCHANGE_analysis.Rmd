@@ -60,7 +60,7 @@ Load packages
 library(knitr)
 library(summarytools)
 library(psych)
-library(eeptools) # Needed to calculate age from birthdate
+library(patchwork)
 library(tidyverse)
 ```
 
@@ -318,6 +318,28 @@ dat %>%
   count(covid_probable_case_incl_screening)
 ```
 
+```{r}
+gad.diff_score_prepan_base_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_prepan_base)) +
+  geom_bar()
+
+gad.diff_score_prepan_retro_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_prepan_retro)) +
+  geom_bar()
+
+gad.diff_score_prepan_base_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_prepan_base)) +
+  geom_bar()
+
+```
+
+```{r fig.height=5, fig.width=5}
+gad.diff_score_prepan_base_plot /
+  gad.diff_score_prepan_retro_plot /
+  gad.diff_score_prepan_base_plot +
+  plot_layout(guides = "collect", heights = c(1,1,1)) +
+  plot_annotation(tag_levels = "A")
+```
 
 
 Calculate mean change per disorder group 
