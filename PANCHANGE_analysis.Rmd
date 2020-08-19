@@ -362,7 +362,10 @@ dat.long %>%
     gad_prepan_base = mean(gad.diff_score_prepan_base, na.rm = T),
     phq_base_retro = mean(phq.diff_score_base_retro, na.rm = T),
     phq_prepan_retro = mean(phq.diff_score_prepan_retro, na.rm = T),
-    phq_prepan_base = mean(phq.diff_score_prepan_base, na.rm = T)
+    phq_prepan_base = mean(phq.diff_score_prepan_base, na.rm = T),
+    ocir_base_retro = mean(ocir.diff_score_base_retro, na.rm = T),
+    ocir_prepan_retro = mean(ocir.diff_score_prepan_retro, na.rm = T),
+    ocir_prepan_base = mean(ocir.diff_score_prepan_base, na.rm = T)
     )
 ```
 
