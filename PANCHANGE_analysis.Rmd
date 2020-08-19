@@ -173,3 +173,182 @@ dat %>%
     data_group_pcl,
     cumul = F)
 ```
+
+```{r vector with psychiatric disorders}
+disorder_columns <- c(
+    "depressive_disorders_numeric",
+    "anxiety_disorders_numeric",
+    "eating_disorders_numeric",
+    "obsessive_compulsive_disorders_numeric",
+    "psychotic_disorders_numeric",
+    "mhd.mania_hypomania_bipolar_or_manicdepression_numeric",
+    "mhd.posttraumatic_stress_disorder_ptsd_numeric",
+    "mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric",
+    "mhd.attention_deficit_hyperactivity_disorder_numeric",
+    "mhd.personality_disorder_numeric"
+)
+```
+
+
+
+```{r gather to long format}
+dat.long <- dat %>%
+  gather(
+    key = "Disorder",
+    value = "Diagnosis",
+    all_of(disorder_columns)) %>%
+  select(
+    ID,
+    Sample,
+    Disorder,
+    Diagnosis
+  )
+
+head(dat.long)
+```
+
+Define disorder columns in vector
+```{r}
+dat.long %>%
+  group_by(Disorder) %>%
+  count()
+```
+
+
+## Disorders - Frequencies *use this as example to convert chunk above*
+```{r Disorders - Frequencies}
+#0 = No to disorder; 1 = Yes to disorder
+PMAD_na_drop_Dx %>%
+  select(ID, #need to add columns for which you want summaries for - ASK GB & KY what they want in descriptives table
+         dem.sex,
+         starts_with("mhd.") & ends_with("numeric")) %>%
+  gather(
+    key = "Disorder",
+    value = "Diagnosis",
+    mhd.MDD_numeric:mhd.ADHD_numeric #all the columns that we want to be gathered
+  ) %>%
+  group_by(Disorder) %>%
+  count(Diagnosis) #count for diagnoses
+```
+
+
+
+Compare the GLAD/EDGI and COPING cohorts as a whole
++++CH: Diagnosis, ethnicity, gender, 
++++MD: May not be possible for NBR; potentially send them code to run it for us
+
+Ethnicity
+```{r}
+
+```
+
+
+Gender
+```{r}
+
+```
+
+Education
+```{r}
+
+```
+
+Key worker status
+```{r}
+
+```
+
+COVID test positive
+```{r}
+
+```
+
+COVID probable diagnosis
+```{r}
+
+```
+
+
+
+Calculate mean change per disorder group 
+Disorders (9) 
+Sex 
+Age (13; RAMP; potentially collapse above 65 depending on group sizes) 
+Ethnicity groups (5; White European, Black (British), Asian, Arab, Mixed) 
+
+Rank the disorders by the size of the change 
+
+
+# Regression
+Regress covariates out of the change? Which? 
+
+Model 0: Disorders
+```{r}
+
+```
+
+
+Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
+```{r}
+
+```
+
+
+Re-calculate change
+```{r}
+
+```
+
+
+Re-rank the change again
+```{r}
+
+```
+
+
+PCL:  
+Calculate the total GLAD, COPING, RAMP baseline 
+```{r}
+
+```
+
+
+For each item 
+present percentages of how say that this is due to the pandemic 
+```{r}
+
+```
+
+
+Calculate a variable PCL pandemic score 
+```{r}
+
+```
+
+
+If one item is highly endorsed due to pandemic -> exclude in sensitivity analysis 
+```{r}
+
+```
+
+ 
+
+
+Descriptives for reporting: "How different are these feelings to how you felt before the pandemic?’ on a 5-point scale (much worse, a little worse, no different, a little better, much better)."
++++KLP: Discuss during the meeting if we use 3 or 5 categories
+```{r}
+
+```
+
+
+Replicate chunk above for retrospective reports. This will only be for people who say that have reported that there is a change in their scores. 
+*Discuss if we should include people who reported "no change" as repition of their current GAD, PHQ, PCL report*
+```{r}
+
+```
+
+
+```{r}
+
+```
+
