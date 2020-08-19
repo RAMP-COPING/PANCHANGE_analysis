@@ -49,8 +49,8 @@ date = Sys.Date()
 ```{r Specify cohort}
 GLAD = FALSE
 EDGI = FALSE
-NBR = FALSE
-RAMP = TRUE
+NBR = TRUE
+RAMP = FALSE
 ```
 
 
@@ -1061,6 +1061,7 @@ Check highest education coding
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE) {
 employment.raw.id %>%
   select(highest_education,
+         highest_education_numeric,
          employment.phd_numeric,
          employment.masters_degree_or_equivalent_numeric,
          employment.postgraduate_degree_or_equivalent_numeric,
@@ -1086,8 +1087,8 @@ employment.raw.id <- employment.raw.id %>%
         employment.what_is_your_highest_level_of_education == "Master's degree or equivalent" ~ 4,
         employment.what_is_your_highest_level_of_education == "Bachelor's degree or equivalent" ~ 4,
         employment.what_is_your_highest_level_of_education == "A-level or equivalent" ~ 3,
-        employment.what_is_your_highest_level_of_education == "GCSE or equivalent" ~ 2,
-        employment.what_is_your_highest_level_of_education == "None of these" ~ 1
+        employment.what_is_your_highest_level_of_education == "GCSE or equivalent" ~ 1,
+        employment.what_is_your_highest_level_of_education == "None of these" ~ 5
       )
     )
 
@@ -1097,10 +1098,11 @@ employment.raw.id <- employment.raw.id %>%
     highest_education =
       recode_factor(
         highest_education_numeric,
-        `1` = "None",
-        `2` = "GCSE/CSE",
+        `1` = "GCSE/CSE",
+        `2` = NA_character_,
         `3` = "A-levels",
-        `4` = "University")
+        `4` = "University",
+        `5` = NA_character_)
     )
 
 employment.raw.id %>%
@@ -1113,6 +1115,7 @@ Check highest education coding for RAMP
 if(RAMP == TRUE) {
 employment.raw.id %>%
   select(highest_education,
+         highest_education_numeric,
          employment.what_is_your_highest_level_of_education,
          employment.what_is_your_highest_level_of_education_numeric
   )
@@ -5500,6 +5503,10 @@ summarytools::dfSummary(
 
 ```{r edgi employment and coping ocir}
 if(EDGI == TRUE){
+  dim(employment.raw.id)
+  dim(coping.ocir.raw.id)
+  
+  
 edgi.employment.coping.ocir <-  full_join(
     x = employment.raw.id,
     y = coping.ocir.raw.id,
@@ -5507,6 +5514,8 @@ edgi.employment.coping.ocir <-  full_join(
       c("Sample",
         "COPING_ID")
 )
+    
+    dim(edgi.employment.coping.ocir)
 }
 ```
 
@@ -5557,6 +5566,7 @@ Removing all prepandemic dataframes from NBR/RAMP (prepandemic measures don't ex
 if(NBR == TRUE | RAMP == TRUE) {
 dfs.list <- list(
   dem.raw.id,
+  employment.raw.id,
   mhd.raw.categories,
   coping.gad.raw.id,
   coping.pcl.raw.id,
