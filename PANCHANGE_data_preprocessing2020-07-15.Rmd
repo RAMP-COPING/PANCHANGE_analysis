@@ -5761,14 +5761,16 @@ dim(dat.no.sex.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]
 ```
 `r dim(dat.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]` were excluded because they did not report their age
 
-Exclusion of inflammatory bowel disease (IBD) BioResource (BR) cohort
+Exclusion of inflammatory bowel disease (IBD) and GLAD BioResource (NBR) cohort
 ++MD: 3,410 participants from NBR IBD cohort excluded
-```{r COVID exclusion of IBD}
+++KT: 3 duplicated GLAD participants are excluded
+```{r COVID exclusion of IBD and GLAD from NBR sample}
 if(NBR == TRUE) {
 dim(dat.no.sex.no.gender.no.age)
 
 dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age %>%
-  filter(Cohort != "IBD")
+  filter(Cohort != "IBD") %>%
+  filter(Cohort != "GLAD")
 
 dim(dat.no.sex.no.gender.no.age.no.ibd)
 dim(dat.no.sex.no.gender.no.age)[1]-dim(dat.no.sex.no.gender.no.age.no.ibd)[1]
