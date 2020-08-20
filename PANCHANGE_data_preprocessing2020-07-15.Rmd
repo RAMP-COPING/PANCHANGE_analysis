@@ -5983,9 +5983,9 @@ if(GLAD == TRUE | EDGI == TRUE){
 # Difference score for prepandemic and retrospective phq sum scores
 dat <- dat %>%
   mutate(
-    phq.diff_score_prepan_retro =
+    phq.diff_score_retro_prepan =
       as.numeric(
-        phq.sum_score_prepan - phq.sum_score_retro  # retrospective sum score MINUS prepandemic sum score 
+        phq.sum_score_retro - phq.sum_score_prepan  # retrospective sum score MINUS prepandemic sum score 
       )
   )
 
@@ -6022,9 +6022,9 @@ if(GLAD == TRUE | EDGI == TRUE){
 # Difference score for prepandemic and retrospective gad sum scores
 dat <- dat %>%
   mutate(
-    gad.diff_score_prepan_retro =
+    gad.diff_score_retro_prepan =
       as.numeric(
-        gad.sum_score_prepan - gad.sum_score_retro  # retrospective sum score MINUS prepandemic sum score 
+        gad.sum_score_retro - gad.sum_score_prepan  # retrospective sum score MINUS prepandemic sum score 
       )
   )
 
@@ -6089,9 +6089,9 @@ if(GLAD == TRUE | EDGI == TRUE){
 # Difference score for prepandemic and retrospective oci-r sum scores
 dat <- dat %>%
   mutate(
-    ocir.diff_score_prepan_retro =
+    ocir.diff_score_retro_prepan =
       as.numeric(
-        ocir.sum_score_prepan - ocir.sum_score_retro  # retrospective sum score MINUS prepandemic sum score 
+        ocir.sum_score_retro - ocir.sum_score_prepan  # retrospective sum score MINUS prepandemic sum score 
       )
   )
 
