@@ -657,6 +657,70 @@ dat %>%
 
 ## gad
 
+### Summary scores
+```{r descriptives gad.diff_score_cols}
+gad.sum_score_numeric_table <- dat %>% 
+  #    group_by(Sample) %>%
+  summarise_at( 
+    vars(
+      "Prepan" = gad.sum_score_prepan,
+      "Base" = gad.sum_score_base,
+      "Retro" = gad.sum_score_retro
+    ),
+    .funs =
+      list(
+        ~mean(., na.rm = T),
+        ~sd(., na.rm = T),
+        ~median(., na.rm = T),
+        ~min(., na.rm = T),
+        ~max(., na.rm = T),
+        ~skew(., na.rm = T),
+        kurtosis = ~kurtosi(., na.rm = T)
+      )
+  )
+
+gad.sum_score_numeric_table
+```
+
+```{r smart numeric summary tables}
+# reshape the table
+gad.sum_score_numeric_summary_table_reshaped <- gad.sum_score_numeric_table %>% 
+  gather(key, value) %>% 
+  separate(key, c("variable", "measure"), sep = "_") %>%
+  mutate(measure = factor(
+    x = measure,
+    levels =  c( # this is the order I want my columns to appear in
+      "missing",
+      "min",
+      "max",
+      "mean", 
+      "median", 
+      "mode",
+      "sd",
+      "skew",
+      "kurtosis"
+    ))) %>% 
+  spread(measure, value) %>% 
+  # we can apply a function to all variables to edit them so that they are publication ready
+  rename_all(
+    .funs = ~str_to_title(.)
+  ) %>% 
+  # or we can individually rename variables 
+  rename(
+    SD = Sd
+  ) 
+
+gad.sum_score_numeric_summary_table_reshaped
+```
+
+Table for knitting
+gad diff summary table
+```{r gad diff summary table}
+kable(gad.sum_score_numeric_summary_table_reshaped)
+```
+
+### Differences scores
+
 ```{r descriptives gad.diff_score_cols}
 gad.numeric_table <- dat %>% 
 #  group_by(dem.sex) %>%
@@ -718,7 +782,7 @@ gad diff summary table
 kable(gad.numeric_summary_table_reshaped)
 ```
 
-
+### Long format
 
 ```{r gad gather to long format Time_points}
 dat.long.gad.diff <- dat %>%
@@ -739,6 +803,8 @@ dat.long.gad.diff <- dat %>%
 
 head(dat.long.gad.diff)
 ```
+
+### Plots
 
 makes this into percentages
 ```{r gad absolut plot}
@@ -791,6 +857,70 @@ dat.long.gad.diff %>%
 
 ## phq
 
+### Summary scores
+```{r descriptives phq.diff_score_cols}
+phq.sum_score_numeric_table <- dat %>% 
+  #    group_by(Sample) %>%
+  summarise_at( 
+    vars(
+      "Prepan" = phq.sum_score_prepan,
+      "Base" = phq.sum_score_base,
+      "Retro" = phq.sum_score_retro
+    ),
+    .funs =
+      list(
+        ~mean(., na.rm = T),
+        ~sd(., na.rm = T),
+        ~median(., na.rm = T),
+        ~min(., na.rm = T),
+        ~max(., na.rm = T),
+        ~skew(., na.rm = T),
+        kurtosis = ~kurtosi(., na.rm = T)
+      )
+  )
+
+phq.sum_score_numeric_table
+```
+
+```{r smart numeric summary tables}
+# reshape the table
+phq.sum_score_numeric_summary_table_reshaped <- phq.sum_score_numeric_table %>% 
+  gather(key, value) %>% 
+  separate(key, c("variable", "measure"), sep = "_") %>%
+  mutate(measure = factor(
+    x = measure,
+    levels =  c( # this is the order I want my columns to appear in
+      "missing",
+      "min",
+      "max",
+      "mean", 
+      "median", 
+      "mode",
+      "sd",
+      "skew",
+      "kurtosis"
+    ))) %>% 
+  spread(measure, value) %>% 
+  # we can apply a function to all variables to edit them so that they are publication ready
+  rename_all(
+    .funs = ~str_to_title(.)
+  ) %>% 
+  # or we can individually rename variables 
+  rename(
+    SD = Sd
+  ) 
+
+phq.sum_score_numeric_summary_table_reshaped
+```
+
+Table for knitting
+phq diff summary table
+```{r phq diff summary table}
+kable(phq.sum_score_numeric_summary_table_reshaped)
+```
+
+### Differences score
+
 ```{r descriptives phq.diff_score_cols}
 phq.numeric_table <- dat %>% 
   #  group_by(dem.sex) %>%
@@ -798,7 +928,7 @@ phq.numeric_table <- dat %>%
     vars(
       "Base - prepan" = phq.diff_score_base_prepan,
       "Base - retro" = phq.diff_score_base_retro,
-      "Prepan - retro" = phq.diff_score_prepan_retro,
+      "Prepan - retro" = phq.diff_score_prepan_retro
     ),
     .funs =
       list(
@@ -852,7 +982,7 @@ phq diff summary table
 kable(phq.numeric_summary_table_reshaped)
 ```
 
-
+### Long format
 
 ```{r phq gather to long format Time_points}
 dat.long.phq.diff <- dat %>%
@@ -873,6 +1003,8 @@ dat.long.phq.diff <- dat %>%
 
 head(dat.long.phq.diff)
 ```
+
+### Plots
 
 makes this into percentages
 ```{r phq absolut plot}
@@ -923,6 +1055,70 @@ dat.long.phq.diff %>%
 
 
 ## ocir
+
+### Summary scores
+```{r descriptives ocir.diff_score_cols}
+ocir.sum_score_numeric_table <- dat %>% 
+  #    group_by(Sample) %>%
+  summarise_at( 
+    vars(
+      "Prepan" = ocir.sum_score_prepan,
+      "Base" = ocir.sum_score_base,
+      "Retro" = ocir.sum_score_retro
+    ),
+    .funs =
+      list(
+        ~mean(., na.rm = T),
+        ~sd(., na.rm = T),
+        ~median(., na.rm = T),
+        ~min(., na.rm = T),
+        ~max(., na.rm = T),
+        ~skew(., na.rm = T),
+        kurtosis = ~kurtosi(., na.rm = T)
+      )
+  )
+
+ocir.sum_score_numeric_table
+```
+
+```{r smart numeric summary tables}
+# reshape the table
+ocir.sum_score_numeric_summary_table_reshaped <- ocir.sum_score_numeric_table %>% 
+  gather(key, value) %>% 
+  separate(key, c("variable", "measure"), sep = "_") %>%
+  mutate(measure = factor(
+    x = measure,
+    levels =  c( # this is the order I want my columns to appear in
+      "missing",
+      "min",
+      "max",
+      "mean", 
+      "median", 
+      "mode",
+      "sd",
+      "skew",
+      "kurtosis"
+    ))) %>% 
+  spread(measure, value) %>% 
+  # we can apply a function to all variables to edit them so that they are publication ready
+  rename_all(
+    .funs = ~str_to_title(.)
+  ) %>% 
+  # or we can individually rename variables 
+  rename(
+    SD = Sd
+  ) 
+
+ocir.sum_score_numeric_summary_table_reshaped
+```
+
+Table for knitting
+ocir diff summary table
+```{r ocir diff summary table}
+kable(ocir.sum_score_numeric_summary_table_reshaped)
+```
+
+### Differences scores
 
 ```{r descriptives ocir.diff_score_cols}
 ocir.numeric_table <- dat %>% 
@@ -985,7 +1181,7 @@ ocir diff summary table
 kable(ocir.numeric_summary_table_reshaped)
 ```
 
-
+### Long format
 
 ```{r ocir gather to long format Time_points}
 dat.long.ocir.diff <- dat %>%
@@ -1006,6 +1202,8 @@ dat.long.ocir.diff <- dat %>%
 
 head(dat.long.ocir.diff)
 ```
+
+### Plots
 
 makes this into percentages
 ```{r ocir absolut plot}
@@ -1054,7 +1252,7 @@ dat.long.ocir.diff %>%
   scale_fill_manual(values = palette, labels = c("Retrospective"))
 ```
 
-
+# RUBBISH
 
 +++ Everything underneath here is only SCRATCH
 
@@ -1191,7 +1389,7 @@ kable(pcl.numeric_summary_table_reshaped)
 
 
 ```{r descriptives pcl.diff_score_cols}
-pcl.numeric_table <- dat %>% 
+pcl.sum_score_numeric_table <- dat %>% 
 #    group_by(Sample) %>%
   summarise_at( 
     vars(
@@ -1215,7 +1413,7 @@ pcl.numeric_table
 
 ```{r smart numeric summary tables}
 # reshape the table
-pcl.numeric_summary_table_reshaped <- pcl.numeric_table %>% 
+pcl.sum_score_numeric_summary_table_reshaped <- pcl.sum_score_numeric_table %>% 
   gather(key, value) %>% 
   separate(key, c("variable", "measure"), sep = "_") %>%
   mutate(measure = factor(
@@ -1241,13 +1439,13 @@ pcl.numeric_summary_table_reshaped <- pcl.numeric_table %>%
     SD = Sd
   ) 
 
-pcl.numeric_summary_table_reshaped
+pcl.sum_score_numeric_summary_table_reshaped
 ```
 
 Table for knitting
 pcl diff summary table
 ```{r pcl diff summary table}
-kable(pcl.numeric_summary_table_reshaped)
+kable(pcl.sum_score_numeric_summary_table_reshaped)
 ```
 
 
