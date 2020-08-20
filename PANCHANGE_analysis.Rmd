@@ -51,22 +51,15 @@ Install packages (if they are not available in your version of R)
 #install.packages("summarytools")
 #install.packages("tidyverse")
 #install.packages("psych")
-#install.packages("eeptools")
+#install.packages("broom")
 #install.packages("skimr")
 ```
-
-Install packages
-```{r}
-#install.packages("infer")
-```
-
 
 Load packages
 ```{r Load packages}
 library(knitr)
 library(summarytools)
 library(psych)
-library(infer)
 library(patchwork)
 library(broom)
 library(tidyverse)
@@ -252,8 +245,6 @@ ocir.diff_score_cols <- dat %>%
 ocir.diff_score_cols
 ```
 
-
-
 # ggplot theme
 Set up ggplot theme for the plots
 ```{r ggplot theme}
@@ -273,6 +264,48 @@ theme_personal <-  theme(
       ),
     axis.ticks = element_blank()
     )
+```
+
+# Psychiatric disorder hierarchy
+```{r}
+dat %>%
+  mutate(
+    Disorder_exclusive_numeric =
+      case_when(
+        control_numeric == 1 ~ 0 
+        depressive_disorders_numeric = "Depressive disorders",
+        anxiety_disorders_numeric = "Anxiety disorders",
+        mhd.posttraumatic_stress_disorder_ptsd_numeric = "PTSD",
+        eating_disorders_numeric = "Eating disorders",
+        obsessive_compulsive_disorders_numeric = "OCDs",
+        mhd.attention_deficit_hyperactivity_disorder_numeric = "ADHD",
+        mhd.personality_disorder_numeric == 1 ~ 7,
+        mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == 1 ~ 8,
+        mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 9,
+        psychotic_disorders_numeric == 1 ~ 10,
+           ))
+        
+      )
+  )
+
+dat %>%
+  mutate(
+    Disorder_exclusive =
+      recode_factor(
+        Disorder_exclusive,
+        "0" = "Controls",
+        "4" = 
+        "5" = "OCDs"
+        "6" = "ADHD"
+        "7" = "Personality disorders"
+        "8" = "Autism",
+        "9" = "Bipolar disorders",
+        "10" = "Psychotic disorders"
+      )
+  )
+
+
+
 ```
 
 
