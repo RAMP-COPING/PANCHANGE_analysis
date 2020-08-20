@@ -57,7 +57,7 @@ Install packages (if they are not available in your version of R)
 
 Install packages
 ```{r}
-#install.packages("infer")
+install.packages("infer")
 ```
 
 
