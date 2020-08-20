@@ -55,11 +55,18 @@ Install packages (if they are not available in your version of R)
 #install.packages("skimr")
 ```
 
+Install packages
+```{r}
+#install.packages("infer")
+```
+
+
 Load packages
 ```{r Load packages}
 library(knitr)
 library(summarytools)
 library(psych)
+library(infer)
 library(patchwork)
 library(broom)
 library(tidyverse)
@@ -155,6 +162,8 @@ summarytools::dfSummary(
 ```
 
 # Data availability
+
+Data availability GAD
 ```{r gad availability}
 dat.raw %>%
   freq(
@@ -162,6 +171,7 @@ dat.raw %>%
     cumul = F)
 ```
 
+Data availability PHQ
 ```{r phq availability}
 dat.raw %>%
   freq(
@@ -169,6 +179,7 @@ dat.raw %>%
     cumul = F)
 ```
 
+Data availability PCL
 ```{r pcl availability}
 dat.raw %>%
   freq(
@@ -183,6 +194,7 @@ dat.raw %>%
     data_group_ocir,
     cumul = F)
 ```
+
 
 
 # Exclusion
@@ -209,7 +221,41 @@ dat <- dat.raw %>%
 dim(dat)
 ```
 
+
+# Vectors for diff_score
+```{r Vectors with diff_score_cols}
+diff_score_cols <- dat %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+diff_score_cols
+
+phq.diff_score_cols <- dat %>%
+  select(contains("phq")) %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+phq.diff_score_cols
+
+gad.diff_score_cols <- dat %>%
+  select(contains("gad")) %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+gad.diff_score_cols
+
+ocir.diff_score_cols <- dat %>%
+  select(contains("ocir")) %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+ocir.diff_score_cols
+```
+
+
+
 # ggplot theme
+Set up ggplot theme for the plots
 ```{r ggplot theme}
 theme_personal <-  theme(
     text = element_text(color = "black"),
@@ -240,34 +286,9 @@ dat %>%
             Max = max(Age))
 ```
 
-# Vectors for diff_score
-```{r Vectors with diff_score_cols}
-diff_score_cols <- dat %>%
-  select(contains("diff_score")) %>% 
-  colnames()
++++ADD CHUNK FOR AGE CATEGORIES HERE
+```{r Age categories}
 
-diff_score_cols
-
-phq.diff_score_cols <- dat %>%
-  select(contains("phq")) %>%
-  select(contains("diff_score")) %>% 
-  colnames()
-
-phq.diff_score_cols
-
-gad.diff_score_cols <- dat %>%
-  select(contains("gad")) %>%
-  select(contains("diff_score")) %>% 
-  colnames()
-
-gad.diff_score_cols
-
-ocir.diff_score_cols <- dat %>%
-  select(contains("ocir")) %>%
-  select(contains("diff_score")) %>% 
-  colnames()
-
-ocir.diff_score_cols
 ```
 
 
@@ -329,11 +350,22 @@ Define disorder columns in vector
 ```{r Disorder by Gender}
 Disorder_by_Gender <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
-  group_by(Disorder, Gender) %>%
-  count(Disorder)
+  count(Disorder, Gender) %>%
+  mutate(Prop = round(n/sum(n), 2))
 
 Disorder_by_Gender
 ```
+
+```{r Disorder by Gender}
+Disorder_by_Gender <- dat.long.psych %>%
+  group_by(Disorder) %>%
+  filter(Diagnosis == 1) %>%
+  count(Gender) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+Disorder_by_Gender
+```
+
 
 ```{r Disorder by Gender plot}
 Disorder_by_Gender %>%
@@ -404,8 +436,10 @@ Arab
 ```{r Disorder by Ethnicity}
 Disorder_by_Ethnicity <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
-  group_by(Disorder, Ethnicity) %>%
-  count(Disorder)
+  count(Disorder, Ethnicity) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+Disorder_by_Ethnicity
 ```
 
 ```{r Disorder by Ethnicity plot}
@@ -441,8 +475,8 @@ Compare the GLAD/EDGI and COPING cohorts as a whole
 # Ethnicity
 ```{r Ethnicity per Sample}
 Ethnicity_by_Sample <- dat %>%
-  group_by(Ethnicity, Sample) %>%
-  count(Ethnicity)
+  count(Ethnicity, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
 
 Ethnicity_by_Sample
 ```
@@ -473,10 +507,55 @@ Ethnicity_by_Sample %>%
 ```
 
 # Gender
-```{r Gender per Sample}
+```{r Gender per Sample prop per total}
 dat %>%
-  group_by(Gender, Sample) %>%
-  count(Gender)
+  count(Gender, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+```
+
+```{r Gender per Sample prop per Sample}
+dat %>%
+  group_by(Sample) %>%
+  count(Gender, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+```
+
+```{r Gender per Sample prop cross table}
+dat %>%
+  group_by(Sample) %>%
+  count(Gender, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+```
+
+
+```{r Gender per Sample count cross table}
+dat %>%
+  count(Gender, Sample) %>%
+  spread(key = Sample, value = n)
+```
+
+
+```{r}
+dat %>%
+  count(Gender, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-Gender) %>%
+  chisq.test() %>%
+  glance()
+```
+
+
+
+
+```{r Gender per Sample chisquare}
+dat %>% 
+  specify(Gender ~ Sample)  %>% 
+  hypothesize(null = "independence") %>% 
+  generate(reps = 1000, type = "permute") %>% 
+  calculate(stat = "Chisq") %>% 
+  visualize()# +
+#  geom_vline(aes(xintercept = observed_stat), color = "red") # add a vertical line for the data
 ```
 
 # highest_education
