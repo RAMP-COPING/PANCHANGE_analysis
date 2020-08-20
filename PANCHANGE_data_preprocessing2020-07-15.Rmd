@@ -6100,9 +6100,9 @@ summary(dat$ocir.diff_score_prepan_retro)
 # Difference score for prepandemic and baseline ocir sum scores
 dat <- dat %>%
   mutate(
-    ocir.diff_score_prepan_base =
+    ocir.diff_score_base_prepan =
       as.numeric(
-        ocir.sum_score_prepan - ocir.sum_score_base  # prepandemic sum score MINUS baseline sum score 
+        ocir.sum_score_base - ocir.sum_score_prepan   # prepandemic sum score MINUS baseline sum score 
       )
   )
 
