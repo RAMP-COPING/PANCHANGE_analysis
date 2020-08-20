@@ -546,59 +546,111 @@ dat %>%
 ```
 
 
-
-
-```{r Gender per Sample chisquare}
-dat %>% 
-  specify(Gender ~ Sample)  %>% 
-  hypothesize(null = "independence") %>% 
-  generate(reps = 1000, type = "permute") %>% 
-  calculate(stat = "Chisq") %>% 
-  visualize()# +
-#  geom_vline(aes(xintercept = observed_stat), color = "red") # add a vertical line for the data
-```
-
 # highest_education
 ```{r highest_education per Sample}
 dat %>%
-  group_by(highest_education, Sample) %>%
-  count(highest_education)
+  count(highest_education, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
 ```
 
 # Key worker status
 ```{r Key worker status per sample}
 dat %>%
-  group_by(key_worker, Sample) %>%
-  count(key_worker)
+  count(key_worker, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
 ```
 
 # COVID
 ## COVID swab test positive
 ```{r COVID positive swap}
 dat %>%
-  group_by(respiratory.throat_swab_test_nose, Sample) %>%
-  count(respiratory.throat_swab_test_nose)
+  count(respiratory.throat_swab_test_nose, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
 ```
 
 ## antibody test
 ```{r COVID positive antibody test}
 dat %>%
-  group_by(respiratory.results_antibody_test, Sample) %>%
-  count(respiratory.results_antibody_test)
+  count(respiratory.results_antibody_test, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
 ```
 
 
 ## COVID probable diagnosis
 ```{r COVID probable diagnosis}
 dat %>%
-  group_by(covid_probable_case_incl_screening, Sample) %>%
-  count(covid_probable_case_incl_screening)
+  count(covid_probable_case_incl_screening, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
 ```
 
 
 # Questionnaire comparions
 
 ## gad
+
+```{r descriptives gad.diff_score_cols}
+gad.numeric_table <- dat %>% 
+#  group_by(dem.sex) %>%
+  summarise_at( 
+    vars(
+      "Base - prepan" = gad.diff_score_base_prepan,
+      "Base - retro" = gad.diff_score_base_retro,
+      "Prepan - retro" = gad.diff_score_prepan_retro,
+    ),
+    .funs =
+      list(
+        ~mean(., na.rm = T),
+        ~sd(., na.rm = T),
+        ~median(., na.rm = T),
+        ~min(., na.rm = T),
+        ~max(., na.rm = T),
+        ~skew(., na.rm = T),
+        kurtosis = ~kurtosi(., na.rm = T)
+      )
+  )
+
+gad.numeric_table
+```
+
+```{r smart numeric summary tables}
+# reshape the table
+gad.numeric_summary_table_reshaped <- gad.numeric_table %>% 
+  gather(key, value) %>% 
+  separate(key, c("variable", "measure"), sep = "_") %>%
+  mutate(measure = factor(
+    x = measure,
+    levels =  c( # this is the order I want my columns to appear in
+      "missing",
+      "min",
+      "max",
+      "mean", 
+      "median", 
+      "mode",
+      "sd",
+      "skew",
+      "kurtosis"
+    ))) %>% 
+  spread(measure, value) %>% 
+  # we can apply a function to all variables to edit them so that they are publication ready
+  rename_all(
+    .funs = ~str_to_title(.)
+    ) %>% 
+  # or we can individually rename variables 
+  rename(
+    SD = Sd
+  ) 
+  
+gad.numeric_summary_table_reshaped
+```
+
+Table for knitting
+gad diff summary table
+```{r gad diff summary table}
+kable(gad.numeric_summary_table_reshaped)
+```
+
+
+
 ```{r gad gather to long format Time_points}
 dat.long.gad.diff <- dat %>%
   gather(
@@ -668,7 +720,70 @@ dat.long.gad.diff %>%
 
 
 
-# phq
+## phq
+
+```{r descriptives phq.diff_score_cols}
+phq.numeric_table <- dat %>% 
+  #  group_by(dem.sex) %>%
+  summarise_at( 
+    vars(
+      "Base - prepan" = phq.diff_score_base_prepan,
+      "Base - retro" = phq.diff_score_base_retro,
+      "Prepan - retro" = phq.diff_score_prepan_retro,
+    ),
+    .funs =
+      list(
+        ~mean(., na.rm = T),
+        ~sd(., na.rm = T),
+        ~median(., na.rm = T),
+        ~min(., na.rm = T),
+        ~max(., na.rm = T),
+        ~skew(., na.rm = T),
+        kurtosis = ~kurtosi(., na.rm = T)
+      )
+  )
+
+phq.numeric_table
+```
+
+```{r smart numeric summary tables}
+# reshape the table
+phq.numeric_summary_table_reshaped <- phq.numeric_table %>% 
+  gather(key, value) %>% 
+  separate(key, c("variable", "measure"), sep = "_") %>%
+  mutate(measure = factor(
+    x = measure,
+    levels =  c( # this is the order I want my columns to appear in
+      "missing",
+      "min",
+      "max",
+      "mean", 
+      "median", 
+      "mode",
+      "sd",
+      "skew",
+      "kurtosis"
+    ))) %>% 
+  spread(measure, value) %>% 
+  # we can apply a function to all variables to edit them so that they are publication ready
+  rename_all(
+    .funs = ~str_to_title(.)
+  ) %>% 
+  # or we can individually rename variables 
+  rename(
+    SD = Sd
+  ) 
+
+phq.numeric_summary_table_reshaped
+```
+
+Table for knitting
+phq diff summary table
+```{r phq diff summary table}
+kable(phq.numeric_summary_table_reshaped)
+```
+
+
 
 ```{r phq gather to long format Time_points}
 dat.long.phq.diff <- dat %>%
@@ -685,45 +800,125 @@ dat.long.phq.diff <- dat %>%
     phq.diff_score
   ) %>%
   mutate(Time_point = str_replace(Time_point_raw, "phq.diff_score_", "")) %>%
-  select(-Time_point_raw) %>%
-  drop_na(phq.diff_score)
+  select(-Time_point_raw)
 
 head(dat.long.phq.diff)
 ```
 
+makes this into percentages
+```{r phq absolut plot}
+dat.long.phq.diff %>%
+  ggplot(mapping = aes(y = phq.diff_score)) +
+  geom_bar() +
+  theme_minimal() +
+  facet_wrap(facets = vars(Time_point))
+```
 
-```{r}
+```{r phq percentage plot prepan_retro}
 dat.long.phq.diff %>%
   filter(Time_point != "prepan_retro") %>%
   ggplot(mapping = aes(
     x = phq.diff_score,
     y = stat(density*width),
     fill = Time_point)) +
-   geom_histogram(
+  geom_histogram(
     binwidth = 1,
     position = position_dodge2(preserve = "single")
-    ) +
-  theme_minimal()
+  ) +
+  labs(
+    x = "Difference phq7 score",
+    y = "Percentage of participants",
+    fill = "Comparison:\nBaseline vs") +
+  theme_personal +
+  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective"))
 ```
 
-```{r}
+```{r phq plot prepan_retro diff}
 dat.long.phq.diff %>%
   filter(Time_point == "prepan_retro") %>%
   ggplot(mapping = aes(
     x = phq.diff_score,
     y = stat(density*width),
     fill = Time_point)) +
-   geom_histogram(
+  geom_histogram(
     binwidth = 1,
     position = position_dodge2(preserve = "single")
-    ) +
-  theme_minimal()
+  ) +
+  labs(
+    x = "Difference phq7 score",
+    y = "Percentage of participants",
+    fill = "Comparison:\nPrepandemic vs") +
+  theme_personal +
+  scale_fill_manual(values = palette, labels = c("Retrospective"))
+```
+
+
+## ocir
+
+```{r descriptives ocir.diff_score_cols}
+ocir.numeric_table <- dat %>% 
+  #  group_by(dem.sex) %>%
+  summarise_at( 
+    vars(
+      "Base - prepan" = ocir.diff_score_base_prepan,
+      "Base - retro" = ocir.diff_score_base_retro,
+      "Prepan - retro" = ocir.diff_score_prepan_retro,
+    ),
+    .funs =
+      list(
+        ~mean(., na.rm = T),
+        ~sd(., na.rm = T),
+        ~median(., na.rm = T),
+        ~min(., na.rm = T),
+        ~max(., na.rm = T),
+        ~skew(., na.rm = T),
+        kurtosis = ~kurtosi(., na.rm = T)
+      )
+  )
+
+ocir.numeric_table
+```
+
+```{r smart numeric summary tables}
+# reshape the table
+ocir.numeric_summary_table_reshaped <- ocir.numeric_table %>% 
+  gather(key, value) %>% 
+  separate(key, c("variable", "measure"), sep = "_") %>%
+  mutate(measure = factor(
+    x = measure,
+    levels =  c( # this is the order I want my columns to appear in
+      "missing",
+      "min",
+      "max",
+      "mean", 
+      "median", 
+      "mode",
+      "sd",
+      "skew",
+      "kurtosis"
+    ))) %>% 
+  spread(measure, value) %>% 
+  # we can apply a function to all variables to edit them so that they are publication ready
+  rename_all(
+    .funs = ~str_to_title(.)
+  ) %>% 
+  # or we can individually rename variables 
+  rename(
+    SD = Sd
+  ) 
+
+ocir.numeric_summary_table_reshaped
+```
+
+Table for knitting
+ocir diff summary table
+```{r ocir diff summary table}
+kable(ocir.numeric_summary_table_reshaped)
 ```
 
 
 
-
-```{r gather to long format Time_points}
+```{r ocir gather to long format Time_points}
 dat.long.ocir.diff <- dat %>%
   gather(
     key = "Time_point_raw",
@@ -743,7 +938,8 @@ dat.long.ocir.diff <- dat %>%
 head(dat.long.ocir.diff)
 ```
 
-```{r}
+makes this into percentages
+```{r ocir absolut plot}
 dat.long.ocir.diff %>%
   ggplot(mapping = aes(y = ocir.diff_score)) +
   geom_bar() +
@@ -751,6 +947,47 @@ dat.long.ocir.diff %>%
   facet_wrap(facets = vars(Time_point))
 ```
 
+```{r ocir percentage plot prepan_retro}
+dat.long.ocir.diff %>%
+  filter(Time_point != "prepan_retro") %>%
+  ggplot(mapping = aes(
+    x = ocir.diff_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Difference ocir7 score",
+    y = "Percentage of participants",
+    fill = "Comparison:\nBaseline vs") +
+  theme_personal +
+  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective"))
+```
+
+```{r ocir plot prepan_retro diff}
+dat.long.ocir.diff %>%
+  filter(Time_point == "prepan_retro") %>%
+  ggplot(mapping = aes(
+    x = ocir.diff_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Difference ocir7 score",
+    y = "Percentage of participants",
+    fill = "Comparison:\nPrepandemic vs") +
+  theme_personal +
+  scale_fill_manual(values = palette, labels = c("Retrospective"))
+```
+
+
+
++++ Everything underneath here is only SCRATCH
 
 ```{r}
 gad.diff_score_prepan_base_plot <- dat %>%
