@@ -339,7 +339,9 @@ dat %>%
   freq(Disorder)
 ```
 
-```{r}
+Investigate NAs 
+Ask Leo?
+```{r NAs in diagnosis}
 dat %>%
   filter(is.na(Disorder)) %>%
   freq(Sample)
@@ -418,7 +420,7 @@ head(dat.long.psych)
 Define disorder columns in vector
 
 ```{r Disorder_inc by Gender}
-Disorder_by_Gender <- dat.long.psych %>%
+Disorder_inc_by_Gender <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
   count(Disorder_inc, Gender) %>%
   mutate(Prop = round(n/sum(n), 2))
@@ -426,7 +428,7 @@ Disorder_by_Gender <- dat.long.psych %>%
 Disorder_inc_by_Gender
 ```
 
-```{r Disorder_inc by Gender}
+```{r Disorder_inc by Gender prop}
 Disorder_inc_by_Gender <- dat.long.psych %>%
   group_by(Disorder_inc) %>%
   filter(Diagnosis == 1) %>%
@@ -462,6 +464,7 @@ Disorder_inc_by_Gender %>%
   coord_flip()
 ```
 
+100% bar per diagnosis with percentages of contribution per sample
 
 ```{r Disorder_inc by Sample}
 Disorder_inc_by_Sample <- dat.long.psych %>%
@@ -652,13 +655,14 @@ dat %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
++++CHECK OVERLAP BETWEEN TESTS and probable COVID
 
 # Questionnaire comparions
 
 ## gad
 
 ### Summary scores
-```{r descriptives gad.diff_score_cols}
+```{r descriptives gad.sum_score_cols}
 gad.sum_score_numeric_table <- dat %>% 
   #    group_by(Sample) %>%
   summarise_at( 
@@ -795,6 +799,7 @@ dat.long.gad.diff <- dat %>%
     Sample,
     Gender,
     Ethnicity,
+    Disorder,
     Time_point_raw,
     gad.diff_score
   ) %>%
@@ -834,6 +839,29 @@ dat.long.gad.diff %>%
   scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective"))
 ```
 
+
+```{r gad percentage plot prepan_retro}
+dat.long.gad.diff %>%
+  filter(Time_point != "prepan_retro") %>%
+  ggplot(mapping = aes(
+    x = gad.diff_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Difference GAD7 score",
+    y = "Percentage of participants",
+    fill = "Comparison:\nBaseline vs") +
+  theme_personal +
+  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
+  facet_wrap("Disorder")
+```
+
+
+
 ```{r gad plot prepan_retro diff}
 dat.long.gad.diff %>%
   filter(Time_point == "prepan_retro") %>%
@@ -858,7 +886,7 @@ dat.long.gad.diff %>%
 ## phq
 
 ### Summary scores
-```{r descriptives phq.diff_score_cols}
+```{r descriptives phq.sum_score}
 phq.sum_score_numeric_table <- dat %>% 
   #    group_by(Sample) %>%
   summarise_at( 
@@ -1015,6 +1043,10 @@ dat.long.phq.diff %>%
   facet_wrap(facets = vars(Time_point))
 ```
 
+
+
+
+
 ```{r phq percentage plot prepan_retro}
 dat.long.phq.diff %>%
   filter(Time_point != "prepan_retro") %>%
@@ -1057,7 +1089,7 @@ dat.long.phq.diff %>%
 ## ocir
 
 ### Summary scores
-```{r descriptives ocir.diff_score_cols}
+```{r descriptives ocir.sum_score}
 ocir.sum_score_numeric_table <- dat %>% 
   #    group_by(Sample) %>%
   summarise_at( 
@@ -1297,13 +1329,26 @@ Ethnicity groups (5; White European, Black (British), Asian, Arab, Mixed)
 Rank the disorders by the size of the change 
 
 
+
+
+
 # Regression
 Regress covariates out of the change? Which? 
 
 Model 0: Disorders
 ```{r}
 model0 <- lm(
-  formula = gad.diff_score_prepan_retro ~ Disorder,
+  formula = phq.diff_score_base_prepan ~ Disorder,
+  data = dat)
+
+summary(model0)
+```
+
+
+Model 0: Disorders
+```{r}
+model0 <- lm(
+  formula = gad.diff_score_base_prepan ~ Disorder,
   data = dat)
 
 summary(model0)
@@ -1313,11 +1358,19 @@ summary(model0)
 tidy(model0)
 ```
 
+Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
+```{r}
+model1 <- lm(
+  formula = phq.diff_score_base_prepan ~ Disorder + Gender + Age + Ethnicity + time_diff_sign_up_coping,
+  data = dat)
+
+summary(model1)
+```
 
 Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
 ```{r}
 model1 <- lm(
-  formula = gad.diff_score_base_retro ~ Disorder + Gender + Age + Ethnicity + time_diff_sign_up_coping,
+  formula = gad.diff_score_base_prepan ~ Disorder + Gender + Age + Ethnicity + time_diff_sign_up_coping,
   data = dat)
 
 summary(model1)
@@ -1388,7 +1441,7 @@ kable(pcl.numeric_summary_table_reshaped)
 ```
 
 
-```{r descriptives pcl.diff_score_cols}
+```{r descriptives pcl.sum_score}
 pcl.sum_score_numeric_table <- dat %>% 
 #    group_by(Sample) %>%
   summarise_at( 
