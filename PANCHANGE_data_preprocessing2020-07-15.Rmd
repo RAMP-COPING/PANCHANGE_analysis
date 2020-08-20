@@ -4308,12 +4308,12 @@ coping.ramp.pcl.raw.id <- coping.ramp.pcl.raw %>%
     pcl.cut_people_feeling_distant_base = pcl.feeling_distant_cut_people, # differ
     pcl.feeling_irritable_or_having_angry_outbursts_base = pcl.feeling_irritable_or_having_angry_outbursts,
     pcl.difficulty_concentrating_base = pcl.difficulty_concentrating,
-    pcl.stressful_experience_repeated_images_retro = pcl.stressful_experience_repeated_images.1,
-    pcl.stressful_experience_upset_reminded_retro = pcl.stressful_experience_reminded_upset.1, # differ
-    pcl.stressful_situation_avoiding_activities_retro = pcl.stressful_experience_avoiding_activities.1, # differ
-    pcl.cut_people_feeling_distant_retro = pcl.feeling_distant_cut_people.1, # differ
-    pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl.feeling_irritable_or_having_angry_outbursts.1,
-    pcl.difficulty_concentrating_retro = pcl.difficulty_concentrating.1
+    pcl.stressful_experience_repeated_images_retro_unc = pcl.stressful_experience_repeated_images.1,
+    pcl.stressful_experience_upset_reminded_retro_unc = pcl.stressful_experience_reminded_upset.1, # differ
+    pcl.stressful_situation_avoiding_activities_retro_unc = pcl.stressful_experience_avoiding_activities.1, # differ
+    pcl.cut_people_feeling_distant_retro_unc = pcl.feeling_distant_cut_people.1, # differ
+    pcl.feeling_irritable_or_having_angry_outbursts_retro_unc = pcl.feeling_irritable_or_having_angry_outbursts.1,
+    pcl.difficulty_concentrating_retro_unc = pcl.difficulty_concentrating.1
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -4341,6 +4341,67 @@ dim(coping.ramp.pcl.raw)[1]-dim(coping.ramp.pcl.raw.id)[1]
 if(RAMP == TRUE) {
   coping.pcl.raw.id <- coping.ramp.pcl.raw.id
 }
+```
+
+Recode RAMP PCL retro scores
+```{r recode ramp pcl retro scores}
+if(RAMP == TRUE) {
+  
+pcl_retro_numeric_recode_vars <- c(
+    "pcl.stressful_experience_repeated_images_retro_unc_numeric",
+    "pcl.stressful_experience_upset_reminded_retro_unc_numeric",
+    "pcl.stressful_situation_avoiding_activities_retro_unc_numeric",
+    "pcl.cut_people_feeling_distant_retro_unc_numeric",
+    "pcl.feeling_irritable_or_having_angry_outbursts_retro_unc_numeric",
+    "pcl.difficulty_concentrating_retro_unc_numeric"
+)
+  
+#recode and rename numeric retro items
+coping.pcl.raw.id <- coping.pcl.raw.id %>%
+  mutate_at(vars(all_of(pcl_retro_numeric_recode_vars)),
+    ~ recode(.,
+           `1` = 1, # 1 = Yes = 1
+           `2` = 0, # 2 = No = 0
+           `3` = NA_real_ # NA = 3 = NA
+                   )) %>%
+  rename_at(vars(ends_with("_retro_unc_numeric")), 
+            funs(str_replace(., 
+                             "_retro_unc_numeric", 
+                             "_retro_numeric")
+                 )
+            )
+
+pcl_retro_recode_vars <- c(
+    "pcl.stressful_experience_repeated_images_retro_numeric",
+    "pcl.stressful_experience_upset_reminded_retro_numeric",
+    "pcl.stressful_situation_avoiding_activities_retro_numeric",
+    "pcl.cut_people_feeling_distant_retro_numeric",
+    "pcl.feeling_irritable_or_having_angry_outbursts_retro_numeric",
+    "pcl.difficulty_concentrating_retro_numeric"
+)
+
+#create factor versions 
+coping.pcl.raw.id <- coping.pcl.raw.id %>%
+  mutate_at(vars(
+    all_of(pcl_retro_recode_vars)),
+    list("factor" = 
+            ~ recode_factor(.,
+           "1" = "Yes", # 1 = Yes = 1
+           "0" = "No" # 2 = No = 0
+                   ))) %>%
+  rename_at(vars(ends_with( "retro_numeric_factor")), 
+            list(~gsub(
+              pattern = "_retro_numeric_factor",
+              replacement = "_retro",
+              .)
+              )
+            ) %>%
+  select(
+    -ends_with("unc")
+  )
+}
+
+colnames(coping.pcl.raw.id)
 ```
 
 ## Sum scores
@@ -4412,6 +4473,8 @@ coping.pcl.raw.id %>%
   descr(pcl.sum_score_base_raw,
         stats = "common"
   )
+
+
 ```
 
 
