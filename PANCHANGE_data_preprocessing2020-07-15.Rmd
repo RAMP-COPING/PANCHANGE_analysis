@@ -6051,7 +6051,7 @@ dat <- dat %>%
         difftime(           #this function does time1 - time2 as difftime(time1, time2...)
           startDate.coping,    #should be start date for COPING (time1)
           startDate.prepandemic),    #should be start date for GLAD (time2)
-          units = c("days")  #can also be "secs", "mins", "hours", "weeks"
+          units = c("weeks")  #can also be "secs", "mins", "hours", "weeks"
           )
         )
 
