@@ -2650,7 +2650,7 @@ mhd.raw.categories <- mhd.raw.id %>%
 
 # Prepandemic
 
-## gad (prepan)
+## GAD (prepan)
 
 ```{r glad gad prepan cols}
 if(GLAD == TRUE){
@@ -2786,7 +2786,7 @@ gad.items_prepan <- c(
   "gad.awful_feeling_afraid_happen_prepan_numeric"
   )
 
-# Calulate total score
+# Calculate total score
 gad.scored_items_prepan <- scoreItems(keys = gad.items_key_prepan,
                                         items = prepan.gad.raw.id[gad.items_prepan],
                                         totals = TRUE, 
@@ -2862,7 +2862,7 @@ summarytools::dfSummary(
 ```
 
 
-## pcl (prepan)
+## PCL (prepan)
 
 ```{r glad prepandemic pcl cols}
 if(GLAD == TRUE) {
@@ -2995,7 +2995,7 @@ pcl.items_prepan <- c(
   "pcl.difficulty_concentrating_prepan_numeric"
   )
 
-# Calulate total score
+# Calculate total score
 pcl.scored_items_prepan <- scoreItems(keys = pcl.items_key_prepan,
                                         items = prepan.pcl.raw.id[pcl.items_prepan],
                                         totals = TRUE, 
@@ -3068,7 +3068,7 @@ summarytools::dfSummary(
 }
 ```
 
-## phq (prepan)
+## PHQ (prepan)
 
 ```{r glad phq cols}
 if(GLAD == TRUE){
@@ -3204,7 +3204,7 @@ phq.items_prepan <- c(
   "phq.dead_hurting_thoughts_prepan_numeric"
   )
 
-# Calulate sum score
+# Calculate sum score
 phq.scored_items_prepan <- scoreItems(keys = phq.items_key_prepan,
                                         items = prepan.phq.raw.id[phq.items_prepan],
                                         totals = TRUE, 
@@ -3325,7 +3325,7 @@ summarytools::dfSummary(
 }
 ```
 
-## ocir (prepan)
+## OCIR (prepan)
 
 ```{r glad ocir prepan cols}
 if(GLAD == TRUE){
@@ -3488,7 +3488,7 @@ ocir.items_prepan = c(
   "ocir.i_collect_things_i_dont_need_prepan_numeric"
   )
 
-# Calulate sum score
+# Calculate sum score
 ocir.scored_items_prepan <- scoreItems(keys = ocir.items_key_prepan,
                                         items = prepan.ocir.raw.id[ocir.items_prepan],
                                         totals = TRUE, 
@@ -3496,12 +3496,13 @@ ocir.scored_items_prepan <- scoreItems(keys = ocir.items_key_prepan,
                                         impute = 'none', 
                                         min = 0, 
                                         max = 4)
+
 # Add in column to tibble
-prepan.ocir.raw.id$ocir.sum_score_prepan <- ocir.scored_items_prepan$scores
+prepan.ocir.raw.id$ocir.sum_score_prepan_raw <- ocir.scored_items_prepan$scores
 
 # Look at values
 prepan.ocir.raw.id %>%
-  descr(ocir.sum_score_prepan,
+  descr(ocir.sum_score_prepan_raw,
         stats = "common"
         )
 }
@@ -3521,6 +3522,26 @@ prepan.ocir.raw.id <- prepan.ocir.raw.id %>%
 prepan.ocir.raw.id %>%
   freq(na_per_person_ocir_prepan,
        cumul = F)
+}
+```
+
+```{r ocir prepan sum score if missigng items set to NA - all items}
+if(GLAD == TRUE | EDGI == TRUE) {
+prepan.ocir.raw.id <- prepan.ocir.raw.id %>%
+  mutate(
+    ocir.sum_score_prepan =
+      if_else(condition = na_per_person_ocir_prepan > 0,
+              true = NA_real_,
+              false = ocir.sum_score_prepan_raw,
+              missing = NA_real_
+      )
+  )
+
+prepan.ocir.raw.id %>%
+  descr(ocir.sum_score_prepan_raw, stats = "common")
+
+prepan.ocir.raw.id %>%
+  descr(ocir.sum_score_prepan, stats = "common")
 }
 ```
 
@@ -3895,7 +3916,7 @@ gad.items_retro <- c(
   "gad.awful_feeling_afraid_happen_retro_numeric"
   )
 
-# Calulate total score
+# Calculate total score
 gad.scored_items_retro <- scoreItems(keys = gad.items_key_retro,
                                         items = coping.gad.raw.id[gad.items_retro],
                                         totals = TRUE, 
@@ -3930,7 +3951,7 @@ gad.items_base <- c(
   "gad.awful_feeling_afraid_happen_base_numeric"
   )
 
-# Calulate total score
+# Calculate total score
 gad.scored_items_base <- scoreItems(keys = gad.items_key_base,
                                         items = coping.gad.raw.id[gad.items_base],
                                         totals = TRUE, 
@@ -4287,12 +4308,12 @@ coping.ramp.pcl.raw.id <- coping.ramp.pcl.raw %>%
     pcl.cut_people_feeling_distant_base = pcl.feeling_distant_cut_people, # differ
     pcl.feeling_irritable_or_having_angry_outbursts_base = pcl.feeling_irritable_or_having_angry_outbursts,
     pcl.difficulty_concentrating_base = pcl.difficulty_concentrating,
-    pcl.stressful_experience_repeated_images_retro = pcl.stressful_experience_repeated_images.1,
-    pcl.stressful_experience_upset_reminded_retro = pcl.stressful_experience_reminded_upset.1, # differ
-    pcl.stressful_situation_avoiding_activities_retro = pcl.stressful_experience_avoiding_activities.1, # differ
-    pcl.cut_people_feeling_distant_retro = pcl.feeling_distant_cut_people.1, # differ
-    pcl.feeling_irritable_or_having_angry_outbursts_retro = pcl.feeling_irritable_or_having_angry_outbursts.1,
-    pcl.difficulty_concentrating_retro = pcl.difficulty_concentrating.1
+    pcl.stressful_experience_repeated_images_retro_unc = pcl.stressful_experience_repeated_images.1,
+    pcl.stressful_experience_upset_reminded_retro_unc = pcl.stressful_experience_reminded_upset.1, # differ
+    pcl.stressful_situation_avoiding_activities_retro_unc = pcl.stressful_experience_avoiding_activities.1, # differ
+    pcl.cut_people_feeling_distant_retro_unc = pcl.feeling_distant_cut_people.1, # differ
+    pcl.feeling_irritable_or_having_angry_outbursts_retro_unc = pcl.feeling_irritable_or_having_angry_outbursts.1,
+    pcl.difficulty_concentrating_retro_unc = pcl.difficulty_concentrating.1
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -4322,6 +4343,67 @@ if(RAMP == TRUE) {
 }
 ```
 
+Recode RAMP PCL retro scores
+```{r recode ramp pcl retro scores}
+if(RAMP == TRUE) {
+  
+pcl_retro_numeric_recode_vars <- c(
+    "pcl.stressful_experience_repeated_images_retro_unc_numeric",
+    "pcl.stressful_experience_upset_reminded_retro_unc_numeric",
+    "pcl.stressful_situation_avoiding_activities_retro_unc_numeric",
+    "pcl.cut_people_feeling_distant_retro_unc_numeric",
+    "pcl.feeling_irritable_or_having_angry_outbursts_retro_unc_numeric",
+    "pcl.difficulty_concentrating_retro_unc_numeric"
+)
+  
+#recode and rename numeric retro items
+coping.pcl.raw.id <- coping.pcl.raw.id %>%
+  mutate_at(vars(all_of(pcl_retro_numeric_recode_vars)),
+    ~ recode(.,
+           `1` = 1, # 1 = Yes = 1
+           `2` = 0, # 2 = No = 0
+           `3` = NA_real_ # NA = 3 = NA
+                   )) %>%
+  rename_at(vars(ends_with("_retro_unc_numeric")), 
+            funs(str_replace(., 
+                             "_retro_unc_numeric", 
+                             "_retro_numeric")
+                 )
+            )
+
+pcl_retro_recode_vars <- c(
+    "pcl.stressful_experience_repeated_images_retro_numeric",
+    "pcl.stressful_experience_upset_reminded_retro_numeric",
+    "pcl.stressful_situation_avoiding_activities_retro_numeric",
+    "pcl.cut_people_feeling_distant_retro_numeric",
+    "pcl.feeling_irritable_or_having_angry_outbursts_retro_numeric",
+    "pcl.difficulty_concentrating_retro_numeric"
+)
+
+#create factor versions 
+coping.pcl.raw.id <- coping.pcl.raw.id %>%
+  mutate_at(vars(
+    all_of(pcl_retro_recode_vars)),
+    list("factor" = 
+            ~ recode_factor(.,
+           "1" = "Yes", # 1 = Yes = 1
+           "0" = "No" # 2 = No = 0
+                   ))) %>%
+  rename_at(vars(ends_with( "retro_numeric_factor")), 
+            list(~gsub(
+              pattern = "_retro_numeric_factor",
+              replacement = "_retro",
+              .)
+              )
+            ) %>%
+  select(
+    -ends_with("unc")
+  )
+}
+
+colnames(coping.pcl.raw.id)
+```
+
 ## Sum scores
 Calculate sum score for PCL-6 retro
 ```{r coping pcl sum score retro}
@@ -4339,7 +4421,7 @@ pcl.items_retro <- c(
   "pcl.difficulty_concentrating_retro_numeric"
 )
 
-# Calulate total score
+# Calculate total score
 pcl.scored_items_retro <- scoreItems(keys = pcl.items_key_retro,
                                      items = coping.pcl.raw.id[pcl.items_retro],
                                      totals = TRUE, 
@@ -4375,7 +4457,7 @@ pcl.items_base <- c(
   "pcl.difficulty_concentrating_base_numeric"
 )
 
-# Calulate total score
+# Calculate total score
 pcl.scored_items_base <- scoreItems(keys = pcl.items_key_base,
                                     items = coping.pcl.raw.id[pcl.items_base],
                                     totals = TRUE, 
@@ -4391,6 +4473,8 @@ coping.pcl.raw.id %>%
   descr(pcl.sum_score_base_raw,
         stats = "common"
   )
+
+
 ```
 
 
@@ -4827,7 +4911,7 @@ phq.items_retro <- c(
 "phq.dead_hurting_thoughts_retro_numeric"
 )
 
-# Calulate total score
+# Calculate total score
 phq.scored_items_retro <- scoreItems(keys = phq.items_key_retro,
                                      items = coping.phq.raw.id[phq.items_retro],
                                      totals = TRUE, 
@@ -4864,7 +4948,7 @@ phq.items_base <- c(
 "phq.dead_hurting_thoughts_base_numeric"
 )
 
-# Calulate total score
+# Calculate total score
 phq.scored_items_base <- scoreItems(keys = phq.items_key_base,
                                     items = coping.phq.raw.id[phq.items_base],
                                     totals = TRUE, 
@@ -5470,7 +5554,7 @@ ocir.items_retro = c(
   "ocir.i_collect_things_i_dont_need_retro"
 )
 
-# Calulate total score
+# Calculate total score
 ocir.scored_items_retro <- scoreItems(keys = ocir.items_key_retro,
                                      items = coping.ocir.raw.id[ocir.items_retro],
                                      totals = TRUE, 
@@ -5516,7 +5600,7 @@ ocir.items_base = c(
   "ocir.i_collect_things_i_dont_need_base"
 )
 
-# Calulate total score
+# Calculate total score
 ocir.scored_items_base <- scoreItems(keys = ocir.items_key_base,
                                     items = coping.ocir.raw.id[ocir.items_base],
                                     totals = TRUE, 
@@ -5533,6 +5617,7 @@ coping.ocir.raw.id %>%
         stats = "common"
   )
 ```
+
 
 # Missingness
 
@@ -5672,9 +5757,6 @@ dfs.list <- list(
 )
 }
 ```
-
-
-
 
 
 Removing all prepandemic dataframes from NBR/RAMP (prepandemic measures don't exist for these cohorts)
@@ -5898,7 +5980,68 @@ dat %>%
 }
 ```
 
-Calculate the time difference between time difference between sign up questionnaire and COPING questionnaire
+Calculate the time difference between starting the COPING questionnaire and the beginning of the pandemic
+```{r time difference between starting the COP|NG questionnaire and the beginning of the pandemic}
+if(GLAD == TRUE | EDGI == TRUE | RAMP == TRUE | NBR == TRUE){
+# using date of pandemic as 23rd of March
+dat <- dat %>%
+  mutate(
+    time_diff_coping_lockdown_march_23 =
+        as.numeric(
+        difftime(           #this function does time1 - time2 as difftime(time1, time2...)
+          startDate.coping,    #should be start date for COPING (time1)
+          date_uk_lockdown_march_23),    #should be start date for GLAD (time2)
+          units = c("days")  #can also be "secs", "mins", "hours", "weeks"
+          )
+        )
+
+dat %>%
+  descr(
+    var = time_diff_coping_lockdown_march_23,
+    stats = "common"
+    )
+
+# using date as 1st of March  
+dat <- dat %>%
+  mutate(
+    time_diff_coping_awareness_march_1 =
+        as.numeric(
+        difftime(           #this function does time1 - time2 as difftime(time1, time2...)
+          startDate.coping,    #should be start date for COPING (time1)
+          date_higher_awareness_march_1),    #should be start date for GLAD (time2)
+          units = c("days")  #can also be "secs", "mins", "hours", "weeks"
+          )
+        )
+
+dat %>%
+  descr(
+    var = time_diff_coping_awareness_march_1,
+    stats = "common"
+    )
+
+# using date as 31st January 
+
+dat <- dat %>%
+  mutate(
+    time_diff_coping_first_case_uk_jan_31 =
+        as.numeric(
+        difftime(           #this function does time1 - time2 as difftime(time1, time2...)
+          startDate.coping,    #should be start date for COPING (time1)
+          date_first_case_uk_january_31),    #should be start date for GLAD (time2)
+          units = c("days")  #can also be "secs", "mins", "hours", "weeks"
+          )
+        )
+
+dat %>%
+  descr(
+    var = time_diff_coping_first_case_uk_jan_31,
+    stats = "common"
+    )
+}
+```
+
+
+Calculate the time difference between sign up questionnaire and COPING questionnaire
 ```{r time difference between sign up questionnaire and COPING questionnaire}
 if(GLAD == TRUE | EDGI == TRUE){
 dat <- dat %>%
@@ -5908,7 +6051,7 @@ dat <- dat %>%
         difftime(           #this function does time1 - time2 as difftime(time1, time2...)
           startDate.coping,    #should be start date for COPING (time1)
           startDate.prepandemic),    #should be start date for GLAD (time2)
-          units = c("days")  #can also be "secs", "mins", "hours", "weeks"
+          units = c("weeks")  #can also be "secs", "mins", "hours", "weeks"
           )
         )
 
