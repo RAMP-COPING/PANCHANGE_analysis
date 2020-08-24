@@ -5991,7 +5991,7 @@ dat <- dat %>%
         difftime(           #this function does time1 - time2 as difftime(time1, time2...)
           startDate.coping,    #should be start date for COPING (time1)
           date_uk_lockdown_march_23),    #should be start date for GLAD (time2)
-          units = c("days")  #can also be "secs", "mins", "hours", "weeks"
+          units = c("weeks")  #can also be "secs", "mins", "hours", "weeks"
           )
         )
 
@@ -6009,7 +6009,7 @@ dat <- dat %>%
         difftime(           #this function does time1 - time2 as difftime(time1, time2...)
           startDate.coping,    #should be start date for COPING (time1)
           date_higher_awareness_march_1),    #should be start date for GLAD (time2)
-          units = c("days")  #can also be "secs", "mins", "hours", "weeks"
+          units = c("weeks")  #can also be "secs", "mins", "hours", "weeks"
           )
         )
 
@@ -6028,7 +6028,7 @@ dat <- dat %>%
         difftime(           #this function does time1 - time2 as difftime(time1, time2...)
           startDate.coping,    #should be start date for COPING (time1)
           date_first_case_uk_january_31),    #should be start date for GLAD (time2)
-          units = c("days")  #can also be "secs", "mins", "hours", "weeks"
+          units = c("weeks")  #can also be "secs", "mins", "hours", "weeks"
           )
         )
 
