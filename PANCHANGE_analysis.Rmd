@@ -688,11 +688,6 @@ dat %>%
   freq(gad.change_binary)
 ```
 
-```{r}
-dat %>%
-  freq(gad.pandemic_felt_feelings_numeric)
-```
-
 
 ### Summary scores
 ```{r descriptives gad.sum_score_cols}
@@ -918,6 +913,33 @@ dat.long.gad.diff %>%
 
 ## phq
 
+### Split sample in improvement and worsening
+```{r phq improvment worsening stratification}
+dat <- dat %>%
+  mutate(phq.change_binary_numeric =
+           case_when(
+             phq.pandemic_felt_feelings_numeric == 1 ~ 1,
+             phq.pandemic_felt_feelings_numeric == 2 ~ 1,
+             phq.pandemic_felt_feelings_numeric == 3 ~ 0,
+             phq.pandemic_felt_feelings_numeric == 4 ~ 2,
+             phq.pandemic_felt_feelings_numeric == 5 ~ 2
+           )
+  )
+
+dat <- dat %>%
+  mutate(phq.change_binary =
+           recode_factor(
+             phq.change_binary_numeric,
+             `1` = "Worsening",
+             `2` = "No change",
+             `3` = "Improvement"
+           )
+  )
+
+dat %>%
+  freq(phq.change_binary)
+```
+
 ### Summary scores
 ```{r descriptives phq.sum_score}
 phq.sum_score_numeric_table <- dat %>% 
@@ -1120,6 +1142,33 @@ dat.long.phq.diff %>%
 
 
 ## ocir
+
+### Split sample in improvement and worsening
+```{r ocir improvment worsening stratification}
+dat <- dat %>%
+  mutate(ocir.change_binary_numeric =
+           case_when(
+             ocir.pandemic_felt_feelings_numeric == 1 ~ 1,
+             ocir.pandemic_felt_feelings_numeric == 2 ~ 1,
+             ocir.pandemic_felt_feelings_numeric == 3 ~ 0,
+             ocir.pandemic_felt_feelings_numeric == 4 ~ 2,
+             ocir.pandemic_felt_feelings_numeric == 5 ~ 2
+           )
+  )
+
+dat <- dat %>%
+  mutate(ocir.change_binary =
+           recode_factor(
+             ocir.change_binary_numeric,
+             `1` = "Worsening",
+             `2` = "No change",
+             `3` = "Improvement"
+           )
+  )
+
+dat %>%
+  freq(ocir.change_binary)
+```
 
 ### Summary scores
 ```{r descriptives ocir.sum_score}
