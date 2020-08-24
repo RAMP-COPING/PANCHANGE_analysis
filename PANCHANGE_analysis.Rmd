@@ -692,7 +692,7 @@ dat %>%
 ### Summary scores
 ```{r descriptives gad.sum_score_cols}
 gad.sum_score_numeric_table <- dat %>% 
-  #    group_by(Sample) %>%
+  group_by(gad.change_binary) %>%
   summarise_at( 
     vars(
       "Prepan" = gad.sum_score_prepan,
@@ -717,7 +717,7 @@ gad.sum_score_numeric_table
 ```{r smart numeric summary tables}
 # reshape the table
 gad.sum_score_numeric_summary_table_reshaped <- gad.sum_score_numeric_table %>% 
-  gather(key, value) %>% 
+  gather(key, value, -gad.change_binary) %>% 
   separate(key, c("variable", "measure"), sep = "_") %>%
   mutate(measure = factor(
     x = measure,
@@ -739,6 +739,7 @@ gad.sum_score_numeric_summary_table_reshaped <- gad.sum_score_numeric_table %>%
   ) %>% 
   # or we can individually rename variables 
   rename(
+    Change = Gad.change_binary,
     SD = Sd
   ) 
 
@@ -755,12 +756,12 @@ kable(gad.sum_score_numeric_summary_table_reshaped)
 
 ```{r descriptives gad.diff_score_cols}
 gad.numeric_table <- dat %>% 
-#  group_by(dem.sex) %>%
+  group_by(gad.change_binary) %>%
   summarise_at( 
     vars(
       "Base - prepan" = gad.diff_score_base_prepan,
       "Base - retro" = gad.diff_score_base_retro,
-      "Prepan - retro" = gad.diff_score_retro_prepan,
+      "Prepan - retro" = gad.diff_score_retro_prepan
     ),
     .funs =
       list(
@@ -780,7 +781,7 @@ gad.numeric_table
 ```{r smart numeric summary tables}
 # reshape the table
 gad.numeric_summary_table_reshaped <- gad.numeric_table %>% 
-  gather(key, value) %>% 
+  gather(key, value, -gad.change_binary) %>% 
   separate(key, c("variable", "measure"), sep = "_") %>%
   mutate(measure = factor(
     x = measure,
@@ -802,6 +803,7 @@ gad.numeric_summary_table_reshaped <- gad.numeric_table %>%
     ) %>% 
   # or we can individually rename variables 
   rename(
+    Change = Gad.change_binary,
     SD = Sd
   ) 
   
@@ -868,7 +870,7 @@ dat.long.gad.diff %>%
 ```
 
 
-```{r gad percentage plot retro_prepan}
+```{r gad percentage plot retro_prepan, fig.height=6, fig.width=10}
 dat.long.gad.diff %>%
   filter(Time_point != "retro_prepan") %>%
   ggplot(mapping = aes(
@@ -943,7 +945,7 @@ dat %>%
 ### Summary scores
 ```{r descriptives phq.sum_score}
 phq.sum_score_numeric_table <- dat %>% 
-  #    group_by(Sample) %>%
+  group_by(phq.change_binary) %>%
   summarise_at( 
     vars(
       "Prepan" = phq.sum_score_prepan,
@@ -967,8 +969,8 @@ phq.sum_score_numeric_table
 
 ```{r smart numeric summary tables}
 # reshape the table
-phq.sum_score_numeric_summary_table_reshaped <- phq.sum_score_numeric_table %>% 
-  gather(key, value) %>% 
+phq.sum_score_numeric_summary_table_reshaped <- phq.sum_score_numeric_table %>%
+  gather(key, value, -phq.change_binary) %>% 
   separate(key, c("variable", "measure"), sep = "_") %>%
   mutate(measure = factor(
     x = measure,
@@ -1006,7 +1008,7 @@ kable(phq.sum_score_numeric_summary_table_reshaped)
 
 ```{r descriptives phq.diff_score_cols}
 phq.numeric_table <- dat %>% 
-  #  group_by(dem.sex) %>%
+  group_by(phq.change_binary) %>%
   summarise_at( 
     vars(
       "Base - prepan" = phq.diff_score_base_prepan,
@@ -1031,7 +1033,7 @@ phq.numeric_table
 ```{r smart numeric summary tables}
 # reshape the table
 phq.numeric_summary_table_reshaped <- phq.numeric_table %>% 
-  gather(key, value) %>% 
+  gather(key, value, -phq.change_binary) %>% 
   separate(key, c("variable", "measure"), sep = "_") %>%
   mutate(measure = factor(
     x = measure,
@@ -1078,6 +1080,7 @@ dat.long.phq.diff <- dat %>%
     Sample,
     Gender,
     Ethnicity,
+    Disorder,
     Time_point_raw,
     phq.diff_score
   ) %>%
@@ -1140,6 +1143,25 @@ dat.long.phq.diff %>%
   scale_fill_manual(values = palette, labels = c("Retrospective"))
 ```
 
+```{r phq percentage plot retro_prepan, fig.height=6, fig.width=10}
+dat.long.phq.diff %>%
+  filter(Time_point != "retro_prepan") %>%
+  ggplot(mapping = aes(
+    x = phq.diff_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Difference PHQ9 score",
+    y = "Percentage of participants",
+    fill = "Comparison:\nBaseline vs") +
+  theme_personal +
+  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
+  facet_wrap("Disorder")
+```
 
 ## ocir
 
@@ -1148,11 +1170,11 @@ dat.long.phq.diff %>%
 dat <- dat %>%
   mutate(ocir.change_binary_numeric =
            case_when(
-             ocir.pandemic_felt_feelings_numeric == 1 ~ 1,
-             ocir.pandemic_felt_feelings_numeric == 2 ~ 1,
-             ocir.pandemic_felt_feelings_numeric == 3 ~ 0,
-             ocir.pandemic_felt_feelings_numeric == 4 ~ 2,
-             ocir.pandemic_felt_feelings_numeric == 5 ~ 2
+             ocir.felt_pandemic_feelings_numeric == 1 ~ 1,
+             ocir.felt_pandemic_feelings_numeric == 2 ~ 1,
+             ocir.felt_pandemic_feelings_numeric == 3 ~ 0,
+             ocir.felt_pandemic_feelings_numeric == 4 ~ 2,
+             ocir.felt_pandemic_feelings_numeric == 5 ~ 2
            )
   )
 
@@ -1173,7 +1195,7 @@ dat %>%
 ### Summary scores
 ```{r descriptives ocir.sum_score}
 ocir.sum_score_numeric_table <- dat %>% 
-  #    group_by(Sample) %>%
+  group_by(ocir.change_binary) %>%
   summarise_at( 
     vars(
       "Prepan" = ocir.sum_score_prepan,
@@ -1197,7 +1219,9 @@ ocir.sum_score_numeric_table
 
 ```{r smart numeric summary tables}
 # reshape the table
-ocir.sum_score_numeric_summary_table_reshaped <- ocir.sum_score_numeric_table %>% 
+ocir.sum_score_numeric_summary_table_reshaped <- ocir.sum_score_numeric_table %>%
+  filter(ocir.change_binary == "Worsening") %>%
+  select(-ocir.change_binary) %>%
   gather(key, value) %>% 
   separate(key, c("variable", "measure"), sep = "_") %>%
   mutate(measure = factor(
@@ -1308,6 +1332,7 @@ dat.long.ocir.diff <- dat %>%
     Sample,
     Gender,
     Ethnicity,
+    Disorder,
     Time_point_raw,
     ocir.diff_score
   ) %>%
@@ -1340,7 +1365,7 @@ dat.long.ocir.diff %>%
     position = position_dodge2(preserve = "single")
   ) +
   labs(
-    x = "Difference ocir7 score",
+    x = "Difference OCI-R score",
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
@@ -1365,6 +1390,27 @@ dat.long.ocir.diff %>%
   theme_personal +
   scale_fill_manual(values = palette, labels = c("Retrospective"))
 ```
+
+```{r ocir percentage plot retro_prepan, fig.height=6, fig.width=10}
+dat.long.ocir.diff %>%
+  filter(Time_point != "retro_prepan") %>%
+  ggplot(mapping = aes(
+    x = ocir.diff_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Difference OCI-R score",
+    y = "Percentage of participants",
+    fill = "Comparison:\nBaseline vs") +
+  theme_personal +
+  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
+  facet_wrap("Disorder")
+```
+
 
 # RUBBISH
 
