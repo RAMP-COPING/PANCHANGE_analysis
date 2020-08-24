@@ -48,9 +48,9 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = FALSE
+EDGI = TRUE
 NBR = FALSE
-RAMP = TRUE
+RAMP = FALSE
 ```
 
 
@@ -5248,7 +5248,9 @@ summarytools::dfSummary(
 
 *Note that the COPING EDGI OCI-R ID numbers are stored under recipientFirstName (rather than ExternalDataReference)
 ```{r coping edgi ocir cleaning}
-exclude_cols_coping_edgi_ocir <- c("COPING_Sample", "COPING_ID")
+exclude_cols_coping_edgi_ocir <- c(
+  "COPING_Sample",
+  "COPING_ID")
 
 if(EDGI == TRUE) {
 coping.edgi.ocir.raw.id <- coping.edgi.ocir.raw %>%
@@ -5297,8 +5299,8 @@ coping.edgi.ocir.raw.id <- coping.edgi.ocir.raw %>%
     ocir.control_difficult_find_thoughts_base = ocir.control_difficult_thoughts_find.1, ## Different from EDGI prepandemic
     ocir.i_collect_things_i_dont_need_base = ocir.i_collect_things_i_dont_need..1
   ) %>%
-  add_column(Sample = "EDGI") %>%
   add_numeric(., exclude = exclude_cols_coping_edgi_ocir) %>%
+  add_column(Sample = "EDGI") %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
