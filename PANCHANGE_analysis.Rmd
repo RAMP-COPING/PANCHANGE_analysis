@@ -1463,13 +1463,32 @@ Rank the disorders by the size of the change
 # Regression
 Regress covariates out of the change? Which? 
 
-Model 0: Disorders
+Model 0a: Disorders
 ```{r}
-model0 <- lm(
+model0a <- lm(
   formula = phq.diff_score_base_prepan ~ Disorder,
   data = dat)
 
-summary(model0)
+summary(model0a)
+```
+
+Model 0b: Disorders
+```{r}
+model0b <- lm(
+  formula = phq.diff_score_base_prepan ~
+    anxiety_disorders +
+    depressive_disorders +
+    eating_disorders +
+    obsessive_compulsive_disorders +
+    psychotic_disorders +
+    mhd.mania_hypomania_bipolar_or_manicdepression +
+    mhd.posttraumatic_stress_disorder_ptsd +
+    mhd.autism_aspergers_or_autistic_spectrum_disorder +
+    mhd.attention_deficit_hyperactivity_disorder +
+    mhd.personality_disorder,
+  data = dat)
+
+summary(model0b)
 ```
 
 
