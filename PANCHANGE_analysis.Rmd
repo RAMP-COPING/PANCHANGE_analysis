@@ -732,7 +732,7 @@ gad.numeric_table <- dat %>%
     vars(
       "Base - prepan" = gad.diff_score_base_prepan,
       "Base - retro" = gad.diff_score_base_retro,
-      "Prepan - retro" = gad.diff_score_prepan_retro,
+      "Prepan - retro" = gad.diff_score_retro_prepan,
     ),
     .funs =
       list(
@@ -820,9 +820,9 @@ dat.long.gad.diff %>%
   facet_wrap(facets = vars(Time_point))
 ```
 
-```{r gad percentage plot prepan_retro}
+```{r gad percentage plot retro_prepan}
 dat.long.gad.diff %>%
-  filter(Time_point != "prepan_retro") %>%
+  filter(Time_point != "retro_prepan") %>%
   ggplot(mapping = aes(
     x = gad.diff_score,
     y = stat(density*width),
@@ -840,9 +840,9 @@ dat.long.gad.diff %>%
 ```
 
 
-```{r gad percentage plot prepan_retro}
+```{r gad percentage plot retro_prepan}
 dat.long.gad.diff %>%
-  filter(Time_point != "prepan_retro") %>%
+  filter(Time_point != "retro_prepan") %>%
   ggplot(mapping = aes(
     x = gad.diff_score,
     y = stat(density*width),
@@ -862,9 +862,9 @@ dat.long.gad.diff %>%
 
 
 
-```{r gad plot prepan_retro diff}
+```{r gad plot retro_prepan diff}
 dat.long.gad.diff %>%
-  filter(Time_point == "prepan_retro") %>%
+  filter(Time_point == "retro_prepan") %>%
   ggplot(mapping = aes(
     x = gad.diff_score,
     y = stat(density*width),
@@ -956,7 +956,7 @@ phq.numeric_table <- dat %>%
     vars(
       "Base - prepan" = phq.diff_score_base_prepan,
       "Base - retro" = phq.diff_score_base_retro,
-      "Prepan - retro" = phq.diff_score_prepan_retro
+      "Prepan - retro" = phq.diff_score_retro_prepan
     ),
     .funs =
       list(
@@ -1047,9 +1047,9 @@ dat.long.phq.diff %>%
 
 
 
-```{r phq percentage plot prepan_retro}
+```{r phq percentage plot retro_prepan}
 dat.long.phq.diff %>%
-  filter(Time_point != "prepan_retro") %>%
+  filter(Time_point != "retro_prepan") %>%
   ggplot(mapping = aes(
     x = phq.diff_score,
     y = stat(density*width),
@@ -1066,9 +1066,9 @@ dat.long.phq.diff %>%
   scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective"))
 ```
 
-```{r phq plot prepan_retro diff}
+```{r phq plot retro_prepan diff}
 dat.long.phq.diff %>%
-  filter(Time_point == "prepan_retro") %>%
+  filter(Time_point == "retro_prepan") %>%
   ggplot(mapping = aes(
     x = phq.diff_score,
     y = stat(density*width),
@@ -1159,7 +1159,7 @@ ocir.numeric_table <- dat %>%
     vars(
       "Base - prepan" = ocir.diff_score_base_prepan,
       "Base - retro" = ocir.diff_score_base_retro,
-      "Prepan - retro" = ocir.diff_score_prepan_retro,
+      "Prepan - retro" = ocir.diff_score_retro_prepan
     ),
     .funs =
       list(
@@ -1246,9 +1246,9 @@ dat.long.ocir.diff %>%
   facet_wrap(facets = vars(Time_point))
 ```
 
-```{r ocir percentage plot prepan_retro}
+```{r ocir percentage plot retro_prepan}
 dat.long.ocir.diff %>%
-  filter(Time_point != "prepan_retro") %>%
+  filter(Time_point != "retro_prepan") %>%
   ggplot(mapping = aes(
     x = ocir.diff_score,
     y = stat(density*width),
@@ -1265,9 +1265,9 @@ dat.long.ocir.diff %>%
   scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective"))
 ```
 
-```{r ocir plot prepan_retro diff}
+```{r ocir plot retro_prepan diff}
 dat.long.ocir.diff %>%
-  filter(Time_point == "prepan_retro") %>%
+  filter(Time_point == "retro_prepan") %>%
   ggplot(mapping = aes(
     x = ocir.diff_score,
     y = stat(density*width),
@@ -1289,27 +1289,27 @@ dat.long.ocir.diff %>%
 +++ Everything underneath here is only SCRATCH
 
 ```{r RUBBISH 1}
-gad.diff_score_prepan_base_plot <- dat %>%
-  ggplot(mapping = aes(y = gad.diff_score_prepan_base)) +
+gad.diff_score_base_prepan_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_base_prepan)) +
   geom_bar() +
   theme_minimal()
 
-gad.diff_score_prepan_retro_plot <- dat %>%
-  ggplot(mapping = aes(y = gad.diff_score_prepan_retro)) +
+gad.diff_score_retro_prepan_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_retro_prepan)) +
   geom_bar() +
   theme_minimal()
 
-gad.diff_score_prepan_base_plot <- dat %>%
-  ggplot(mapping = aes(y = gad.diff_score_prepan_base)) +
+gad.diff_score_base_retro_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_base_retro)) +
   geom_bar() +
   theme_minimal()
 
 ```
 
-```{r RUBBISH 2 fig.height=5, fig.width=5}
-gad.diff_score_prepan_base_plot /
-  gad.diff_score_prepan_retro_plot /
-  gad.diff_score_prepan_base_plot +
+```{r RUBBISH 2 fig.height=7, fig.width=5}
+gad.diff_score_base_prepan_plot /
+  gad.diff_score_retro_prepan_plot /
+  gad.diff_score_base_retro_plot +
   plot_layout(guides = "collect", heights = c(1,1,1)) +
   plot_annotation(tag_levels = "A")
 ```
@@ -1508,7 +1508,31 @@ kable(pcl.sum_score_numeric_summary_table_reshaped)
 For each item 
 present percentages of how say that this is due to the pandemic 
 ```{r}
+pcl.retro.items <- c(
+  "pcl.stressful_experience_upset_reminded_retro_numeric",
+  "pcl.stressful_experience_repeated_images_retro_numeric",
+  "pcl.stressful_situation_avoiding_activities_retro_numeric",
+  "pcl.cut_people_feeling_distant_retro_numeric",
+  "pcl.difficulty_concentrating_retro_numeric",
+  "pcl.feeling_irritable_or_having_angry_outbursts_retro_numeric"
+)
 
+pcl.percentages.summary <- dat %>%
+  select(
+    all_of(pcl.retro.items)
+  ) %>%
+  gather(
+    key = "PCL Item",
+    value = "Binary_score",
+    all_of(pcl.retro.items)
+  ) %>%
+  mutate(Binary_score = fct_explicit_na(as.factor(Binary_score), na_level = "Missing")) %>%
+  group_by(`PCL Item`) %>%
+  count(`PCL Item`, Binary_score) %>%
+  mutate(prop = round(n/sum(n), 3)*100) %>%
+  mutate(n_prop = paste0(n," (",prop, "%)"))
+
+pcl.percentages.summary
 ```
 
 
