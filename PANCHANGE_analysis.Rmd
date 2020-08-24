@@ -661,6 +661,39 @@ dat %>%
 
 ## gad
 
+### Split sample in improvement and worsening
+```{r gad improvment worsening stratification}
+dat <- dat %>%
+  mutate(gad.change_binary_numeric =
+           case_when(
+             gad.pandemic_felt_feelings_numeric == 1 ~ 1,
+             gad.pandemic_felt_feelings_numeric == 2 ~ 1,
+             gad.pandemic_felt_feelings_numeric == 3 ~ 0,
+             gad.pandemic_felt_feelings_numeric == 4 ~ 2,
+             gad.pandemic_felt_feelings_numeric == 5 ~ 2
+           )
+         )
+
+dat <- dat %>%
+  mutate(gad.change_binary =
+           recode_factor(
+             gad.change_binary_numeric,
+             `1` = "Worsening",
+             `2` = "No change",
+             `3` = "Improvement"
+           )
+         )
+
+dat %>%
+  freq(gad.change_binary)
+```
+
+```{r}
+dat %>%
+  freq(gad.pandemic_felt_feelings_numeric)
+```
+
+
 ### Summary scores
 ```{r descriptives gad.sum_score_cols}
 gad.sum_score_numeric_table <- dat %>% 
@@ -1507,7 +1540,7 @@ kable(pcl.sum_score_numeric_summary_table_reshaped)
 
 For each item 
 present percentages of how say that this is due to the pandemic 
-```{r}
+```{r pcl percentages due to pandemic}
 pcl.retro.items <- c(
   "pcl.stressful_experience_upset_reminded_retro_numeric",
   "pcl.stressful_experience_repeated_images_retro_numeric",
