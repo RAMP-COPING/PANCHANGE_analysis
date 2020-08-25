@@ -193,15 +193,59 @@ dat.raw %>%
   freq(Sample)
 ```
 
+# Collapsing categories
 
-
-```{r}
+## age_category_full
+```{r Inspect age_category_full}
 dat.raw %>%
   freq(age_category_full)
+
+dat.raw %>%
+  freq(age_category_full_numeric)
+```
+
+```{r Collapse age_category_full}
+dat.raw <- dat.raw %>%
+  mutate(age_category_collapsed_numeric =
+           case_when(
+             age_category_full_numeric == 1 ~ 0,
+             age_category_full_numeric == 2 ~ 1,
+             age_category_full_numeric == 3 ~ 2,
+             age_category_full_numeric == 4 ~ 3,
+             age_category_full_numeric == 5 ~ 4,
+             age_category_full_numeric == 6 ~ 5,
+             age_category_full_numeric == 7 ~ 6,
+             age_category_full_numeric == 8 ~ 7,
+             age_category_full_numeric == 9 ~ 9,
+             age_category_full_numeric == 10 ~ 9,
+             age_category_full_numeric == 11 ~ 9,
+             age_category_full_numeric == 12 ~ 9,
+             age_category_full_numeric == 13 ~ 9
+             
+           )
+  )
+
+dat.raw <- dat.raw %>%
+  mutate(age_category_collapsed =
+           recode_factor(
+             age_category_collapsed_numeric,
+             `0` = "16-18",
+             `1` = "19-25",
+             `2` = "26-35",
+             `3` = "36-45",
+             `4` = "46-55",
+             `5` = "56-65",
+             `6` = "66-70",
+             `7` = "71-75",
+             `8` = "76+"
+           )
+  )
+
+dat.raw %>%
+  freq(age_category_collapsed)
 ```
 
 
-# Collapsing categories
 
 ## Gender
 ```{r Inspect Gender}
@@ -339,9 +383,15 @@ ocir.sum_score_cols <- dat %>%
   colnames()
 
 ocir.sum_score_cols
+
+pcl.sum_score_cols <- dat %>%
+  select(contains("pcl")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  colnames()
+
+pcl.sum_score_cols
 ```
-
-
 
 
 
@@ -498,10 +548,11 @@ dat %>%
 ```
 
 +++ADD CHUNK FOR AGE CATEGORIES HERE
-```{r Age categories}
+```{r Age categories by Sample}
 dat %>%
   group_by(Sample) %>%
-  count(age_category_full, Sample)
+  count(age_category_full, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
 ```
 
 # Psychiatric disorders
@@ -1070,7 +1121,29 @@ dat.long.gad.diff <- dat %>%
 head(dat.long.gad.diff)
 ```
 
-### Plots
+```{r gad gather to long format Time_points gad.sum_score}
+dat.long.gad.sum <- dat %>%
+  gather(
+    key = "Time_point_raw",
+    value = "gad.sum_score",
+    all_of(gad.sum_score_cols)) %>%
+  select(
+    ID,
+    Sample,
+    Gender,
+    Ethnicity,
+    Disorder_hierarchical,
+    Time_point_raw,
+    gad.sum_score
+  ) %>%
+  mutate(Time_point = str_replace(Time_point_raw, "gad.sum_score_", "")) %>%
+  select(-Time_point_raw)
+
+head(dat.long.gad.sum)
+```
+
+
+### Plots diff
 
 makes this into percentages
 ```{r gad absolut plot}
@@ -1081,7 +1154,7 @@ dat.long.gad.diff %>%
   facet_wrap(facets = vars(Time_point))
 ```
 
-```{r gad percentage plot retro_prepan}
+```{r gad percentage plot retro_prepan diff}
 dat.long.gad.diff %>%
   filter(Time_point != "retro_prepan") %>%
   ggplot(mapping = aes(
@@ -1142,6 +1215,52 @@ dat.long.gad.diff %>%
   scale_fill_manual(values = palette, labels = c("Prepandemic"))
 ```
 
+### Plots sum
+
+```{r gad percentage plot retro_prepan sum}
+dat.long.gad.sum %>%
+#  filter(Time_point != "retro_prepan") %>%
+  ggplot(mapping = aes(
+    x = gad.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "GAD7 scores",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    labels = c("Baseline", "Prepandemic", "Retrospective")
+    )
+```
+
+```{r gad percentage plot retro_prepan sum, fig.height=6, fig.width=10}
+dat.long.gad.sum %>%
+#  filter(Time_point != "retro_prepan") %>%
+  ggplot(mapping = aes(
+    x = gad.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "GAD7 score",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+#    labels = c("Prepandemic", "Retrospective")
+    ) +
+  facet_wrap("Disorder_hierarchical")
+```
 
 
 ## phq
@@ -1321,6 +1440,27 @@ dat.long.phq.diff <- dat %>%
 head(dat.long.phq.diff)
 ```
 
+```{r phq gather to long format Time_points phq.sum_score}
+dat.long.phq.sum <- dat %>%
+  gather(
+    key = "Time_point_raw",
+    value = "phq.sum_score",
+    all_of(phq.sum_score_cols)) %>%
+  select(
+    ID,
+    Sample,
+    Gender,
+    Ethnicity,
+    Disorder_hierarchical,
+    Time_point_raw,
+    phq.sum_score
+  ) %>%
+  mutate(Time_point = str_replace(Time_point_raw, "phq.sum_score_", "")) %>%
+  select(-Time_point_raw)
+
+head(dat.long.phq.sum)
+```
+
 ### Plots
 
 makes this into percentages
@@ -1391,6 +1531,53 @@ dat.long.phq.diff %>%
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
   scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
+  facet_wrap("Disorder_hierarchical")
+```
+
+### Plots sum
+
+```{r phq percentage plot retro_prepan sum}
+dat.long.phq.sum %>%
+  #  filter(Time_point != "retro_prepan") %>%
+  ggplot(mapping = aes(
+    x = phq.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "PHQ9 scores",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    labels = c("Baseline", "Prepandemic", "Retrospective")
+  )
+```
+
+```{r phq percentage plot retro_prepan sum, fig.height=6, fig.width=10}
+dat.long.phq.sum %>%
+  #  filter(Time_point != "retro_prepan") %>%
+  ggplot(mapping = aes(
+    x = phq.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "PHQ9 score",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    labels = c("Baseline", "Prepandemic", "Retrospective")
+  ) +
   facet_wrap("Disorder_hierarchical")
 ```
 
@@ -1573,6 +1760,27 @@ dat.long.ocir.diff <- dat %>%
 head(dat.long.ocir.diff)
 ```
 
+```{r ocir gather to long format Time_points ocir.sum_score}
+dat.long.ocir.sum <- dat %>%
+  gather(
+    key = "Time_point_raw",
+    value = "ocir.sum_score",
+    all_of(ocir.sum_score_cols)) %>%
+  select(
+    ID,
+    Sample,
+    Gender,
+    Ethnicity,
+    Disorder_hierarchical,
+    Time_point_raw,
+    ocir.sum_score
+  ) %>%
+  mutate(Time_point = str_replace(Time_point_raw, "ocir.sum_score_", "")) %>%
+  select(-Time_point_raw)
+
+head(dat.long.ocir.sum)
+```
+
 ### Plots
 
 makes this into percentages
@@ -1641,6 +1849,52 @@ dat.long.ocir.diff %>%
   scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
   facet_wrap("Disorder_hierarchical")
 ```
+
+### Plots sum
+
+```{r ocir percentage plot retro_prepan sum}
+dat.long.ocir.sum %>%
+  ggplot(mapping = aes(
+    x = ocir.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "OCI-R scores",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    labels = c("Baseline", "Prepandemic", "Retrospective")
+  )
+```
+
+```{r ocir percentage plot retro_prepan sum, fig.height=6, fig.width=10}
+dat.long.ocir.sum %>%
+  ggplot(mapping = aes(
+    x = ocir.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "OCI-R score",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    labels = c("Baseline", "Prepandemic", "Retrospective")
+  ) +
+  facet_wrap("Disorder_hierarchical")
+```
+
 
 
 Rank the disorders by the size of the change 
@@ -1771,6 +2025,26 @@ pcl diff summary table
 kable(pcl.sum_score_numeric_summary_table_reshaped)
 ```
 
+```{r pcl gather to long format Time_points pcl.sum_score}
+dat.long.pcl.sum <- dat %>%
+  gather(
+    key = "Time_point_raw",
+    value = "pcl.sum_score",
+    all_of(pcl.sum_score_cols)) %>%
+  select(
+    ID,
+    Sample,
+    Gender,
+    Ethnicity,
+    Disorder_hierarchical,
+    Time_point_raw,
+    pcl.sum_score
+  ) %>%
+  mutate(Time_point = str_replace(Time_point_raw, "pcl.sum_score_", "")) %>%
+  select(-Time_point_raw)
+
+head(dat.long.pcl.sum)
+```
 
 For each item 
 present percentages of how say that this is due to the pandemic 
@@ -1803,7 +2077,50 @@ pcl.percentages.summary
 ```
 
 
+### Plots sum
 
+```{r pcl percentage plot retro_prepan sum}
+dat.long.pcl.sum %>%
+  ggplot(mapping = aes(
+    x = pcl.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "PCL scores",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    labels = c("Baseline", "Prepandemic", "Retrospective")
+  )
+```
+
+```{r pcl percentage plot retro_prepan sum, fig.height=6, fig.width=10}
+dat.long.pcl.sum %>%
+  ggplot(mapping = aes(
+    x = pcl.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "PCL score",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    labels = c("Baseline", "Prepandemic", "Retrospective")
+  ) +
+  facet_wrap("Disorder_hierarchical")
+```
 
 
 # Regression

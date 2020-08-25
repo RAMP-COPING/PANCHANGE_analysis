@@ -569,7 +569,7 @@ if(RAMP == TRUE){
       Sample, # Sample
       ID, # ID
 #      startDate.coping, #Date when participant signed up to ramp  (is in the coping gad chunk)
-      age_category_full = demographics.how_old_are_you, # Age
+      age_category = demographics.how_old_are_you, # Age
       Gender = demographics.which_gender_do_you_identify_with, # Gender (what [GLAD] vs which [RAMP])
 #     EduYrs = demographics.university_education_attend_school.txt, # Years in education - not in RAMP dataset
 #     demographics.college_or_university_degree, # level of education - univeristy - level of education is in employment file
@@ -794,7 +794,7 @@ dem.raw.id <- dem.raw.id %>%
 
 dem.raw.id <- dem.raw.id %>%
     mutate(
-      age_category_full =
+      age_category =
         recode_factor(
           age_category_numeric, 
           "1" = "16-18",
@@ -814,7 +814,7 @@ dem.raw.id <- dem.raw.id %>%
     )
 
 dem.raw.id %>%
-  freq(age_category_full)
+  freq(age_category)
 }
 ```
 
@@ -5879,7 +5879,7 @@ dim(dat.no.sex)[1]-dim(dat.no.sex.no.gender)[1]
 ```{r Exclude participants that do not report age}
 dim(dat.no.sex.no.gender)
 dat.no.sex.no.gender.no.age <- dat.no.sex.no.gender %>%
-  drop_na(age_category_full)
+  drop_na(age_category)
 dim(dat.no.sex.no.gender.no.age)
 
 dim(dat.no.sex.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]
@@ -7021,19 +7021,19 @@ dat.coping <- dat.coping %>%
   mutate(
     Age_respiratory =
       case_when(
-        age_category_full == "16-18" ~ 17,
-        age_category_full == "19-25" ~ 22,
-        age_category_full == "26-35" ~ 30.5,
-        age_category_full == "36-45" ~ 40.5,
-        age_category_full == "46-55" ~ 50.5,
-        age_category_full == "56-65" ~ 60.5,
-        age_category_full == "66-70" ~ 68,
-        age_category_full == "71-75" ~ 73,
-        age_category_full == "76-80" ~ 78,
-        age_category_full == "81-85" ~ 83,
-        age_category_full == "86-90" ~ 88,
-        age_category_full == "91-100" ~ 93,
-      age_category_full == "100+" ~ 100
+        age_category == "16-18" ~ 17,
+        age_category == "19-25" ~ 22,
+        age_category == "26-35" ~ 30.5,
+        age_category == "36-45" ~ 40.5,
+        age_category == "46-55" ~ 50.5,
+        age_category == "56-65" ~ 60.5,
+        age_category == "66-70" ~ 68,
+        age_category == "71-75" ~ 73,
+        age_category == "76-80" ~ 78,
+        age_category == "81-85" ~ 83,
+        age_category == "86-90" ~ 88,
+        age_category == "91-100" ~ 93,
+      age_category == "100+" ~ 100
       )
   )
 }
