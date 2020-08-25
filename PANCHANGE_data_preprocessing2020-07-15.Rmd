@@ -47,10 +47,10 @@ date = Sys.Date()
 
 # Specify cohort
 ```{r Specify cohort}
-GLAD = TRUE
+GLAD = FALSE
 EDGI = FALSE
 NBR = FALSE
-RAMP = FALSE
+RAMP = TRUE
 ```
 
 
@@ -2282,20 +2282,10 @@ mhd.raw.id %>%
     autism_spectrum_disorder_numeric,
     mhd.autism_aspergers_or_autistic_spectrum_disorder,
     mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric
-  )
+  ) %>%
+    filter(autism_spectrum_disorder == "Autism spectrum disorder")
 }
 ```
-
-
-```{r}
-mhd.raw.id %>%
-  freq(mhd.autism_aspergers_or_autistic_spectrum_disorder)
-
-mhd.raw.id %>%
-  freq(mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric)
-
-```
-
 
 
 ### Personality disorders
