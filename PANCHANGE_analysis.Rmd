@@ -188,7 +188,85 @@ dat.raw %>%
     cumul = F)
 ```
 
+```{r}
+dat.raw %>%
+  freq(age_category_full)
+```
 
+
+# Collapsing categories
+
+## Gender
+```{r Inspect Gender}
+dat.raw %>%
+  freq(Gender)
+
+dat.raw %>%
+  freq(Gender_numeric)
+```
+
+```{r Collapse Gender}
+dat.raw <- dat.raw %>%
+  mutate(Gender_collapsed_numeric =
+           case_when(
+             Gender_numeric == 0 ~ 0,
+             Gender_numeric == 1 ~ 1,
+             Gender_numeric == 2 ~ 2,
+             Gender_numeric == 3 ~ 2
+           )
+         )
+
+dat.raw <- dat.raw %>%
+  mutate(Gender_collapsed =
+           recode_factor(
+             Gender_collapsed_numeric,
+             `0` = "Male",
+             `1` = "Female",
+             `2` = "Non-binary/Self-defined"
+           )
+         )
+
+dat.raw %>%
+  freq(Gender_collapsed)
+```
+
+## Ethnicity
+```{r Inspect Ethnicity}
+dat.raw %>%
+  freq(Ethnicity)
+
+dat.raw %>%
+  freq(Ethnicity_numeric)
+```
+
+```{r Collapse Ethnicity}
+dat.raw <- dat.raw %>%
+  mutate(Ethnicity_collapsed_numeric =
+           case_when(
+             Ethnicity_numeric == 1 ~ 0,
+             Ethnicity_numeric == 2 ~ 1,
+             Ethnicity_numeric == 3 ~ 2,
+             Ethnicity_numeric == 4 ~ 3,
+             Ethnicity_numeric == 5 ~ 3,
+             Ethnicity_numeric == 6 ~ 4
+           )
+  )
+
+dat.raw <- dat.raw %>%
+  mutate(Ethnicity_collapsed =
+           recode_factor(
+             Ethnicity_collapsed_numeric,
+             `0` = "European",
+             `1` = "Mixed or multiple ethnic origins",
+             `2` = "Asian or Asian British",
+             `3` = "African or African British",
+             `4` = "Asian or Asian British"
+           )
+  )
+
+dat.raw %>%
+  freq(Ethnicity_collapsed)
+```
 
 # Exclusion
 
@@ -217,8 +295,8 @@ dim(dat)
 ```
 
 ```{r}
-dat.raw %>%
-  freq(age_category_full)
+dat %>%
+  freq(disorders_total_count)
 ```
 
 
@@ -226,7 +304,8 @@ dat.raw %>%
 ## GAD
 ```{r}
 dat.gad <- dat.raw %>%
-  drop_na()
+  drop_na(
+  ) %>%
   filter(
     (data_group_gad == "Baseline and retrospective data" |
       data_group_gad == "Prepandemic and baseline data" |
@@ -369,12 +448,6 @@ dat %>%
   filter(is.na(Disorder)) %>%
   freq(Sample)
 ```
-
-# Positive covid test results
-```{r}
-
-```
-
 
 
 # Age
@@ -665,7 +738,7 @@ dat %>%
 ## Recode variable
 ```{r gad covid test positive double}
 dat <- dat %>%
-  mutate(gad.covid_test_positive_double_numeric =
+  mutate(covid_test_positive_double_numeric =
            case_when(
              (respiratory.throat_swab_test_nose_numeric == 1 &
                respiratory.results_antibody_test_numeric == 1) ~ 2,
@@ -679,7 +752,7 @@ dat <- dat %>%
 dat <- dat %>%
   mutate(covid_test_positive_double =
            recode_factor(
-             gad.covid_test_positive_double_numeric,
+             covid_test_positive_double_numeric,
              `0` = "Negative",
              `1` = "Positive",
              `2` = "Double positive"
