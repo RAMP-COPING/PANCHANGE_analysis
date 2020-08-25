@@ -347,6 +347,12 @@ dat %>%
   freq(Sample)
 ```
 
+# Positive covid test results
+```{r}
+
+```
+
+
 
 # Age
 ```{r descriptives Ages}
@@ -633,6 +639,63 @@ dat %>%
 ```
 
 # COVID
+## Recode variable
+```{r gad covid test positive double}
+dat <- dat %>%
+  mutate(gad.covid_test_positive_double_numeric =
+           case_when(
+             (respiratory.throat_swab_test_nose_numeric == 1 &
+               respiratory.results_antibody_test_numeric == 1) ~ 2,
+             respiratory.throat_swab_test_nose_numeric == 1 ~ 1,
+             respiratory.throat_swab_test_nose_numeric == 2 ~ 0,
+             respiratory.results_antibody_test_numeric == 1 ~ 1,
+             respiratory.results_antibody_test_numeric == 2 ~ 0
+           )
+         )
+
+dat <- dat %>%
+  mutate(covid_test_positive_double =
+           recode_factor(
+             gad.covid_test_positive_double_numeric,
+             `0` = "Negative",
+             `1` = "Positive",
+             `2` = "Double positive"
+           )
+         )
+
+dat %>%
+  freq(covid_test_positive_double)
+```
+
+```{r gad covid test positive}
+dat <- dat %>%
+  mutate(gad.covid_test_positive_numeric =
+           case_when(
+             (respiratory.throat_swab_test_nose_numeric == 1 &
+               respiratory.results_antibody_test_numeric == 1) ~ 1, # with two positive test results get coded as positive
+             respiratory.throat_swab_test_nose_numeric == 1 ~ 1,
+             respiratory.throat_swab_test_nose_numeric == 2 ~ 0,
+             respiratory.results_antibody_test_numeric == 1 ~ 1,
+             respiratory.results_antibody_test_numeric == 2 ~ 0
+           )
+         )
+
+dat <- dat %>%
+  mutate(covid_test_positive =
+           recode_factor(
+             gad.covid_test_positive_numeric,
+             `0` = "Negative",
+             `1` = "Positive"
+#             `2` = "Double positive"
+           )
+         )
+
+dat %>%
+  freq(covid_test_positive)
+```
+
+
+
 ## COVID swab test positive
 ```{r COVID positive swap}
 dat %>%
@@ -654,6 +717,14 @@ dat %>%
   count(covid_probable_case_incl_screening, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
+
+## Cross table probable covid and covid test positive
+```{r}
+dat %>%
+```
+
+
+
 
 +++CHECK OVERLAP BETWEEN TESTS and probable COVID
 
