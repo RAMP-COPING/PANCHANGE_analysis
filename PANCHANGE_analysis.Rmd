@@ -195,32 +195,32 @@ dat.raw %>%
 
 # Collapsing categories
 
-## age_category_full
-```{r Inspect age_category_full}
+## age_category
+```{r Inspect age_category}
 dat.raw %>%
-  freq(age_category_full)
+  freq(age_category)
 
 dat.raw %>%
-  freq(age_category_full_numeric)
+  freq(age_category_numeric)
 ```
 
-```{r Collapse age_category_full}
+```{r Collapse age_category}
 dat.raw <- dat.raw %>%
   mutate(age_category_collapsed_numeric =
            case_when(
-             age_category_full_numeric == 1 ~ 0,
-             age_category_full_numeric == 2 ~ 1,
-             age_category_full_numeric == 3 ~ 2,
-             age_category_full_numeric == 4 ~ 3,
-             age_category_full_numeric == 5 ~ 4,
-             age_category_full_numeric == 6 ~ 5,
-             age_category_full_numeric == 7 ~ 6,
-             age_category_full_numeric == 8 ~ 7,
-             age_category_full_numeric == 9 ~ 9,
-             age_category_full_numeric == 10 ~ 9,
-             age_category_full_numeric == 11 ~ 9,
-             age_category_full_numeric == 12 ~ 9,
-             age_category_full_numeric == 13 ~ 9
+             age_category_numeric == 1 ~ 0,
+             age_category_numeric == 2 ~ 1,
+             age_category_numeric == 3 ~ 2,
+             age_category_numeric == 4 ~ 3,
+             age_category_numeric == 5 ~ 4,
+             age_category_numeric == 6 ~ 5,
+             age_category_numeric == 7 ~ 6,
+             age_category_numeric == 8 ~ 7,
+             age_category_numeric == 9 ~ 8,
+             age_category_numeric == 10 ~ 8,
+             age_category_numeric == 11 ~ 8,
+             age_category_numeric == 12 ~ 8,
+             age_category_numeric == 13 ~ 8
              
            )
   )
@@ -544,15 +544,34 @@ dat %>%
 +++ADD CHUNK FOR AGE CATEGORIES HERE
 ```{r Age categories}
 dat %>%
-  freq(age_category_full)
+  freq(age_category)
 ```
 
 +++ADD CHUNK FOR AGE CATEGORIES HERE
 ```{r Age categories by Sample}
 dat %>%
   group_by(Sample) %>%
-  count(age_category_full, Sample) %>%
+  count(age_category, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
+```
+
+```{r Gender per Sample count cross table}
+dat %>%
+  count(age_category, Sample) %>%
+  spread(key = Sample, value = n)
+```
+
+```{r Gender per Sample count cross table chi square test}
+dat %>%
+  count(age_category, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-age_category) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0))
+    ) %>%
+  chisq.test() %>%
+  glance()
 ```
 
 # Psychiatric disorders
@@ -2182,7 +2201,7 @@ model1 <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender + age_category_full + Ethnicity + time_diff_sign_up_coping,
+    Gender + age_category + Ethnicity + time_diff_sign_up_coping,
   data = dat)
 
 summary(model1)
@@ -2191,7 +2210,7 @@ summary(model1)
 Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
 ```{r}
 model1 <- lm(
-  formula = pcl.diff_score_base_prepan ~ Disorder_hierarchical + Gender + age_category_full + Ethnicity + time_diff_sign_up_coping,
+  formula = pcl.diff_score_base_prepan ~ Disorder_hierarchical + Gender + age_category + Ethnicity + time_diff_sign_up_coping,
   data = dat)
 
 summary(model1)
