@@ -2274,7 +2274,7 @@ if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE){
 }
 ```
 
-```{r Check psychotic_disorders}
+```{r Check autism_spectrum_disorder}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
@@ -2462,7 +2462,7 @@ mhd.raw.id <- mhd.raw.id %>%
     psychotic_disorders_numeric == "0" &
     mhd.mania_hypomania_bipolar_or_manicdepression_numeric == "0" &
     mhd.posttraumatic_stress_disorder_ptsd_numeric == "0" &
-    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == "0" &
+    autism_spectrum_disorder_numeric == "0" &
     mhd.attention_deficit_hyperactivity_disorder_numeric == "0" &
     mhd.personality_disorder_numeric == "0", 
     true = 1, 
@@ -2495,7 +2495,7 @@ disorder_columns <- c(
     "psychotic_disorders_numeric",
     "mhd.mania_hypomania_bipolar_or_manicdepression_numeric",
     "mhd.posttraumatic_stress_disorder_ptsd_numeric",
-    "mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric",
+    "autism_spectrum_disorder_numeric",
     "mhd.attention_deficit_hyperactivity_disorder_numeric",
     "mhd.personality_disorder_numeric"
 )
@@ -2598,8 +2598,8 @@ mhd.raw.categories <- mhd.raw.id %>%
     mhd.mania_hypomania_bipolar_or_manicdepression,
     mhd.posttraumatic_stress_disorder_ptsd_numeric,
     mhd.posttraumatic_stress_disorder_ptsd,
-    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric,
-    mhd.autism_aspergers_or_autistic_spectrum_disorder,
+    autism_spectrum_disorder_numeric,
+    autism_spectrum_disorder,
     mhd.attention_deficit_hyperactivity_disorder_numeric,
     mhd.attention_deficit_hyperactivity_disorder,
     mhd.personality_disorder_numeric,
@@ -2652,8 +2652,8 @@ mhd.raw.categories <- mhd.raw.id %>%
     mhd.mania_hypomania_bipolar_or_manicdepression,
     mhd.posttraumatic_stress_disorder_ptsd_numeric,
     mhd.posttraumatic_stress_disorder_ptsd,
-    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric,
-    mhd.autism_aspergers_or_autistic_spectrum_disorder,
+    autism_spectrum_disorder_numeric,
+    autism_spectrum_disorder,
     mhd.attention_deficit_hyperactivity_disorder_numeric,
     mhd.attention_deficit_hyperactivity_disorder,
     mhd.personality_disorder_numeric,

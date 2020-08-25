@@ -190,6 +190,13 @@ dat.raw %>%
 
 ```{r}
 dat.raw %>%
+  freq(Sample)
+```
+
+
+
+```{r}
+dat.raw %>%
   freq(age_category_full)
 ```
 
@@ -299,21 +306,42 @@ dat %>%
   freq(disorders_total_count)
 ```
 
+# Vectors for sum_score
+```{r Vectors with sum_score_cols}
+sum_score_cols <- dat %>%
+  select(contains("sum_score")) %>%
+  select(-ends_with("raw")) %>%
+  colnames()
 
+sum_score_cols
 
-## GAD
-```{r}
-dat.gad <- dat.raw %>%
-  drop_na(
-  ) %>%
-  filter(
-    (data_group_gad == "Baseline and retrospective data" |
-      data_group_gad == "Prepandemic and baseline data" |
-      data_group_gad == "All prepandemic, baseline and retrospective data")
-  )
+phq.sum_score_cols <- dat %>%
+  select(contains("phq")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  select(-contains("8items")) %>%
+  colnames()
 
-dim(dat.gad)
+phq.sum_score_cols
+
+gad.sum_score_cols <- dat %>%
+  select(contains("gad")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  colnames()
+
+gad.sum_score_cols
+
+ocir.sum_score_cols <- dat %>%
+  select(contains("ocir")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  colnames()
+
+ocir.sum_score_cols
 ```
+
+
 
 
 
@@ -378,13 +406,13 @@ eating_disorders_numeric == 1 ~ 4,
 obsessive_compulsive_disorders_numeric == 1 ~ 5,
 mhd.attention_deficit_hyperactivity_disorder_numeric == 1 ~ 6,
 mhd.personality_disorder_numeric == 1 ~ 7,
-mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == 1 ~ 8,
+autism_spectrum_disorder_numeric == 1 ~ 8,
 mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 9,
 psychotic_disorders_numeric == 1 ~ 10
 
 psychotic_disorders_numeric == 1 ~ 10
 mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 9,
-mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == 1 ~ 8,
+autism_spectrum_disorder_numeric == 1 ~ 8,
 mhd.personality_disorder_numeric == 1 ~ 7,
 mhd.attention_deficit_hyperactivity_disorder_numeric == 1 ~ 6,
 obsessive_compulsive_disorders_numeric == 1 ~ 5,
@@ -398,11 +426,11 @@ control_numeric == 1 ~ 0,
 ```{r Psychiatric disorders hierarchy}
 dat <- dat %>%
   mutate(
-    Disorder_numeric =
+    Disorder_hierarchical_numeric =
       case_when(
         psychotic_disorders_numeric == 1 ~ 11,
         mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 10,
-        mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == 1 ~ 9,
+        autism_spectrum_disorder_numeric == 1 ~ 9,
         mhd.personality_disorder_numeric == 1 ~ 8,
         mhd.attention_deficit_hyperactivity_disorder_numeric == 1 ~ 7,
         obsessive_compulsive_disorders_numeric == 1 ~ 6,
@@ -418,9 +446,9 @@ dat <- dat %>%
 
 dat <- dat %>%
   mutate(
-    Disorder =
+    Disorder_hierarchical =
       recode_factor(
-        Disorder_numeric,
+        Disorder_hierarchical_numeric,
         `0` = "Controls",
         `1` = "Depressive disorders",
         `2` = "Anxiety disorders",
@@ -438,14 +466,14 @@ dat <- dat %>%
 
 
 dat %>%
-  freq(Disorder)
+  freq(Disorder_hierarchical)
 ```
 
 Investigate NAs 
 Ask Leo?
 ```{r NAs in diagnosis}
 dat %>%
-  filter(is.na(Disorder)) %>%
+  filter(is.na(Disorder_hierarchical)) %>%
   freq(Sample)
 ```
 
@@ -460,11 +488,21 @@ dat %>%
             Max = max(Age))
 ```
 
++++ ADD AGE PLOT HERE
+
+
 +++ADD CHUNK FOR AGE CATEGORIES HERE
 ```{r Age categories}
-
+dat %>%
+  freq(age_category_full)
 ```
 
++++ADD CHUNK FOR AGE CATEGORIES HERE
+```{r Age categories}
+dat %>%
+  group_by(Sample) %>%
+  count(age_category_full, Sample)
+```
 
 # Psychiatric disorders
 ```{r vector with psychiatric disorders}
@@ -476,7 +514,7 @@ disorder_columns <- c(
     "psychotic_disorders_numeric",
     "mhd.mania_hypomania_bipolar_or_manicdepression_numeric",
     "mhd.posttraumatic_stress_disorder_ptsd_numeric",
-    "mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric",
+    "autism_spectrum_disorder_numeric",
     "mhd.attention_deficit_hyperactivity_disorder_numeric",
     "mhd.personality_disorder_numeric",
     "control_numeric"
@@ -485,7 +523,7 @@ disorder_columns <- c(
 
 
 
-```{r gather to long format Disorder}
+```{r gather to long format Disorder_hierarchical}
 dat.long.psych <- dat %>%
   gather(
     key = "Disorder_inc_raw",
@@ -510,7 +548,7 @@ dat.long.psych <- dat %>%
              psychotic_disorders_numeric = "Psychotic disorders",
              mhd.mania_hypomania_bipolar_or_manicdepression_numeric = "Bipolar disorders",
              mhd.posttraumatic_stress_disorder_ptsd_numeric = "PTSD",
-             mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric = "Autism",
+             autism_spectrum_disorder_numeric = "Autism",
              mhd.attention_deficit_hyperactivity_disorder_numeric = "ADHD",
              mhd.personality_disorder_numeric = "Personality disorders",
              control_numeric = "Controls"
@@ -655,6 +693,17 @@ Ethnicity_by_Sample <- dat %>%
 Ethnicity_by_Sample
 ```
 
+# Ethnicity
+```{r Ethnicity per Sample}
+Ethnicity_by_Sample <- dat %>%
+  group_by(Sample) %>%
+  count(Ethnicity, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+Ethnicity_by_Sample
+```
+
+
 ```{r Ethnicity by Sample plot}
 Ethnicity_by_Sample %>%
   ggplot(mapping = aes(
@@ -723,6 +772,7 @@ dat %>%
 # highest_education
 ```{r highest_education per Sample}
 dat %>%
+  group_by(Sample) %>%
   count(highest_education, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
@@ -730,6 +780,7 @@ dat %>%
 # Key worker status
 ```{r Key worker status per sample}
 dat %>%
+  group_by(Sample) %>%
   count(key_worker, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
@@ -820,6 +871,22 @@ dat %>%
   count(covid_test_positive, covid_probable_case_incl_screening) %>%
   spread(key = covid_test_positive, value = n)
 ```
+
+# Create data set per cohort
+
+## GAD
+```{r}
+dat.gad <- dat %>%
+#  drop_na() %>%
+  filter(
+    (data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data")
+  )
+
+dim(dat.gad)
+```
+
 
 # Questionnaire comparions
 
@@ -982,7 +1049,7 @@ kable(gad.numeric_summary_table_reshaped)
 
 ### Long format
 
-```{r gad gather to long format Time_points}
+```{r gad gather to long format Time_points gad.diff_score}
 dat.long.gad.diff <- dat %>%
   gather(
     key = "Time_point_raw",
@@ -993,7 +1060,7 @@ dat.long.gad.diff <- dat %>%
     Sample,
     Gender,
     Ethnicity,
-    Disorder,
+    Disorder_hierarchical,
     Time_point_raw,
     gad.diff_score
   ) %>%
@@ -1051,7 +1118,7 @@ dat.long.gad.diff %>%
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
   scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
-  facet_wrap("Disorder")
+  facet_wrap("Disorder_hierarchical")
 ```
 
 
@@ -1070,9 +1137,9 @@ dat.long.gad.diff %>%
   labs(
     x = "Difference GAD7 score",
     y = "Percentage of participants",
-    fill = "Comparison:\nPrepandemic vs") +
+    fill = "Comparison:\nRetrospective vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Retrospective"))
+  scale_fill_manual(values = palette, labels = c("Prepandemic"))
 ```
 
 
@@ -1244,7 +1311,7 @@ dat.long.phq.diff <- dat %>%
     Sample,
     Gender,
     Ethnicity,
-    Disorder,
+    Disorder_hierarchical,
     Time_point_raw,
     phq.diff_score
   ) %>%
@@ -1281,7 +1348,7 @@ dat.long.phq.diff %>%
     position = position_dodge2(preserve = "single")
   ) +
   labs(
-    x = "Difference phq7 score",
+    x = "Difference PHQ9 score",
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
@@ -1324,7 +1391,7 @@ dat.long.phq.diff %>%
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
   scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
-  facet_wrap("Disorder")
+  facet_wrap("Disorder_hierarchical")
 ```
 
 ## ocir
@@ -1496,7 +1563,7 @@ dat.long.ocir.diff <- dat %>%
     Sample,
     Gender,
     Ethnicity,
-    Disorder,
+    Disorder_hierarchical,
     Time_point_raw,
     ocir.diff_score
   ) %>%
@@ -1572,120 +1639,12 @@ dat.long.ocir.diff %>%
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
   scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
-  facet_wrap("Disorder")
-```
-
-
-# RUBBISH
-
-+++ Everything underneath here is only SCRATCH
-
-```{r RUBBISH 1}
-gad.diff_score_base_prepan_plot <- dat %>%
-  ggplot(mapping = aes(y = gad.diff_score_base_prepan)) +
-  geom_bar() +
-  theme_minimal()
-
-gad.diff_score_retro_prepan_plot <- dat %>%
-  ggplot(mapping = aes(y = gad.diff_score_retro_prepan)) +
-  geom_bar() +
-  theme_minimal()
-
-gad.diff_score_base_retro_plot <- dat %>%
-  ggplot(mapping = aes(y = gad.diff_score_base_retro)) +
-  geom_bar() +
-  theme_minimal()
-
-```
-
-```{r RUBBISH 2 fig.height=7, fig.width=5}
-gad.diff_score_base_prepan_plot /
-  gad.diff_score_retro_prepan_plot /
-  gad.diff_score_base_retro_plot +
-  plot_layout(guides = "collect", heights = c(1,1,1)) +
-  plot_annotation(tag_levels = "A")
-```
-
-
-Calculate mean change per disorder group 
-Disorders (9) 
-Sex 
-Age (13; RAMP; potentially collapse above 65 depending on group sizes) 
-Ethnicity groups (5; White European, Black (British), Asian, Arab, Mixed) 
-
-```{r RUBBISH }
-#ADD
+  facet_wrap("Disorder_hierarchical")
 ```
 
 
 Rank the disorders by the size of the change 
 
-
-
-
-
-# Regression
-Regress covariates out of the change? Which? 
-
-Model 0a: Disorders
-```{r}
-model0a <- lm(
-  formula = phq.diff_score_base_prepan ~ Disorder,
-  data = dat)
-
-summary(model0a)
-```
-
-Model 0b: Disorders
-```{r}
-model0b <- lm(
-  formula = phq.diff_score_base_prepan ~
-    anxiety_disorders +
-    depressive_disorders +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    mhd.autism_aspergers_or_autistic_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat)
-
-summary(model0b)
-```
-
-
-Model 0: Disorders
-```{r}
-model0 <- lm(
-  formula = gad.diff_score_base_prepan ~ Disorder,
-  data = dat)
-
-summary(model0)
-```
-
-```{r}
-tidy(model0)
-```
-
-Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
-```{r}
-model1 <- lm(
-  formula = phq.diff_score_base_prepan ~ Disorder + Gender + Age + Ethnicity + time_diff_sign_up_coping,
-  data = dat)
-
-summary(model1)
-```
-
-Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
-```{r}
-model1 <- lm(
-  formula = gad.diff_score_base_prepan ~ Disorder + Gender + Age + Ethnicity + time_diff_sign_up_coping,
-  data = dat)
-
-summary(model1)
-```
 
 
 PCL:  
@@ -1813,9 +1772,6 @@ kable(pcl.sum_score_numeric_summary_table_reshaped)
 ```
 
 
-
-
-
 For each item 
 present percentages of how say that this is due to the pandemic 
 ```{r pcl percentages due to pandemic}
@@ -1845,6 +1801,142 @@ pcl.percentages.summary <- dat %>%
 
 pcl.percentages.summary
 ```
+
+
+
+
+
+# Regression
+Regress covariates out of the change? Which? 
+
+Model 0a: Disorder_hierarchical
+```{r Model 0a: Disorder_hierarchical}
+model0a <- lm(
+  formula = gad.diff_score_base_prepan ~ Disorder_hierarchical,
+  data = dat.gad)
+
+summary(model0a)
+```
+
+Model 0b: Disorders
+```{r}
+model0b <- lm(
+  formula = ocir.diff_score_base_prepan ~
+    anxiety_disorders +
+    depressive_disorders +
+    eating_disorders +
+    obsessive_compulsive_disorders +
+    psychotic_disorders +
+    mhd.mania_hypomania_bipolar_or_manicdepression +
+    mhd.posttraumatic_stress_disorder_ptsd +
+    autism_spectrum_disorder +
+    mhd.attention_deficit_hyperactivity_disorder +
+    mhd.personality_disorder,
+  data = dat)
+
+summary(model0b)
+```
+
+
+Model 0: Disorders
+```{r}
+model0 <- lm(
+  formula = gad.diff_score_base_prepan ~ Disorder,
+  data = dat)
+
+summary(model0)
+```
+
+```{r}
+tidy(model0)
+```
+
+Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
+```{r}
+model1 <- lm(
+  formula = phq.diff_score_base_prepan ~
+    anxiety_disorders +
+    depressive_disorders +
+    eating_disorders +
+    obsessive_compulsive_disorders +
+    psychotic_disorders +
+    mhd.mania_hypomania_bipolar_or_manicdepression +
+    mhd.posttraumatic_stress_disorder_ptsd +
+    autism_spectrum_disorder +
+    mhd.attention_deficit_hyperactivity_disorder +
+    mhd.personality_disorder +
+    Gender + age_category_full + Ethnicity + time_diff_sign_up_coping,
+  data = dat)
+
+summary(model1)
+```
+
+Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
+```{r}
+model1 <- lm(
+  formula = pcl.diff_score_base_prepan ~ Disorder_hierarchical + Gender + age_category_full + Ethnicity + time_diff_sign_up_coping,
+  data = dat)
+
+summary(model1)
+```
+
+
+
+Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
+```{r}
+model1 <- lm(
+  formula = gad.diff_score_base_prepan ~ Disorder + Gender + Age + Ethnicity + time_diff_sign_up_coping,
+  data = dat)
+
+summary(model1)
+```
+
+
+
+# RUBBISH
+
++++ Everything underneath here is only SCRATCH
+
+```{r RUBBISH 1}
+gad.diff_score_base_prepan_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_base_prepan)) +
+  geom_bar() +
+  theme_minimal()
+
+gad.diff_score_retro_prepan_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_retro_prepan)) +
+  geom_bar() +
+  theme_minimal()
+
+gad.diff_score_base_retro_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_base_retro)) +
+  geom_bar() +
+  theme_minimal()
+
+```
+
+```{r RUBBISH 2 fig.height=7, fig.width=5}
+gad.diff_score_base_prepan_plot /
+  gad.diff_score_retro_prepan_plot /
+  gad.diff_score_base_retro_plot +
+  plot_layout(guides = "collect", heights = c(1,1,1)) +
+  plot_annotation(tag_levels = "A")
+```
+
+
+Calculate mean change per disorder group 
+Disorders (9) 
+Sex 
+Age (13; RAMP; potentially collapse above 65 depending on group sizes) 
+Ethnicity groups (5; White European, Black (British), Asian, Arab, Mixed) 
+
+```{r RUBBISH }
+#ADD
+```
+
+
+
+
 
 
 Calculate a variable PCL pandemic score 
