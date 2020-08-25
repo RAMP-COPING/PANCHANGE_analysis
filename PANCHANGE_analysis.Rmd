@@ -191,6 +191,8 @@ dat.raw %>%
 
 
 # Exclusion
+
+## COPING
 Filter data frame to exclude participants that never answered COPING
 ```{r exclusion criteria dat}
 dat <- dat.raw %>%
@@ -213,6 +215,27 @@ dat <- dat.raw %>%
 ```{r dimensions of total dat}
 dim(dat)
 ```
+
+```{r}
+dat.raw %>%
+  freq(age_category_full)
+```
+
+
+
+## GAD
+```{r}
+dat.gad <- dat.raw %>%
+  drop_na()
+  filter(
+    (data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data")
+  )
+
+dim(dat.gad)
+```
+
 
 
 # Vectors for diff_score
