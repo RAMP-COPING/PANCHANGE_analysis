@@ -719,8 +719,10 @@ dat %>%
 ```
 
 ## Cross table probable covid and covid test positive
-```{r}
+```{r Cross table probable covid and covid test positive}
 dat %>%
+  count(covid_test_positive, covid_probable_case_incl_screening) %>%
+  spread(key = covid_test_positive, value = n)
 ```
 
 
@@ -749,9 +751,9 @@ dat <- dat %>%
   mutate(gad.change_binary =
            recode_factor(
              gad.change_binary_numeric,
+             `0` = "No change",
              `1` = "Worsening",
-             `2` = "No change",
-             `3` = "Improvement"
+             `2` = "Improvement"
            )
          )
 
@@ -1003,9 +1005,9 @@ dat <- dat %>%
   mutate(phq.change_binary =
            recode_factor(
              phq.change_binary_numeric,
+             `0` = "No change",
              `1` = "Worsening",
-             `2` = "No change",
-             `3` = "Improvement"
+             `2` = "Improvement"
            )
   )
 
@@ -1253,9 +1255,9 @@ dat <- dat %>%
   mutate(ocir.change_binary =
            recode_factor(
              ocir.change_binary_numeric,
+             `0` = "No change",
              `1` = "Worsening",
-             `2` = "No change",
-             `3` = "Improvement"
+             `2` = "Improvement"
            )
   )
 
