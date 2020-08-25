@@ -725,11 +725,6 @@ dat %>%
   spread(key = covid_test_positive, value = n)
 ```
 
-
-
-
-+++CHECK OVERLAP BETWEEN TESTS and probable COVID
-
 # Questionnaire comparions
 
 ## gad

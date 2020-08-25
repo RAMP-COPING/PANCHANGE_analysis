@@ -47,10 +47,10 @@ date = Sys.Date()
 
 # Specify cohort
 ```{r Specify cohort}
-GLAD = FALSE
+GLAD = TRUE
 EDGI = FALSE
 NBR = FALSE
-RAMP = TRUE
+RAMP = FALSE
 ```
 
 
@@ -2246,6 +2246,57 @@ mhd.raw.id %>%
   )
 }
 ```
+
+### Autism spectrum disorder
+```{r mhd autism_spectrum_disorder}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE){
+  mhd.raw.id <- mhd.raw.id %>%
+    mutate(
+      autism_spectrum_disorder_numeric =
+        case_when(
+          mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == 0 ~ 0,
+          mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == 1 ~ 1
+        )
+    )
+  
+  mhd.raw.id <- mhd.raw.id %>%
+    mutate(
+      autism_spectrum_disorder =
+        recode_factor(
+          autism_spectrum_disorder_numeric,
+          `0` = "No autism spectrum disorder",
+          `1` = "Autism spectrum disorder"
+        )
+    )
+  
+  mhd.raw.id %>%
+    freq(autism_spectrum_disorder)
+}
+```
+
+```{r Check psychotic_disorders}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
+mhd.raw.id %>%
+  select(
+    autism_spectrum_disorder,
+    autism_spectrum_disorder_numeric,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric
+  )
+}
+```
+
+
+```{r}
+mhd.raw.id %>%
+  freq(mhd.autism_aspergers_or_autistic_spectrum_disorder)
+
+mhd.raw.id %>%
+  freq(mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric)
+
+```
+
+
 
 ### Personality disorders
 ++KT: For all cluster coding chunks - have added other clusters as == 0, so that they are not coerced into NAs. 
