@@ -537,17 +537,17 @@ dat %>%
 ## Vector
 ```{r vector with psychiatric disorders}
 disorder_columns <- c(
-    "depressive_disorders_numeric",
+  "control_numeric",  
+  "depressive_disorders_numeric",
     "anxiety_disorders_numeric",
+    "mhd.posttraumatic_stress_disorder_ptsd_numeric",
     "eating_disorders_numeric",
     "obsessive_compulsive_disorders_numeric",
-    "psychotic_disorders_numeric",
-    "mhd.mania_hypomania_bipolar_or_manicdepression_numeric",
-    "mhd.posttraumatic_stress_disorder_ptsd_numeric",
-    "autism_spectrum_disorder_numeric",
     "mhd.attention_deficit_hyperactivity_disorder_numeric",
     "mhd.personality_disorder_numeric",
-    "control_numeric"
+    "autism_spectrum_disorder_numeric",
+    "mhd.mania_hypomania_bipolar_or_manicdepression_numeric",
+    "psychotic_disorders_numeric"
 )
 ```
 
@@ -613,8 +613,8 @@ dat.long.psych <- dat %>%
   select(
     ID,
     Sample,
-    Gender,
-    Ethnicity,
+    Gender_collapsed,
+    Ethnicity_collapsed,
     all_of(diff_score_cols),
     Disorder_inc_raw,
     Diagnosis
@@ -752,23 +752,23 @@ Mixed or multiple ethnic origins
 African or African British
 Asian or Asian British
 Arab
-```{r Disorder_inc by Ethnicity}
+```{r Disorder_inc by Ethnicity_collapsed}
 Disorder_inc_by_Ethnicity <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
-  count(Disorder_inc, Ethnicity) %>%
+  count(Disorder_inc, Ethnicity_collapsed) %>%
   mutate(Prop = round(n/sum(n), 2))
 
 Disorder_inc_by_Ethnicity
 ```
 
-```{r Disorder_inc by Ethnicity plot}
+```{r Disorder_inc by Ethnicity_collapsed plot}
 Disorder_inc_by_Ethnicity %>%
   ggplot(mapping = aes(
     x = Disorder_inc,
     y = n)
   ) +
   geom_bar(
-    aes(fill = Ethnicity),
+    aes(fill = Ethnicity_collapsed),
     #    position = "dodge",
     stat="identity",
     binwidth = 1,
@@ -777,7 +777,7 @@ Disorder_inc_by_Ethnicity %>%
   labs(
     x = "Disorders",
     y = "Number of participants",
-    fill = "Ethnicity") +
+    fill = "Ethnicity_collapsed") +
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette6,
@@ -1646,8 +1646,8 @@ dat.long.gad.diff <- dat %>%
   select(
     ID,
     Sample,
-    Gender,
-    Ethnicity,
+    Gender_collapsed,
+    Ethnicity_collapsed,
     Disorder_hierarchical,
     Time_point_raw,
     gad.diff_score
@@ -1667,8 +1667,8 @@ dat.long.gad.sum <- dat %>%
   select(
     ID,
     Sample,
-    Gender,
-    Ethnicity,
+    Gender_collapsed,
+    Ethnicity_collapsed,
     Disorder_hierarchical,
     Time_point_raw,
     gad.sum_score
@@ -1965,8 +1965,8 @@ dat.long.phq.diff <- dat %>%
   select(
     ID,
     Sample,
-    Gender,
-    Ethnicity,
+    Gender_collapsed,
+    Ethnicity_collapsed,
     Disorder_hierarchical,
     Time_point_raw,
     phq.diff_score
@@ -1986,8 +1986,8 @@ dat.long.phq.sum <- dat %>%
   select(
     ID,
     Sample,
-    Gender,
-    Ethnicity,
+    Gender_collapsed,
+    Ethnicity_collapsed,
     Disorder_hierarchical,
     Time_point_raw,
     phq.sum_score
@@ -2285,8 +2285,8 @@ dat.long.ocir.diff <- dat %>%
   select(
     ID,
     Sample,
-    Gender,
-    Ethnicity,
+    Gender_collapsed,
+    Ethnicity_collapsed,
     Disorder_hierarchical,
     Time_point_raw,
     ocir.diff_score
@@ -2306,8 +2306,8 @@ dat.long.ocir.sum <- dat %>%
   select(
     ID,
     Sample,
-    Gender,
-    Ethnicity,
+    Gender_collapsed,
+    Ethnicity_collapsed,
     Disorder_hierarchical,
     Time_point_raw,
     ocir.sum_score
@@ -2571,8 +2571,8 @@ dat.long.pcl.sum <- dat %>%
   select(
     ID,
     Sample,
-    Gender,
-    Ethnicity,
+    Gender_collapsed,
+    Ethnicity_collapsed,
     Disorder_hierarchical,
     Time_point_raw,
     pcl.sum_score
@@ -2705,7 +2705,7 @@ summary(model0)
 tidy(model0)
 ```
 
-Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
+Model 1: Model 0 + Sex + Age + Ethnicity_collapsed + Time registration and baseline
 ```{r}
 model1 <- lm(
   formula = phq.diff_score_base_prepan ~
@@ -2719,16 +2719,16 @@ model1 <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender + age_category + Ethnicity + time_diff_sign_up_coping,
+    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat)
 
 summary(model1)
 ```
 
-Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
+Model 1: Model 0 + Sex + Age + Ethnicity_collapsed + Time registration and baseline
 ```{r}
 model1 <- lm(
-  formula = pcl.diff_score_base_prepan ~ Disorder_hierarchical + Gender + age_category + Ethnicity + time_diff_sign_up_coping,
+  formula = pcl.diff_score_base_prepan ~ Disorder_hierarchical + Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat)
 
 summary(model1)
@@ -2736,10 +2736,10 @@ summary(model1)
 
 
 
-Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
+Model 1: Model 0 + Sex + Age + Ethnicity_collapsed + Time registration and baseline
 ```{r}
 model1 <- lm(
-  formula = gad.diff_score_base_prepan ~ Disorder + Gender + Age + Ethnicity + time_diff_sign_up_coping,
+  formula = gad.diff_score_base_prepan ~ Disorder + Gender_collapsed + Age + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat)
 
 summary(model1)
