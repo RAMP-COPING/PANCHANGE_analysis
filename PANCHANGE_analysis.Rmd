@@ -912,7 +912,7 @@ Ethnicity_collapsed_by_Sample_prop_plot <- Ethnicity_collapsed_per_Sample_prop_S
   ) +
   labs(
     x = "Ethnicity_collapsed",
-    y = "Number of participants",
+    y = "Percentage per sample",
     fill = "Sample") +
   theme_personal +
   scale_fill_manual(
@@ -1028,7 +1028,7 @@ Gender_collapsed_by_Sample_prop_plot <- Gender_collapsed_per_Sample_prop_Sample 
   ) +
   labs(
     x = "Gender_collapsed",
-    y = "Number of participants",
+    y = "Percentage per sample",
     fill = "Sample") +
   theme_personal +
   scale_fill_manual(
@@ -1061,16 +1061,19 @@ highest_education_per_Sample_prop_Sample
 ```
 
 ```{r highest_education per Sample prop cross table}
-dat %>%
+highest_education_per_Sample_prop_Sample_cross_table <- dat %>%
   group_by(Sample) %>%
   count(highest_education, Sample) %>%
   mutate(Prop = round(n/sum(n), 2)) %>%
   pivot_wider(names_from = Sample, values_from = c(n, Prop))
+
+kable(highest_education_per_Sample_prop_Sample_cross_table)
+highest_education_per_Sample_prop_Sample_cross_table
 ```
 
 
 ```{r highest_education per Sample count cross table}
-dat %>%
+highest_education_per_Sample_count_cross_table <- dat %>%
   count(highest_education, Sample) %>%
   spread(key = Sample, value = n) %>%
   mutate(
@@ -1079,11 +1082,14 @@ dat %>%
     NBR = as.integer(replace_na(NBR, 0)),
     RAMP = as.integer(replace_na(RAMP, 0))
   )
+
+kable(highest_education_per_Sample_count_cross_table)
+highest_education_per_Sample_count_cross_table
 ```
 
 
 ```{r highest_education per Sample chisquare test}
-dat %>%
+highest_education_per_Sample_chissquare_test <- dat %>%
   count(highest_education, Sample) %>%
   spread(key = Sample, value = n) %>%
   select(-highest_education) %>%
@@ -1095,10 +1101,13 @@ dat %>%
   ) %>%
   chisq.test() %>%
   glance()
+
+kable(highest_education_per_Sample_chissquare_test)
+highest_education_per_Sample_chissquare_test
 ```
 
 ```{r highest_education by Sample count plot}
-highest_education_per_Sample_prop_Sample %>%
+highest_education_by_Sample_count_plot <- highest_education_per_Sample_prop_Sample %>%
   ggplot(mapping = aes(
     x = highest_education,
     y = n)
@@ -1118,10 +1127,12 @@ highest_education_per_Sample_prop_Sample %>%
     values = COPINGpalette6
   ) +
   coord_flip()
+
+highest_education_by_Sample_count_plot
 ```
 
 ```{r highest_education by Sample prop plot}
-highest_education_per_Sample_prop_Sample %>%
+highest_education_by_Sample_prop_plot <- highest_education_per_Sample_prop_Sample %>%
   ggplot(mapping = aes(
     x = highest_education,
     y = Prop)
@@ -1134,13 +1145,15 @@ highest_education_per_Sample_prop_Sample %>%
   ) +
   labs(
     x = "highest_education",
-    y = "Number of participants",
+    y = "Percentage per sample",
     fill = "Sample") +
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette6
   ) +
   coord_flip()
+
+highest_education_by_Sample_prop_plot
 ```
 
 
@@ -1165,16 +1178,19 @@ key_worker_per_Sample_prop_Sample
 ```
 
 ```{r key_worker per Sample prop cross table}
-dat %>%
+key_worker_per_Sample_prop_Sample_cross_table <- dat %>%
   group_by(Sample) %>%
   count(key_worker, Sample) %>%
   mutate(Prop = round(n/sum(n), 2)) %>%
   pivot_wider(names_from = Sample, values_from = c(n, Prop))
+
+kable(key_worker_per_Sample_prop_Sample_cross_table)
+key_worker_per_Sample_prop_Sample_cross_table
 ```
 
 
 ```{r key_worker per Sample count cross table}
-dat %>%
+key_worker_per_Sample_count_cross_table <- dat %>%
   count(key_worker, Sample) %>%
   spread(key = Sample, value = n) %>%
   mutate(
@@ -1183,11 +1199,14 @@ dat %>%
     NBR = as.integer(replace_na(NBR, 0)),
     RAMP = as.integer(replace_na(RAMP, 0))
   )
+
+kable(key_worker_per_Sample_count_cross_table)
+key_worker_per_Sample_count_cross_table
 ```
 
 
 ```{r key_worker per Sample chisquare test}
-dat %>%
+key_worker_per_Sample_chissquare_test <- dat %>%
   count(key_worker, Sample) %>%
   spread(key = Sample, value = n) %>%
   select(-key_worker) %>%
@@ -1199,10 +1218,13 @@ dat %>%
   ) %>%
   chisq.test() %>%
   glance()
+
+kable(key_worker_per_Sample_chissquare_test)
+key_worker_per_Sample_chissquare_test
 ```
 
 ```{r key_worker by Sample count plot}
-key_worker_per_Sample_prop_Sample %>%
+key_worker_by_Sample_count_plot <- key_worker_per_Sample_prop_Sample %>%
   ggplot(mapping = aes(
     x = key_worker,
     y = n)
@@ -1222,10 +1244,12 @@ key_worker_per_Sample_prop_Sample %>%
     values = COPINGpalette6
   ) +
   coord_flip()
+
+key_worker_by_Sample_count_plot
 ```
 
 ```{r key_worker by Sample prop plot}
-key_worker_per_Sample_prop_Sample %>%
+key_worker_by_Sample_prop_plot <- key_worker_per_Sample_prop_Sample %>%
   ggplot(mapping = aes(
     x = key_worker,
     y = Prop)
@@ -1238,13 +1262,15 @@ key_worker_per_Sample_prop_Sample %>%
   ) +
   labs(
     x = "key_worker",
-    y = "Number of participants",
+    y = "Percentage per sample",
     fill = "Sample") +
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette6
   ) +
   coord_flip()
+
+key_worker_by_Sample_prop_plot
 ```
 
 
