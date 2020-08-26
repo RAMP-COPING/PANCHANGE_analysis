@@ -530,53 +530,11 @@ dat %>%
 ```
 
 
-# Age
-```{r descriptives Ages}
-dat %>%
-  group_by(Sample) %>%
-  summarise(Mean = mean(Age),
-            SD = sd(Age),
-            Min = min(Age),
-            Max = max(Age))
-```
 
-+++ ADD AGE PLOT HERE
-
-
-+++ADD CHUNK FOR AGE CATEGORIES HERE
-```{r Age categories}
-dat %>%
-  freq(age_category)
-```
-
-+++ADD CHUNK FOR AGE CATEGORIES HERE
-```{r Age categories by Sample}
-dat %>%
-  group_by(Sample) %>%
-  count(age_category, Sample) %>%
-  mutate(Prop = round(n/sum(n), 2))
-```
-
-```{r Gender per Sample count cross table}
-dat %>%
-  count(age_category, Sample) %>%
-  spread(key = Sample, value = n)
-```
-
-```{r Gender per Sample count cross table chi square test}
-dat %>%
-  count(age_category, Sample) %>%
-  spread(key = Sample, value = n) %>%
-  select(-age_category) %>%
-  mutate(
-    EDGI = as.integer(replace_na(EDGI, 0)),
-    GLAD = as.integer(replace_na(GLAD, 0))
-    ) %>%
-  chisq.test() %>%
-  glance()
-```
 
 # Psychiatric disorders
+
+## Vector
 ```{r vector with psychiatric disorders}
 disorder_columns <- c(
     "depressive_disorders_numeric",
@@ -593,7 +551,7 @@ disorder_columns <- c(
 )
 ```
 
-Correlation matrix of psychiatric disorders
+## Correlation matrix
 ```{r Correlation matrix of psychiatric disorders}
 # Select items for correlation matrix
 mhd.items <- c(
@@ -680,37 +638,36 @@ dat.long.psych <- dat %>%
 head(dat.long.psych)
 ```
 
-Define disorder columns in vector
 
-```{r Disorder_inc by Gender}
-Disorder_inc_by_Gender <- dat.long.psych %>%
+
+```{r Disorder_inc by Gender_collapsed}
+Disorder_inc_by_Gender_collapsed <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
-  count(Disorder_inc, Gender) %>%
+  count(Disorder_inc, Gender_collapsed) %>%
   mutate(Prop = round(n/sum(n), 2))
 
-Disorder_inc_by_Gender
+Disorder_inc_by_Gender_collapsed
 ```
 
-```{r Disorder_inc by Gender prop}
-Disorder_inc_by_Gender <- dat.long.psych %>%
+```{r Disorder_inc by Gender_collapsed prop}
+Disorder_inc_by_Gender_collapsed <- dat.long.psych %>%
   group_by(Disorder_inc) %>%
   filter(Diagnosis == 1) %>%
-  count(Gender) %>%
+  count(Gender_collapsed) %>%
   mutate(Prop = round(n/sum(n), 2))
 
-Disorder_inc_by_Gender
+Disorder_inc_by_Gender_collapsed
 ```
 
 
-```{r Disorder_inc by Gender plot}
-Disorder_inc_by_Gender %>%
+```{r Disorder_inc by Gender_collapsed count plot}
+Disorder_inc_by_Gender_collapsed_count_plot <- Disorder_inc_by_Gender_collapsed %>%
   ggplot(mapping = aes(
     x = Disorder_inc,
     y = n)
     ) +
   geom_bar(
-    aes(fill = Gender),
-#    position = "dodge",
+    aes(fill = Gender_collapsed),
     stat="identity",
     binwidth = 1,
     position = position_dodge2(preserve = "single")
@@ -718,14 +675,41 @@ Disorder_inc_by_Gender %>%
   labs(
     x = "Disorders",
     y = "Number of participants",
-    fill = "Gender") +
+    fill = "Gender_collapsed") +
   theme_personal +
   scale_fill_manual(
-    values = COPINGpalette4,
-#    labels = c("Prepandemic", "Retrospective")
+    values = COPINGpalette4
     ) +
   coord_flip()
+
+Disorder_inc_by_Gender_collapsed_count_plot
 ```
+
+```{r Disorder_inc by Gender_collapsed prop plot}
+Disorder_inc_by_Gender_collapsed_prop_plot <- Disorder_inc_by_Gender_collapsed %>%
+  ggplot(mapping = aes(
+    x = Disorder_inc,
+    y = Prop)
+    ) +
+  geom_bar(
+    aes(fill = Gender_collapsed),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Disorders",
+    y = "Number of participants",
+    fill = "Gender_collapsed") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette4
+    ) +
+  coord_flip()
+
+Disorder_inc_by_Gender_collapsed_prop_plot
+```
+
 
 100% bar per diagnosis with percentages of contribution per sample
 
@@ -804,8 +788,123 @@ Disorder_inc_by_Ethnicity %>%
 
 
 Compare the GLAD/EDGI and COPING cohorts as a whole
-+++CH: Diagnosis, ethnicity, gender, 
-+++MD: May not be possible for NBR; potentially send them code to run it for us
++++CH: Diagnosis, ethnicity, gender, age
+
+# age_category
+```{r age_category per Sample prop per total}
+age_category_per_Sample_prop_total <- dat %>%
+  count(age_category, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(age_category_per_Sample_prop_total)
+age_category_per_Sample_prop_total
+```
+
+```{r age_category per Sample prop per Sample}
+age_category_per_Sample_prop_Sample <- dat %>%
+  group_by(Sample) %>%
+  count(age_category, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(age_category_per_Sample_prop_Sample)
+age_category_per_Sample_prop_Sample
+```
+
+```{r age_category per Sample prop cross table}
+age_category_per_Sample_prop_Sample_cross_table <- dat %>%
+  group_by(Sample) %>%
+  count(age_category, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+
+kable(age_category_per_Sample_prop_Sample_cross_table)
+age_category_per_Sample_prop_Sample_cross_table
+```
+
+
+```{r age_category per Sample count cross table}
+age_category_per_Sample_count_cross_table <- dat %>%
+  count(age_category, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  )
+
+kable(age_category_per_Sample_count_cross_table)
+age_category_per_Sample_count_cross_table
+```
+
+
+```{r age_category per Sample chisquare test}
+age_category_per_Sample_chissquare_test <- dat %>%
+  count(age_category, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-age_category) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  ) %>%
+  chisq.test() %>%
+  glance()
+
+kable(age_category_per_Sample_chissquare_test)
+age_category_per_Sample_chissquare_test
+```
+
+```{r age_category by Sample count plot}
+age_category_by_Sample_count_plot <- age_category_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = age_category,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "age_category",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+age_category_by_Sample_count_plot
+```
+
+```{r age_category by Sample prop plot}
+age_category_by_Sample_prop_plot <- age_category_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = age_category,
+    y = Prop)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "age_category",
+    y = "Percentage per sample",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+age_category_by_Sample_prop_plot
+```
 
 # Ethnicity_collapsed
 ```{r Ethnicity_collapsed per Sample prop per total}
