@@ -1354,7 +1354,8 @@ edgi.mhd.raw.id <- edgi.mhd.raw %>%
     mhd.bulimia_nervosa,
     mhd.atypical_bulimia_nervosa,
     mhd.bingeeating_disorder,
-    mhd.atypical_bingeeating_disorder
+    mhd.atypical_bingeeating_disorder,
+    mhd.ed_none_of_the_above = mhd.none_of_the_above
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -1422,7 +1423,9 @@ if(EDGI == TRUE){
     mhd.autism_aspergers_or_autistic_spectrum_disorder = demographics.autism_spectrum_disorder_asd, # different name in EDGI
     mhd.body_dysmorphic_disorder_bdd = demographics.body_dysmorphic_disorder,
     mhd.personality_disorder = demographics.personality_disorder, # routing variable in EDGI is named differently; renamed here to match GLAD
-    mhd.attention_deficit_hyperactivity_disorder = demographics.attention_deficit_hyperactivity_disorder
+    mhd.attention_deficit_hyperactivity_disorder = demographics.attention_deficit_hyperactivity_disorder,
+    mhd.none_of_the_above = demographics.none_of_the_above.1,
+    mhd.none_of_the_above.1 = demographics.none_of_the_above.8
     ) %>%
     add_column(
       mhd.schizoaffective_disorder = NA_character_
@@ -1497,7 +1500,8 @@ nbr.mhd.raw.id <- nbr.mhd.raw %>%
     mhd.anorexia_nervosa_unc = mhd.anorexia_nervosa,
     mhd.atypical_anorexia_nervosa_unc = mhd.atypical_anorexia_nervosa,
     mhd.bulimia_nervosa_unc = mhd.bulimia_nervosa,
-    mhd.bingeeating_disorder_unc = mhd.bingeeating_disorder
+    mhd.bingeeating_disorder_unc = mhd.bingeeating_disorder,
+    mhd.ed_none_of_the_above = mhd.none_of_the_above.2
   ) %>%
   add_column(
     mhd.schizoaffective_disorder = NA #NBR doesn't ask about schizoaffective disorder. This means the column das not exist in the data set
@@ -1579,7 +1583,9 @@ ramp.mhd.raw.id <- ramp.mhd.raw %>%
     mhd.personality_disorder = NA.30.personality_disorder,
     mhd.autism_aspergers_or_autistic_spectrum_disorder = NA.30.autism_aspergers_or_autistic_spectrum_disorder,
     mhd.attention_deficit_hyperactivity_disorder = NA.30.attention_deficit_hyperactivity_disorder,
-    mhd.personality_disorder_diagnosed = NA.30.personality_disorder_diagnosed
+    mhd.personality_disorder_diagnosed = NA.30.personality_disorder_diagnosed,
+    mhd.none_of_the_above = NA.30.none_of_these,
+    mhd.none_of_the_above.1 = NA.30.none_of_these.1
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -2484,6 +2490,52 @@ mhd.raw.id %>%
   freq(control,
        cumul = F)
 ```
+
+```{r}
+mhd.raw.id %>%
+  select(
+    control,
+    mhd.none_of_the_above,
+    mhd.none_of_the_above.1
+  )
+
+mhd.raw.id %>%
+  group_by(mhd.none_of_the_above.1) %>%
+  count(
+    control,
+    mhd.none_of_the_above
+  )
+
+mhd.raw.id %>%
+  count(
+    control,
+    age_
+  )
+```
+
+
+
+
+```{r Check personality_cluster_c}
+if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
+mhd.raw.id %>%
+  select(
+    control,
+    depressive_disorders_numeric,
+    anxiety_disorders_numeric,
+    eating_disorders_numeric,
+    obsessive_compulsive_disorders_numeric,
+    psychotic_disorders_numeric,
+    mhd.mania_hypomania_bipolar_or_manicdepression_numeric,
+    mhd.posttraumatic_stress_disorder_ptsd_numeric,
+    autism_spectrum_disorder_numeric,
+    mhd.attention_deficit_hyperactivity_disorder_numeric,
+    mhd.personality_disorder_numeric, 
+  )
+}
+```
+
+
 
 ## Total disorder count
 ```{r disorders_total_count}

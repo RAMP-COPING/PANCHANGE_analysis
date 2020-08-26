@@ -326,7 +326,7 @@ dat.raw %>%
 ## COPING
 Filter data frame to exclude participants that never answered COPING
 ```{r exclusion criteria dat}
-dat <- dat.raw %>%
+dat.2.timepoints <- dat.raw %>%
   filter(
     (data_group_gad == "Baseline and retrospective data" |
       data_group_gad == "Prepandemic and baseline data" |
@@ -341,7 +341,32 @@ dat <- dat.raw %>%
       data_group_ocir == "Prepandemic and baseline data" |
       data_group_ocir == "All prepandemic, baseline and retrospective data")
   )
+
+dim(dat.2.timepoints)
 ```
+
+```{r}
+
+```
+
+
+
+```{r}
+dat.2.timepoints %>%
+  select(age_category) %>%
+  filter(is.na(age_category))
+```
+
+
+
+Exclusion
+```{r Exclusion}
+dat <- dat.2.timepoints %>%
+  
+```
+
+
+
 
 ```{r dimensions of total dat}
 dim(dat)
