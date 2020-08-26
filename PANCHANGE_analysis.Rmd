@@ -60,6 +60,8 @@ Load packages
 library(knitr)
 library(summarytools)
 library(psych)
+library(polycor)
+library(corrplot)
 library(patchwork)
 library(broom)
 library(tidyverse)
@@ -589,6 +591,57 @@ disorder_columns <- c(
     "mhd.personality_disorder_numeric",
     "control_numeric"
 )
+```
+
+Correlation matrix of psychiatric disorders
+```{r Correlation matrix of psychiatric disorders}
+# Select items for correlation matrix
+mhd.items <- c(
+    "depressive_disorders",
+    "anxiety_disorders",
+    "eating_disorders",
+    "obsessive_compulsive_disorders",
+    "psychotic_disorders",
+    "mhd.mania_hypomania_bipolar_or_manicdepression",
+    "mhd.posttraumatic_stress_disorder_ptsd",
+    "autism_spectrum_disorder",
+    "mhd.attention_deficit_hyperactivity_disorder",
+    "mhd.personality_disorder",
+    "control"
+)
+
+# Calculate correlation matrix on specific columns (variables) from your data frame
+mhd.corr.mat <- hetcor(
+  as.data.frame(dat[,mhd.items]), # Specify the data
+  use = "pairwise.complete.obs" # Use all pairwise observations
+)
+
+# Print the correlation matrix
+print(mhd.corr.mat, digits = max(3, getOption("digits") - 3)) 
+
+# Save the correlations from the correlation matrix in an object
+mhd.corr.matrix <- as.matrix(mhd.corr.mat)
+
+# Save the p values from the correlation matrix in an object
+mhd.p.matrix <- as.matrix(mhd.corr.mat$tests)
+```
+
+Create the correlation matrix plot using the corrplot package
+```{r Correlation matrix of psychiatric disorders plot, fig.height=7}
+corrplot(mhd.corr.matrix, 
+         method = "color", # objects to represent the correlations on plot
+         type = "lower", # only use the lower triangle of the matrix
+         diag = FALSE, # do not show the correlations on the diagonal
+         addgrid.col = NA,
+         addCoef.col = "black", # colour for the correlation coefficients in the plot
+         tl.cex = 0.8,
+         tl.col = "black",
+         col=colorRampPalette(c("dodgerblue4","white","firebrick4"))(200), # colours for correlations
+         # Combine with significance
+         p.mat = mhd.p.matrix, # Matrix with p values
+         sig.level = 0.01, # Choose significant level
+         insig = "blank" # Nonsignificant correlations have no colour
+         )
 ```
 
 
