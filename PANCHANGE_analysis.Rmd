@@ -953,22 +953,264 @@ kable(Gender_per_Sample_chissquare_test)
 Gender_per_Sample_chissquare_test
 ```
 
+```{r Gender by Sample count plot}
+Gender_by_Sample_count_plot <- Gender_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = Gender,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Gender",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+Gender_by_Sample_count_plot
+```
+
+```{r Gender by Sample prop plot}
+Gender_by_Sample_prop_plot <- Gender_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = Gender,
+    y = Prop)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Gender",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+Gender_by_Sample_prop_plot
+```
+
 
 # highest_education
-```{r highest_education per Sample}
-dat %>%
+```{r highest_education per Sample prop per total}
+highest_education_per_Sample_prop_total <- dat %>%
+  count(highest_education, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(highest_education_per_Sample_prop_total)
+highest_education_per_Sample_prop_total
+```
+
+```{r highest_education per Sample prop per Sample}
+highest_education_per_Sample_prop_Sample <- dat %>%
   group_by(Sample) %>%
   count(highest_education, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
+
+kable(highest_education_per_Sample_prop_Sample)
+highest_education_per_Sample_prop_Sample
 ```
 
-# Key worker status
-```{r Key worker status per sample}
+```{r highest_education per Sample prop cross table}
 dat %>%
+  group_by(Sample) %>%
+  count(highest_education, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+```
+
+
+```{r highest_education per Sample count cross table}
+dat %>%
+  count(highest_education, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  )
+```
+
+
+```{r highest_education per Sample chisquare test}
+dat %>%
+  count(highest_education, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-highest_education) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  ) %>%
+  chisq.test() %>%
+  glance()
+```
+
+```{r highest_education by Sample count plot}
+highest_education_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = highest_education,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "highest_education",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+```
+
+```{r highest_education by Sample prop plot}
+highest_education_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = highest_education,
+    y = Prop)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "highest_education",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+```
+
+
+# key_worker
+```{r key_worker per Sample prop per total}
+key_worker_per_Sample_prop_total <- dat %>%
+  count(key_worker, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(key_worker_per_Sample_prop_total)
+key_worker_per_Sample_prop_total
+```
+
+```{r key_worker per Sample prop per Sample}
+key_worker_per_Sample_prop_Sample <- dat %>%
   group_by(Sample) %>%
   count(key_worker, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
+
+kable(key_worker_per_Sample_prop_Sample)
+key_worker_per_Sample_prop_Sample
 ```
+
+```{r key_worker per Sample prop cross table}
+dat %>%
+  group_by(Sample) %>%
+  count(key_worker, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+```
+
+
+```{r key_worker per Sample count cross table}
+dat %>%
+  count(key_worker, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  )
+```
+
+
+```{r key_worker per Sample chisquare test}
+dat %>%
+  count(key_worker, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-key_worker) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  ) %>%
+  chisq.test() %>%
+  glance()
+```
+
+```{r key_worker by Sample count plot}
+key_worker_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = key_worker,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "key_worker",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+```
+
+```{r key_worker by Sample prop plot}
+key_worker_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = key_worker,
+    y = Prop)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "key_worker",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+```
+
 
 # COVID
 ## Recode variable
