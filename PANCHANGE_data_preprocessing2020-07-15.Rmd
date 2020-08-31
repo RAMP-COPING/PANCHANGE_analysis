@@ -2492,6 +2492,7 @@ mhd.raw.id %>%
 ```
 
 ```{r}
+if(RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     control,
@@ -2500,9 +2501,9 @@ mhd.raw.id %>%
   )
 
 mhd.raw.id %>%
-  group_by(mhd.none_of_the_above.1) %>%
+  group_by(control) %>%
   count(
-    control,
+    mhd.none_of_the_above.1,
     mhd.none_of_the_above
   )
 
@@ -2511,8 +2512,20 @@ mhd.raw.id %>%
     control,
     age_
   )
+}
 ```
 
+Inspect the participants that do not qualify as double "None of these"
+```{r}
+if(RAMP == TRUE) {
+mhd.raw.id %>%
+  filter(
+    (mhd.none_of_the_above.1 == "Not None of these" |
+    mhd.none_of_the_above == "Not None of these") &
+      control == "Control"
+  )
+}
+```
 
 
 
