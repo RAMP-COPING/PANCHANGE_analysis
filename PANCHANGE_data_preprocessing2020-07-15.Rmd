@@ -1585,7 +1585,11 @@ ramp.mhd.raw.id <- ramp.mhd.raw %>%
     mhd.attention_deficit_hyperactivity_disorder = NA.30.attention_deficit_hyperactivity_disorder,
     mhd.personality_disorder_diagnosed = NA.30.personality_disorder_diagnosed,
     mhd.none_of_the_above = NA.30.none_of_these,
-    mhd.none_of_the_above.1 = NA.30.none_of_these.1
+    mhd.dont_know = NA.30.dont_know,
+    mhd.prefer_not_to_answer = NA.30.prefer_not_to_answer,
+    mhd.none_of_the_above.1 = NA.30.none_of_these.1,
+    mhd.dont_know.1 = NA.30.dont_know.1,
+    mhd.prefer_not_to_answer.1 = NA.30.prefer_not_to_answer.1
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -1749,7 +1753,7 @@ mhd.raw.id %>%
 }
 ```
 
-Agoraphonia and panic disorder group
+Agoraphobia and panic disorder group
 ```{r mhd agoraphobia_panic_disorder}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
@@ -2470,7 +2474,11 @@ mhd.raw.id <- mhd.raw.id %>%
     mhd.posttraumatic_stress_disorder_ptsd_numeric == "0" &
     autism_spectrum_disorder_numeric == "0" &
     mhd.attention_deficit_hyperactivity_disorder_numeric == "0" &
-    mhd.personality_disorder_numeric == "0", 
+    mhd.personality_disorder_numeric == "0" &
+      mhd.prefer_not_to_answer_numeric == "0" & # added 31. August 2020
+      mhd.prefer_not_to_answer.1_numeric == "0" & # added 31. August 2020
+      mhd.dont_know_numeric == "0" & # added 31. August 2020
+      mhd.dont_know.1_numeric == "0", # added 31. August 2020
     true = 1, 
     false = 0, 
     NA_real_)
@@ -2491,7 +2499,7 @@ mhd.raw.id %>%
        cumul = F)
 ```
 
-```{r}
+```{r mhd check none of the above}
 if(RAMP == TRUE) {
 mhd.raw.id %>%
   select(
@@ -2507,29 +2515,36 @@ mhd.raw.id %>%
     mhd.none_of_the_above
   )
 
-mhd.raw.id %>%
-  count(
-    control,
-    age_
-  )
+#mhd.raw.id %>%
+#  count(
+#    control,
+#    age_
+#  )
 }
 ```
 
 Inspect the participants that do not qualify as double "None of these"
-```{r}
+```{r RAMP none of these comparison}
 if(RAMP == TRUE) {
 mhd.raw.id %>%
   filter(
     (mhd.none_of_the_above.1 == "Not None of these" |
     mhd.none_of_the_above == "Not None of these") &
       control == "Control"
-  )
+  ) %>%
+    select(
+      mhd.none_of_the_above_numeric,
+      mhd.dont_know_numeric,
+      mhd.prefer_not_to_answer_numeric,
+      mhd.none_of_the_above.1_numeric,
+      mhd.dont_know.1_numeric,
+      mhd.prefer_not_to_answer.1_numeric
+      )
 }
 ```
 
 
-
-```{r Check personality_cluster_c}
+```{r Check control columns}
 if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
@@ -2543,7 +2558,7 @@ mhd.raw.id %>%
     mhd.posttraumatic_stress_disorder_ptsd_numeric,
     autism_spectrum_disorder_numeric,
     mhd.attention_deficit_hyperactivity_disorder_numeric,
-    mhd.personality_disorder_numeric, 
+    mhd.personality_disorder_numeric
   )
 }
 ```
@@ -2686,7 +2701,9 @@ mhd.raw.categories <- mhd.raw.id %>%
     disorders_total_count,
     comorbidity_total_count_numeric,
     comorbidity_total_count_factor_numeric,
-    comorbidity_total_count_factor
+    comorbidity_total_count_factor,
+    mhd.none_of_the_above,
+    mhd.none_of_the_above.1
     )
 }
 ```
@@ -5923,7 +5940,7 @@ dim(dat.raw)[1]-dim(dat.no.sex)[1]
 ```
 `r dim(dat.glad.raw)[1]-dim(dat.no.sex)[1]` were excluded because they did not report their sex
 
-```{r rename dataset for ramp}
+```{r Rename dataset for ramp}
 if(RAMP == TRUE){
 #there is no sex variable in ramp
 dat.no.sex <- dat.raw
@@ -5979,6 +5996,35 @@ dat <- dat.no.sex.no.gender.no.age.no.ibd
 
 skimr::skim(dat)
 ```
+
+```{r Investigating RAMP NAs}
+dat %>%
+  group_by(control) %>%
+  count(
+    mhd.none_of_the_above.1,
+    mhd.none_of_the_above,
+    control,
+    age_category
+  )
+
+dat %>%
+  select(contains("none"))
+
+
+dat %>%
+  filter(
+    (mhd.none_of_the_above.1 == "Not None of these" |
+    mhd.none_of_the_above == "Not None of these") &
+      control == "Control"
+  )
+
+```
+
+
+
+
+
+
 
 # Definition of prepandemic and baseline 
 Exlcude people who have joined GLAD/EDGI after the pandemic began, sensitivity analyses done on the cut off's we have chosen. 
