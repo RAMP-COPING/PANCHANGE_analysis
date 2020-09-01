@@ -2560,9 +2560,9 @@ mhd.raw.id <- mhd.raw.id %>%
       mhd.dont_know_numeric == "0" & # added 31. August 2020
       mhd.dont_know.1_numeric == "0" & # added 31. August 2020
       mhd.other_please_tell_us_more_numeric == "0" &
-      mhd.dont_know_eating_disorder_numeric == "0",# &
-#      mhd.prefer_not_to_answer_eating_disorder_numeric == "0" &
-#      mhd.other_eating_disorder_numeric == "0",
+      mhd.dont_know_eating_disorder_numeric == "0" &
+      mhd.prefer_not_to_answer_eating_disorder_numeric == "0" &
+      mhd.other_eating_disorder_numeric == "0",
     true = 1,
     false = 0, 
     NA_real_)
@@ -2601,14 +2601,25 @@ mhd.raw.id %>%
     mhd.none_of_the_above,
     mhd.other_please_tell_us_more
   )
-
-#mhd.raw.id %>%
-#  count(
-#    control,
-#    age_
-#  )
 }
 ```
+
+```{r mhd check none of the above}
+if(NBR == TRUE) {
+mhd.raw.id %>%
+  group_by(control) %>%
+  count(
+    mhd.none_of_the_above.1,
+    mhd.none_of_the_above,
+    mhd.other_please_tell_us_more,
+    mhd.other_eating_disorder
+  )
+}
+```
+
+
+
+
 
 Inspect the participants that do not qualify as double "None of these"
 ```{r RAMP none of these comparison}
