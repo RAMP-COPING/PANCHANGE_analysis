@@ -49,8 +49,8 @@ date = Sys.Date()
 ```{r Specify cohort}
 GLAD = FALSE
 EDGI = FALSE
-NBR = TRUE
-RAMP = FALSE
+NBR = FALSE
+RAMP = TRUE
 ```
 
 
@@ -1355,7 +1355,10 @@ edgi.mhd.raw.id <- edgi.mhd.raw %>%
     mhd.atypical_bulimia_nervosa,
     mhd.bingeeating_disorder,
     mhd.atypical_bingeeating_disorder,
-    mhd.none_of_the_above_eating_disorder = mhd.none_of_the_above
+    mhd.other_eating_disorder,
+    mhd.none_of_the_above_eating_disorder = mhd.none_of_the_above,
+    mhd.dont_know_eating_disorder = mhd.dont_know,
+    mhd.prefer_not_to_answer_eating_disorder = mhd.prefer_not_to_answer
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -1425,7 +1428,12 @@ if(EDGI == TRUE){
     mhd.personality_disorder = demographics.personality_disorder, # routing variable in EDGI is named differently; renamed here to match GLAD
     mhd.attention_deficit_hyperactivity_disorder = demographics.attention_deficit_hyperactivity_disorder,
     mhd.none_of_the_above = demographics.none_of_the_above.1,
-    mhd.none_of_the_above.1 = demographics.none_of_the_above.8
+    mhd.dont_know = demographics.dont_know,
+    mhd.prefer_not_to_answer = demographics.prefer_not_to_answer.3,
+    mhd.none_of_the_above.1 = demographics.none_of_the_above.8,
+    mhd.dont_know.1 = demographics.dont_know.7,
+    mhd.prefer_not_to_answer.1 = demographics.prefer_not_to_answer.11,
+    mhd.other_please_tell_us_more = demographics.other.1
     ) %>%
     add_column(
       mhd.schizoaffective_disorder = NA_character_
@@ -1910,9 +1918,9 @@ mhd.raw.id <- mhd.raw.id %>%
                 mhd.prefer_not_to_answer_eating_disorder_unc == "0" ~ "Not Prefer not to answer",
                 mhd.prefer_not_to_answer_eating_disorder_unc == "1" ~ "Prefer not to answer"),
     mhd.other_eating_disorder = 
-      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not Other eating disorder",
-                mhd.other_eating_disorder_unc_numeric == "0" ~ "Not Other eating disorder",
-                mhd.other_eating_disorder_unc_numeric == "1" ~ "Other eating disorder")
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not Other eating disorder:",
+                mhd.other_eating_disorder_unc_numeric == "0" ~ "Not Other eating disorder:",
+                mhd.other_eating_disorder_unc_numeric == "1" ~ "Other eating disorder:")
     )
 }
 
@@ -2605,7 +2613,7 @@ mhd.raw.id %>%
 ```
 
 ```{r mhd check none of the above}
-if(NBR == TRUE) {
+if(NBR == TRUE | EDGI == TRUE) {
 mhd.raw.id %>%
   group_by(control) %>%
   count(
@@ -2616,9 +2624,6 @@ mhd.raw.id %>%
   )
 }
 ```
-
-
-
 
 
 Inspect the participants that do not qualify as double "None of these"
@@ -6097,6 +6102,7 @@ skimr::skim(dat)
 ```
 
 ```{r Investigating RAMP NAs}
+if(RAMP == TRUE) {
 dat %>%
   group_by(control) %>%
   count(
@@ -6116,7 +6122,7 @@ dat %>%
     mhd.none_of_the_above == "Not None of these") &
       control == "Control"
   )
-
+}
 ```
 
 
