@@ -1589,7 +1589,8 @@ ramp.mhd.raw.id <- ramp.mhd.raw %>%
     mhd.prefer_not_to_answer = NA.30.prefer_not_to_answer,
     mhd.none_of_the_above.1 = NA.30.none_of_these.1,
     mhd.dont_know.1 = NA.30.dont_know.1,
-    mhd.prefer_not_to_answer.1 = NA.30.prefer_not_to_answer.1
+    mhd.prefer_not_to_answer.1 = NA.30.prefer_not_to_answer.1,
+    mhd.other = NA.30.other_please_tell_us_more
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -2512,7 +2513,8 @@ mhd.raw.id %>%
   group_by(control) %>%
   count(
     mhd.none_of_the_above.1,
-    mhd.none_of_the_above
+    mhd.none_of_the_above,
+    mhd.other
   )
 
 #mhd.raw.id %>%
@@ -2538,7 +2540,8 @@ mhd.raw.id %>%
       mhd.prefer_not_to_answer_numeric,
       mhd.none_of_the_above.1_numeric,
       mhd.dont_know.1_numeric,
-      mhd.prefer_not_to_answer.1_numeric
+      mhd.prefer_not_to_answer.1_numeric,
+      mhd.other
       )
 }
 ```
