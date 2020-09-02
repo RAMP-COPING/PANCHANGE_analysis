@@ -812,6 +812,7 @@ disorder_columns <- c(
 ```
 
 ## Correlation matrix
+++MD: Should we use the dat.mhd for this correlation matrix, as it has the least stringent inclusion criteria? Or just use dat.raw and include everyone? (alternatively, can create a correlation matrix for all 3 datasets)
 ```{r Correlation matrix of psychiatric disorders}
 # Select items for correlation matrix
 mhd.items <- c(
@@ -830,7 +831,7 @@ mhd.items <- c(
 
 # Calculate correlation matrix on specific columns (variables) from your data frame
 mhd.corr.mat <- hetcor(
-  as.data.frame(dat[,mhd.items]), # Specify the data
+  as.data.frame(dat.mhd[,mhd.items]), # Specify the data
   use = "pairwise.complete.obs" # Use all pairwise observations
 )
 
@@ -865,7 +866,7 @@ corrplot(mhd.corr.matrix,
 
 
 ```{r gather to long format Disorder_hierarchical}
-dat.long.psych <- dat %>%
+dat.long.psych <- dat.mhd %>%
   gather(
     key = "Disorder_inc_raw",
     value = "Diagnosis",
