@@ -53,6 +53,9 @@ Install packages (if they are not available in your version of R)
 #install.packages("psych")
 #install.packages("broom")
 #install.packages("skimr")
+#install.packages("polycor")
+#install.packages("corrplot")
+#install.packages("patchwork")
 ```
 
 Load packages
@@ -135,7 +138,7 @@ palette = COPINGpalette2
 ## Source data file paths 
 
 ```{r source file path}
-#source raw data directory: data.raw_path
+#source data directory: data_path
 source("../PANCHANGE_raw_path.R")
 ```
 
@@ -147,7 +150,7 @@ dim(dat.raw)
 colnames(dat.raw)
 ```
 
-
+++MD: I had to cancel this chunk while running because it took too long - there are 473 variables in this dataset, so I don't think summarising all at once is useful!
 ```{r dat.coping summary, eval=FALSE, include=FALSE}
 summarytools::dfSummary(
   dat.raw,
