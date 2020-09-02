@@ -60,6 +60,8 @@ Load packages
 library(knitr)
 library(summarytools)
 library(psych)
+library(polycor)
+library(corrplot)
 library(patchwork)
 library(broom)
 library(tidyverse)
@@ -188,12 +190,143 @@ dat.raw %>%
     cumul = F)
 ```
 
+```{r}
+dat.raw %>%
+  freq(Sample)
+```
 
+# Collapsing categories
+
+## age_category
+```{r Inspect age_category}
+dat.raw %>%
+  freq(age_category)
+
+dat.raw %>%
+  freq(age_category_numeric)
+```
+
+```{r Collapse age_category}
+dat.raw <- dat.raw %>%
+  mutate(age_category_collapsed_numeric =
+           case_when(
+             age_category_numeric == 1 ~ 0,
+             age_category_numeric == 2 ~ 1,
+             age_category_numeric == 3 ~ 2,
+             age_category_numeric == 4 ~ 3,
+             age_category_numeric == 5 ~ 4,
+             age_category_numeric == 6 ~ 5,
+             age_category_numeric == 7 ~ 6,
+             age_category_numeric == 8 ~ 7,
+             age_category_numeric == 9 ~ 8,
+             age_category_numeric == 10 ~ 8,
+             age_category_numeric == 11 ~ 8,
+             age_category_numeric == 12 ~ 8,
+             age_category_numeric == 13 ~ 8
+             
+           )
+  )
+
+dat.raw <- dat.raw %>%
+  mutate(age_category_collapsed =
+           recode_factor(
+             age_category_collapsed_numeric,
+             `0` = "16-18",
+             `1` = "19-25",
+             `2` = "26-35",
+             `3` = "36-45",
+             `4` = "46-55",
+             `5` = "56-65",
+             `6` = "66-70",
+             `7` = "71-75",
+             `8` = "76+"
+           )
+  )
+
+dat.raw %>%
+  freq(age_category_collapsed)
+```
+
+
+
+## Gender
+```{r Inspect Gender}
+dat.raw %>%
+  freq(Gender)
+
+dat.raw %>%
+  freq(Gender_numeric)
+```
+
+```{r Collapse Gender}
+dat.raw <- dat.raw %>%
+  mutate(Gender_collapsed_numeric =
+           case_when(
+             Gender_numeric == 0 ~ 0,
+             Gender_numeric == 1 ~ 1,
+             Gender_numeric == 2 ~ 2,
+             Gender_numeric == 3 ~ 2
+           )
+         )
+
+dat.raw <- dat.raw %>%
+  mutate(Gender_collapsed =
+           recode_factor(
+             Gender_collapsed_numeric,
+             `0` = "Male",
+             `1` = "Female",
+             `2` = "Non-binary/Self-defined"
+           )
+         )
+
+dat.raw %>%
+  freq(Gender_collapsed)
+```
+
+## Ethnicity
+```{r Inspect Ethnicity}
+dat.raw %>%
+  freq(Ethnicity)
+
+dat.raw %>%
+  freq(Ethnicity_numeric)
+```
+
+```{r Collapse Ethnicity}
+dat.raw <- dat.raw %>%
+  mutate(Ethnicity_collapsed_numeric =
+           case_when(
+             Ethnicity_numeric == 1 ~ 0,
+             Ethnicity_numeric == 2 ~ 1,
+             Ethnicity_numeric == 3 ~ 2,
+             Ethnicity_numeric == 4 ~ 3,
+             Ethnicity_numeric == 5 ~ 3,
+             Ethnicity_numeric == 6 ~ 4
+           )
+  )
+
+dat.raw <- dat.raw %>%
+  mutate(Ethnicity_collapsed =
+           recode_factor(
+             Ethnicity_collapsed_numeric,
+             `0` = "European",
+             `1` = "Mixed or multiple ethnic origins",
+             `2` = "Asian or Asian British",
+             `3` = "African or African British",
+             `4` = "Asian or Asian British"
+           )
+  )
+
+dat.raw %>%
+  freq(Ethnicity_collapsed)
+```
 
 # Exclusion
+
+## COPING
 Filter data frame to exclude participants that never answered COPING
 ```{r exclusion criteria dat}
-dat <- dat.raw %>%
+dat.2.timepoints <- dat.raw %>%
   filter(
     (data_group_gad == "Baseline and retrospective data" |
       data_group_gad == "Prepandemic and baseline data" |
@@ -208,11 +341,85 @@ dat <- dat.raw %>%
       data_group_ocir == "Prepandemic and baseline data" |
       data_group_ocir == "All prepandemic, baseline and retrospective data")
   )
+
+dim(dat.2.timepoints)
 ```
+
+```{r}
+
+```
+
+
+
+```{r}
+dat.2.timepoints %>%
+  select(age_category) %>%
+  filter(is.na(age_category))
+```
+
+
+
+Exclusion
+```{r Exclusion}
+dat <- dat.2.timepoints %>%
+  
+```
+
+
+
 
 ```{r dimensions of total dat}
 dim(dat)
 ```
+
+```{r}
+dat %>%
+  freq(disorders_total_count)
+```
+
+# Vectors for sum_score
+```{r Vectors with sum_score_cols}
+sum_score_cols <- dat %>%
+  select(contains("sum_score")) %>%
+  select(-ends_with("raw")) %>%
+  colnames()
+
+sum_score_cols
+
+phq.sum_score_cols <- dat %>%
+  select(contains("phq")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  select(-contains("8items")) %>%
+  colnames()
+
+phq.sum_score_cols
+
+gad.sum_score_cols <- dat %>%
+  select(contains("gad")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  colnames()
+
+gad.sum_score_cols
+
+ocir.sum_score_cols <- dat %>%
+  select(contains("ocir")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  colnames()
+
+ocir.sum_score_cols
+
+pcl.sum_score_cols <- dat %>%
+  select(contains("pcl")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  colnames()
+
+pcl.sum_score_cols
+```
+
 
 
 # Vectors for diff_score
@@ -276,13 +483,13 @@ eating_disorders_numeric == 1 ~ 4,
 obsessive_compulsive_disorders_numeric == 1 ~ 5,
 mhd.attention_deficit_hyperactivity_disorder_numeric == 1 ~ 6,
 mhd.personality_disorder_numeric == 1 ~ 7,
-mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == 1 ~ 8,
+autism_spectrum_disorder_numeric == 1 ~ 8,
 mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 9,
 psychotic_disorders_numeric == 1 ~ 10
 
 psychotic_disorders_numeric == 1 ~ 10
 mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 9,
-mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == 1 ~ 8,
+autism_spectrum_disorder_numeric == 1 ~ 8,
 mhd.personality_disorder_numeric == 1 ~ 7,
 mhd.attention_deficit_hyperactivity_disorder_numeric == 1 ~ 6,
 obsessive_compulsive_disorders_numeric == 1 ~ 5,
@@ -296,11 +503,11 @@ control_numeric == 1 ~ 0,
 ```{r Psychiatric disorders hierarchy}
 dat <- dat %>%
   mutate(
-    Disorder_numeric =
+    Disorder_hierarchical_numeric =
       case_when(
         psychotic_disorders_numeric == 1 ~ 11,
         mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 10,
-        mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == 1 ~ 9,
+        autism_spectrum_disorder_numeric == 1 ~ 9,
         mhd.personality_disorder_numeric == 1 ~ 8,
         mhd.attention_deficit_hyperactivity_disorder_numeric == 1 ~ 7,
         obsessive_compulsive_disorders_numeric == 1 ~ 6,
@@ -316,9 +523,9 @@ dat <- dat %>%
 
 dat <- dat %>%
   mutate(
-    Disorder =
+    Disorder_hierarchical =
       recode_factor(
-        Disorder_numeric,
+        Disorder_hierarchical_numeric,
         `0` = "Controls",
         `1` = "Depressive disorders",
         `2` = "Anxiety disorders",
@@ -336,54 +543,93 @@ dat <- dat %>%
 
 
 dat %>%
-  freq(Disorder)
+  freq(Disorder_hierarchical)
 ```
 
 Investigate NAs 
 Ask Leo?
 ```{r NAs in diagnosis}
 dat %>%
-  filter(is.na(Disorder)) %>%
+  filter(is.na(Disorder_hierarchical)) %>%
   freq(Sample)
 ```
 
 
-# Age
-```{r descriptives Ages}
-dat %>%
-  group_by(Sample) %>%
-  summarise(Mean = mean(Age),
-            SD = sd(Age),
-            Min = min(Age),
-            Max = max(Age))
-```
-
-+++ADD CHUNK FOR AGE CATEGORIES HERE
-```{r Age categories}
-
-```
 
 
 # Psychiatric disorders
+
+## Vector
 ```{r vector with psychiatric disorders}
 disorder_columns <- c(
-    "depressive_disorders_numeric",
+  "control_numeric",  
+  "depressive_disorders_numeric",
     "anxiety_disorders_numeric",
+    "mhd.posttraumatic_stress_disorder_ptsd_numeric",
     "eating_disorders_numeric",
     "obsessive_compulsive_disorders_numeric",
-    "psychotic_disorders_numeric",
-    "mhd.mania_hypomania_bipolar_or_manicdepression_numeric",
-    "mhd.posttraumatic_stress_disorder_ptsd_numeric",
-    "mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric",
     "mhd.attention_deficit_hyperactivity_disorder_numeric",
     "mhd.personality_disorder_numeric",
-    "control_numeric"
+    "autism_spectrum_disorder_numeric",
+    "mhd.mania_hypomania_bipolar_or_manicdepression_numeric",
+    "psychotic_disorders_numeric"
 )
+```
+
+## Correlation matrix
+```{r Correlation matrix of psychiatric disorders}
+# Select items for correlation matrix
+mhd.items <- c(
+    "depressive_disorders",
+    "anxiety_disorders",
+    "eating_disorders",
+    "obsessive_compulsive_disorders",
+    "psychotic_disorders",
+    "mhd.mania_hypomania_bipolar_or_manicdepression",
+    "mhd.posttraumatic_stress_disorder_ptsd",
+    "autism_spectrum_disorder",
+    "mhd.attention_deficit_hyperactivity_disorder",
+    "mhd.personality_disorder",
+    "control"
+)
+
+# Calculate correlation matrix on specific columns (variables) from your data frame
+mhd.corr.mat <- hetcor(
+  as.data.frame(dat[,mhd.items]), # Specify the data
+  use = "pairwise.complete.obs" # Use all pairwise observations
+)
+
+# Print the correlation matrix
+print(mhd.corr.mat, digits = max(3, getOption("digits") - 3)) 
+
+# Save the correlations from the correlation matrix in an object
+mhd.corr.matrix <- as.matrix(mhd.corr.mat)
+
+# Save the p values from the correlation matrix in an object
+mhd.p.matrix <- as.matrix(mhd.corr.mat$tests)
+```
+
+Create the correlation matrix plot using the corrplot package
+```{r Correlation matrix of psychiatric disorders plot, fig.height=7}
+corrplot(mhd.corr.matrix, 
+         method = "color", # objects to represent the correlations on plot
+         type = "lower", # only use the lower triangle of the matrix
+         diag = FALSE, # do not show the correlations on the diagonal
+         addgrid.col = NA,
+         addCoef.col = "black", # colour for the correlation coefficients in the plot
+         tl.cex = 0.8,
+         tl.col = "black",
+         col=colorRampPalette(c("dodgerblue4","white","firebrick4"))(200), # colours for correlations
+         # Combine with significance
+         p.mat = mhd.p.matrix, # Matrix with p values
+         sig.level = 0.01, # Choose significant level
+         insig = "blank" # Nonsignificant correlations have no colour
+         )
 ```
 
 
 
-```{r gather to long format Disorder}
+```{r gather to long format Disorder_hierarchical}
 dat.long.psych <- dat %>%
   gather(
     key = "Disorder_inc_raw",
@@ -392,8 +638,8 @@ dat.long.psych <- dat %>%
   select(
     ID,
     Sample,
-    Gender,
-    Ethnicity,
+    Gender_collapsed,
+    Ethnicity_collapsed,
     all_of(diff_score_cols),
     Disorder_inc_raw,
     Diagnosis
@@ -408,7 +654,7 @@ dat.long.psych <- dat %>%
              psychotic_disorders_numeric = "Psychotic disorders",
              mhd.mania_hypomania_bipolar_or_manicdepression_numeric = "Bipolar disorders",
              mhd.posttraumatic_stress_disorder_ptsd_numeric = "PTSD",
-             mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric = "Autism",
+             autism_spectrum_disorder_numeric = "Autism",
              mhd.attention_deficit_hyperactivity_disorder_numeric = "ADHD",
              mhd.personality_disorder_numeric = "Personality disorders",
              control_numeric = "Controls"
@@ -417,37 +663,36 @@ dat.long.psych <- dat %>%
 head(dat.long.psych)
 ```
 
-Define disorder columns in vector
 
-```{r Disorder_inc by Gender}
-Disorder_inc_by_Gender <- dat.long.psych %>%
+
+```{r Disorder_inc by Gender_collapsed}
+Disorder_inc_by_Gender_collapsed <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
-  count(Disorder_inc, Gender) %>%
+  count(Disorder_inc, Gender_collapsed) %>%
   mutate(Prop = round(n/sum(n), 2))
 
-Disorder_inc_by_Gender
+Disorder_inc_by_Gender_collapsed
 ```
 
-```{r Disorder_inc by Gender prop}
-Disorder_inc_by_Gender <- dat.long.psych %>%
+```{r Disorder_inc by Gender_collapsed prop}
+Disorder_inc_by_Gender_collapsed <- dat.long.psych %>%
   group_by(Disorder_inc) %>%
   filter(Diagnosis == 1) %>%
-  count(Gender) %>%
+  count(Gender_collapsed) %>%
   mutate(Prop = round(n/sum(n), 2))
 
-Disorder_inc_by_Gender
+Disorder_inc_by_Gender_collapsed
 ```
 
 
-```{r Disorder_inc by Gender plot}
-Disorder_inc_by_Gender %>%
+```{r Disorder_inc by Gender_collapsed count plot}
+Disorder_inc_by_Gender_collapsed_count_plot <- Disorder_inc_by_Gender_collapsed %>%
   ggplot(mapping = aes(
     x = Disorder_inc,
     y = n)
     ) +
   geom_bar(
-    aes(fill = Gender),
-#    position = "dodge",
+    aes(fill = Gender_collapsed),
     stat="identity",
     binwidth = 1,
     position = position_dodge2(preserve = "single")
@@ -455,14 +700,41 @@ Disorder_inc_by_Gender %>%
   labs(
     x = "Disorders",
     y = "Number of participants",
-    fill = "Gender") +
+    fill = "Gender_collapsed") +
   theme_personal +
   scale_fill_manual(
-    values = COPINGpalette4,
-#    labels = c("Prepandemic", "Retrospective")
+    values = COPINGpalette4
     ) +
   coord_flip()
+
+Disorder_inc_by_Gender_collapsed_count_plot
 ```
+
+```{r Disorder_inc by Gender_collapsed prop plot}
+Disorder_inc_by_Gender_collapsed_prop_plot <- Disorder_inc_by_Gender_collapsed %>%
+  ggplot(mapping = aes(
+    x = Disorder_inc,
+    y = Prop)
+    ) +
+  geom_bar(
+    aes(fill = Gender_collapsed),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Disorders",
+    y = "Number of participants",
+    fill = "Gender_collapsed") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette4
+    ) +
+  coord_flip()
+
+Disorder_inc_by_Gender_collapsed_prop_plot
+```
+
 
 100% bar per diagnosis with percentages of contribution per sample
 
@@ -505,23 +777,23 @@ Mixed or multiple ethnic origins
 African or African British
 Asian or Asian British
 Arab
-```{r Disorder_inc by Ethnicity}
+```{r Disorder_inc by Ethnicity_collapsed}
 Disorder_inc_by_Ethnicity <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
-  count(Disorder_inc, Ethnicity) %>%
+  count(Disorder_inc, Ethnicity_collapsed) %>%
   mutate(Prop = round(n/sum(n), 2))
 
 Disorder_inc_by_Ethnicity
 ```
 
-```{r Disorder_inc by Ethnicity plot}
+```{r Disorder_inc by Ethnicity_collapsed plot}
 Disorder_inc_by_Ethnicity %>%
   ggplot(mapping = aes(
     x = Disorder_inc,
     y = n)
   ) +
   geom_bar(
-    aes(fill = Ethnicity),
+    aes(fill = Ethnicity_collapsed),
     #    position = "dodge",
     stat="identity",
     binwidth = 1,
@@ -530,7 +802,7 @@ Disorder_inc_by_Ethnicity %>%
   labs(
     x = "Disorders",
     y = "Number of participants",
-    fill = "Ethnicity") +
+    fill = "Ethnicity_collapsed") +
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette6,
@@ -541,98 +813,649 @@ Disorder_inc_by_Ethnicity %>%
 
 
 Compare the GLAD/EDGI and COPING cohorts as a whole
-+++CH: Diagnosis, ethnicity, gender, 
-+++MD: May not be possible for NBR; potentially send them code to run it for us
++++CH: Diagnosis, ethnicity, gender, age
 
-# Ethnicity
-```{r Ethnicity per Sample}
-Ethnicity_by_Sample <- dat %>%
-  count(Ethnicity, Sample) %>%
+# age_category
+```{r age_category per Sample prop per total}
+age_category_per_Sample_prop_total <- dat %>%
+  count(age_category, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
 
-Ethnicity_by_Sample
+kable(age_category_per_Sample_prop_total)
+age_category_per_Sample_prop_total
 ```
 
-```{r Ethnicity by Sample plot}
-Ethnicity_by_Sample %>%
+```{r age_category per Sample prop per Sample}
+age_category_per_Sample_prop_Sample <- dat %>%
+  group_by(Sample) %>%
+  count(age_category, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(age_category_per_Sample_prop_Sample)
+age_category_per_Sample_prop_Sample
+```
+
+```{r age_category per Sample prop cross table}
+age_category_per_Sample_prop_Sample_cross_table <- dat %>%
+  group_by(Sample) %>%
+  count(age_category, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+
+kable(age_category_per_Sample_prop_Sample_cross_table)
+age_category_per_Sample_prop_Sample_cross_table
+```
+
+
+```{r age_category per Sample count cross table}
+age_category_per_Sample_count_cross_table <- dat %>%
+  count(age_category, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  )
+
+kable(age_category_per_Sample_count_cross_table)
+age_category_per_Sample_count_cross_table
+```
+
+
+```{r age_category per Sample chisquare test}
+age_category_per_Sample_chissquare_test <- dat %>%
+  count(age_category, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-age_category) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  ) %>%
+  chisq.test() %>%
+  glance()
+
+kable(age_category_per_Sample_chissquare_test)
+age_category_per_Sample_chissquare_test
+```
+
+```{r age_category by Sample count plot}
+age_category_by_Sample_count_plot <- age_category_per_Sample_prop_Sample %>%
   ggplot(mapping = aes(
-    x = Ethnicity,
+    x = age_category,
     y = n)
   ) +
   geom_bar(
     aes(fill = Sample),
-    #    position = "dodge",
     stat="identity",
     binwidth = 1,
     position = position_dodge2(preserve = "single")
   ) +
   labs(
-    x = "Ethnicity",
+    x = "age_category",
     y = "Number of participants",
     fill = "Sample") +
   theme_personal +
   scale_fill_manual(
-    values = COPINGpalette6,
-    #    labels = c("Prepandemic", "Retrospective")
+    values = COPINGpalette6
   ) +
   coord_flip()
+
+age_category_by_Sample_count_plot
 ```
 
-# Gender
-```{r Gender per Sample prop per total}
-dat %>%
-  count(Gender, Sample) %>%
+```{r age_category by Sample prop plot}
+age_category_by_Sample_prop_plot <- age_category_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = age_category,
+    y = Prop)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "age_category",
+    y = "Percentage per sample",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+age_category_by_Sample_prop_plot
+```
+
+# Ethnicity_collapsed
+```{r Ethnicity_collapsed per Sample prop per total}
+Ethnicity_collapsed_per_Sample_prop_total <- dat %>%
+  count(Ethnicity_collapsed, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
+
+kable(Ethnicity_collapsed_per_Sample_prop_total)
+Ethnicity_collapsed_per_Sample_prop_total
 ```
 
-```{r Gender per Sample prop per Sample}
-dat %>%
+```{r Ethnicity_collapsed per Sample prop per Sample}
+Ethnicity_collapsed_per_Sample_prop_Sample <- dat %>%
   group_by(Sample) %>%
-  count(Gender, Sample) %>%
+  count(Ethnicity_collapsed, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
+
+kable(Ethnicity_collapsed_per_Sample_prop_Sample)
+Ethnicity_collapsed_per_Sample_prop_Sample
 ```
 
-```{r Gender per Sample prop cross table}
-dat %>%
+```{r Ethnicity_collapsed per Sample prop cross table}
+Ethnicity_collapsed_per_Sample_prop_Sample_cross_table <- dat %>%
   group_by(Sample) %>%
-  count(Gender, Sample) %>%
+  count(Ethnicity_collapsed, Sample) %>%
   mutate(Prop = round(n/sum(n), 2)) %>%
   pivot_wider(names_from = Sample, values_from = c(n, Prop))
+
+kable(Ethnicity_collapsed_per_Sample_prop_Sample_cross_table)
+Ethnicity_collapsed_per_Sample_prop_Sample_cross_table
 ```
 
 
-```{r Gender per Sample count cross table}
-dat %>%
-  count(Gender, Sample) %>%
-  spread(key = Sample, value = n)
-```
-
-
-```{r}
-dat %>%
-  count(Gender, Sample) %>%
+```{r Ethnicity_collapsed per Sample count cross table}
+Ethnicity_collapsed_per_Sample_count_cross_table <- dat %>%
+  count(Ethnicity_collapsed, Sample) %>%
   spread(key = Sample, value = n) %>%
-  select(-Gender) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  )
+
+kable(Ethnicity_collapsed_per_Sample_count_cross_table)
+Ethnicity_collapsed_per_Sample_count_cross_table
+```
+
+
+```{r Ethnicity_collapsed per Sample chisquare test}
+Ethnicity_collapsed_per_Sample_chissquare_test <- dat %>%
+  count(Ethnicity_collapsed, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-Ethnicity_collapsed) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  ) %>%
   chisq.test() %>%
   glance()
+
+kable(Ethnicity_collapsed_per_Sample_chissquare_test)
+Ethnicity_collapsed_per_Sample_chissquare_test
+```
+
+```{r Ethnicity_collapsed by Sample count plot}
+Ethnicity_collapsed_by_Sample_count_plot <- Ethnicity_collapsed_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = Ethnicity_collapsed,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Ethnicity_collapsed",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+Ethnicity_collapsed_by_Sample_count_plot
+```
+
+```{r Ethnicity_collapsed by Sample prop plot}
+Ethnicity_collapsed_by_Sample_prop_plot <- Ethnicity_collapsed_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = Ethnicity_collapsed,
+    y = Prop)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Ethnicity_collapsed",
+    y = "Percentage per sample",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+Ethnicity_collapsed_by_Sample_prop_plot
+```
+
+# Gender_collapsed
+```{r Gender_collapsed per Sample prop per total}
+Gender_collapsed_per_Sample_prop_total <- dat %>%
+  count(Gender_collapsed, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(Gender_collapsed_per_Sample_prop_total)
+Gender_collapsed_per_Sample_prop_total
+```
+
+```{r Gender_collapsed per Sample prop per Sample}
+Gender_collapsed_per_Sample_prop_Sample <- dat %>%
+  group_by(Sample) %>%
+  count(Gender_collapsed, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(Gender_collapsed_per_Sample_prop_Sample)
+Gender_collapsed_per_Sample_prop_Sample
+```
+
+```{r Gender_collapsed per Sample prop cross table}
+Gender_collapsed_per_Sample_prop_Sample_cross_table <- dat %>%
+  group_by(Sample) %>%
+  count(Gender_collapsed, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+
+kable(Gender_collapsed_per_Sample_prop_Sample_cross_table)
+Gender_collapsed_per_Sample_prop_Sample_cross_table
+```
+
+
+```{r Gender_collapsed per Sample count cross table}
+Gender_collapsed_per_Sample_count_cross_table <- dat %>%
+  count(Gender_collapsed, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  )
+
+kable(Gender_collapsed_per_Sample_count_cross_table)
+Gender_collapsed_per_Sample_count_cross_table
+```
+
+
+```{r Gender_collapsed per Sample chisquare test}
+Gender_collapsed_per_Sample_chissquare_test <- dat %>%
+  count(Gender_collapsed, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-Gender_collapsed) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  ) %>%
+  chisq.test() %>%
+  glance()
+
+kable(Gender_collapsed_per_Sample_chissquare_test)
+Gender_collapsed_per_Sample_chissquare_test
+```
+
+```{r Gender_collapsed by Sample count plot}
+Gender_collapsed_by_Sample_count_plot <- Gender_collapsed_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = Gender_collapsed,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Gender_collapsed",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+Gender_collapsed_by_Sample_count_plot
+```
+
+```{r Gender_collapsed by Sample prop plot}
+Gender_collapsed_by_Sample_prop_plot <- Gender_collapsed_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = Gender_collapsed,
+    y = Prop)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Gender_collapsed",
+    y = "Percentage per sample",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+Gender_collapsed_by_Sample_prop_plot
 ```
 
 
 # highest_education
-```{r highest_education per Sample}
-dat %>%
+```{r highest_education per Sample prop per total}
+highest_education_per_Sample_prop_total <- dat %>%
   count(highest_education, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
+
+kable(highest_education_per_Sample_prop_total)
+highest_education_per_Sample_prop_total
 ```
 
-# Key worker status
-```{r Key worker status per sample}
-dat %>%
+```{r highest_education per Sample prop per Sample}
+highest_education_per_Sample_prop_Sample <- dat %>%
+  group_by(Sample) %>%
+  count(highest_education, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(highest_education_per_Sample_prop_Sample)
+highest_education_per_Sample_prop_Sample
+```
+
+```{r highest_education per Sample prop cross table}
+highest_education_per_Sample_prop_Sample_cross_table <- dat %>%
+  group_by(Sample) %>%
+  count(highest_education, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+
+kable(highest_education_per_Sample_prop_Sample_cross_table)
+highest_education_per_Sample_prop_Sample_cross_table
+```
+
+
+```{r highest_education per Sample count cross table}
+highest_education_per_Sample_count_cross_table <- dat %>%
+  count(highest_education, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  )
+
+kable(highest_education_per_Sample_count_cross_table)
+highest_education_per_Sample_count_cross_table
+```
+
+
+```{r highest_education per Sample chisquare test}
+highest_education_per_Sample_chissquare_test <- dat %>%
+  count(highest_education, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-highest_education) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  ) %>%
+  chisq.test() %>%
+  glance()
+
+kable(highest_education_per_Sample_chissquare_test)
+highest_education_per_Sample_chissquare_test
+```
+
+```{r highest_education by Sample count plot}
+highest_education_by_Sample_count_plot <- highest_education_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = highest_education,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "highest_education",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+highest_education_by_Sample_count_plot
+```
+
+```{r highest_education by Sample prop plot}
+highest_education_by_Sample_prop_plot <- highest_education_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = highest_education,
+    y = Prop)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "highest_education",
+    y = "Percentage per sample",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+highest_education_by_Sample_prop_plot
+```
+
+
+# key_worker
+```{r key_worker per Sample prop per total}
+key_worker_per_Sample_prop_total <- dat %>%
   count(key_worker, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
+
+kable(key_worker_per_Sample_prop_total)
+key_worker_per_Sample_prop_total
 ```
 
+```{r key_worker per Sample prop per Sample}
+key_worker_per_Sample_prop_Sample <- dat %>%
+  group_by(Sample) %>%
+  count(key_worker, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(key_worker_per_Sample_prop_Sample)
+key_worker_per_Sample_prop_Sample
+```
+
+```{r key_worker per Sample prop cross table}
+key_worker_per_Sample_prop_Sample_cross_table <- dat %>%
+  group_by(Sample) %>%
+  count(key_worker, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+
+kable(key_worker_per_Sample_prop_Sample_cross_table)
+key_worker_per_Sample_prop_Sample_cross_table
+```
+
+
+```{r key_worker per Sample count cross table}
+key_worker_per_Sample_count_cross_table <- dat %>%
+  count(key_worker, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  )
+
+kable(key_worker_per_Sample_count_cross_table)
+key_worker_per_Sample_count_cross_table
+```
+
+
+```{r key_worker per Sample chisquare test}
+key_worker_per_Sample_chissquare_test <- dat %>%
+  count(key_worker, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-key_worker) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  ) %>%
+  chisq.test() %>%
+  glance()
+
+kable(key_worker_per_Sample_chissquare_test)
+key_worker_per_Sample_chissquare_test
+```
+
+```{r key_worker by Sample count plot}
+key_worker_by_Sample_count_plot <- key_worker_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = key_worker,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "key_worker",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+key_worker_by_Sample_count_plot
+```
+
+```{r key_worker by Sample prop plot}
+key_worker_by_Sample_prop_plot <- key_worker_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = key_worker,
+    y = Prop)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "key_worker",
+    y = "Percentage per sample",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+key_worker_by_Sample_prop_plot
+```
+
+
 # COVID
+## Recode variable
+```{r gad covid test positive double}
+dat <- dat %>%
+  mutate(covid_test_positive_double_numeric =
+           case_when(
+             (respiratory.throat_swab_test_nose_numeric == 1 &
+               respiratory.results_antibody_test_numeric == 1) ~ 2,
+             respiratory.throat_swab_test_nose_numeric == 1 ~ 1,
+             respiratory.throat_swab_test_nose_numeric == 2 ~ 0,
+             respiratory.results_antibody_test_numeric == 1 ~ 1,
+             respiratory.results_antibody_test_numeric == 2 ~ 0
+           )
+         )
+
+dat <- dat %>%
+  mutate(covid_test_positive_double =
+           recode_factor(
+             covid_test_positive_double_numeric,
+             `0` = "Negative",
+             `1` = "Positive",
+             `2` = "Double positive"
+           )
+         )
+
+dat %>%
+  freq(covid_test_positive_double)
+```
+
+```{r gad covid test positive}
+dat <- dat %>%
+  mutate(gad.covid_test_positive_numeric =
+           case_when(
+             (respiratory.throat_swab_test_nose_numeric == 1 &
+               respiratory.results_antibody_test_numeric == 1) ~ 1, # with two positive test results get coded as positive
+             respiratory.throat_swab_test_nose_numeric == 1 ~ 1,
+             respiratory.throat_swab_test_nose_numeric == 2 ~ 0,
+             respiratory.results_antibody_test_numeric == 1 ~ 1,
+             respiratory.results_antibody_test_numeric == 2 ~ 0
+           )
+         )
+
+dat <- dat %>%
+  mutate(covid_test_positive =
+           recode_factor(
+             gad.covid_test_positive_numeric,
+             `0` = "Negative",
+             `1` = "Positive"
+#             `2` = "Double positive"
+           )
+         )
+
+dat %>%
+  freq(covid_test_positive)
+```
+
+
+
 ## COVID swab test positive
 ```{r COVID positive swap}
 dat %>%
@@ -655,16 +1478,65 @@ dat %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
-+++CHECK OVERLAP BETWEEN TESTS and probable COVID
+## Cross table probable covid and covid test positive
+```{r Cross table probable covid and covid test positive}
+dat %>%
+  count(covid_test_positive, covid_probable_case_incl_screening) %>%
+  spread(key = covid_test_positive, value = n)
+```
+
+# Create data set per cohort
+
+## GAD
+```{r}
+dat.gad <- dat %>%
+#  drop_na() %>%
+  filter(
+    (data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data")
+  )
+
+dim(dat.gad)
+```
+
 
 # Questionnaire comparions
 
 ## gad
 
+### Split sample in improvement and worsening
+```{r gad improvment worsening stratification}
+dat <- dat %>%
+  mutate(gad.change_binary_numeric =
+           case_when(
+             gad.pandemic_felt_feelings_numeric == 1 ~ 1,
+             gad.pandemic_felt_feelings_numeric == 2 ~ 1,
+             gad.pandemic_felt_feelings_numeric == 3 ~ 0,
+             gad.pandemic_felt_feelings_numeric == 4 ~ 2,
+             gad.pandemic_felt_feelings_numeric == 5 ~ 2
+           )
+         )
+
+dat <- dat %>%
+  mutate(gad.change_binary =
+           recode_factor(
+             gad.change_binary_numeric,
+             `0` = "No change",
+             `1` = "Worsening",
+             `2` = "Improvement"
+           )
+         )
+
+dat %>%
+  freq(gad.change_binary)
+```
+
+
 ### Summary scores
 ```{r descriptives gad.sum_score_cols}
 gad.sum_score_numeric_table <- dat %>% 
-  #    group_by(Sample) %>%
+  group_by(gad.change_binary) %>%
   summarise_at( 
     vars(
       "Prepan" = gad.sum_score_prepan,
@@ -689,7 +1561,7 @@ gad.sum_score_numeric_table
 ```{r smart numeric summary tables}
 # reshape the table
 gad.sum_score_numeric_summary_table_reshaped <- gad.sum_score_numeric_table %>% 
-  gather(key, value) %>% 
+  gather(key, value, -gad.change_binary) %>% 
   separate(key, c("variable", "measure"), sep = "_") %>%
   mutate(measure = factor(
     x = measure,
@@ -711,6 +1583,7 @@ gad.sum_score_numeric_summary_table_reshaped <- gad.sum_score_numeric_table %>%
   ) %>% 
   # or we can individually rename variables 
   rename(
+    Change = Gad.change_binary,
     SD = Sd
   ) 
 
@@ -727,12 +1600,12 @@ kable(gad.sum_score_numeric_summary_table_reshaped)
 
 ```{r descriptives gad.diff_score_cols}
 gad.numeric_table <- dat %>% 
-#  group_by(dem.sex) %>%
+  group_by(gad.change_binary) %>%
   summarise_at( 
     vars(
       "Base - prepan" = gad.diff_score_base_prepan,
       "Base - retro" = gad.diff_score_base_retro,
-      "Prepan - retro" = gad.diff_score_prepan_retro,
+      "Prepan - retro" = gad.diff_score_retro_prepan
     ),
     .funs =
       list(
@@ -752,7 +1625,7 @@ gad.numeric_table
 ```{r smart numeric summary tables}
 # reshape the table
 gad.numeric_summary_table_reshaped <- gad.numeric_table %>% 
-  gather(key, value) %>% 
+  gather(key, value, -gad.change_binary) %>% 
   separate(key, c("variable", "measure"), sep = "_") %>%
   mutate(measure = factor(
     x = measure,
@@ -774,6 +1647,7 @@ gad.numeric_summary_table_reshaped <- gad.numeric_table %>%
     ) %>% 
   # or we can individually rename variables 
   rename(
+    Change = Gad.change_binary,
     SD = Sd
   ) 
   
@@ -788,7 +1662,7 @@ kable(gad.numeric_summary_table_reshaped)
 
 ### Long format
 
-```{r gad gather to long format Time_points}
+```{r gad gather to long format Time_points gad.diff_score}
 dat.long.gad.diff <- dat %>%
   gather(
     key = "Time_point_raw",
@@ -797,9 +1671,9 @@ dat.long.gad.diff <- dat %>%
   select(
     ID,
     Sample,
-    Gender,
-    Ethnicity,
-    Disorder,
+    Gender_collapsed,
+    Ethnicity_collapsed,
+    Disorder_hierarchical,
     Time_point_raw,
     gad.diff_score
   ) %>%
@@ -809,7 +1683,29 @@ dat.long.gad.diff <- dat %>%
 head(dat.long.gad.diff)
 ```
 
-### Plots
+```{r gad gather to long format Time_points gad.sum_score}
+dat.long.gad.sum <- dat %>%
+  gather(
+    key = "Time_point_raw",
+    value = "gad.sum_score",
+    all_of(gad.sum_score_cols)) %>%
+  select(
+    ID,
+    Sample,
+    Gender_collapsed,
+    Ethnicity_collapsed,
+    Disorder_hierarchical,
+    Time_point_raw,
+    gad.sum_score
+  ) %>%
+  mutate(Time_point = str_replace(Time_point_raw, "gad.sum_score_", "")) %>%
+  select(-Time_point_raw)
+
+head(dat.long.gad.sum)
+```
+
+
+### Plots diff
 
 makes this into percentages
 ```{r gad absolut plot}
@@ -820,9 +1716,9 @@ dat.long.gad.diff %>%
   facet_wrap(facets = vars(Time_point))
 ```
 
-```{r gad percentage plot prepan_retro}
+```{r gad percentage plot retro_prepan diff}
 dat.long.gad.diff %>%
-  filter(Time_point != "prepan_retro") %>%
+  filter(Time_point != "retro_prepan") %>%
   ggplot(mapping = aes(
     x = gad.diff_score,
     y = stat(density*width),
@@ -840,9 +1736,9 @@ dat.long.gad.diff %>%
 ```
 
 
-```{r gad percentage plot prepan_retro}
+```{r gad percentage plot retro_prepan, fig.height=6, fig.width=10}
 dat.long.gad.diff %>%
-  filter(Time_point != "prepan_retro") %>%
+  filter(Time_point != "retro_prepan") %>%
   ggplot(mapping = aes(
     x = gad.diff_score,
     y = stat(density*width),
@@ -857,14 +1753,14 @@ dat.long.gad.diff %>%
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
   scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
-  facet_wrap("Disorder")
+  facet_wrap("Disorder_hierarchical")
 ```
 
 
 
-```{r gad plot prepan_retro diff}
+```{r gad plot retro_prepan diff}
 dat.long.gad.diff %>%
-  filter(Time_point == "prepan_retro") %>%
+  filter(Time_point == "retro_prepan") %>%
   ggplot(mapping = aes(
     x = gad.diff_score,
     y = stat(density*width),
@@ -876,19 +1772,92 @@ dat.long.gad.diff %>%
   labs(
     x = "Difference GAD7 score",
     y = "Percentage of participants",
-    fill = "Comparison:\nPrepandemic vs") +
+    fill = "Comparison:\nRetrospective vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Retrospective"))
+  scale_fill_manual(values = palette, labels = c("Prepandemic"))
 ```
 
+### Plots sum
+
+```{r gad percentage plot retro_prepan sum}
+dat.long.gad.sum %>%
+#  filter(Time_point != "retro_prepan") %>%
+  ggplot(mapping = aes(
+    x = gad.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "GAD7 scores",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    labels = c("Baseline", "Prepandemic", "Retrospective")
+    )
+```
+
+```{r gad percentage plot retro_prepan sum, fig.height=6, fig.width=10}
+dat.long.gad.sum %>%
+#  filter(Time_point != "retro_prepan") %>%
+  ggplot(mapping = aes(
+    x = gad.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "GAD7 score",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+#    labels = c("Prepandemic", "Retrospective")
+    ) +
+  facet_wrap("Disorder_hierarchical")
+```
 
 
 ## phq
 
+### Split sample in improvement and worsening
+```{r phq improvment worsening stratification}
+dat <- dat %>%
+  mutate(phq.change_binary_numeric =
+           case_when(
+             phq.pandemic_felt_feelings_numeric == 1 ~ 1,
+             phq.pandemic_felt_feelings_numeric == 2 ~ 1,
+             phq.pandemic_felt_feelings_numeric == 3 ~ 0,
+             phq.pandemic_felt_feelings_numeric == 4 ~ 2,
+             phq.pandemic_felt_feelings_numeric == 5 ~ 2
+           )
+  )
+
+dat <- dat %>%
+  mutate(phq.change_binary =
+           recode_factor(
+             phq.change_binary_numeric,
+             `0` = "No change",
+             `1` = "Worsening",
+             `2` = "Improvement"
+           )
+  )
+
+dat %>%
+  freq(phq.change_binary)
+```
+
 ### Summary scores
 ```{r descriptives phq.sum_score}
 phq.sum_score_numeric_table <- dat %>% 
-  #    group_by(Sample) %>%
+  group_by(phq.change_binary) %>%
   summarise_at( 
     vars(
       "Prepan" = phq.sum_score_prepan,
@@ -912,8 +1881,8 @@ phq.sum_score_numeric_table
 
 ```{r smart numeric summary tables}
 # reshape the table
-phq.sum_score_numeric_summary_table_reshaped <- phq.sum_score_numeric_table %>% 
-  gather(key, value) %>% 
+phq.sum_score_numeric_summary_table_reshaped <- phq.sum_score_numeric_table %>%
+  gather(key, value, -phq.change_binary) %>% 
   separate(key, c("variable", "measure"), sep = "_") %>%
   mutate(measure = factor(
     x = measure,
@@ -951,12 +1920,12 @@ kable(phq.sum_score_numeric_summary_table_reshaped)
 
 ```{r descriptives phq.diff_score_cols}
 phq.numeric_table <- dat %>% 
-  #  group_by(dem.sex) %>%
+  group_by(phq.change_binary) %>%
   summarise_at( 
     vars(
       "Base - prepan" = phq.diff_score_base_prepan,
       "Base - retro" = phq.diff_score_base_retro,
-      "Prepan - retro" = phq.diff_score_prepan_retro
+      "Prepan - retro" = phq.diff_score_retro_prepan
     ),
     .funs =
       list(
@@ -976,7 +1945,7 @@ phq.numeric_table
 ```{r smart numeric summary tables}
 # reshape the table
 phq.numeric_summary_table_reshaped <- phq.numeric_table %>% 
-  gather(key, value) %>% 
+  gather(key, value, -phq.change_binary) %>% 
   separate(key, c("variable", "measure"), sep = "_") %>%
   mutate(measure = factor(
     x = measure,
@@ -1021,8 +1990,9 @@ dat.long.phq.diff <- dat %>%
   select(
     ID,
     Sample,
-    Gender,
-    Ethnicity,
+    Gender_collapsed,
+    Ethnicity_collapsed,
+    Disorder_hierarchical,
     Time_point_raw,
     phq.diff_score
   ) %>%
@@ -1030,6 +2000,27 @@ dat.long.phq.diff <- dat %>%
   select(-Time_point_raw)
 
 head(dat.long.phq.diff)
+```
+
+```{r phq gather to long format Time_points phq.sum_score}
+dat.long.phq.sum <- dat %>%
+  gather(
+    key = "Time_point_raw",
+    value = "phq.sum_score",
+    all_of(phq.sum_score_cols)) %>%
+  select(
+    ID,
+    Sample,
+    Gender_collapsed,
+    Ethnicity_collapsed,
+    Disorder_hierarchical,
+    Time_point_raw,
+    phq.sum_score
+  ) %>%
+  mutate(Time_point = str_replace(Time_point_raw, "phq.sum_score_", "")) %>%
+  select(-Time_point_raw)
+
+head(dat.long.phq.sum)
 ```
 
 ### Plots
@@ -1047,9 +2038,9 @@ dat.long.phq.diff %>%
 
 
 
-```{r phq percentage plot prepan_retro}
+```{r phq percentage plot retro_prepan}
 dat.long.phq.diff %>%
-  filter(Time_point != "prepan_retro") %>%
+  filter(Time_point != "retro_prepan") %>%
   ggplot(mapping = aes(
     x = phq.diff_score,
     y = stat(density*width),
@@ -1059,16 +2050,16 @@ dat.long.phq.diff %>%
     position = position_dodge2(preserve = "single")
   ) +
   labs(
-    x = "Difference phq7 score",
+    x = "Difference PHQ9 score",
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
   scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective"))
 ```
 
-```{r phq plot prepan_retro diff}
+```{r phq plot retro_prepan diff}
 dat.long.phq.diff %>%
-  filter(Time_point == "prepan_retro") %>%
+  filter(Time_point == "retro_prepan") %>%
   ggplot(mapping = aes(
     x = phq.diff_score,
     y = stat(density*width),
@@ -1085,13 +2076,106 @@ dat.long.phq.diff %>%
   scale_fill_manual(values = palette, labels = c("Retrospective"))
 ```
 
+```{r phq percentage plot retro_prepan, fig.height=6, fig.width=10}
+dat.long.phq.diff %>%
+  filter(Time_point != "retro_prepan") %>%
+  ggplot(mapping = aes(
+    x = phq.diff_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Difference PHQ9 score",
+    y = "Percentage of participants",
+    fill = "Comparison:\nBaseline vs") +
+  theme_personal +
+  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
+  facet_wrap("Disorder_hierarchical")
+```
+
+### Plots sum
+
+```{r phq percentage plot retro_prepan sum}
+dat.long.phq.sum %>%
+  #  filter(Time_point != "retro_prepan") %>%
+  ggplot(mapping = aes(
+    x = phq.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "PHQ9 scores",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    labels = c("Baseline", "Prepandemic", "Retrospective")
+  )
+```
+
+```{r phq percentage plot retro_prepan sum, fig.height=6, fig.width=10}
+dat.long.phq.sum %>%
+  #  filter(Time_point != "retro_prepan") %>%
+  ggplot(mapping = aes(
+    x = phq.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "PHQ9 score",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    labels = c("Baseline", "Prepandemic", "Retrospective")
+  ) +
+  facet_wrap("Disorder_hierarchical")
+```
 
 ## ocir
+
+### Split sample in improvement and worsening
+```{r ocir improvment worsening stratification}
+dat <- dat %>%
+  mutate(ocir.change_binary_numeric =
+           case_when(
+             ocir.felt_pandemic_feelings_numeric == 1 ~ 1,
+             ocir.felt_pandemic_feelings_numeric == 2 ~ 1,
+             ocir.felt_pandemic_feelings_numeric == 3 ~ 0,
+             ocir.felt_pandemic_feelings_numeric == 4 ~ 2,
+             ocir.felt_pandemic_feelings_numeric == 5 ~ 2
+           )
+  )
+
+dat <- dat %>%
+  mutate(ocir.change_binary =
+           recode_factor(
+             ocir.change_binary_numeric,
+             `0` = "No change",
+             `1` = "Worsening",
+             `2` = "Improvement"
+           )
+  )
+
+dat %>%
+  freq(ocir.change_binary)
+```
 
 ### Summary scores
 ```{r descriptives ocir.sum_score}
 ocir.sum_score_numeric_table <- dat %>% 
-  #    group_by(Sample) %>%
+  group_by(ocir.change_binary) %>%
   summarise_at( 
     vars(
       "Prepan" = ocir.sum_score_prepan,
@@ -1115,7 +2199,9 @@ ocir.sum_score_numeric_table
 
 ```{r smart numeric summary tables}
 # reshape the table
-ocir.sum_score_numeric_summary_table_reshaped <- ocir.sum_score_numeric_table %>% 
+ocir.sum_score_numeric_summary_table_reshaped <- ocir.sum_score_numeric_table %>%
+  filter(ocir.change_binary == "Worsening") %>%
+  select(-ocir.change_binary) %>%
   gather(key, value) %>% 
   separate(key, c("variable", "measure"), sep = "_") %>%
   mutate(measure = factor(
@@ -1159,7 +2245,7 @@ ocir.numeric_table <- dat %>%
     vars(
       "Base - prepan" = ocir.diff_score_base_prepan,
       "Base - retro" = ocir.diff_score_base_retro,
-      "Prepan - retro" = ocir.diff_score_prepan_retro,
+      "Prepan - retro" = ocir.diff_score_retro_prepan
     ),
     .funs =
       list(
@@ -1224,8 +2310,9 @@ dat.long.ocir.diff <- dat %>%
   select(
     ID,
     Sample,
-    Gender,
-    Ethnicity,
+    Gender_collapsed,
+    Ethnicity_collapsed,
+    Disorder_hierarchical,
     Time_point_raw,
     ocir.diff_score
   ) %>%
@@ -1233,6 +2320,27 @@ dat.long.ocir.diff <- dat %>%
   select(-Time_point_raw)
 
 head(dat.long.ocir.diff)
+```
+
+```{r ocir gather to long format Time_points ocir.sum_score}
+dat.long.ocir.sum <- dat %>%
+  gather(
+    key = "Time_point_raw",
+    value = "ocir.sum_score",
+    all_of(ocir.sum_score_cols)) %>%
+  select(
+    ID,
+    Sample,
+    Gender_collapsed,
+    Ethnicity_collapsed,
+    Disorder_hierarchical,
+    Time_point_raw,
+    ocir.sum_score
+  ) %>%
+  mutate(Time_point = str_replace(Time_point_raw, "ocir.sum_score_", "")) %>%
+  select(-Time_point_raw)
+
+head(dat.long.ocir.sum)
 ```
 
 ### Plots
@@ -1246,9 +2354,9 @@ dat.long.ocir.diff %>%
   facet_wrap(facets = vars(Time_point))
 ```
 
-```{r ocir percentage plot prepan_retro}
+```{r ocir percentage plot retro_prepan}
 dat.long.ocir.diff %>%
-  filter(Time_point != "prepan_retro") %>%
+  filter(Time_point != "retro_prepan") %>%
   ggplot(mapping = aes(
     x = ocir.diff_score,
     y = stat(density*width),
@@ -1258,16 +2366,16 @@ dat.long.ocir.diff %>%
     position = position_dodge2(preserve = "single")
   ) +
   labs(
-    x = "Difference ocir7 score",
+    x = "Difference OCI-R score",
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
   scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective"))
 ```
 
-```{r ocir plot prepan_retro diff}
+```{r ocir plot retro_prepan diff}
 dat.long.ocir.diff %>%
-  filter(Time_point == "prepan_retro") %>%
+  filter(Time_point == "retro_prepan") %>%
   ggplot(mapping = aes(
     x = ocir.diff_score,
     y = stat(density*width),
@@ -1284,97 +2392,75 @@ dat.long.ocir.diff %>%
   scale_fill_manual(values = palette, labels = c("Retrospective"))
 ```
 
-# RUBBISH
-
-+++ Everything underneath here is only SCRATCH
-
-```{r RUBBISH 1}
-gad.diff_score_prepan_base_plot <- dat %>%
-  ggplot(mapping = aes(y = gad.diff_score_prepan_base)) +
-  geom_bar() +
-  theme_minimal()
-
-gad.diff_score_prepan_retro_plot <- dat %>%
-  ggplot(mapping = aes(y = gad.diff_score_prepan_retro)) +
-  geom_bar() +
-  theme_minimal()
-
-gad.diff_score_prepan_base_plot <- dat %>%
-  ggplot(mapping = aes(y = gad.diff_score_prepan_base)) +
-  geom_bar() +
-  theme_minimal()
-
+```{r ocir percentage plot retro_prepan, fig.height=6, fig.width=10}
+dat.long.ocir.diff %>%
+  filter(Time_point != "retro_prepan") %>%
+  ggplot(mapping = aes(
+    x = ocir.diff_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Difference OCI-R score",
+    y = "Percentage of participants",
+    fill = "Comparison:\nBaseline vs") +
+  theme_personal +
+  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
+  facet_wrap("Disorder_hierarchical")
 ```
 
-```{r RUBBISH 2 fig.height=5, fig.width=5}
-gad.diff_score_prepan_base_plot /
-  gad.diff_score_prepan_retro_plot /
-  gad.diff_score_prepan_base_plot +
-  plot_layout(guides = "collect", heights = c(1,1,1)) +
-  plot_annotation(tag_levels = "A")
+### Plots sum
+
+```{r ocir percentage plot retro_prepan sum}
+dat.long.ocir.sum %>%
+  ggplot(mapping = aes(
+    x = ocir.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "OCI-R scores",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    labels = c("Baseline", "Prepandemic", "Retrospective")
+  )
 ```
 
-
-Calculate mean change per disorder group 
-Disorders (9) 
-Sex 
-Age (13; RAMP; potentially collapse above 65 depending on group sizes) 
-Ethnicity groups (5; White European, Black (British), Asian, Arab, Mixed) 
-
-```{r RUBBISH }
-#ADD
+```{r ocir percentage plot retro_prepan sum, fig.height=6, fig.width=10}
+dat.long.ocir.sum %>%
+  ggplot(mapping = aes(
+    x = ocir.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "OCI-R score",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    labels = c("Baseline", "Prepandemic", "Retrospective")
+  ) +
+  facet_wrap("Disorder_hierarchical")
 ```
+
 
 
 Rank the disorders by the size of the change 
 
-
-
-
-
-# Regression
-Regress covariates out of the change? Which? 
-
-Model 0: Disorders
-```{r}
-model0 <- lm(
-  formula = phq.diff_score_base_prepan ~ Disorder,
-  data = dat)
-
-summary(model0)
-```
-
-
-Model 0: Disorders
-```{r}
-model0 <- lm(
-  formula = gad.diff_score_base_prepan ~ Disorder,
-  data = dat)
-
-summary(model0)
-```
-
-```{r}
-tidy(model0)
-```
-
-Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
-```{r}
-model1 <- lm(
-  formula = phq.diff_score_base_prepan ~ Disorder + Gender + Age + Ethnicity + time_diff_sign_up_coping,
-  data = dat)
-
-summary(model1)
-```
-
-Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline
-```{r}
-model1 <- lm(
-  formula = gad.diff_score_base_prepan ~ Disorder + Gender + Age + Ethnicity + time_diff_sign_up_coping,
-  data = dat)
-
-summary(model1)
-```
 
 
 PCL:  
@@ -1501,15 +2587,235 @@ pcl diff summary table
 kable(pcl.sum_score_numeric_summary_table_reshaped)
 ```
 
+```{r pcl gather to long format Time_points pcl.sum_score}
+dat.long.pcl.sum <- dat %>%
+  gather(
+    key = "Time_point_raw",
+    value = "pcl.sum_score",
+    all_of(pcl.sum_score_cols)) %>%
+  select(
+    ID,
+    Sample,
+    Gender_collapsed,
+    Ethnicity_collapsed,
+    Disorder_hierarchical,
+    Time_point_raw,
+    pcl.sum_score
+  ) %>%
+  mutate(Time_point = str_replace(Time_point_raw, "pcl.sum_score_", "")) %>%
+  select(-Time_point_raw)
 
-
-
+head(dat.long.pcl.sum)
+```
 
 For each item 
 present percentages of how say that this is due to the pandemic 
+```{r pcl percentages due to pandemic}
+pcl.retro.items <- c(
+  "pcl.stressful_experience_upset_reminded_retro_numeric",
+  "pcl.stressful_experience_repeated_images_retro_numeric",
+  "pcl.stressful_situation_avoiding_activities_retro_numeric",
+  "pcl.cut_people_feeling_distant_retro_numeric",
+  "pcl.difficulty_concentrating_retro_numeric",
+  "pcl.feeling_irritable_or_having_angry_outbursts_retro_numeric"
+)
+
+pcl.percentages.summary <- dat %>%
+  select(
+    all_of(pcl.retro.items)
+  ) %>%
+  gather(
+    key = "PCL Item",
+    value = "Binary_score",
+    all_of(pcl.retro.items)
+  ) %>%
+  mutate(Binary_score = fct_explicit_na(as.factor(Binary_score), na_level = "Missing")) %>%
+  group_by(`PCL Item`) %>%
+  count(`PCL Item`, Binary_score) %>%
+  mutate(prop = round(n/sum(n), 3)*100) %>%
+  mutate(n_prop = paste0(n," (",prop, "%)"))
+
+pcl.percentages.summary
+```
+
+
+### Plots sum
+
+```{r pcl percentage plot retro_prepan sum}
+dat.long.pcl.sum %>%
+  ggplot(mapping = aes(
+    x = pcl.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "PCL scores",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    labels = c("Baseline", "Prepandemic", "Retrospective")
+  )
+```
+
+```{r pcl percentage plot retro_prepan sum, fig.height=6, fig.width=10}
+dat.long.pcl.sum %>%
+  ggplot(mapping = aes(
+    x = pcl.sum_score,
+    y = stat(density*width),
+    fill = Time_point)) +
+  geom_histogram(
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "PCL score",
+    y = "Percentage of participants",
+    fill = "Time point") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    labels = c("Baseline", "Prepandemic", "Retrospective")
+  ) +
+  facet_wrap("Disorder_hierarchical")
+```
+
+
+# Regression
+Regress covariates out of the change? Which? 
+
+Model 0a: Disorder_hierarchical
+```{r Model 0a: Disorder_hierarchical}
+model0a <- lm(
+  formula = gad.diff_score_base_prepan ~ Disorder_hierarchical,
+  data = dat.gad)
+
+summary(model0a)
+```
+
+Model 0b: Disorders
 ```{r}
+model0b <- lm(
+  formula = ocir.diff_score_base_prepan ~
+    anxiety_disorders +
+    depressive_disorders +
+    eating_disorders +
+    obsessive_compulsive_disorders +
+    psychotic_disorders +
+    mhd.mania_hypomania_bipolar_or_manicdepression +
+    mhd.posttraumatic_stress_disorder_ptsd +
+    autism_spectrum_disorder +
+    mhd.attention_deficit_hyperactivity_disorder +
+    mhd.personality_disorder,
+  data = dat)
+
+summary(model0b)
+```
+
+
+Model 0: Disorders
+```{r}
+model0 <- lm(
+  formula = gad.diff_score_base_prepan ~ Disorder,
+  data = dat)
+
+summary(model0)
+```
+
+```{r}
+tidy(model0)
+```
+
+Model 1: Model 0 + Sex + Age + Ethnicity_collapsed + Time registration and baseline
+```{r}
+model1 <- lm(
+  formula = phq.diff_score_base_prepan ~
+    anxiety_disorders +
+    depressive_disorders +
+    eating_disorders +
+    obsessive_compulsive_disorders +
+    psychotic_disorders +
+    mhd.mania_hypomania_bipolar_or_manicdepression +
+    mhd.posttraumatic_stress_disorder_ptsd +
+    autism_spectrum_disorder +
+    mhd.attention_deficit_hyperactivity_disorder +
+    mhd.personality_disorder +
+    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+  data = dat)
+
+summary(model1)
+```
+
+Model 1: Model 0 + Sex + Age + Ethnicity_collapsed + Time registration and baseline
+```{r}
+model1 <- lm(
+  formula = pcl.diff_score_base_prepan ~ Disorder_hierarchical + Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+  data = dat)
+
+summary(model1)
+```
+
+
+
+Model 1: Model 0 + Sex + Age + Ethnicity_collapsed + Time registration and baseline
+```{r}
+model1 <- lm(
+  formula = gad.diff_score_base_prepan ~ Disorder + Gender_collapsed + Age + Ethnicity_collapsed + time_diff_sign_up_coping,
+  data = dat)
+
+summary(model1)
+```
+
+
+
+# RUBBISH
+
++++ Everything underneath here is only SCRATCH
+
+```{r RUBBISH 1}
+gad.diff_score_base_prepan_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_base_prepan)) +
+  geom_bar() +
+  theme_minimal()
+
+gad.diff_score_retro_prepan_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_retro_prepan)) +
+  geom_bar() +
+  theme_minimal()
+
+gad.diff_score_base_retro_plot <- dat %>%
+  ggplot(mapping = aes(y = gad.diff_score_base_retro)) +
+  geom_bar() +
+  theme_minimal()
 
 ```
+
+```{r RUBBISH 2 fig.height=7, fig.width=5}
+gad.diff_score_base_prepan_plot /
+  gad.diff_score_retro_prepan_plot /
+  gad.diff_score_base_retro_plot +
+  plot_layout(guides = "collect", heights = c(1,1,1)) +
+  plot_annotation(tag_levels = "A")
+```
+
+
+Calculate mean change per disorder group 
+Disorders (9) 
+Sex 
+Age (13; RAMP; potentially collapse above 65 depending on group sizes) 
+Ethnicity groups (5; White European, Black (British), Asian, Arab, Mixed) 
+
+```{r RUBBISH }
+#ADD
+```
+
+
+
+
 
 
 Calculate a variable PCL pandemic score 

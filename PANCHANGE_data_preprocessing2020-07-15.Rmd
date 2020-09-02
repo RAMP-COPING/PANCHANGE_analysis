@@ -569,7 +569,7 @@ if(RAMP == TRUE){
       Sample, # Sample
       ID, # ID
 #      startDate.coping, #Date when participant signed up to ramp  (is in the coping gad chunk)
-      age_category_full = demographics.how_old_are_you, # Age
+      age_category = demographics.how_old_are_you, # Age
       Gender = demographics.which_gender_do_you_identify_with, # Gender (what [GLAD] vs which [RAMP])
 #     EduYrs = demographics.university_education_attend_school.txt, # Years in education - not in RAMP dataset
 #     demographics.college_or_university_degree, # level of education - univeristy - level of education is in employment file
@@ -794,27 +794,27 @@ dem.raw.id <- dem.raw.id %>%
 
 dem.raw.id <- dem.raw.id %>%
     mutate(
-      age_category_full =
+      age_category =
         recode_factor(
           age_category_numeric, 
-          "1" = "16 to 18 years",
-          "2" = "19 to 25 years",
-          "3" = "26 to 35 years",
-          "4" = "36 to 45 years",
-          "5" = "46 to 55 years",
-          "6" = "56 to 65 years",
-          "7" = "66 to 70 years",
-          "8" = "71 to 75 years",
-          "9" = "76 to 80 years",
-          "10" = "81 to 85 years",
-          "11" = "86 to 90 years",
-          "12" = "91 to 100 years",
-          "13" = "Above 100 years"
+          "1" = "16-18",
+          "2" = "19-25",
+          "3" = "26-35",
+          "4" = "36-45",
+          "5" = "46-55",
+          "6" = "56-65",
+          "7" = "66-70",
+          "8" = "71-75",
+          "9" = "76-80",
+          "10" = "81-85",
+          "11" = "86-90",
+          "12" = "91-100",
+          "13" = "100+"
           )
     )
 
 dem.raw.id %>%
-  freq(age_category_full)
+  freq(age_category)
 }
 ```
 
@@ -1354,7 +1354,11 @@ edgi.mhd.raw.id <- edgi.mhd.raw %>%
     mhd.bulimia_nervosa,
     mhd.atypical_bulimia_nervosa,
     mhd.bingeeating_disorder,
-    mhd.atypical_bingeeating_disorder
+    mhd.atypical_bingeeating_disorder,
+    mhd.other_eating_disorder,
+    mhd.none_of_the_above_eating_disorder = mhd.none_of_the_above,
+    mhd.dont_know_eating_disorder = mhd.dont_know,
+    mhd.prefer_not_to_answer_eating_disorder = mhd.prefer_not_to_answer
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -1422,7 +1426,14 @@ if(EDGI == TRUE){
     mhd.autism_aspergers_or_autistic_spectrum_disorder = demographics.autism_spectrum_disorder_asd, # different name in EDGI
     mhd.body_dysmorphic_disorder_bdd = demographics.body_dysmorphic_disorder,
     mhd.personality_disorder = demographics.personality_disorder, # routing variable in EDGI is named differently; renamed here to match GLAD
-    mhd.attention_deficit_hyperactivity_disorder = demographics.attention_deficit_hyperactivity_disorder
+    mhd.attention_deficit_hyperactivity_disorder = demographics.attention_deficit_hyperactivity_disorder,
+    mhd.none_of_the_above = demographics.none_of_the_above.1,
+    mhd.dont_know = demographics.dont_know,
+    mhd.prefer_not_to_answer = demographics.prefer_not_to_answer.3,
+    mhd.none_of_the_above.1 = demographics.none_of_the_above.8,
+    mhd.dont_know.1 = demographics.dont_know.7,
+    mhd.prefer_not_to_answer.1 = demographics.prefer_not_to_answer.11,
+    mhd.other_please_tell_us_more = demographics.other.1
     ) %>%
     add_column(
       mhd.schizoaffective_disorder = NA_character_
@@ -1494,10 +1505,15 @@ nbr.mhd.raw.id <- nbr.mhd.raw %>%
     mhd.specific_phobia_e.g._phobia_of_flying = mhd.specific_phobia_e.g._fear_of_flying,
     mhd.type_psychosis_psychotic_illness = mhd.psychosis_type_psychotic_illness,
     mhd.autism_aspergers_or_autistic_spectrum_disorder = mhd.autism_spectrum_disorder_asd,
+    mhd.other_please_tell_us_more = mhd.other,
     mhd.anorexia_nervosa_unc = mhd.anorexia_nervosa,
     mhd.atypical_anorexia_nervosa_unc = mhd.atypical_anorexia_nervosa,
     mhd.bulimia_nervosa_unc = mhd.bulimia_nervosa,
-    mhd.bingeeating_disorder_unc = mhd.bingeeating_disorder
+    mhd.bingeeating_disorder_unc = mhd.bingeeating_disorder,
+    mhd.other_eating_disorder_unc = mhd.other_eating_disorder,
+    mhd.none_of_the_above_eating_disorder_unc = mhd.none_of_the_above.2,
+    mhd.dont_know_eating_disorder_unc = mhd.dont_know.2,
+    mhd.prefer_not_to_answer_eating_disorder_unc = mhd.prefer_not_to_answer.2
   ) %>%
   add_column(
     mhd.schizoaffective_disorder = NA #NBR doesn't ask about schizoaffective disorder. This means the column das not exist in the data set
@@ -1579,7 +1595,14 @@ ramp.mhd.raw.id <- ramp.mhd.raw %>%
     mhd.personality_disorder = NA.30.personality_disorder,
     mhd.autism_aspergers_or_autistic_spectrum_disorder = NA.30.autism_aspergers_or_autistic_spectrum_disorder,
     mhd.attention_deficit_hyperactivity_disorder = NA.30.attention_deficit_hyperactivity_disorder,
-    mhd.personality_disorder_diagnosed = NA.30.personality_disorder_diagnosed
+    mhd.personality_disorder_diagnosed = NA.30.personality_disorder_diagnosed,
+    mhd.none_of_the_above = NA.30.none_of_these,
+    mhd.dont_know = NA.30.dont_know,
+    mhd.prefer_not_to_answer = NA.30.prefer_not_to_answer,
+    mhd.none_of_the_above.1 = NA.30.none_of_these.1,
+    mhd.dont_know.1 = NA.30.dont_know.1,
+    mhd.prefer_not_to_answer.1 = NA.30.prefer_not_to_answer.1,
+    mhd.other_please_tell_us_more = NA.30.other_please_tell_us_more
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -1743,7 +1766,7 @@ mhd.raw.id %>%
 }
 ```
 
-Agoraphonia and panic disorder group
+Agoraphobia and panic disorder group
 ```{r mhd agoraphobia_panic_disorder}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
@@ -1850,6 +1873,22 @@ mhd.raw.id <- mhd.raw.id %>%
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
                 mhd.bingeeating_disorder_unc_numeric == "0" ~ 0,
                 mhd.bingeeating_disorder_unc_numeric == "1" ~ 1),
+    mhd.none_of_the_above_eating_disorder_numeric =
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
+                mhd.none_of_the_above_eating_disorder_unc_numeric == "0" ~ 0,
+                mhd.none_of_the_above_eating_disorder_unc_numeric == "1" ~ 1),
+    mhd.dont_know_eating_disorder_numeric =
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
+                mhd.dont_know_eating_disorder_unc_numeric == "0" ~ 0,
+                mhd.dont_know_eating_disorder_unc_numeric == "1" ~ 1),
+    mhd.prefer_not_to_answer_eating_disorder_numeric =
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
+                mhd.prefer_not_to_answer_eating_disorder_unc_numeric == "0" ~ 0,
+                mhd.prefer_not_to_answer_eating_disorder_unc_numeric == "1" ~ 1),
+    mhd.other_eating_disorder_numeric = 
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
+                mhd.other_eating_disorder_unc_numeric == "0" ~ 0,
+                mhd.other_eating_disorder_unc_numeric == "1" ~ 1),        
     mhd.anorexia_nervosa =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not Anorexia nervosa",
                 mhd.anorexia_nervosa_unc_numeric == "0" ~ "Not Anorexia nervosa",
@@ -1865,7 +1904,23 @@ mhd.raw.id <- mhd.raw.id %>%
     mhd.bingeeating_disorder =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not Binge-eating disorder",
                 mhd.bingeeating_disorder_unc_numeric == "0" ~ "Not Binge-eating disorder",
-                mhd.bingeeating_disorder_unc_numeric == "1" ~ "Binge-eating disorder")
+                mhd.bingeeating_disorder_unc_numeric == "1" ~ "Binge-eating disorder"),
+    mhd.none_of_the_above_eating_disorder =
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not None of the above",
+                mhd.none_of_the_above_eating_disorder_unc == "0" ~ "Not None of the above",
+                mhd.none_of_the_above_eating_disorder_unc == "1" ~ "None of the above"),
+    mhd.dont_know_eating_disorder =
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not Don't know",
+                mhd.dont_know_eating_disorder_numeric == "0" ~ "Not Don't know",
+                mhd.dont_know_eating_disorder_numeric == "1" ~ "Don't know"),
+    mhd.prefer_not_to_answer_eating_disorder =
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not Prefer not to answer",
+                mhd.prefer_not_to_answer_eating_disorder_unc == "0" ~ "Not Prefer not to answer",
+                mhd.prefer_not_to_answer_eating_disorder_unc == "1" ~ "Prefer not to answer"),
+    mhd.other_eating_disorder = 
+      case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not Other eating disorder:",
+                mhd.other_eating_disorder_unc_numeric == "0" ~ "Not Other eating disorder:",
+                mhd.other_eating_disorder_unc_numeric == "1" ~ "Other eating disorder:")
     )
 }
 
@@ -2247,6 +2302,47 @@ mhd.raw.id %>%
 }
 ```
 
+### Autism spectrum disorder
+```{r mhd autism_spectrum_disorder}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE){
+  mhd.raw.id <- mhd.raw.id %>%
+    mutate(
+      autism_spectrum_disorder_numeric =
+        case_when(
+          mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == 0 ~ 0,
+          mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == 1 ~ 1
+        )
+    )
+  
+  mhd.raw.id <- mhd.raw.id %>%
+    mutate(
+      autism_spectrum_disorder =
+        recode_factor(
+          autism_spectrum_disorder_numeric,
+          `0` = "No autism spectrum disorder",
+          `1` = "Autism spectrum disorder"
+        )
+    )
+  
+  mhd.raw.id %>%
+    freq(autism_spectrum_disorder)
+}
+```
+
+```{r Check autism_spectrum_disorder}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
+mhd.raw.id %>%
+  select(
+    autism_spectrum_disorder,
+    autism_spectrum_disorder_numeric,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder,
+    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric
+  ) %>%
+    filter(autism_spectrum_disorder == "Autism spectrum disorder")
+}
+```
+
+
 ### Personality disorders
 ++KT: For all cluster coding chunks - have added other clusters as == 0, so that they are not coerced into NAs. 
 Cluster A
@@ -2409,7 +2505,8 @@ mhd.raw.id %>%
 
 ### Controls
 These individuals have no self report diagnosis of any kind that we measure. 
-```{r mhd control}
+```{r mhd control GLAD RAMP}
+if(GLAD == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
     control_numeric =
@@ -2421,9 +2518,14 @@ mhd.raw.id <- mhd.raw.id %>%
     psychotic_disorders_numeric == "0" &
     mhd.mania_hypomania_bipolar_or_manicdepression_numeric == "0" &
     mhd.posttraumatic_stress_disorder_ptsd_numeric == "0" &
-    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == "0" &
+    autism_spectrum_disorder_numeric == "0" &
     mhd.attention_deficit_hyperactivity_disorder_numeric == "0" &
-    mhd.personality_disorder_numeric == "0", 
+    mhd.personality_disorder_numeric == "0" &
+      mhd.prefer_not_to_answer_numeric == "0" & # added 31. August 2020
+      mhd.prefer_not_to_answer.1_numeric == "0" & # added 31. August 2020
+      mhd.dont_know_numeric == "0" & # added 31. August 2020
+      mhd.dont_know.1_numeric == "0" & # added 31. August 2020
+      mhd.other_please_tell_us_more_numeric == "0",
     true = 1, 
     false = 0, 
     NA_real_)
@@ -2442,7 +2544,130 @@ mhd.raw.id <- mhd.raw.id %>%
 mhd.raw.id %>%
   freq(control,
        cumul = F)
+}
 ```
+
+```{r mhd control EDGI NBR}
+if(EDGI == TRUE | NBR == TRUE) {
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    control_numeric =
+      if_else(
+    depressive_disorders_numeric == "0" &
+    anxiety_disorders_numeric == "0" &
+    eating_disorders_numeric == "0" &
+    obsessive_compulsive_disorders_numeric == "0" &
+    psychotic_disorders_numeric == "0" &
+    mhd.mania_hypomania_bipolar_or_manicdepression_numeric == "0" &
+    mhd.posttraumatic_stress_disorder_ptsd_numeric == "0" &
+    autism_spectrum_disorder_numeric == "0" &
+    mhd.attention_deficit_hyperactivity_disorder_numeric == "0" &
+    mhd.personality_disorder_numeric == "0" &
+      mhd.prefer_not_to_answer_numeric == "0" & # added 31. August 2020
+      mhd.prefer_not_to_answer.1_numeric == "0" & # added 31. August 2020
+      mhd.dont_know_numeric == "0" & # added 31. August 2020
+      mhd.dont_know.1_numeric == "0" & # added 31. August 2020
+      mhd.other_please_tell_us_more_numeric == "0" &
+      mhd.dont_know_eating_disorder_numeric == "0" &
+      mhd.prefer_not_to_answer_eating_disorder_numeric == "0" &
+      mhd.other_eating_disorder_numeric == "0",
+    true = 1,
+    false = 0, 
+    NA_real_)
+  )
+
+mhd.raw.id <- mhd.raw.id %>%
+  mutate(
+    control =
+      recode_factor(control_numeric,
+                    "0" = "No control",
+                    "1" = "Control",
+                    missing = NA_character_
+                    )
+  )
+
+mhd.raw.id %>%
+  freq(control,
+       cumul = F)
+}
+```
+
+
+```{r mhd check none of the above}
+if(RAMP == TRUE) {
+mhd.raw.id %>%
+  select(
+    control,
+    mhd.none_of_the_above,
+    mhd.none_of_the_above.1
+  )
+
+mhd.raw.id %>%
+  group_by(control) %>%
+  count(
+    mhd.none_of_the_above.1,
+    mhd.none_of_the_above,
+    mhd.other_please_tell_us_more
+  )
+}
+```
+
+```{r mhd check none of the above}
+if(NBR == TRUE | EDGI == TRUE) {
+mhd.raw.id %>%
+  group_by(control) %>%
+  count(
+    mhd.none_of_the_above.1,
+    mhd.none_of_the_above,
+    mhd.other_please_tell_us_more,
+    mhd.other_eating_disorder
+  )
+}
+```
+
+
+Inspect the participants that do not qualify as double "None of these"
+```{r RAMP none of these comparison}
+if(RAMP == TRUE) {
+mhd.raw.id %>%
+  filter(
+    (mhd.none_of_the_above.1 == "Not None of these" |
+    mhd.none_of_the_above == "Not None of these") &
+      control == "Control"
+  ) %>%
+    select(
+      mhd.none_of_the_above_numeric,
+      mhd.dont_know_numeric,
+      mhd.prefer_not_to_answer_numeric,
+      mhd.none_of_the_above.1_numeric,
+      mhd.dont_know.1_numeric,
+      mhd.prefer_not_to_answer.1_numeric,
+      mhd.other_please_tell_us_more_numeric
+      )
+}
+```
+
+
+```{r Check control columns}
+if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
+mhd.raw.id %>%
+  select(
+    control,
+    depressive_disorders_numeric,
+    anxiety_disorders_numeric,
+    eating_disorders_numeric,
+    obsessive_compulsive_disorders_numeric,
+    psychotic_disorders_numeric,
+    mhd.mania_hypomania_bipolar_or_manicdepression_numeric,
+    mhd.posttraumatic_stress_disorder_ptsd_numeric,
+    autism_spectrum_disorder_numeric,
+    mhd.attention_deficit_hyperactivity_disorder_numeric,
+    mhd.personality_disorder_numeric
+  )
+}
+```
+
+
 
 ## Total disorder count
 ```{r disorders_total_count}
@@ -2454,7 +2679,7 @@ disorder_columns <- c(
     "psychotic_disorders_numeric",
     "mhd.mania_hypomania_bipolar_or_manicdepression_numeric",
     "mhd.posttraumatic_stress_disorder_ptsd_numeric",
-    "mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric",
+    "autism_spectrum_disorder_numeric",
     "mhd.attention_deficit_hyperactivity_disorder_numeric",
     "mhd.personality_disorder_numeric"
 )
@@ -2557,8 +2782,8 @@ mhd.raw.categories <- mhd.raw.id %>%
     mhd.mania_hypomania_bipolar_or_manicdepression,
     mhd.posttraumatic_stress_disorder_ptsd_numeric,
     mhd.posttraumatic_stress_disorder_ptsd,
-    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric,
-    mhd.autism_aspergers_or_autistic_spectrum_disorder,
+    autism_spectrum_disorder_numeric,
+    autism_spectrum_disorder,
     mhd.attention_deficit_hyperactivity_disorder_numeric,
     mhd.attention_deficit_hyperactivity_disorder,
     mhd.personality_disorder_numeric,
@@ -2580,7 +2805,9 @@ mhd.raw.categories <- mhd.raw.id %>%
     disorders_total_count,
     comorbidity_total_count_numeric,
     comorbidity_total_count_factor_numeric,
-    comorbidity_total_count_factor
+    comorbidity_total_count_factor,
+    mhd.none_of_the_above,
+    mhd.none_of_the_above.1
     )
 }
 ```
@@ -2611,8 +2838,8 @@ mhd.raw.categories <- mhd.raw.id %>%
     mhd.mania_hypomania_bipolar_or_manicdepression,
     mhd.posttraumatic_stress_disorder_ptsd_numeric,
     mhd.posttraumatic_stress_disorder_ptsd,
-    mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric,
-    mhd.autism_aspergers_or_autistic_spectrum_disorder,
+    autism_spectrum_disorder_numeric,
+    autism_spectrum_disorder,
     mhd.attention_deficit_hyperactivity_disorder_numeric,
     mhd.attention_deficit_hyperactivity_disorder,
     mhd.personality_disorder_numeric,
@@ -5248,7 +5475,9 @@ summarytools::dfSummary(
 
 *Note that the COPING EDGI OCI-R ID numbers are stored under recipientFirstName (rather than ExternalDataReference)
 ```{r coping edgi ocir cleaning}
-exclude_cols_coping_edgi_ocir <- c("COPING_Sample", "COPING_ID")
+exclude_cols_coping_edgi_ocir <- c(
+  "COPING_Sample",
+  "COPING_ID")
 
 if(EDGI == TRUE) {
 coping.edgi.ocir.raw.id <- coping.edgi.ocir.raw %>%
@@ -5297,8 +5526,8 @@ coping.edgi.ocir.raw.id <- coping.edgi.ocir.raw %>%
     ocir.control_difficult_find_thoughts_base = ocir.control_difficult_thoughts_find.1, ## Different from EDGI prepandemic
     ocir.i_collect_things_i_dont_need_base = ocir.i_collect_things_i_dont_need..1
   ) %>%
-  add_column(Sample = "EDGI") %>%
   add_numeric(., exclude = exclude_cols_coping_edgi_ocir) %>%
+  add_column(Sample = "EDGI") %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
@@ -5815,7 +6044,7 @@ dim(dat.raw)[1]-dim(dat.no.sex)[1]
 ```
 `r dim(dat.glad.raw)[1]-dim(dat.no.sex)[1]` were excluded because they did not report their sex
 
-```{r rename dataset for ramp}
+```{r Rename dataset for ramp}
 if(RAMP == TRUE){
 #there is no sex variable in ramp
 dat.no.sex <- dat.raw
@@ -5836,7 +6065,7 @@ dim(dat.no.sex)[1]-dim(dat.no.sex.no.gender)[1]
 ```{r Exclude participants that do not report age}
 dim(dat.no.sex.no.gender)
 dat.no.sex.no.gender.no.age <- dat.no.sex.no.gender %>%
-  drop_na(age_category_full)
+  drop_na(age_category)
 dim(dat.no.sex.no.gender.no.age)
 
 dim(dat.no.sex.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]
@@ -5871,6 +6100,36 @@ dat <- dat.no.sex.no.gender.no.age.no.ibd
 
 skimr::skim(dat)
 ```
+
+```{r Investigating RAMP NAs}
+if(RAMP == TRUE) {
+dat %>%
+  group_by(control) %>%
+  count(
+    mhd.none_of_the_above.1,
+    mhd.none_of_the_above,
+    control,
+    age_category
+  )
+
+dat %>%
+  select(contains("none"))
+
+
+dat %>%
+  filter(
+    (mhd.none_of_the_above.1 == "Not None of these" |
+    mhd.none_of_the_above == "Not None of these") &
+      control == "Control"
+  )
+}
+```
+
+
+
+
+
+
 
 # Definition of prepandemic and baseline 
 Exlcude people who have joined GLAD/EDGI after the pandemic began, sensitivity analyses done on the cut off's we have chosen. 
@@ -5991,7 +6250,7 @@ dat <- dat %>%
         difftime(           #this function does time1 - time2 as difftime(time1, time2...)
           startDate.coping,    #should be start date for COPING (time1)
           date_uk_lockdown_march_23),    #should be start date for GLAD (time2)
-          units = c("days")  #can also be "secs", "mins", "hours", "weeks"
+          units = c("weeks")  #can also be "secs", "mins", "hours", "weeks"
           )
         )
 
@@ -6009,7 +6268,7 @@ dat <- dat %>%
         difftime(           #this function does time1 - time2 as difftime(time1, time2...)
           startDate.coping,    #should be start date for COPING (time1)
           date_higher_awareness_march_1),    #should be start date for GLAD (time2)
-          units = c("days")  #can also be "secs", "mins", "hours", "weeks"
+          units = c("weeks")  #can also be "secs", "mins", "hours", "weeks"
           )
         )
 
@@ -6028,7 +6287,7 @@ dat <- dat %>%
         difftime(           #this function does time1 - time2 as difftime(time1, time2...)
           startDate.coping,    #should be start date for COPING (time1)
           date_first_case_uk_january_31),    #should be start date for GLAD (time2)
-          units = c("days")  #can also be "secs", "mins", "hours", "weeks"
+          units = c("weeks")  #can also be "secs", "mins", "hours", "weeks"
           )
         )
 
@@ -6978,19 +7237,19 @@ dat.coping <- dat.coping %>%
   mutate(
     Age_respiratory =
       case_when(
-        age_category_full == "16-18" ~ 17,
-        age_category_full == "19-25" ~ 22,
-        age_category_full == "26-35" ~ 30.5,
-        age_category_full == "36-45" ~ 40.5,
-        age_category_full == "46-55" ~ 50.5,
-        age_category_full == "56-65" ~ 60.5,
-        age_category_full == "66-70" ~ 68,
-        age_category_full == "71-75" ~ 73,
-        age_category_full == "76-80" ~ 78,
-        age_category_full == "81-85" ~ 83,
-        age_category_full == "86-90" ~ 88,
-        age_category_full == "91-100" ~ 93,
-      age_category_full == "100+" ~ 100
+        age_category == "16-18" ~ 17,
+        age_category == "19-25" ~ 22,
+        age_category == "26-35" ~ 30.5,
+        age_category == "36-45" ~ 40.5,
+        age_category == "46-55" ~ 50.5,
+        age_category == "56-65" ~ 60.5,
+        age_category == "66-70" ~ 68,
+        age_category == "71-75" ~ 73,
+        age_category == "76-80" ~ 78,
+        age_category == "81-85" ~ 83,
+        age_category == "86-90" ~ 88,
+        age_category == "91-100" ~ 93,
+      age_category == "100+" ~ 100
       )
   )
 }
