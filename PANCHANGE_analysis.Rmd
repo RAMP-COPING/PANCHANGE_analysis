@@ -152,11 +152,11 @@ colnames(dat.raw)
 
 ++MD: I had to cancel this chunk while running because it took too long - there are 473 variables in this dataset, so I don't think summarising all at once is useful!
 ```{r dat.coping summary, eval=FALSE, include=FALSE}
-summarytools::dfSummary(
-  dat.raw,
-  graph.col = F,
-  valid.col = F,
-  labels.col = F)
+#summarytools::dfSummary(
+#  dat.raw,
+#  graph.col = F,
+#  valid.col = F,
+#  labels.col = F)
 ```
 
 # Data availability
@@ -295,6 +295,7 @@ dat.raw %>%
   freq(Ethnicity_numeric)
 ```
 
+++MD: Need to decide what to do with the Arab grouping.
 ```{r Collapse Ethnicity}
 dat.raw <- dat.raw %>%
   mutate(Ethnicity_collapsed_numeric =
@@ -325,13 +326,65 @@ dat.raw %>%
 ```
 
 # Exclusion
+Filter data frame to create 3 datasets:
+  1. Diagnoses analyses
+        i. Exclude individuals with NA for MHD
+  2. Retrospective - baseline change anlyses
+        i. Exclude individuals with NAs for:
+              1. MHD
+              2. Age
+              3. Gender
+  3. Prepandemic - baseline change analyses
+          i. Exclude individuals with NAs for:
+              1. MHD
+              2. Age
+              3. Gender
+          ii. Exclude individuals with prepandemic data collected after 1st March.
 
-## COPING
-Filter data frame to exclude participants that never answered COPING
-```{r exclusion criteria dat}
-dat.2.timepoints <- dat.raw %>%
+Diagnoses analyses
+Exclude individuals with NA for the MHD categories
+```{r exclusion criteria for diagnoses analysis}
+dat.mhd <- dat.raw %>%
   filter(
-    (data_group_gad == "Baseline and retrospective data" |
+    !is.na(depressive_disorders) &
+      !is.na(eating_disorders) &
+      !is.na(psychotic_disorders) &
+      !is.na(obsessive_compulsive_disorders) &
+      !is.na(autism_spectrum_disorder) &
+      !is.na(mhd.mania_hypomania_bipolar_or_manicdepression_numeric) &
+      !is.na(mhd.posttraumatic_stress_disorder_ptsd_numeric)
+  )
+
+dim(dat.mhd)
+
+```
+
+Retro-baseline analyses
+Exclude individuals with NA for MHD, age, gender
+```{r exclusion criteria for retro-baseline analysis}
+dat.retro <- dat.mhd %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      !is.na(age_category) &
+      !is.na(Gender_collapsed)
+  )
+
+dim(dat.retro)
+```
+
+Prepan-baseline analyses
+Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March
+```{r exclusion criteria for prepan-baseline analysis}
+dat.prepan <- dat.mhd %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
       data_group_gad == "Prepandemic and baseline data" |
       data_group_gad == "All prepandemic, baseline and retrospective data") |
       (data_group_phq == "Baseline and retrospective data" |
@@ -342,41 +395,22 @@ dat.2.timepoints <- dat.raw %>%
       data_group_pcl == "All prepandemic, baseline and retrospective data") |
       (data_group_ocir == "Baseline and retrospective data" |
       data_group_ocir == "Prepandemic and baseline data" |
-      data_group_ocir == "All prepandemic, baseline and retrospective data")
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      !is.na(age_category) &
+      !is.na(Gender_collapsed) &
+      prepandemic_march_1_numeric == 1
   )
 
-dim(dat.2.timepoints)
+dim(dat.prepan)
 ```
-
-```{r}
-
-```
-
-
-
-```{r}
-dat.2.timepoints %>%
-  select(age_category) %>%
-  filter(is.na(age_category))
-```
-
-
-
-Exclusion
-```{r Exclusion}
-dat <- dat.2.timepoints %>%
-  
-```
-
-
 
 
 ```{r dimensions of total dat}
-dim(dat)
+dim(dat.raw)
 ```
 
-```{r}
-dat %>%
+```{r disorders total count}
+dat.raw %>%
   freq(disorders_total_count)
 ```
 
