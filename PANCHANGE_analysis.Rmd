@@ -422,7 +422,7 @@ theme_personal <-  theme(
 ```
 
 # Psychiatric disorder hierarchy
-------------
+- - - -
 OLD VERSIONS:
 control_numeric == 1 ~ 0,
 depressive_disorders_numeric == 1 ~ 1,
@@ -447,7 +447,7 @@ mhd.posttraumatic_stress_disorder_ptsd_numeric == 1 ~ 3,
 anxiety_disorders_numeric == 1 ~ 2,
 depressive_disorders_numeric == 1 ~ 1,
 control_numeric == 1 ~ 0,
-------------
+- - - -
 
 Disorder hierarchy
 1: Psychotic disorders (create one with, create one without to test in analyses)
@@ -458,9 +458,8 @@ Disorder hierarchy
 6: Eating disorders
 7: Anxiety disorders
 
-## Hierarchy including psychosis
-```{r Psychiatric disorders hierarchy including psychosis - dat.mhd}
-dat.raw <- dat.raw %>%
+```{r Psychiatric disorders hierarchy including psychosis}
+dat <- dat.raw %>%
   mutate(
     Disorder_hierarchical_psychosis_numeric =
       case_when(
@@ -475,7 +474,7 @@ dat.raw <- dat.raw %>%
       )
   )
 
-dat.raw <- dat.raw %>%
+dat <- dat.raw %>%
   mutate(
     Disorder_hierarchical_psychosis =
       recode_factor(
@@ -492,13 +491,13 @@ dat.raw <- dat.raw %>%
   )
 
 
-dat.raw %>%
+dat %>%
   freq(Disorder_hierarchical_psychosis)
 ```
 
 
-```{r Psychiatric disorders hierarchy without psychosis - dat.mhd}
-dat.raw <- dat.raw %>%
+```{r Psychiatric disorders hierarchy without psychosis}
+dat <- dat %>%
   mutate(
     Disorder_hierarchical_numeric =
       case_when(
@@ -512,7 +511,7 @@ dat.raw <- dat.raw %>%
       )
   )
 
-dat.raw <- dat.raw %>%
+dat <- dat %>%
   mutate(
     Disorder_hierarchical =
       recode_factor(
@@ -528,359 +527,18 @@ dat.raw <- dat.raw %>%
   )
 
 
-dat.raw %>%
+dat %>%
   freq(Disorder_hierarchical) 
-dat.raw %>% 
+dat %>% 
   freq(Disorder_hierarchical_psychosis)
 ```
 
 Investigate NAs 
 NAs are coded for individuals that don't have one of the listed disorders in the hierarchy, but who have another diagnosis that excludes them from being a control (e.g. personality disorder, ADHD, ASD). These individuals will be excluded from the analyses.
 ```{r NAs in diagnosis}
-dat.raw %>%
+dat %>%
   filter(is.na(Disorder_hierarchical)) %>%
   freq(Sample)
-```
-
-# Exclusion
-Filter data frame to create 3 datasets:
-  1. Diagnoses analyses
-        i. Exclude individuals with NA for MHD
-  2. Retrospective - baseline change anlyses
-        i. Exclude individuals with NAs for:
-              1. MHD
-              2. Age
-              3. Gender
-  3. Prepandemic - baseline change analyses
-          i. Exclude individuals with NAs for:
-              1. MHD
-              2. Age
-              3. Gender
-          ii. Exclude individuals with prepandemic data collected after 1st March.
-
-Diagnoses analyses
-Exclude individuals with NA for the MHD categories
-```{r exclusion criteria for diagnoses analysis}
-dat.mhd <- dat.raw %>%
-  filter(
-    !is.na(depressive_disorders) &
-      !is.na(eating_disorders) &
-      !is.na(psychotic_disorders) &
-      !is.na(obsessive_compulsive_disorders) &
-      !is.na(autism_spectrum_disorder) &
-      !is.na(mhd.mania_hypomania_bipolar_or_manicdepression_numeric) &
-      !is.na(mhd.posttraumatic_stress_disorder_ptsd_numeric) &
-      !is.na(control)
-  )
-
-dim(dat.mhd)
-
-```
-
-Retro-baseline analyses
-Exclude individuals with NA for MHD, age, gender
-```{r exclusion criteria for retro-baseline analysis}
-dat.retro <- dat.mhd %>%
-  filter(
-    ((data_group_gad == "Baseline and retrospective data" |
-      data_group_gad == "All prepandemic, baseline and retrospective data") |
-      (data_group_phq == "Baseline and retrospective data" |
-      data_group_phq == "All prepandemic, baseline and retrospective data") |
-      (data_group_pcl == "Baseline and retrospective data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data") |
-      (data_group_ocir == "Baseline and retrospective data" |
-      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
-      !is.na(age_category) &
-      !is.na(Gender_collapsed)
-  )
-
-dim(dat.retro)
-```
-
-Prepan-baseline analyses
-Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March
-```{r exclusion criteria for prepan-baseline analysis}
-dat.prepan <- dat.mhd %>%
-  filter(
-    ((data_group_gad == "Baseline and retrospective data" |
-      data_group_gad == "Prepandemic and baseline data" |
-      data_group_gad == "All prepandemic, baseline and retrospective data") |
-      (data_group_phq == "Baseline and retrospective data" |
-      data_group_phq == "Prepandemic and baseline data" |
-      data_group_phq == "All prepandemic, baseline and retrospective data") |
-      (data_group_pcl == "Baseline and retrospective data" |
-      data_group_pcl == "Prepandemic and baseline data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data") |
-      (data_group_ocir == "Baseline and retrospective data" |
-      data_group_ocir == "Prepandemic and baseline data" |
-      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
-      !is.na(age_category) &
-      !is.na(Gender_collapsed) &
-      prepandemic_march_1_numeric == 1
-  )
-
-dim(dat.prepan)
-```
-
-
-# Psychiatric disorders
-
-```{r disorders total count}
-dat.mhd %>%
-  freq(disorders_total_count)
-```
-
-## Vector
-```{r vector with psychiatric disorders}
-disorder_columns <- c(
-  "control_numeric",  
-  "depressive_disorders_numeric",
-    "anxiety_disorders_numeric",
-    "mhd.posttraumatic_stress_disorder_ptsd_numeric",
-    "eating_disorders_numeric",
-    "obsessive_compulsive_disorders_numeric",
-    "mhd.attention_deficit_hyperactivity_disorder_numeric",
-    "mhd.personality_disorder_numeric",
-    "autism_spectrum_disorder_numeric",
-    "mhd.mania_hypomania_bipolar_or_manicdepression_numeric",
-    "psychotic_disorders_numeric"
-)
-```
-
-## Correlation matrix
-Using dat.mhd for the correlation matrix.
-```{r Correlation matrix of psychiatric disorders}
-# Select items for correlation matrix
-mhd.items <- c(
-    "depressive_disorders",
-    "anxiety_disorders",
-    "eating_disorders",
-    "obsessive_compulsive_disorders",
-    "psychotic_disorders",
-    "mhd.mania_hypomania_bipolar_or_manicdepression",
-    "mhd.posttraumatic_stress_disorder_ptsd",
-    "autism_spectrum_disorder",
-    "mhd.attention_deficit_hyperactivity_disorder",
-    "mhd.personality_disorder",
-    "control"
-)
-
-# Calculate correlation matrix on specific columns (variables) from your data frame
-mhd.corr.mat <- hetcor(
-  as.data.frame(dat.mhd[,mhd.items]), # Specify the data
-  use = "pairwise.complete.obs" # Use all pairwise observations
-)
-
-# Print the correlation matrix
-print(mhd.corr.mat, digits = max(3, getOption("digits") - 3)) 
-
-# Save the correlations from the correlation matrix in an object
-mhd.corr.matrix <- as.matrix(mhd.corr.mat)
-
-# Save the p values from the correlation matrix in an object
-mhd.p.matrix <- as.matrix(mhd.corr.mat$tests)
-```
-
-Create the correlation matrix plot using the corrplot package
-```{r Correlation matrix of psychiatric disorders plot, fig.height=7}
-corrplot(mhd.corr.matrix, 
-         method = "color", # objects to represent the correlations on plot
-         type = "lower", # only use the lower triangle of the matrix
-         diag = FALSE, # do not show the correlations on the diagonal
-         addgrid.col = NA,
-         addCoef.col = "black", # colour for the correlation coefficients in the plot
-         tl.cex = 0.8,
-         tl.col = "black",
-         col=colorRampPalette(c("dodgerblue4","white","firebrick4"))(200), # colours for correlations
-         # Combine with significance
-         p.mat = mhd.p.matrix, # Matrix with p values
-         sig.level = 0.01, # Choose significant level
-         insig = "blank" # Nonsignificant correlations have no colour
-         )
-```
-
-
-
-```{r gather to long format Disorder_hierarchical}
-dat.long.psych <- dat.mhd %>%
-  gather(
-    key = "Disorder_inc_raw",
-    value = "Diagnosis",
-    all_of(disorder_columns)) %>%
-  select(
-    ID,
-    Sample,
-    Gender_collapsed,
-    Ethnicity_collapsed,
-    all_of(diff_score_cols),
-    Disorder_inc_raw,
-    Diagnosis
-  ) %>%
-  mutate(Disorder_inc =
-           recode_factor(
-             Disorder_inc_raw,
-             anxiety_disorders_numeric = "Anxiety disorders",
-             depressive_disorders_numeric = "Depressive disorders",
-             eating_disorders_numeric = "Eating disorders",
-             obsessive_compulsive_disorders_numeric = "OCDs",
-             psychotic_disorders_numeric = "Psychotic disorders",
-             mhd.mania_hypomania_bipolar_or_manicdepression_numeric = "Bipolar disorders",
-             mhd.posttraumatic_stress_disorder_ptsd_numeric = "PTSD",
-             autism_spectrum_disorder_numeric = "Autism",
-             mhd.attention_deficit_hyperactivity_disorder_numeric = "ADHD",
-             mhd.personality_disorder_numeric = "Personality disorders",
-             control_numeric = "Controls"
-           ))
-
-head(dat.long.psych)
-```
-
-
-
-```{r Disorder_inc by Gender_collapsed}
-Disorder_inc_by_Gender_collapsed <- dat.long.psych %>%
-  filter(Diagnosis == 1) %>%
-  count(Disorder_inc, Gender_collapsed) %>%
-  mutate(Prop = round(n/sum(n), 2))
-
-Disorder_inc_by_Gender_collapsed
-```
-
-```{r Disorder_inc by Gender_collapsed prop}
-Disorder_inc_by_Gender_collapsed <- dat.long.psych %>%
-  group_by(Disorder_inc) %>%
-  filter(Diagnosis == 1) %>%
-  count(Gender_collapsed) %>%
-  mutate(Prop = round(n/sum(n), 2))
-
-Disorder_inc_by_Gender_collapsed
-```
-
-
-```{r Disorder_inc by Gender_collapsed count plot}
-Disorder_inc_by_Gender_collapsed_count_plot <- Disorder_inc_by_Gender_collapsed %>%
-  ggplot(mapping = aes(
-    x = Disorder_inc,
-    y = n)
-    ) +
-  geom_bar(
-    aes(fill = Gender_collapsed),
-    stat="identity",
-    binwidth = 1,
-    position = position_dodge2(preserve = "single")
-  ) +
-  labs(
-    x = "Disorders",
-    y = "Number of participants",
-    fill = "Gender_collapsed") +
-  theme_personal +
-  scale_fill_manual(
-    values = COPINGpalette4
-    ) +
-  coord_flip()
-
-Disorder_inc_by_Gender_collapsed_count_plot
-```
-
-```{r Disorder_inc by Gender_collapsed prop plot}
-Disorder_inc_by_Gender_collapsed_prop_plot <- Disorder_inc_by_Gender_collapsed %>%
-  ggplot(mapping = aes(
-    x = Disorder_inc,
-    y = Prop)
-    ) +
-  geom_bar(
-    aes(fill = Gender_collapsed),
-    stat="identity",
-    binwidth = 1,
-    position = position_dodge2(preserve = "single")
-  ) +
-  labs(
-    x = "Disorders",
-    y = "Number of participants",
-    fill = "Gender_collapsed") +
-  theme_personal +
-  scale_fill_manual(
-    values = COPINGpalette4
-    ) +
-  coord_flip()
-
-Disorder_inc_by_Gender_collapsed_prop_plot
-```
-
-
-100% bar per diagnosis with percentages of contribution per sample
-
-```{r Disorder_inc by Sample}
-Disorder_inc_by_Sample <- dat.long.psych %>%
-  filter(Diagnosis == 1) %>%
-  count(Disorder_inc, Sample)
-```
-
-```{r Disorder_inc by Sample plot}
-Disorder_inc_by_Sample %>%
-  ggplot(mapping = aes(
-    x = Disorder_inc,
-    y = n)
-    ) +
-  geom_bar(
-    aes(fill = Sample),
-#    position = "dodge",
-    stat="identity",
-    binwidth = 1,
-    position = position_dodge2(preserve = "single")
-  ) +
-  labs(
-    x = "Disorders",
-    y = "Number of participants",
-    fill = "Sample") +
-  theme_personal +
-  scale_fill_manual(
-    values = COPINGpalette4,
-#    labels = c("Prepandemic", "Retrospective")
-    ) +
-  coord_flip()
-```
-
-
-
-Ethnicity should be recoded
-European
-Mixed or multiple ethnic origins
-African or African British
-Asian or Asian British
-Arab
-```{r Disorder_inc by Ethnicity_collapsed}
-Disorder_inc_by_Ethnicity <- dat.long.psych %>%
-  filter(Diagnosis == 1) %>%
-  count(Disorder_inc, Ethnicity_collapsed) %>%
-  mutate(Prop = round(n/sum(n), 2))
-
-Disorder_inc_by_Ethnicity
-```
-
-```{r Disorder_inc by Ethnicity_collapsed plot}
-Disorder_inc_by_Ethnicity %>%
-  ggplot(mapping = aes(
-    x = Disorder_inc,
-    y = n)
-  ) +
-  geom_bar(
-    aes(fill = Ethnicity_collapsed),
-    #    position = "dodge",
-    stat="identity",
-    binwidth = 1,
-    position = position_dodge2(preserve = "single")
-  ) +
-  labs(
-    x = "Disorders",
-    y = "Number of participants",
-    fill = "Ethnicity_collapsed") +
-  theme_personal +
-  scale_fill_manual(
-    values = COPINGpalette6,
-    #    labels = c("Prepandemic", "Retrospective")
-  ) +
-  coord_flip()
 ```
 
 
@@ -2756,6 +2414,345 @@ dat.long.pcl.sum %>%
   facet_wrap("Disorder_hierarchical")
 ```
 
+# Exclusion
+Filter data frame to create 3 datasets:
+  1. Diagnoses analyses
+        i. Exclude individuals with NA for MHD
+  2. Retrospective - baseline change anlyses
+        i. Exclude individuals with NAs for:
+              1. MHD
+              2. Age
+              3. Gender
+  3. Prepandemic - baseline change analyses
+          i. Exclude individuals with NAs for:
+              1. MHD
+              2. Age
+              3. Gender
+          ii. Exclude individuals with prepandemic data collected after 1st March.
+
+Diagnoses analyses
+Exclude individuals with NA for the MHD categories
+```{r exclusion criteria for diagnoses analysis}
+dat.mhd <- dat.raw %>%
+  filter(
+    !is.na(depressive_disorders) &
+      !is.na(eating_disorders) &
+      !is.na(psychotic_disorders) &
+      !is.na(obsessive_compulsive_disorders) &
+      !is.na(autism_spectrum_disorder) &
+      !is.na(mhd.mania_hypomania_bipolar_or_manicdepression_numeric) &
+      !is.na(mhd.posttraumatic_stress_disorder_ptsd_numeric) &
+      !is.na(control)
+  )
+
+dim(dat.mhd)
+
+```
+
+Retro-baseline analyses
+Exclude individuals with NA for MHD, age, gender
+```{r exclusion criteria for retro-baseline analysis}
+dat.retro <- dat.mhd %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      !is.na(age_category) &
+      !is.na(Gender_collapsed)
+  )
+
+dim(dat.retro)
+```
+
+Prepan-baseline analyses
+Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March
+```{r exclusion criteria for prepan-baseline analysis}
+dat.prepan <- dat.mhd %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "Prepandemic and baseline data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "Prepandemic and baseline data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      !is.na(age_category) &
+      !is.na(Gender_collapsed) &
+      prepandemic_march_1_numeric == 1
+  )
+
+dim(dat.prepan)
+```
+
+
+# Psychiatric disorders
+
+```{r disorders total count}
+dat %>%
+  freq(disorders_total_count)
+```
+
+## Vector
+```{r vector with psychiatric disorders}
+disorder_columns <- c(
+  "control_numeric",  
+  "depressive_disorders_numeric",
+    "anxiety_disorders_numeric",
+    "mhd.posttraumatic_stress_disorder_ptsd_numeric",
+    "eating_disorders_numeric",
+    "obsessive_compulsive_disorders_numeric",
+    "mhd.attention_deficit_hyperactivity_disorder_numeric",
+    "mhd.personality_disorder_numeric",
+    "autism_spectrum_disorder_numeric",
+    "mhd.mania_hypomania_bipolar_or_manicdepression_numeric",
+    "psychotic_disorders_numeric"
+)
+```
+
+## Correlation matrix
+Using dat for the correlation matrix.
+```{r Correlation matrix of psychiatric disorders}
+# Select items for correlation matrix
+mhd.items <- c(
+    "depressive_disorders",
+    "anxiety_disorders",
+    "eating_disorders",
+    "obsessive_compulsive_disorders",
+    "psychotic_disorders",
+    "mhd.mania_hypomania_bipolar_or_manicdepression",
+    "mhd.posttraumatic_stress_disorder_ptsd",
+    "autism_spectrum_disorder",
+    "mhd.attention_deficit_hyperactivity_disorder",
+    "mhd.personality_disorder",
+    "control"
+)
+
+# Calculate correlation matrix on specific columns (variables) from your data frame
+mhd.corr.mat <- hetcor(
+  as.data.frame(dat[,mhd.items]), # Specify the data
+  use = "pairwise.complete.obs" # Use all pairwise observations
+)
+
+# Print the correlation matrix
+print(mhd.corr.mat, digits = max(3, getOption("digits") - 3)) 
+
+# Save the correlations from the correlation matrix in an object
+mhd.corr.matrix <- as.matrix(mhd.corr.mat)
+
+# Save the p values from the correlation matrix in an object
+mhd.p.matrix <- as.matrix(mhd.corr.mat$tests)
+```
+
+Create the correlation matrix plot using the corrplot package
+```{r Correlation matrix of psychiatric disorders plot, fig.height=7}
+corrplot(mhd.corr.matrix, 
+         method = "color", # objects to represent the correlations on plot
+         type = "lower", # only use the lower triangle of the matrix
+         diag = FALSE, # do not show the correlations on the diagonal
+         addgrid.col = NA,
+         addCoef.col = "black", # colour for the correlation coefficients in the plot
+         tl.cex = 0.8,
+         tl.col = "black",
+         col=colorRampPalette(c("dodgerblue4","white","firebrick4"))(200), # colours for correlations
+         # Combine with significance
+         p.mat = mhd.p.matrix, # Matrix with p values
+         sig.level = 0.01, # Choose significant level
+         insig = "blank" # Nonsignificant correlations have no colour
+         )
+```
+
+
+
+```{r gather to long format Disorder_hierarchical}
+dat.long.psych <- dat %>%
+  gather(
+    key = "Disorder_inc_raw",
+    value = "Diagnosis",
+    all_of(disorder_columns)) %>%
+  select(
+    ID,
+    Sample,
+    Gender_collapsed,
+    Ethnicity_collapsed,
+    all_of(diff_score_cols),
+    Disorder_inc_raw,
+    Diagnosis
+  ) %>%
+  mutate(Disorder_inc =
+           recode_factor(
+             Disorder_inc_raw,
+             anxiety_disorders_numeric = "Anxiety disorders",
+             depressive_disorders_numeric = "Depressive disorders",
+             eating_disorders_numeric = "Eating disorders",
+             obsessive_compulsive_disorders_numeric = "OCDs",
+             psychotic_disorders_numeric = "Psychotic disorders",
+             mhd.mania_hypomania_bipolar_or_manicdepression_numeric = "Bipolar disorders",
+             mhd.posttraumatic_stress_disorder_ptsd_numeric = "PTSD",
+             autism_spectrum_disorder_numeric = "Autism",
+             mhd.attention_deficit_hyperactivity_disorder_numeric = "ADHD",
+             mhd.personality_disorder_numeric = "Personality disorders",
+             control_numeric = "Controls"
+           ))
+
+head(dat.long.psych)
+```
+
+
+```{r Disorder_inc by Gender_collapsed}
+Disorder_inc_by_Gender_collapsed <- dat.long.psych %>%
+  filter(Diagnosis == 1) %>%
+  count(Disorder_inc, Gender_collapsed) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+Disorder_inc_by_Gender_collapsed
+```
+
+```{r Disorder_inc by Gender_collapsed prop}
+Disorder_inc_by_Gender_collapsed <- dat.long.psych %>%
+  group_by(Disorder_inc) %>%
+  filter(Diagnosis == 1) %>%
+  count(Gender_collapsed) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+Disorder_inc_by_Gender_collapsed
+```
+
+
+```{r Disorder_inc by Gender_collapsed count plot}
+Disorder_inc_by_Gender_collapsed_count_plot <- Disorder_inc_by_Gender_collapsed %>%
+  ggplot(mapping = aes(
+    x = Disorder_inc,
+    y = n)
+    ) +
+  geom_bar(
+    aes(fill = Gender_collapsed),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Disorders",
+    y = "Number of participants",
+    fill = "Gender_collapsed") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette4
+    ) +
+  coord_flip()
+
+Disorder_inc_by_Gender_collapsed_count_plot
+```
+
+```{r Disorder_inc by Gender_collapsed prop plot}
+Disorder_inc_by_Gender_collapsed_prop_plot <- Disorder_inc_by_Gender_collapsed %>%
+  ggplot(mapping = aes(
+    x = Disorder_inc,
+    y = Prop)
+    ) +
+  geom_bar(
+    aes(fill = Gender_collapsed),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Disorders",
+    y = "Number of participants",
+    fill = "Gender_collapsed") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette4
+    ) +
+  coord_flip()
+
+Disorder_inc_by_Gender_collapsed_prop_plot
+```
+
+
+100% bar per diagnosis with percentages of contribution per sample
+
+```{r Disorder_inc by Sample}
+Disorder_inc_by_Sample <- dat.long.psych %>%
+  filter(Diagnosis == 1) %>%
+  count(Disorder_inc, Sample)
+```
+
+```{r Disorder_inc by Sample plot}
+Disorder_inc_by_Sample %>%
+  ggplot(mapping = aes(
+    x = Disorder_inc,
+    y = n)
+    ) +
+  geom_bar(
+    aes(fill = Sample),
+#    position = "dodge",
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Disorders",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette4,
+#    labels = c("Prepandemic", "Retrospective")
+    ) +
+  coord_flip()
+```
+
+
+
+Ethnicity should be recoded
+European
+Mixed or multiple ethnic origins
+African or African British
+Asian or Asian British
+Arab
+```{r Disorder_inc by Ethnicity_collapsed}
+Disorder_inc_by_Ethnicity <- dat.long.psych %>%
+  filter(Diagnosis == 1) %>%
+  count(Disorder_inc, Ethnicity_collapsed) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+Disorder_inc_by_Ethnicity
+```
+
+```{r Disorder_inc by Ethnicity_collapsed plot}
+Disorder_inc_by_Ethnicity %>%
+  ggplot(mapping = aes(
+    x = Disorder_inc,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Ethnicity_collapsed),
+    #    position = "dodge",
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Disorders",
+    y = "Number of participants",
+    fill = "Ethnicity_collapsed") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6,
+    #    labels = c("Prepandemic", "Retrospective")
+  ) +
+  coord_flip()
+```
 
 # Regression
 Regress covariates out of the change? Which? 
