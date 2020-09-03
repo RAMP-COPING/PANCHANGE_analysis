@@ -2751,7 +2751,33 @@ dat.prepan <- dat %>%
 dim(dat.prepan)
 ```
 
-# Regression
+#ANALYSIS PLAN
+1. Calculate mean change per disorder group 
+    i. Disorders (9)
+      a. Rank the disorders by the size of the change
+    ii. Sex 
+    iii. Age (13; RAMP; potentially collapse above 65 depending on group sizes) 
+    iv. Ethnicity groups (5; White European, Black (British), Asian, Arab, Mixed) 
+
+2. Regression models (Regress covariates out of the change? Which?)
+    i. Model 0: Disorders  
+    ii. Model 1: Model 0 + Sex + Age + Ethnicity + Time registration and baseline 
+
+3. Re-calculate change 
+
+4. Re-rank the change again 
+
+5. PCL:  
+    i. Calculate the total GLAD, COPING, RAMP baseline
+    ii. For each item:
+          a. present percentages of how say that this is due to the pandemic 
+          b. Calculate a variable PCL pandemic score 
+          c. If one item is highly endorsed due to pandemic -> exclude in sensitivity analysis 
+
+# 1. Calculate mean change per group 
+
+
+# 2. Regression
 Regress covariates out of the change? Which? 
 
 Model naming conventions:
