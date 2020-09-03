@@ -328,14 +328,14 @@ dat.raw %>%
 
 Diagnoses analyses
 ```{r dat.mhd - Vectors with sum_score_cols}
-sum_score_cols <- dat.mhd %>%
+sum_score_cols <- dat.raw %>%
   select(contains("sum_score")) %>%
   select(-ends_with("raw")) %>%
   colnames()
 
 sum_score_cols
 
-phq.sum_score_cols <- dat.mhd %>%
+phq.sum_score_cols <- dat.raw %>%
   select(contains("phq")) %>%
   select(contains("sum_score")) %>% 
   select(-ends_with("raw")) %>%
@@ -344,7 +344,7 @@ phq.sum_score_cols <- dat.mhd %>%
 
 phq.sum_score_cols
 
-gad.sum_score_cols <- dat.mhd %>%
+gad.sum_score_cols <- dat.raw %>%
   select(contains("gad")) %>%
   select(contains("sum_score")) %>% 
   select(-ends_with("raw")) %>%
@@ -352,7 +352,7 @@ gad.sum_score_cols <- dat.mhd %>%
 
 gad.sum_score_cols
 
-ocir.sum_score_cols <- dat.mhd %>%
+ocir.sum_score_cols <- dat.raw %>%
   select(contains("ocir")) %>%
   select(contains("sum_score")) %>% 
   select(-ends_with("raw")) %>%
@@ -360,7 +360,7 @@ ocir.sum_score_cols <- dat.mhd %>%
 
 ocir.sum_score_cols
 
-pcl.sum_score_cols <- dat.mhd %>%
+pcl.sum_score_cols <- dat.raw %>%
   select(contains("pcl")) %>%
   select(contains("sum_score")) %>% 
   select(-ends_with("raw")) %>%
@@ -372,27 +372,27 @@ pcl.sum_score_cols
 # Vectors for diff_score
 
 ```{r Vectors with diff_score_cols}
-diff_score_cols <- dat.mhd %>%
+diff_score_cols <- dat.raw %>%
   select(contains("diff_score")) %>% 
   colnames()
 
 diff_score_cols
 
-phq.diff_score_cols <- dat.mhd %>%
+phq.diff_score_cols <- dat.raw %>%
   select(contains("phq")) %>%
   select(contains("diff_score")) %>% 
   colnames()
 
 phq.diff_score_cols
 
-gad.diff_score_cols <- dat.mhd %>%
+gad.diff_score_cols <- dat.raw %>%
   select(contains("gad")) %>%
   select(contains("diff_score")) %>% 
   colnames()
 
 gad.diff_score_cols
 
-ocir.diff_score_cols <- dat.mhd %>%
+ocir.diff_score_cols <- dat.raw %>%
   select(contains("ocir")) %>%
   select(contains("diff_score")) %>% 
   colnames()
@@ -474,7 +474,7 @@ dat <- dat.raw %>%
       )
   )
 
-dat <- dat.raw %>%
+dat <- dat %>%
   mutate(
     Disorder_hierarchical_psychosis =
       recode_factor(
