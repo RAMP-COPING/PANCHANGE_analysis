@@ -197,19 +197,44 @@ dat.raw %>%
   freq(Sample)
 ```
 
+# Exclusions
+
+Exclude GLAD/EDGI individuals that didn't take part in COPING
+Exclude individuals with NA for the MHD categories
+
+++MD: There's an issue with the EDGI obsessive_compulsive_disorders variable. There are >400 NAs so we are only left with 78 EDGI participants in the dataset.
+```{r exclusion criteria for diagnoses analysis}
+dat <- dat.raw %>%
+  filter(
+    !is.na(depressive_disorders) &
+      !is.na(eating_disorders) &
+      !is.na(psychotic_disorders) &
+      !is.na(obsessive_compulsive_disorders) &
+      !is.na(autism_spectrum_disorder) &
+      !is.na(mhd.mania_hypomania_bipolar_or_manicdepression_numeric) &
+      !is.na(mhd.posttraumatic_stress_disorder_ptsd_numeric) &
+      !is.na(control)
+  ) %>% 
+  drop_na(startDate.coping)
+
+dim(dat.raw)
+dim(dat)
+
+```
+
 # Collapsing categories
 
 ## age_category
 ```{r Inspect age_category}
-dat.raw %>%
+dat %>%
   freq(age_category)
 
-dat.raw %>%
+dat %>%
   freq(age_category_numeric)
 ```
 
 ```{r Collapse age_category}
-dat.raw <- dat.raw %>%
+dat <- dat %>%
   mutate(age_category_collapsed_numeric =
            case_when(
              age_category_numeric == 1 ~ 0,
@@ -229,7 +254,7 @@ dat.raw <- dat.raw %>%
            )
   )
 
-dat.raw <- dat.raw %>%
+dat <- dat %>%
   mutate(age_category_collapsed =
            recode_factor(
              age_category_collapsed_numeric,
@@ -245,7 +270,7 @@ dat.raw <- dat.raw %>%
            )
   )
 
-dat.raw %>%
+dat %>%
   freq(age_category_collapsed)
 ```
 
@@ -253,15 +278,15 @@ dat.raw %>%
 
 ## Gender
 ```{r Inspect Gender}
-dat.raw %>%
+dat %>%
   freq(Gender)
 
-dat.raw %>%
+dat %>%
   freq(Gender_numeric)
 ```
 
 ```{r Collapse Gender}
-dat.raw <- dat.raw %>%
+dat <- dat %>%
   mutate(Gender_collapsed_numeric =
            case_when(
              Gender_numeric == 0 ~ 0,
@@ -271,7 +296,7 @@ dat.raw <- dat.raw %>%
            )
          )
 
-dat.raw <- dat.raw %>%
+dat <- dat %>%
   mutate(Gender_collapsed =
            recode_factor(
              Gender_collapsed_numeric,
@@ -281,34 +306,37 @@ dat.raw <- dat.raw %>%
            )
          )
 
-dat.raw %>%
+dat %>%
   freq(Gender_collapsed)
 ```
 
 ## Ethnicity
+++MD: The ethnicity_numeric variable has more NAs (N = 14304) than the ethnicity categorical variable (N = 3568). Something strange must have happened during the conversion to numeric?
 ```{r Inspect Ethnicity}
-dat.raw %>%
+dat %>%
   freq(Ethnicity)
 
-dat.raw %>%
+dat %>%
   freq(Ethnicity_numeric)
+
 ```
 
 ++MD: Need to decide what to do with the Arab grouping.
+++MD: Why is "Other ethnic group" recoded as Asian or Asian British?
 ```{r Collapse Ethnicity}
-dat.raw <- dat.raw %>%
+dat <- dat %>%
   mutate(Ethnicity_collapsed_numeric =
            case_when(
-             Ethnicity_numeric == 1 ~ 0,
-             Ethnicity_numeric == 2 ~ 1,
-             Ethnicity_numeric == 3 ~ 2,
-             Ethnicity_numeric == 4 ~ 3,
-             Ethnicity_numeric == 5 ~ 3,
-             Ethnicity_numeric == 6 ~ 4
+             Ethnicity_numeric == 1 ~ 0, #European
+             Ethnicity_numeric == 2 ~ 1, #Mixed or multiple ethnic origins 
+             Ethnicity_numeric == 3 ~ 2, #Asian or Asian British
+             Ethnicity_numeric == 4 ~ 3, #African or African British
+             Ethnicity_numeric == 5 ~ 3, #Arab - combined with African/African British
+             Ethnicity_numeric == 6 ~ 4  #Other ethnic group
            )
   )
 
-dat.raw <- dat.raw %>%
+dat <- dat %>%
   mutate(Ethnicity_collapsed =
            recode_factor(
              Ethnicity_collapsed_numeric,
@@ -320,22 +348,21 @@ dat.raw <- dat.raw %>%
            )
   )
 
-dat.raw %>%
+dat %>%
   freq(Ethnicity_collapsed)
 ```
 
 # Vectors for sum_score
 
-Diagnoses analyses
-```{r dat.mhd - Vectors with sum_score_cols}
-sum_score_cols <- dat.raw %>%
+```{r Vectors with sum_score_cols}
+sum_score_cols <- dat %>%
   select(contains("sum_score")) %>%
   select(-ends_with("raw")) %>%
   colnames()
 
 sum_score_cols
 
-phq.sum_score_cols <- dat.raw %>%
+phq.sum_score_cols <- dat %>%
   select(contains("phq")) %>%
   select(contains("sum_score")) %>% 
   select(-ends_with("raw")) %>%
@@ -344,7 +371,7 @@ phq.sum_score_cols <- dat.raw %>%
 
 phq.sum_score_cols
 
-gad.sum_score_cols <- dat.raw %>%
+gad.sum_score_cols <- dat %>%
   select(contains("gad")) %>%
   select(contains("sum_score")) %>% 
   select(-ends_with("raw")) %>%
@@ -352,7 +379,7 @@ gad.sum_score_cols <- dat.raw %>%
 
 gad.sum_score_cols
 
-ocir.sum_score_cols <- dat.raw %>%
+ocir.sum_score_cols <- dat %>%
   select(contains("ocir")) %>%
   select(contains("sum_score")) %>% 
   select(-ends_with("raw")) %>%
@@ -360,7 +387,7 @@ ocir.sum_score_cols <- dat.raw %>%
 
 ocir.sum_score_cols
 
-pcl.sum_score_cols <- dat.raw %>%
+pcl.sum_score_cols <- dat %>%
   select(contains("pcl")) %>%
   select(contains("sum_score")) %>% 
   select(-ends_with("raw")) %>%
@@ -372,27 +399,27 @@ pcl.sum_score_cols
 # Vectors for diff_score
 
 ```{r Vectors with diff_score_cols}
-diff_score_cols <- dat.raw %>%
+diff_score_cols <- dat %>%
   select(contains("diff_score")) %>% 
   colnames()
 
 diff_score_cols
 
-phq.diff_score_cols <- dat.raw %>%
+phq.diff_score_cols <- dat %>%
   select(contains("phq")) %>%
   select(contains("diff_score")) %>% 
   colnames()
 
 phq.diff_score_cols
 
-gad.diff_score_cols <- dat.raw %>%
+gad.diff_score_cols <- dat %>%
   select(contains("gad")) %>%
   select(contains("diff_score")) %>% 
   colnames()
 
 gad.diff_score_cols
 
-ocir.diff_score_cols <- dat.raw %>%
+ocir.diff_score_cols <- dat %>%
   select(contains("ocir")) %>%
   select(contains("diff_score")) %>% 
   colnames()
@@ -459,7 +486,7 @@ Disorder hierarchy
 7: Anxiety disorders
 
 ```{r Psychiatric disorders hierarchy including psychosis}
-dat <- dat.raw %>%
+dat <- dat %>%
   mutate(
     Disorder_hierarchical_psychosis_numeric =
       case_when(
@@ -1130,7 +1157,7 @@ key_worker_by_Sample_prop_plot
 
 # COVID
 ## Recode variable
-```{r gad covid test positive double}
+```{r covid test positive double}
 dat <- dat %>%
   mutate(covid_test_positive_double_numeric =
            case_when(
@@ -1216,6 +1243,7 @@ dat %>%
 ```
 
 # Create data set per cohort
+++MD: Do we want to break up the datasets by cohort again? Or is this breaking up datasets into GAD
 
 ## GAD
 ```{r}
@@ -2414,87 +2442,6 @@ dat.long.pcl.sum %>%
   facet_wrap("Disorder_hierarchical")
 ```
 
-# Exclusion
-Filter data frame to create 3 datasets:
-  1. Diagnoses analyses
-        i. Exclude individuals with NA for MHD
-  2. Retrospective - baseline change anlyses
-        i. Exclude individuals with NAs for:
-              1. MHD
-              2. Age
-              3. Gender
-  3. Prepandemic - baseline change analyses
-          i. Exclude individuals with NAs for:
-              1. MHD
-              2. Age
-              3. Gender
-          ii. Exclude individuals with prepandemic data collected after 1st March.
-
-Diagnoses analyses
-Exclude individuals with NA for the MHD categories
-```{r exclusion criteria for diagnoses analysis}
-dat.mhd <- dat.raw %>%
-  filter(
-    !is.na(depressive_disorders) &
-      !is.na(eating_disorders) &
-      !is.na(psychotic_disorders) &
-      !is.na(obsessive_compulsive_disorders) &
-      !is.na(autism_spectrum_disorder) &
-      !is.na(mhd.mania_hypomania_bipolar_or_manicdepression_numeric) &
-      !is.na(mhd.posttraumatic_stress_disorder_ptsd_numeric) &
-      !is.na(control)
-  )
-
-dim(dat.mhd)
-
-```
-
-Retro-baseline analyses
-Exclude individuals with NA for MHD, age, gender
-```{r exclusion criteria for retro-baseline analysis}
-dat.retro <- dat.mhd %>%
-  filter(
-    ((data_group_gad == "Baseline and retrospective data" |
-      data_group_gad == "All prepandemic, baseline and retrospective data") |
-      (data_group_phq == "Baseline and retrospective data" |
-      data_group_phq == "All prepandemic, baseline and retrospective data") |
-      (data_group_pcl == "Baseline and retrospective data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data") |
-      (data_group_ocir == "Baseline and retrospective data" |
-      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
-      !is.na(age_category) &
-      !is.na(Gender_collapsed)
-  )
-
-dim(dat.retro)
-```
-
-Prepan-baseline analyses
-Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March
-```{r exclusion criteria for prepan-baseline analysis}
-dat.prepan <- dat.mhd %>%
-  filter(
-    ((data_group_gad == "Baseline and retrospective data" |
-      data_group_gad == "Prepandemic and baseline data" |
-      data_group_gad == "All prepandemic, baseline and retrospective data") |
-      (data_group_phq == "Baseline and retrospective data" |
-      data_group_phq == "Prepandemic and baseline data" |
-      data_group_phq == "All prepandemic, baseline and retrospective data") |
-      (data_group_pcl == "Baseline and retrospective data" |
-      data_group_pcl == "Prepandemic and baseline data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data") |
-      (data_group_ocir == "Baseline and retrospective data" |
-      data_group_ocir == "Prepandemic and baseline data" |
-      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
-      !is.na(age_category) &
-      !is.na(Gender_collapsed) &
-      prepandemic_march_1_numeric == 1
-  )
-
-dim(dat.prepan)
-```
-
-
 # Psychiatric disorders
 
 ```{r disorders total count}
@@ -2520,7 +2467,6 @@ disorder_columns <- c(
 ```
 
 ## Correlation matrix
-Using dat for the correlation matrix.
 ```{r Correlation matrix of psychiatric disorders}
 # Select items for correlation matrix
 mhd.items <- c(
@@ -2752,6 +2698,64 @@ Disorder_inc_by_Ethnicity %>%
     #    labels = c("Prepandemic", "Retrospective")
   ) +
   coord_flip()
+```
+
+# Create additional datasets for analyses
+Filter data frame to create 3 datasets:
+
+  1. Retrospective - baseline change anlyses
+        i. Exclude individuals with NAs for:
+              1. MHD
+              2. Age
+              3. Gender
+              4. Missing retrospective and/or baseline data
+  2. Prepandemic - baseline change analyses
+          i. Exclude individuals with NAs for:
+              1. MHD
+              2. Age
+              3. Gender
+              4. Missing pandemic and/or baseline data
+          ii. Exclude individuals with prepandemic data collected after 1st March.
+
+Retro-baseline analyses
+Exclude individuals with NA for MHD, age, gender
+```{r exclusion criteria for retro-baseline analysis}
+dat.retro <- dat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data"))
+  )
+
+dim(dat.retro)
+```
+
+Prepan-baseline analyses
+Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March
+```{r exclusion criteria for prepan-baseline analysis}
+dat.prepan <- dat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "Prepandemic and baseline data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "Prepandemic and baseline data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      prepandemic_march_1_numeric == 1
+  )
+
+dim(dat.prepan)
 ```
 
 # Regression
