@@ -3046,8 +3046,6 @@ tidy(ocir_prepan_model1b)
 ```
 
 
-
-
 ## Retro-baseline change
 
 ### GAD
@@ -3192,10 +3190,21 @@ tidy(phq_retro_model1b)
 
 
 ### PCL
+
+++MD: Not sure if this is how we want to run the PCL regression - the outcome variable I've included is "How many PCL items the participants report are related to the pandemic", but I think we might want a more nuanced approach than this.
+
+```{r recode PCL retro variable as numeric}
+dat.retro <- dat.retro %>% 
+  mutate(
+    pcl.sum_score_retro = 
+      as.numeric(pcl.sum_score_retro_raw)
+  )
+```
+
 Model 0a: Disorder_hierarchical, Unadjusted
 ```{r PCL retro Model 0a}
 pcl_retro_model0a <- lm(
-  formula = pcl.diff_score_base_retro ~ 
+  formula = pcl.sum_score_retro ~ 
     Disorder_hierarchical,
   data = dat.retro)
 
@@ -3206,7 +3215,7 @@ tidy(pcl_retro_model0a)
 Model 0b: Overlapping disorders, Unadjusted
 ```{r PCL retro Model 0b}
 pcl_retro_model0b <- lm(
-  formula = pcl.diff_score_base_retro ~
+  formula = pcl.sum_score_retro ~
     anxiety_disorders +
     depressive_disorders +
     eating_disorders +
@@ -3227,7 +3236,7 @@ Model 1a: Disorder hierarchical, Adjusted
   Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
 ```{r PCL retro Model 1a}
 pcl_retro_model1a <- lm(
-  formula = pcl.diff_score_base_retro ~ 
+  formula = pcl.sum_score_retro ~ 
     Disorder_hierarchical + 
     Gender_collapsed + 
     age_category + 
@@ -3243,7 +3252,7 @@ Model 1b: Overlapping disorders, Adjusted
   Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
 ```{r PCL retro Model 1b}
 pcl_retro_model1b <- lm(
-  formula = pcl.diff_score_base_retro ~
+  formula = pcl.sum_score_retro ~
     anxiety_disorders +
     depressive_disorders +
     eating_disorders +
