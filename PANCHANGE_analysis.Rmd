@@ -53,6 +53,9 @@ Install packages (if they are not available in your version of R)
 #install.packages("psych")
 #install.packages("broom")
 #install.packages("skimr")
+#install.packages("polycor")
+#install.packages("corrplot")
+#install.packages("patchwork")
 ```
 
 Load packages
@@ -135,7 +138,7 @@ palette = COPINGpalette2
 ## Source data file paths 
 
 ```{r source file path}
-#source raw data directory: data.raw_path
+#source data directory: data_path
 source("../PANCHANGE_raw_path.R")
 ```
 
@@ -147,13 +150,13 @@ dim(dat.raw)
 colnames(dat.raw)
 ```
 
-
+++MD: I had to cancel this chunk while running because it took too long - there are 473 variables in this dataset, so I don't think summarising all at once is useful!
 ```{r dat.coping summary, eval=FALSE, include=FALSE}
-summarytools::dfSummary(
-  dat.raw,
-  graph.col = F,
-  valid.col = F,
-  labels.col = F)
+#summarytools::dfSummary(
+#  dat.raw,
+#  graph.col = F,
+#  valid.col = F,
+#  labels.col = F)
 ```
 
 # Data availability
@@ -292,6 +295,7 @@ dat.raw %>%
   freq(Ethnicity_numeric)
 ```
 
+++MD: Need to decide what to do with the Arab grouping.
 ```{r Collapse Ethnicity}
 dat.raw <- dat.raw %>%
   mutate(Ethnicity_collapsed_numeric =
@@ -322,13 +326,65 @@ dat.raw %>%
 ```
 
 # Exclusion
+Filter data frame to create 3 datasets:
+  1. Diagnoses analyses
+        i. Exclude individuals with NA for MHD
+  2. Retrospective - baseline change anlyses
+        i. Exclude individuals with NAs for:
+              1. MHD
+              2. Age
+              3. Gender
+  3. Prepandemic - baseline change analyses
+          i. Exclude individuals with NAs for:
+              1. MHD
+              2. Age
+              3. Gender
+          ii. Exclude individuals with prepandemic data collected after 1st March.
 
-## COPING
-Filter data frame to exclude participants that never answered COPING
-```{r exclusion criteria dat}
-dat.2.timepoints <- dat.raw %>%
+Diagnoses analyses
+Exclude individuals with NA for the MHD categories
+```{r exclusion criteria for diagnoses analysis}
+dat.mhd <- dat.raw %>%
   filter(
-    (data_group_gad == "Baseline and retrospective data" |
+    !is.na(depressive_disorders) &
+      !is.na(eating_disorders) &
+      !is.na(psychotic_disorders) &
+      !is.na(obsessive_compulsive_disorders) &
+      !is.na(autism_spectrum_disorder) &
+      !is.na(mhd.mania_hypomania_bipolar_or_manicdepression_numeric) &
+      !is.na(mhd.posttraumatic_stress_disorder_ptsd_numeric)
+  )
+
+dim(dat.mhd)
+
+```
+
+Retro-baseline analyses
+Exclude individuals with NA for MHD, age, gender
+```{r exclusion criteria for retro-baseline analysis}
+dat.retro <- dat.mhd %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      !is.na(age_category) &
+      !is.na(Gender_collapsed)
+  )
+
+dim(dat.retro)
+```
+
+Prepan-baseline analyses
+Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March
+```{r exclusion criteria for prepan-baseline analysis}
+dat.prepan <- dat.mhd %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
       data_group_gad == "Prepandemic and baseline data" |
       data_group_gad == "All prepandemic, baseline and retrospective data") |
       (data_group_phq == "Baseline and retrospective data" |
@@ -339,54 +395,32 @@ dat.2.timepoints <- dat.raw %>%
       data_group_pcl == "All prepandemic, baseline and retrospective data") |
       (data_group_ocir == "Baseline and retrospective data" |
       data_group_ocir == "Prepandemic and baseline data" |
-      data_group_ocir == "All prepandemic, baseline and retrospective data")
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      !is.na(age_category) &
+      !is.na(Gender_collapsed) &
+      prepandemic_march_1_numeric == 1
   )
 
-dim(dat.2.timepoints)
+dim(dat.prepan)
 ```
 
-```{r}
-
-```
-
-
-
-```{r}
-dat.2.timepoints %>%
-  select(age_category) %>%
-  filter(is.na(age_category))
-```
-
-
-
-Exclusion
-```{r Exclusion}
-dat <- dat.2.timepoints %>%
-  
-```
-
-
-
-
-```{r dimensions of total dat}
-dim(dat)
-```
-
-```{r}
-dat %>%
+```{r disorders total count}
+dat.raw %>%
   freq(disorders_total_count)
 ```
 
 # Vectors for sum_score
-```{r Vectors with sum_score_cols}
-sum_score_cols <- dat %>%
+
+Diagnoses analyses
+```{r dat.mhd - Vectors with sum_score_cols}
+sum_score_cols <- dat.mhd %>%
   select(contains("sum_score")) %>%
   select(-ends_with("raw")) %>%
   colnames()
 
 sum_score_cols
 
-phq.sum_score_cols <- dat %>%
+phq.sum_score_cols <- dat.mhd %>%
   select(contains("phq")) %>%
   select(contains("sum_score")) %>% 
   select(-ends_with("raw")) %>%
@@ -395,7 +429,7 @@ phq.sum_score_cols <- dat %>%
 
 phq.sum_score_cols
 
-gad.sum_score_cols <- dat %>%
+gad.sum_score_cols <- dat.mhd %>%
   select(contains("gad")) %>%
   select(contains("sum_score")) %>% 
   select(-ends_with("raw")) %>%
@@ -403,7 +437,7 @@ gad.sum_score_cols <- dat %>%
 
 gad.sum_score_cols
 
-ocir.sum_score_cols <- dat %>%
+ocir.sum_score_cols <- dat.mhd %>%
   select(contains("ocir")) %>%
   select(contains("sum_score")) %>% 
   select(-ends_with("raw")) %>%
@@ -411,7 +445,7 @@ ocir.sum_score_cols <- dat %>%
 
 ocir.sum_score_cols
 
-pcl.sum_score_cols <- dat %>%
+pcl.sum_score_cols <- dat.mhd %>%
   select(contains("pcl")) %>%
   select(contains("sum_score")) %>% 
   select(-ends_with("raw")) %>%
@@ -420,31 +454,30 @@ pcl.sum_score_cols <- dat %>%
 pcl.sum_score_cols
 ```
 
-
-
 # Vectors for diff_score
+
 ```{r Vectors with diff_score_cols}
-diff_score_cols <- dat %>%
+diff_score_cols <- dat.mhd %>%
   select(contains("diff_score")) %>% 
   colnames()
 
 diff_score_cols
 
-phq.diff_score_cols <- dat %>%
+phq.diff_score_cols <- dat.mhd %>%
   select(contains("phq")) %>%
   select(contains("diff_score")) %>% 
   colnames()
 
 phq.diff_score_cols
 
-gad.diff_score_cols <- dat %>%
+gad.diff_score_cols <- dat.mhd %>%
   select(contains("gad")) %>%
   select(contains("diff_score")) %>% 
   colnames()
 
 gad.diff_score_cols
 
-ocir.diff_score_cols <- dat %>%
+ocir.diff_score_cols <- dat.mhd %>%
   select(contains("ocir")) %>%
   select(contains("diff_score")) %>% 
   colnames()
@@ -474,7 +507,8 @@ theme_personal <-  theme(
 ```
 
 # Psychiatric disorder hierarchy
-
+------------
+OLD VERSIONS:
 control_numeric == 1 ~ 0,
 depressive_disorders_numeric == 1 ~ 1,
 anxiety_disorders_numeric == 1 ~ 2,
@@ -498,63 +532,264 @@ mhd.posttraumatic_stress_disorder_ptsd_numeric == 1 ~ 3,
 anxiety_disorders_numeric == 1 ~ 2,
 depressive_disorders_numeric == 1 ~ 1,
 control_numeric == 1 ~ 0,
+------------
 
+Disorder hierarchy
+1: Psychotic disorders (create one with, create one without to test in analyses)
+2: Bipolar disorder
+3: MDD
+4: PTSD
+5: OCD
+6: Eating disorders
+7: Anxiety disorders
 
-```{r Psychiatric disorders hierarchy}
-dat <- dat %>%
+## Hierarchy including psychosis
+Diagnoses analyses
+```{r Psychiatric disorders hierarchy including psychosis - dat.mhd}
+dat.mhd <- dat.mhd %>%
   mutate(
-    Disorder_hierarchical_numeric =
+    Disorder_hierarchical_psychosis_numeric =
       case_when(
-        psychotic_disorders_numeric == 1 ~ 11,
-        mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 10,
-        autism_spectrum_disorder_numeric == 1 ~ 9,
-        mhd.personality_disorder_numeric == 1 ~ 8,
-        mhd.attention_deficit_hyperactivity_disorder_numeric == 1 ~ 7,
-        obsessive_compulsive_disorders_numeric == 1 ~ 6,
-        eating_disorders_numeric == 1 ~ 5,
+        psychotic_disorders_numeric == 1 ~ 7,
+        mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 6,
+        depressive_disorders_numeric == 1 ~ 5,
         mhd.posttraumatic_stress_disorder_ptsd_numeric == 1 ~ 4,
-        (anxiety_disorders_numeric == 1 &
-        depressive_disorders_numeric == 1) ~ 3,
-        anxiety_disorders_numeric == 1 ~ 2,
-        depressive_disorders_numeric == 1 ~ 1,
+        obsessive_compulsive_disorders_numeric == 1 ~ 3,
+        eating_disorders_numeric == 1 ~ 2,
+        anxiety_disorders_numeric == 1 ~ 1,
         control_numeric == 1 ~ 0
       )
   )
 
-dat <- dat %>%
+dat.mhd <- dat.mhd %>%
+  mutate(
+    Disorder_hierarchical_psychosis =
+      recode_factor(
+        Disorder_hierarchical_psychosis_numeric,
+        `0` = "Controls",
+        `1` = "Anxiety disorders",
+        `2` = "Eating disorders",
+        `3` = "OCDs",
+        `4` = "PTSD",
+        `5` = "Depressive disorders",
+        `6` = "Bipolar disorders",
+        `7` = "Psychotic disorders"
+      )
+  )
+
+
+dat.mhd %>%
+  freq(Disorder_hierarchical_psychosis)
+```
+
+Retro-baseline
+```{r Psychiatric disorders hierarchy including psychosis - dat.retro}
+dat.retro <- dat.retro %>%
+  mutate(
+    Disorder_hierarchical_psychosis_numeric =
+      case_when(
+        psychotic_disorders_numeric == 1 ~ 7,
+        mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 6,
+        depressive_disorders_numeric == 1 ~ 5,
+        mhd.posttraumatic_stress_disorder_ptsd_numeric == 1 ~ 4,
+        obsessive_compulsive_disorders_numeric == 1 ~ 3,
+        eating_disorders_numeric == 1 ~ 2,
+        anxiety_disorders_numeric == 1 ~ 1,
+        control_numeric == 1 ~ 0
+      )
+  )
+
+dat.retro <- dat.retro %>%
+  mutate(
+    Disorder_hierarchical_psychosis =
+      recode_factor(
+        Disorder_hierarchical_psychosis_numeric,
+        `0` = "Controls",
+        `1` = "Anxiety disorders",
+        `2` = "Eating disorders",
+        `3` = "OCDs",
+        `4` = "PTSD",
+        `5` = "Depressive disorders",
+        `6` = "Bipolar disorders",
+        `7` = "Psychotic disorders"
+      )
+  )
+
+
+dat.retro %>%
+  freq(Disorder_hierarchical_psychosis)
+```
+
+Prepan-baseline
+++MD: For GLAD/EDGI we shouldn't have any controls, but some have crept in because they likely haven't ever received a diagnosis (despite qualifying on the CIDI or current measures of psychopathology). We should consider just excluding them.
+```{r Psychiatric disorders hierarchy including psychosis - dat.prepan}
+dat.prepan <- dat.prepan %>%
+  mutate(
+    Disorder_hierarchical_psychosis_numeric =
+      case_when(
+        psychotic_disorders_numeric == 1 ~ 7,
+        mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 6,
+        depressive_disorders_numeric == 1 ~ 5,
+        mhd.posttraumatic_stress_disorder_ptsd_numeric == 1 ~ 4,
+        obsessive_compulsive_disorders_numeric == 1 ~ 3,
+        eating_disorders_numeric == 1 ~ 2,
+        anxiety_disorders_numeric == 1 ~ 1,
+        control_numeric == 1 ~ 0
+      )
+  )
+
+dat.prepan <- dat.prepan %>%
+  mutate(
+    Disorder_hierarchical_psychosis =
+      recode_factor(
+        Disorder_hierarchical_psychosis_numeric,
+        `0` = "Controls",
+        `1` = "Anxiety disorders",
+        `2` = "Eating disorders",
+        `3` = "OCDs",
+        `4` = "PTSD",
+        `5` = "Depressive disorders",
+        `6` = "Bipolar disorders",
+        `7` = "Psychotic disorders"
+      )
+  )
+
+
+dat.prepan %>%
+  freq(Disorder_hierarchical_psychosis)
+```
+
+## Hierarchy NOT including psychosis
+Diagnoses analyses
+```{r Psychiatric disorders hierarchy without psychosis - dat.mhd}
+dat.mhd <- dat.mhd %>%
+  mutate(
+    Disorder_hierarchical_numeric =
+      case_when(
+        mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 6,
+        depressive_disorders_numeric == 1 ~ 5,
+        mhd.posttraumatic_stress_disorder_ptsd_numeric == 1 ~ 4,
+        obsessive_compulsive_disorders_numeric == 1 ~ 3,
+        eating_disorders_numeric == 1 ~ 2,
+        anxiety_disorders_numeric == 1 ~ 1,
+        control_numeric == 1 ~ 0
+      )
+  )
+
+dat.mhd <- dat.mhd %>%
   mutate(
     Disorder_hierarchical =
       recode_factor(
         Disorder_hierarchical_numeric,
         `0` = "Controls",
-        `1` = "Depressive disorders",
-        `2` = "Anxiety disorders",
-        `3` = "Depressive & anxiety disorders",
+        `1` = "Anxiety disorders",
+        `2` = "Eating disorders",
+        `3` = "OCDs",
         `4` = "PTSD",
-        `5` = "Eating disorders",
-        `6` = "OCDs",
-        `7` = "ADHD",
-        `8` = "Personality disorders",
-        `9` = "Autism",
-        `10` = "Bipolar disorders",
-        `11` = "Psychotic disorders"
+        `5` = "Depressive disorders",
+        `6` = "Bipolar disorders"
       )
   )
 
 
-dat %>%
+dat.mhd %>%
+  freq(Disorder_hierarchical) 
+dat.mhd %>% 
+  freq(Disorder_hierarchical_psychosis)
+```
+
+Retro-baseline
+```{r Psychiatric disorders hierarchy without psychosis - dat.retro}
+dat.retro <- dat.retro %>%
+  mutate(
+    Disorder_hierarchical_numeric =
+      case_when(
+        mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 6,
+        depressive_disorders_numeric == 1 ~ 5,
+        mhd.posttraumatic_stress_disorder_ptsd_numeric == 1 ~ 4,
+        obsessive_compulsive_disorders_numeric == 1 ~ 3,
+        eating_disorders_numeric == 1 ~ 2,
+        anxiety_disorders_numeric == 1 ~ 1,
+        control_numeric == 1 ~ 0
+      )
+  )
+
+dat.retro <- dat.retro %>%
+  mutate(
+    Disorder_hierarchical =
+      recode_factor(
+        Disorder_hierarchical_numeric,
+        `0` = "Controls",
+        `1` = "Anxiety disorders",
+        `2` = "Eating disorders",
+        `3` = "OCDs",
+        `4` = "PTSD",
+        `5` = "Depressive disorders",
+        `6` = "Bipolar disorders"
+      )
+  )
+
+
+dat.retro %>%
   freq(Disorder_hierarchical)
+dat.retro %>%
+  freq(Disorder_hierarchical_psychosis)
+```
+
+Prepan-baseline
+```{r Psychiatric disorders hierarchy without psychosis - dat.prepan}
+dat.prepan <- dat.prepan %>%
+  mutate(
+    Disorder_hierarchical_numeric =
+      case_when(
+        mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 6,
+        depressive_disorders_numeric == 1 ~ 5,
+        mhd.posttraumatic_stress_disorder_ptsd_numeric == 1 ~ 4,
+        obsessive_compulsive_disorders_numeric == 1 ~ 3,
+        eating_disorders_numeric == 1 ~ 2,
+        anxiety_disorders_numeric == 1 ~ 1,
+        control_numeric == 1 ~ 0
+      )
+  )
+
+dat.prepan <- dat.prepan %>%
+  mutate(
+    Disorder_hierarchical =
+      recode_factor(
+        Disorder_hierarchical_numeric,
+        `0` = "Controls",
+        `1` = "Anxiety disorders",
+        `2` = "Eating disorders",
+        `3` = "OCDs",
+        `4` = "PTSD",
+        `5` = "Depressive disorders",
+        `6` = "Bipolar disorders"
+      )
+  )
+
+
+dat.prepan %>%
+  freq(Disorder_hierarchical)
+dat.prepan %>%
+  freq(Disorder_hierarchical_psychosis)
 ```
 
 Investigate NAs 
 Ask Leo?
+++MD: you'll have NAs for individuals that don't have one of the listed disorders in the hierarchy, but who have another diagnosis that excludes them from being a control (e.g. personality disorder, ADHD, ASD). We can add an "Other" category to cover those other diagnoses, or exclude them from these analyses.
 ```{r NAs in diagnosis}
-dat %>%
+dat.mhd %>%
+  filter(is.na(Disorder_hierarchical)) %>%
+  freq(Sample)
+
+dat.retro %>%
+  filter(is.na(Disorder_hierarchical)) %>%
+  freq(Sample)
+
+dat.prepan %>%
   filter(is.na(Disorder_hierarchical)) %>%
   freq(Sample)
 ```
-
-
 
 
 # Psychiatric disorders
@@ -577,6 +812,7 @@ disorder_columns <- c(
 ```
 
 ## Correlation matrix
+++MD: Should we use the dat.mhd for this correlation matrix, as it has the least stringent inclusion criteria? Or just use dat.raw and include everyone? (alternatively, can create a correlation matrix for all 3 datasets)
 ```{r Correlation matrix of psychiatric disorders}
 # Select items for correlation matrix
 mhd.items <- c(
@@ -595,7 +831,7 @@ mhd.items <- c(
 
 # Calculate correlation matrix on specific columns (variables) from your data frame
 mhd.corr.mat <- hetcor(
-  as.data.frame(dat[,mhd.items]), # Specify the data
+  as.data.frame(dat.mhd[,mhd.items]), # Specify the data
   use = "pairwise.complete.obs" # Use all pairwise observations
 )
 
@@ -630,7 +866,7 @@ corrplot(mhd.corr.matrix,
 
 
 ```{r gather to long format Disorder_hierarchical}
-dat.long.psych <- dat %>%
+dat.long.psych <- dat.mhd %>%
   gather(
     key = "Disorder_inc_raw",
     value = "Diagnosis",
