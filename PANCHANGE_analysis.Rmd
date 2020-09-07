@@ -2869,6 +2869,20 @@ dat %>%
   freq(disorders_total_count)
 ```
 
+```{r psychiatric disorders frequencies}
+#Ppts with least one psychiatric disorder
+dat %>%
+  count(disorders_total_count >= 1)
+
+#Ppts with anxiety OR depressive disorder
+dat %>% 
+  count(anxiety_disorders_numeric == 1 | depressive_disorders == 1)
+
+#Ppts with anxiety & depression
+dat %>% 
+  count(depression_and_anxiety_numeric == 1)
+```
+
 ## Vector
 ```{r vector with psychiatric disorders}
 disorder_columns <- c(
