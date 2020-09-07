@@ -56,6 +56,7 @@ Install packages (if they are not available in your version of R)
 #install.packages("polycor")
 #install.packages("corrplot")
 #install.packages("patchwork")
+#instlal.packages("ggpubr")
 ```
 
 Load packages
@@ -68,6 +69,7 @@ library(corrplot)
 library(patchwork)
 library(broom)
 library(tidyverse)
+library(ggpubr)
 ```
 
 # Colour palettes
@@ -345,7 +347,7 @@ dat <- dat %>%
              `1` = "Mixed or multiple ethnic origins",
              `2` = "Asian or Asian British",
              `3` = "African or African British",
-             `4` = "Asian or Asian British"
+             `4` = "Other"
            )
   )
 
@@ -689,6 +691,65 @@ age_category_by_Sample_prop_plot <- age_category_per_Sample_prop_Sample %>%
 age_category_by_Sample_prop_plot
 ```
 
+age bar plot for whole sample (not grouped)
+
+Create a nice summary dataset for age and display it as a bar plot
+
+```{r age_category prop total (ungrouped)}
+
+age_category_prop_total <- dat %>%
+  count(age_category) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+# add a column to help order the factor
+age_category_prop_total$order <- c(1,2,3,4,5,6,7,8,9,10,11,12,13)
+
+# total responders
+ageN <- sum(age_category_prop_total$n)
+
+kable(age_category_prop_total)
+age_category_prop_total
+
+```
+
+
+```{r age_category prop total (ungrouped) plot}
+#Colour palette
+RAMPagepalette <- c(
+  "#00D9AC","#21D9B3","#4DD9BC","#78D9C5","#8ED9C9","#A3D9CE",
+  "#CFD9D7",
+  "#DAD0BA","#DAC38F","#DAC38F","#DAB663" ,"#DAA937","#DA9C0C")
+
+#Bar plot
+plot.age <- 
+  
+  age_category_prop_total %>%
+    mutate(age_category = fct_reorder(age_category,order)) %>%
+
+  ggplot(aes(x = age_category)) +
+  geom_bar(aes(y = n, color=age_category, fill=age_category, alpha = 1),
+           stat ="summary") +
+  scale_fill_manual(values =  RAMPagepalette) +
+  scale_color_manual(values =  RAMPagepalette) +
+  labs(x = "",
+       y = "Total count",
+       title = paste("Number of participants in each age category",sep=" "),
+       subtitle = paste("n = ", ageN,
+                        sep = ""),
+       fill = "Age category") +
+   guides(alpha = FALSE, color = FALSE, fill = FALSE) +
+  scale_x_discrete(limits = (levels(age_category_prop_total$age_category))) +
+  theme_classic2() +
+   theme(axis.text.x = element_text(colour="black", size = 12,angle=45,
+                                    vjust=0.5),
+        axis.text.y = element_text(colour="black", size = 12)) 
+
+
+plot.age
+                     
+
+```
+
 # Ethnicity_collapsed
 ```{r Ethnicity_collapsed per Sample prop per total}
 Ethnicity_collapsed_per_Sample_prop_total <- dat %>%
@@ -804,6 +865,80 @@ Ethnicity_collapsed_by_Sample_prop_plot <- Ethnicity_collapsed_per_Sample_prop_S
 
 Ethnicity_collapsed_by_Sample_prop_plot
 ```
+
+### pie charts
+
+```{r Ethnicity_collapsed prop per total summary}
+
+Ethnicity_collapsed_prop_Sample <- dat %>%
+  count(Ethnicity_collapsed) %>%
+  drop_na() %>%
+  mutate(freq = round(n/sum(n), 2))
+  
+# total responders
+ethN <- sum(Ethnicity_collapsed_prop_Sample$n)
+
+kable(Ethnicity_collapsed_prop_Sample)
+Ethnicity_collapsed_prop_Sample
+
+```
+
+pie chart with only European label
+
+```{r ethnicity pie chart biggest group label}
+
+eth_pie_alllabel <- 
+  
+  Ethnicity_collapsed_prop_Sample %>%
+   mutate(Ethnicity_collapsed = fct_reorder(Ethnicity_collapsed,-n)) %>%
+  
+  ggplot(aes(x="", y=freq, fill=Ethnicity_collapsed)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette6) +
+  scale_color_manual(values =  COPINGpalette6) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported ethnicity",
+                      sep=" "),
+        subtitle = paste("n =", sum(Ethnicity_collapsed_prop_Sample$n),
+                         sep = " "),
+        fill = "Self reported ethnicity")  +
+    geom_text(aes(y = c(0.5),
+                  label= c(paste0(round((freq[1]*100),0),"%"))), #Frequency of European only
+             size=5,
+             face="bold"
+             )  
+
+eth_pie_alllabel
+
+```
+
+
+pie chart - no labels
+
+```{r ethnicity pie chart no label}
+
+eth_pie <- 
+
+    Ethnicity_collapsed_prop_Sample %>%
+   mutate(Ethnicity_collapsed = fct_reorder(Ethnicity_collapsed,-n)) %>%
+  
+  ggplot(aes(x="", y=freq, fill=Ethnicity_collapsed)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette6) +
+  scale_color_manual(values =  COPINGpalette6) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported ethnicity",
+                      sep=" "),
+        subtitle = paste("n =", sum(Ethnicity_collapsed_prop_Sample$n),
+                         sep = " "),
+        fill = "Self reported ethnicity")
+
+eth_pie
+
+```
+
 
 # Gender_collapsed
 ```{r Gender_collapsed per Sample prop per total}
@@ -921,6 +1056,100 @@ Gender_collapsed_by_Sample_prop_plot <- Gender_collapsed_per_Sample_prop_Sample 
 Gender_collapsed_by_Sample_prop_plot
 ```
 
+```{r summary gender}
+
+summarytools::freq(data_dem[(grep("gender",names(data_dem)))],
+                   style = "rmarkdown")
+
+```
+
+### pie charts
+
+```{r Gender_collapsed prop per total}
+
+Gender_collapsed_prop_total <- dat %>%
+  count(Gender_collapsed) %>%
+  mutate(freq = round(n/sum(n), 2))
+
+kable(Gender_collapsed_prop_total)
+Gender_collapsed_prop_total
+
+```
+
+
+```{r gender pie chart - all labels}
+
+gen_pie_alllabel <- 
+  ggplot(Gender_collapsed_prop_total, aes(x="", y=freq, fill=Gender_collapsed)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette5) +
+  scale_color_manual(values =  COPINGpalette5) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported gender",
+                      sep=" "),
+        subtitle = paste("n", sum(Gender_collapsed_prop_total$n),
+                         sep = " "),
+        fill = "Self reported gender")  +
+    geom_text(aes(y = c(0.85,0.35,0),
+                  x = c(1.2,1.2,1.8),
+                  label= c(paste0(round((freq[1:2]*100),0),"%"),paste0(round((freq[3]*100),1),"%"))),
+             size=5,
+             face="bold"
+             ) 
+
+gen_pie_alllabel
+
+```
+
+
+pie chart - only labelling two largest groups (male and female)
+
+```{r gender pie chart - male/female labels only}
+
+gen_pie <- 
+  ggplot(Gender_collapsed_prop_total, aes(x="", y=freq, fill=Gender_collapsed)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette5) +
+  scale_color_manual(values =  COPINGpalette5) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported gender",
+                      sep=" "),
+        subtitle = paste("n", sum(Gender_collapsed_prop_total$n),
+                         sep = " "),
+        fill = "Self reported gender")  +
+    geom_text(aes(y = c(0.85,0.35,0),
+                  x = c(1.2,1.2,1.8),
+                  label= c(paste0(round((freq[1:2]*100),0),"%"),"")),
+             size=5,
+             face="bold"
+             ) 
+
+gen_pie
+
+```
+
+pie chart -  no labels
+
+```{r gender pie chart - no labels }
+
+gen_pie_nolabel <- 
+  ggplot(Gender_collapsed_prop_total, aes(x="", y=freq, fill=Gender_collapsed)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette5) +
+  scale_color_manual(values =  COPINGpalette5) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported gender",
+                      sep=" "),
+        subtitle = paste("n", sum(Gender_collapsed_prop_total$n),
+                         sep = " "),
+        fill = "Self reported gender")
+
+gen_pie_nolabel
+
+```
 
 # highest_education
 ```{r highest_education per Sample prop per total}
@@ -1036,6 +1265,196 @@ highest_education_by_Sample_prop_plot <- highest_education_per_Sample_prop_Sampl
   coord_flip()
 
 highest_education_by_Sample_prop_plot
+```
+
+### pie chart 
+
+summary dataset with frequencies
+
+```{r highest education prop per total}
+
+highest_education_prop_total <- dat %>%
+  count(highest_education) %>%
+  mutate(freq = round(n/sum(n), 2)) %>% 
+  drop_na()
+
+kable(highest_education_prop_total)
+highest_education_prop_total
+
+# total responders
+eduN <- sum(highest_education_prop_total$n)
+
+edubindat <- dat %>%
+  mutate(demographics.education_binary =
+           case_when(
+             highest_education_numeric == "4" ~ "Bachelors or higher",
+             highest_education_numeric == "3" ~ "A-levels or lower"
+           )) %>%
+  summarise(n = n()) %>%
+  drop_na() %>%
+  mutate(freq = n / sum(n)) 
+
+educatdat <- dat %>%
+  mutate(demographics.education_three = 
+           case_when(
+             highest_education_numeric == "4" ~ "Bachelors or higher",
+             highest_education_numeric == "3" ~ "A-levels",
+             highest_education_numeric == "1" ~ "GCSEs or lower"
+           )) %>%
+  summarise(n = n()) %>%
+  drop_na() %>%
+  mutate(freq = n / sum(n)) 
+
+
+```
+
+pie chart labels
+
+```{r education pie chart all labels}
+
+edu_pie_alllabel <- 
+  
+    highest_education_prop_total %>%
+    mutate(demographics.highest_level_of_education = fct_reorder(highest_education,-n)) %>%
+
+  
+  ggplot(aes(x="", y=freq, fill=demographics.highest_level_of_education)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette7) +
+  scale_color_manual(values =  COPINGpalette7) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported level of education",
+                      sep=" "),
+        subtitle = paste("n", sum(highest_education_prop_total$n),
+                         sep = " "),
+        fill = "Self reported level of education")  +
+    geom_text(aes(y = c(0.13,0.04,0.3,0.65),
+                  x = c(1.2,1.2,1.2,1.2), #GCSE, NVQ, A-levels, university
+                  label= paste0(round((freq*100),0),"%")),
+             size=5,
+             face="bold"
+             )
+
+edu_pie_alllabel
+
+#y = c(0.57,0.85,0.25,0.38,0.015,0.05,0.14),
+#x = c(1.2,1.2,1.2,1.2,1.35,1.2,1.2)
+
+```
+
+```{r binary education pie chart all labels}
+
+edu_pie_binlabel <- 
+  
+    edubindat %>%
+    mutate(demographics.education_binary = fct_reorder(demographics.education_binary,-n)) %>%
+
+  
+  ggplot(aes(x="", y=freq, fill=demographics.education_binary)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette7) +
+  scale_color_manual(values =  COPINGpalette7) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP sample self reported highest level of education, above or below bachelor degree or equivalent",
+                      sep=" "),
+        subtitle = paste("n", sum(edubindat$n),
+                         sep = " "),
+        fill = "Self reported level of education")  +
+    geom_text(aes(y = c(0.25,0.75),
+                  label= paste0(round((freq*100),0),"%")),
+             size=5,
+             face="bold"
+             )
+
+edu_pie_binlabel
+
+```
+
+```{r 3 category education pie chart all labels}
+
+edu_pie_catlabel <- 
+  
+    educatdat %>%
+    mutate(demographics.education_three = fct_reorder(demographics.education_three,-n)) %>%
+
+  
+  ggplot(aes(x="", y=freq, fill=demographics.education_three)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette7) +
+  scale_color_manual(values =  COPINGpalette7) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP sample self reported highest level of education, above or below bachelor degree or equivalent",
+                      sep=" "),
+        subtitle = paste("n", sum(educatdat$n),
+                         sep = " "),
+        fill = "Self reported level of education")  +
+    geom_text(aes(y = c(0.25,0.75,0.02),
+                  label= c(paste0(round((freq[1:2]*100),0),"%"),"") ),
+             size=5,
+             face="bold"
+             )
+
+edu_pie_catlabel
+
+```
+
+
+```{r education pie chart - largest groups labelled }
+
+edu_pie_somelabel <- 
+  
+    edudat %>%
+    mutate(demographics.highest_level_of_education = fct_reorder(demographics.highest_level_of_education,-n)) %>%
+
+  
+  ggplot(aes(x="", y=freq, fill=demographics.highest_level_of_education)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette7) +
+  scale_color_manual(values =  COPINGpalette7) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP sample self reported level of education",
+                      sep=" "),
+        subtitle = paste("n", sum(edudat$n),
+                         sep = " "),
+        fill = "Self reported level of education")  +
+    geom_text(aes(y = c(0.57,0.85,0.25,0.38,0.015,0.05,0.14),
+                  x = c(1.2,1.2,1.2,1.2,1.35,1.2,1.2),
+                  label=c( paste0(round((freq[1:4]*100),0),"%"),"",
+                  paste0(round((freq[6:7]*100),0),"%"))),
+             size=5,
+             face="bold"
+             )
+edu_pie_somelabel
+
+```
+
+pie chart -  no labels
+
+```{r education pie chart no labels }
+
+edu_pie_nolabel <- 
+   edudat %>%
+    mutate(demographics.highest_level_of_education = fct_reorder(demographics.highest_level_of_education,-n)) %>%
+
+  
+  ggplot(aes(x="", y=freq, fill=demographics.highest_level_of_education)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette7) +
+  scale_color_manual(values =  COPINGpalette7) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP sample self reported level of education",
+                      sep=" "),
+        subtitle = paste("n", sum(edudat$n),
+                         sep = " "),
+        fill = "Self reported level of education")  
+
+edu_pie_nolabel
+
 ```
 
 
@@ -2510,15 +2929,13 @@ corrplot(mhd.corr.matrix,
          addCoef.col = "black", # colour for the correlation coefficients in the plot
          tl.cex = 0.8,
          tl.col = "black",
-         col=colorRampPalette(c("dodgerblue4","white","firebrick4"))(200), # colours for correlations
+         col=colorCOPINGpalette(c("dodgerblue4","white","firebrick4"))(200), # colours for correlations
          # Combine with significance
          p.mat = mhd.p.matrix, # Matrix with p values
          sig.level = 0.01, # Choose significant level
          insig = "blank" # Nonsignificant correlations have no colour
          )
 ```
-
-
 
 ```{r gather to long format Disorder_hierarchical}
 dat.long.psych <- dat %>%
