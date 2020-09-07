@@ -48,9 +48,9 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = FALSE
+EDGI = TRUE
 NBR = FALSE
-RAMP = TRUE
+RAMP = FALSE
 ```
 
 
@@ -491,7 +491,7 @@ nbr.cohort.raw.id$Ethnicity_full <- recode_factor(nbr.cohort.raw.id$Ethnicity.un
                                              "P" = "Black - Other",
                                              "R" = "Chinese - Chinese",
                                              "S" = "Chinese - Other",
-                                             "W" = NULL, ## Asking NBR what this level means
+                                             "W" = "White - not disclosed", ## Asking NBR what this level means
                                              "Z" = NULL,
                                              "99" = NULL)
 
@@ -513,7 +513,7 @@ nbr.cohort.raw.id$Ethnicity_unc <- recode_factor(nbr.cohort.raw.id$Ethnicity.unc
                                              "P" = "Black or Black British",
                                              "R" = "Asian or Asian British (including Chinese)",
                                              "S" = "Asian or Asian British (including Chinese)",
-                                             "W" = NULL, ## Asking NBR what this level means
+                                             "W" = "White, white European or Caucasian", 
                                              "Z" = NULL,
                                              "99" = NULL)
 }
@@ -712,7 +712,7 @@ dem.raw.id <- dem.raw.id %>%
   ) %>%
   mutate(
     Ethnicity_numeric = 
-      recode(Ethnicity_unc,
+      recode(Ethnicity,
         "European" = 1,
         "Mixed or multiple ethnic origins" = 2,
         "Asian or Asian British" = 3,
@@ -913,7 +913,18 @@ glad.employment.raw.id <- glad.employment.raw %>%
          employment.o_levelsgcses_or_equivalent, # level of education - gcse
          employment.cses_or_equivalent, # level of education - cse
          employment.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
-         employment.government_work_key_workers # key worker status
+         employment.government_work_key_workers, # key worker status
+         employment.government_work_key_workers, # key worker status
+         employment.unemployed, #key worker routing variable
+         employment.zerohours_contract, #key worker routing variable
+         employment.stayathome_parent_or_carer, #key worker routing variable
+         employment.retired, #key worker routing variable
+         employment.student_gcse_or_a_level, #key worker routing variable
+         employment.student_university, #key worker routing variable
+         employment.became_unemployed, #key worker routing variable
+         employment.furloughed_or_paid_leave_government_funded, #key worker routing variable
+         employment.furloughed_or_paid_leave_company_funded, #key worker routing variable
+         employment.paid_leave_furloughed #key worker routing variable
          ) %>%
   add_numeric(., exclude = exclude_cols_employment) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -981,7 +992,18 @@ edgi.employment.raw.id <- edgi.employment.raw %>%
          employment.o_levelsgcses_or_equivalent, # level of education - gcse
          employment.cses_or_equivalent, # level of education - cse
          employment.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
-         employment.government_work_key_workers # key worker status
+         employment.government_work_key_workers, # key worker status
+         employment.government_work_key_workers, # key worker status
+         employment.unemployed, #key worker routing variable
+         employment.zerohours_contract, #key worker routing variable
+         employment.stayathome_parent_or_carer, #key worker routing variable
+         employment.retired, #key worker routing variable
+         employment.student_gcse_or_a_level, #key worker routing variable
+         employment.student_university, #key worker routing variable
+         employment.became_unemployed, #key worker routing variable
+         employment.furloughed_or_paid_leave_government_funded, #key worker routing variable
+         employment.furloughed_or_paid_leave_company_funded, #key worker routing variable
+         employment.paid_leave_furloughed #key worker routing variable
          ) %>%
   add_numeric(., exclude = exclude_cols_employment_edgi) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -1045,7 +1067,17 @@ nbr.employment.raw.id <- nbr.employment.raw %>%
          employment.o_levelsgcses_or_equivalent, # level of education - gcse
          employment.cses_or_equivalent, # level of education - cse
          employment.nvq_or_hnd_or_hnc_or_equivalent, # level of education - nvq
-         employment.government_work_key_workers # key worker status
+         employment.government_work_key_workers, # key worker status
+         employment.unemployed, #key worker routing variable
+         employment.zerohours_contract, #key worker routing variable
+         employment.stayathome_parent_or_carer, #key worker routing variable
+         employment.retired, #key worker routing variable
+         employment.student_gcse_or_a_level, #key worker routing variable
+         employment.student_university, #key worker routing variable
+         employment.became_unemployed, #key worker routing variable
+         employment.furloughed_or_paid_leave_government_funded, #key worker routing variable
+         employment.furloughed_or_paid_leave_company_funded, #key worker routing variable
+         employment.paid_leave_furloughed #key worker routing variable
          ) %>%
   add_numeric(., exclude = exclude_cols_employment) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -1104,7 +1136,18 @@ ramp.employment.raw.id <- ramp.employment.raw %>%
          Sample, # Sample
          ID, # ID
          employment.what_is_your_highest_level_of_education, #highest level of edcuation
-         employment.government_work_key_workers # key worker status
+         employment.government_work_key_workers, # key worker status
+         employment.government_work_key_workers, # key worker status
+         employment.unemployed, #key worker routing variable
+         employment.zerohours_contract, #key worker routing variable
+         employment.stayathome_parent_or_carer, #key worker routing variable
+         employment.retired, #key worker routing variable
+         employment.student_gcse_or_a_level, #key worker routing variable
+         employment.student_university, #key worker routing variable
+         employment.became_unemployed, #key worker routing variable
+         employment.furloughed_or_paid_leave_government_funded, #key worker routing variable
+         employment.furloughed_or_paid_leave_company_funded, #key worker routing variable
+         employment.paid_leave_furloughed #key worker routing variable
          ) %>%
   add_numeric(., exclude = exclude_cols_employment) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -1248,7 +1291,16 @@ employment.raw.id <- employment.raw.id %>%
     key_worker_numeric =
       case_when(
         employment.government_work_key_workers_numeric == "0" ~ 0,
-        employment.government_work_key_workers_numeric > 0 ~ 1
+        employment.government_work_key_workers_numeric > 0 ~ 1,
+        employment.unemployed_numeric == "1" ~ 0,
+        employment.stayathome_parent_or_carer_numeric == "1" ~ 0,
+        employment.retired_numeric == "1" ~ 0, 
+        employment.became_unemployed_numeric == "0" ~ 0,
+        employment.student_gcse_or_a_level_numeric == "1" ~ 0,
+        employment.student_university_numeric == "1" ~ 0,
+        employment.furloughed_or_paid_leave_government_funded_numeric == "1" ~ 0,
+        employment.furloughed_or_paid_leave_company_funded_numeric == "1" ~ 0,
+        employment.paid_leave_furloughed_numeric == "1" ~ 0
       )
     )
 
@@ -1266,6 +1318,7 @@ employment.raw.id <- employment.raw.id %>%
 employment.raw.id %>%
   freq(key_worker)
 }
+
 ```
 
 # Columns to exclude from add_numeric
@@ -1417,14 +1470,13 @@ if(EDGI == TRUE){
     mhd.panic_attacks = demographics.panic_attacks,
     mhd.obsessivecompulsive_disorder_ocd = demographics.obsessivecompulsive_disorder_ocd,
     mhd.obsessive_compulsive_related_disorders = demographics.obsessive_compulsive_related_disorders,
-    mhd.body_dysmorphic_disorder_bdd = demographics.body_dysmorphic_disorder,
+    mhd.body_dysmorphic_disorder_bdd = demographics.body_dysmorphic_disorder_bdd,
     mhd.mania_hypomania_bipolar_or_manicdepression = demographics.mania_hypomania_bipolar_or_manicdepression,
     mhd.schizophrenia = demographics.schizophrenia,
     mhd.type_psychosis_psychotic_illness = demographics.psychosis_type_psychotic_illness, # word type psychosis changed order compared to GLAD 
     mhd.personality_disorder_diagnosed = demographics.diagnosed_personality_disorder, # named differently in EDGI
     mhd.posttraumatic_stress_disorder_ptsd = demographics.posttraumatic_stress_disorder_ptsd,
     mhd.autism_aspergers_or_autistic_spectrum_disorder = demographics.autism_spectrum_disorder_asd, # different name in EDGI
-    mhd.body_dysmorphic_disorder_bdd = demographics.body_dysmorphic_disorder,
     mhd.personality_disorder = demographics.personality_disorder, # routing variable in EDGI is named differently; renamed here to match GLAD
     mhd.attention_deficit_hyperactivity_disorder = demographics.attention_deficit_hyperactivity_disorder,
     mhd.none_of_the_above = demographics.none_of_the_above.1,
