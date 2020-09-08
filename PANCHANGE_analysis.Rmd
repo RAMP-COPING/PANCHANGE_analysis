@@ -3198,6 +3198,7 @@ gad_prepan_model0b <- lm(
   formula = gad.diff_score_base_prepan ~
     anxiety_disorders +
     depressive_disorders +
+    depression_and_anxiety +
     eating_disorders +
     obsessive_compulsive_disorders +
     psychotic_disorders +
@@ -3235,6 +3236,7 @@ gad_prepan_model1b <- lm(
   formula = gad.diff_score_base_prepan ~
     anxiety_disorders +
     depressive_disorders +
+    depression_and_anxiety +
     eating_disorders +
     obsessive_compulsive_disorders +
     psychotic_disorders +
@@ -3268,6 +3270,7 @@ phq_prepan_model0b <- lm(
   formula = phq.diff_score_base_prepan ~
     anxiety_disorders +
     depressive_disorders +
+    depression_and_anxiety +
     eating_disorders +
     obsessive_compulsive_disorders +
     psychotic_disorders +
@@ -3305,6 +3308,7 @@ phq_prepan_model1b <- lm(
   formula = phq.diff_score_base_prepan ~
     anxiety_disorders +
     depressive_disorders +
+    depression_and_anxiety +
     eating_disorders +
     obsessive_compulsive_disorders +
     psychotic_disorders +
@@ -3339,6 +3343,7 @@ pcl_prepan_model0b <- lm(
   formula = pcl.diff_score_base_prepan ~
     anxiety_disorders +
     depressive_disorders +
+    depression_and_anxiety +
     eating_disorders +
     obsessive_compulsive_disorders +
     psychotic_disorders +
@@ -3376,6 +3381,7 @@ pcl_prepan_model1b <- lm(
   formula = pcl.diff_score_base_prepan ~
     anxiety_disorders +
     depressive_disorders +
+    depression_and_anxiety +
     eating_disorders +
     obsessive_compulsive_disorders +
     psychotic_disorders +
@@ -3409,6 +3415,7 @@ ocir_prepan_model0b <- lm(
   formula = ocir.diff_score_base_prepan ~
     anxiety_disorders +
     depressive_disorders +
+    depression_and_anxiety +
     eating_disorders +
     obsessive_compulsive_disorders +
     psychotic_disorders +
@@ -3446,6 +3453,7 @@ ocir_prepan_model1b <- lm(
   formula = ocir.diff_score_base_prepan ~
     anxiety_disorders +
     depressive_disorders +
+    depression_and_anxiety +
     eating_disorders +
     obsessive_compulsive_disorders +
     psychotic_disorders +
