@@ -5981,6 +5981,1441 @@ summarytools::dfSummary(
   labels.col = F)
 ```
 
+# Neurological symptoms
+
+## ALS (alsfrs)
+
+### GLAD
+Read in data
+```{r glad als cols}
+if(GLAD == TRUE){
+glad.als.raw <- readRDS(file = paste0(data.raw_path, "/glad/alsfrs_coping_glad.rds"))
+dim(glad.als.raw)
+colnames(glad.als.raw)
+}
+```
+
+Select variables
+```{r glad als cleaning}
+if(GLAD == TRUE){
+  
+glad.als.raw.id <- glad.als.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         alsfrs.limb_weakness_noticed_past,
+         alsfrs.normal,
+         alsfrs.slow_or_sloppy_all_words_are_legible,
+         alsfrs.not_all_words_are_legible,
+         alsfrs.able_to_grip_pen,
+         alsfrs.unable_to_grip_pen,
+         alsfrs.have_you_noticed_any_difficulty_walking,
+         alsfrs.do_you_have_any_difficulty_climbing_stairs
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(glad.als.raw.id)
+# Inspect colnames
+colnames(glad.als.raw.id)
+#Differences
+dim(glad.als.raw)[1]-dim(glad.als.raw.id)[1]
+}
+```
+
+```{r glad copy als}
+if(GLAD == TRUE){
+als.raw.id <- glad.als.raw.id
+}
+```
+
+### EDGI
+Read in data
+```{r edgi als cols}
+if(EDGI == TRUE){
+edgi.als.raw <- readRDS(file = paste0(data.raw_path, "/edgi/alsfrs_coping_edgi.rds"))
+dim(edgi.als.raw)
+colnames(edgi.als.raw)
+}
+```
+
+Select variables
+```{r edgi als cleaning}
+if(EDGI == TRUE){
+
+edgi.als.raw.id <- edgi.als.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         alsfrs.limb_weakness_noticed_past,
+         alsfrs.normal,
+         alsfrs.slow_or_sloppy_all_words_are_legible,
+         alsfrs.not_all_words_are_legible,
+         alsfrs.able_to_grip_pen,
+         alsfrs.unable_to_grip_pen,
+         alsfrs.have_you_noticed_any_difficulty_walking,
+         alsfrs.do_you_have_any_difficulty_climbing_stairs
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(edgi.als.raw.id)
+# Inspect colnames
+colnames(edgi.als.raw.id)
+#Differences
+dim(edgi.als.raw)[1]-dim(edgi.als.raw.id)[1]
+}
+```
+
+```{r edgi copy als}
+if(EDGI == TRUE){
+als.raw.id <- edgi.als.raw.id
+}
+```
+
+### NBR
+Read in data
+```{r nbr als cols}
+if(NBR == TRUE){
+nbr.als.raw <- readRDS(file = paste0(data.raw_path, "/nbr/alsfrs_coping_nbr.rds"))
+dim(nbr.als.raw)
+colnames(nbr.als.raw)
+}
+```
+
+Select variables
+```{r nbr als cleaning}
+if(NBR == TRUE){
+
+nbr.als.raw.id <- nbr.als.raw %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         alsfrs.limb_weakness_noticed_past,
+         alsfrs.normal,
+         alsfrs.slow_or_sloppy_all_words_are_legible,
+         alsfrs.not_all_words_are_legible,
+         alsfrs.able_to_grip_pen,
+         alsfrs.unable_to_grip_pen,
+         alsfrs.have_you_noticed_any_difficulty_walking,
+         alsfrs.do_you_have_any_difficulty_climbing_stairs
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(nbr.als.raw.id)
+# Inspect colnames
+colnames(nbr.als.raw.id)
+#Differences
+dim(nbr.als.raw)[1]-dim(nbr.als.raw.id)[1]
+}
+```
+
+```{r nbr copy als}
+if(NBR == TRUE){
+als.raw.id <- nbr.als.raw.id
+}
+```
+
+### RAMP
+Read in data
+```{r ramp als cols}
+if(RAMP == TRUE){
+ramp.als.raw <- readRDS(file = paste0(data.raw_path, "/ramp/alsfrs_ramp.rds"))
+dim(ramp.als.raw)
+colnames(ramp.als.raw)
+}
+```
+
+Select variables
+```{r ramp als cleaning}
+if(RAMP == TRUE){
+
+ramp.als.raw.id <- ramp.als.raw %>%
+  drop_na(`Login ID`) %>% # Drop NAs
+  distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(`Login ID`, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         alsfrs.limb_weakness_noticed_past,
+         alsfrs.normal,
+         alsfrs.slow_or_sloppy_all_words_are_legible,
+         alsfrs.not_all_words_are_legible,
+         alsfrs.able_to_grip_pen,
+         alsfrs.unable_to_grip_pen,
+         alsfrs.have_you_noticed_any_difficulty_walking,
+         alsfrs.do_you_have_any_difficulty_climbing_stairs
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(ramp.als.raw.id)
+# Inspect colnames
+colnames(ramp.als.raw.id)
+#Differences
+dim(ramp.als.raw)[1]-dim(ramp.als.raw.id)[1]
+}
+```
+
+```{r ramp copy als}
+if(RAMP == TRUE){
+als.raw.id <- ramp.als.raw.id
+}
+```
+
+## Epsworth sleep scale (ess)
+
+### GLAD
+Read in data
+```{r glad ess cols}
+if(GLAD == TRUE){
+glad.ess.raw <- readRDS(file = paste0(data.raw_path, "/glad/ess_coping_glad.rds"))
+dim(glad.ess.raw)
+colnames(glad.ess.raw)
+}
+```
+
+Select variables
+```{r glad ess cleaning}
+if(GLAD == TRUE){
+
+glad.ess.raw.id <- glad.ess.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         ess.felt_excessively_sleepy_past= ess.day_past_month_felt,
+         ess.sitting_and_reading,
+         ess.watching_tv,
+         ess.sitting_inactive_in_a_public_place,
+         ess.break_passenger_hour_car,
+         ess.afternoon_rest_circumstances_lying,
+         ess.sitting_and_talking_to_someone,
+         ess.sitting_quietly_after_a_lunch_without_alcohol,
+         ess.car_minutes_stopped_traffic,
+         ess.insomnia,
+         ess.narcolepsy,
+         ess.rem_sleep_behaviour_disorder,
+         ess.restless_legs_syndrome,
+         ess.sleep_apnea,
+         ess.sleep_terrors,
+         ess.sleepwalking,
+         ess.other,
+         ess.none   
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(glad.ess.raw.id)
+# Inspect colnames
+colnames(glad.ess.raw.id)
+#Differences
+dim(glad.ess.raw)[1]-dim(glad.ess.raw.id)[1]
+}
+```
+
+```{r glad copy ess}
+if(GLAD == TRUE){
+ess.raw.id <- glad.ess.raw.id
+}
+```
+
+### EDGI
+Read in data
+```{r edgi ess cols}
+if(EDGI == TRUE){
+edgi.ess.raw <- readRDS(file = paste0(data.raw_path, "/edgi/ess_coping_edgi.rds"))
+dim(edgi.ess.raw)
+colnames(edgi.ess.raw)
+}
+```
+
+Select variables
+```{r edgi ess cleaning}
+if(EDGI == TRUE){
+
+edgi.ess.raw.id <- edgi.ess.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         ess.felt_excessively_sleepy_past,
+         ess.sitting_and_reading,
+         ess.watching_tv,
+         ess.sitting_inactive_in_a_public_place,
+         ess.break_passenger_hour_car,
+         ess.afternoon_rest_circumstances_lying,
+         ess.sitting_and_talking_to_someone,
+         ess.sitting_quietly_after_a_lunch_without_alcohol,
+         ess.car_minutes_stopped_traffic,
+         ess.insomnia,
+         ess.narcolepsy,
+         ess.rem_sleep_behaviour_disorder,
+         ess.restless_legs_syndrome,
+         ess.sleep_apnea,
+         ess.sleep_terrors,
+         ess.sleepwalking,
+         ess.other,
+         ess.none  
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(edgi.ess.raw.id)
+# Inspect colnames
+colnames(edgi.ess.raw.id)
+#Differences
+dim(edgi.ess.raw)[1]-dim(edgi.ess.raw.id)[1]
+}
+```
+
+```{r edgi copy ess}
+if(EDGI == TRUE){
+ess.raw.id <- edgi.ess.raw.id
+}
+```
+
+### NBR
+Read in data
+```{r nbr ess cols}
+if(NBR == TRUE){
+nbr.ess.raw <- readRDS(file = paste0(data.raw_path, "/nbr/ess_coping_nbr.rds"))
+dim(nbr.ess.raw)
+colnames(nbr.ess.raw)
+}
+```
+
+Select variables
+```{r nbr ess cleaning}
+if(NBR == TRUE){
+
+nbr.ess.raw.id <- nbr.ess.raw %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         ess.felt_excessively_sleepy_past,
+         ess.sitting_and_reading,
+         ess.watching_tv,
+         ess.sitting_inactive_in_a_public_place,
+         ess.break_passenger_hour_car,
+         ess.afternoon_rest_circumstances_lying,
+         ess.sitting_and_talking_to_someone,
+         ess.sitting_quietly_after_a_lunch_without_alcohol,
+         ess.car_minutes_stopped_traffic,
+         ess.insomnia,
+         ess.narcolepsy,
+         ess.rem_sleep_behaviour_disorder,
+         ess.restless_legs_syndrome,
+         ess.sleep_apnea,
+         ess.sleep_terrors,
+         ess.sleepwalking,
+         ess.other,
+         ess.none  
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(nbr.ess.raw.id)
+# Inspect colnames
+colnames(nbr.ess.raw.id)
+#Differences
+dim(nbr.ess.raw)[1]-dim(nbr.ess.raw.id)[1]
+}
+```
+
+```{r nbr copy ess}
+if(NBR == TRUE){
+ess.raw.id <- nbr.ess.raw.id
+}
+```
+
+### RAMP
+Read in data
+```{r ramp ess cols}
+if(RAMP == TRUE){
+ramp.ess.raw <- readRDS(file = paste0(data.raw_path, "/ramp/ess_ramp.rds"))
+dim(ramp.ess.raw)
+colnames(ramp.ess.raw)
+}
+```
+
+Select variables
+```{r ramp ess cleaning}
+if(RAMP == TRUE){
+
+ramp.ess.raw.id <- ramp.ess.raw %>%
+  drop_na(`Login ID`) %>% # Drop NAs
+  distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(`Login ID`, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         ess.felt_excessively_sleepy_past,
+         ess.sitting_and_reading,
+         ess.watching_tv,
+         ess.sitting_inactive_in_a_public_place,
+         ess.break_passenger_hour_car,
+         ess.afternoon_rest_circumstances_lying,
+         ess.sitting_and_talking_to_someone,
+         ess.sitting_quietly_after_a_lunch_without_alcohol,
+         ess.car_minutes_stopped_traffic,
+         ess.insomnia,
+         ess.narcolepsy,
+         ess.rem_sleep_behaviour_disorder,
+         ess.restless_legs_syndrome,
+         ess.sleep_apnea,
+         ess.sleep_terrors,
+         ess.sleepwalking,
+         ess.other,
+         ess.none  
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(ramp.ess.raw.id)
+# Inspect colnames
+colnames(ramp.ess.raw.id)
+#Differences
+dim(ramp.ess.raw)[1]-dim(ramp.ess.raw.id)[1]
+}
+```
+
+```{r ramp copy ess}
+if(RAMP == TRUE){
+ess.raw.id <- ramp.ess.raw.id
+}
+```
+
+## Migraines (midas)
+
+### GLAD
+Read in data
+```{r glad midas cols}
+if(GLAD == TRUE){
+glad.midas.raw <- readRDS(file = paste0(data.raw_path, "/glad/midas_coping_glad.rds"))
+dim(glad.midas.raw)
+colnames(glad.midas.raw)
+}
+```
+
+Select variables
+```{r glad midas cleaning}
+if(GLAD == TRUE){
+
+glad.midas.raw.id <- glad.midas.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         midas.headaches_suffered_past_month,
+         midas.days_past_month_miss_work_school = midas.days_past_month,
+         midas.days_past_month_work_school_half_productivity = midas.days_past_month.1,
+         midas.days_past_month_miss_housework = midas.days_past_month.2,
+         midas.days_past_month_housework_half_productivity = midas.days_past_month.3,
+         midas.days_past_month_miss_social_activities = midas.days_past_month.4
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(glad.midas.raw.id)
+# Inspect colnames
+colnames(glad.midas.raw.id)
+#Differences
+dim(glad.midas.raw)[1]-dim(glad.midas.raw.id)[1]
+}
+```
+
+```{r glad copy midas}
+if(GLAD == TRUE){
+midas.raw.id <- glad.midas.raw.id
+}
+```
+
+### EDGI
+Read in data
+```{r edgi midas cols}
+if(EDGI == TRUE){
+edgi.midas.raw <- readRDS(file = paste0(data.raw_path, "/edgi/midas_coping_edgi.rds"))
+dim(edgi.midas.raw)
+colnames(edgi.midas.raw)
+}
+```
+
+Select variables
+```{r edgi midas cleaning}
+if(EDGI == TRUE){
+
+edgi.midas.raw.id <- edgi.midas.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         midas.headaches_suffered_past_month,
+         midas.days_past_month_miss_work_school = midas.past_month_days,
+         midas.days_past_month_work_school_half_productivity = midas.past_month_days.1,
+         midas.days_past_month_miss_housework = midas.past_month_days.2,
+         midas.days_past_month_housework_half_productivity = midas.past_month_days.3,
+         midas.days_past_month_miss_social_activities = midas.past_month_days.4  
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(edgi.midas.raw.id)
+# Inspect colnames
+colnames(edgi.midas.raw.id)
+#Differences
+dim(edgi.midas.raw)[1]-dim(edgi.midas.raw.id)[1]
+}
+```
+
+```{r edgi copy midas}
+if(EDGI == TRUE){
+midas.raw.id <- edgi.midas.raw.id
+}
+```
+
+### NBR
+Read in data
+```{r nbr midas cols}
+if(NBR == TRUE){
+nbr.midas.raw <- readRDS(file = paste0(data.raw_path, "/nbr/midas_coping_nbr.rds"))
+dim(nbr.midas.raw)
+colnames(nbr.midas.raw)
+}
+```
+
+Select variables
+```{r nbr midas cleaning}
+if(NBR == TRUE){
+
+nbr.midas.raw.id <- nbr.midas.raw %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         midas.day_past_month_felt,
+         midas.sitting_and_reading,
+         midas.watching_tv,
+         midas.sitting_inactive_in_a_public_place,
+         midas.break_passenger_hour_car,
+         midas.afternoon_rest_circumstances_lying,
+         midas.sitting_and_talking_to_someone,
+         midas.sitting_quietly_after_a_lunch_without_alcohol,
+         midas.car_minutes_stopped_traffic,
+         midas.insomnia,
+         midas.narcolepsy,
+         midas.rem_sleep_behaviour_disorder,
+         midas.restlmidas_legs_syndrome,
+         midas.sleep_apnea,
+         midas.sleep_terrors,
+         midas.sleepwalking,
+         midas.other,
+         midas.none  
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(nbr.midas.raw.id)
+# Inspect colnames
+colnames(nbr.midas.raw.id)
+#Differences
+dim(nbr.midas.raw)[1]-dim(nbr.midas.raw.id)[1]
+}
+```
+
+```{r nbr copy midas}
+if(NBR == TRUE){
+midas.raw.id <- nbr.midas.raw.id
+}
+```
+
+### RAMP
+Read in data
+```{r ramp midas cols}
+if(RAMP == TRUE){
+ramp.midas.raw <- readRDS(file = paste0(data.raw_path, "/ramp/midas_ramp.rds"))
+dim(ramp.midas.raw)
+colnames(ramp.midas.raw)
+}
+```
+
+Select variables
+```{r ramp midas cleaning}
+if(RAMP == TRUE){
+
+ramp.midas.raw.id <- ramp.midas.raw %>%
+  drop_na(`Login ID`) %>% # Drop NAs
+  distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(`Login ID`, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         midas.day_past_month_felt,
+         midas.sitting_and_reading,
+         midas.watching_tv,
+         midas.sitting_inactive_in_a_public_place,
+         midas.break_passenger_hour_car,
+         midas.afternoon_rest_circumstances_lying,
+         midas.sitting_and_talking_to_someone,
+         midas.sitting_quietly_after_a_lunch_without_alcohol,
+         midas.car_minutes_stopped_traffic,
+         midas.insomnia,
+         midas.narcolepsy,
+         midas.rem_sleep_behaviour_disorder,
+         midas.restlmidas_legs_syndrome,
+         midas.sleep_apnea,
+         midas.sleep_terrors,
+         midas.sleepwalking,
+         midas.other,
+         midas.none  
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(ramp.midas.raw.id)
+# Inspect colnames
+colnames(ramp.midas.raw.id)
+#Differences
+dim(ramp.midas.raw)[1]-dim(ramp.midas.raw.id)[1]
+}
+```
+
+```{r ramp copy midas}
+if(RAMP == TRUE){
+midas.raw.id <- ramp.midas.raw.id
+}
+```
+
+## Loss of taste/smell (nmss)
+
+### GLAD
+Read in data
+```{r glad nmss cols}
+if(GLAD == TRUE){
+glad.nmss.raw <- readRDS(file = paste0(data.raw_path, "/glad/nmss_coping_glad.rds"))
+dim(glad.nmss.raw)
+colnames(glad.nmss.raw)
+}
+```
+
+Select variables
+```{r glad nmss cleaning}
+if(GLAD == TRUE){
+
+glad.nmss.raw.id <- glad.nmss.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         nmss.ability_taste_food_change,
+         nmss.severe_taste_smell_loss
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(glad.nmss.raw.id)
+# Inspect colnames
+colnames(glad.nmss.raw.id)
+#Differences
+dim(glad.nmss.raw)[1]-dim(glad.nmss.raw.id)[1]
+}
+```
+
+```{r glad copy nmss}
+if(GLAD == TRUE){
+nmss.raw.id <- glad.nmss.raw.id
+}
+```
+
+### EDGI
+Read in data
+```{r edgi nmss cols}
+if(EDGI == TRUE){
+edgi.nmss.raw <- readRDS(file = paste0(data.raw_path, "/edgi/nmss_coping_edgi.rds"))
+dim(edgi.nmss.raw)
+colnames(edgi.nmss.raw)
+}
+```
+
+Select variables
+```{r edgi nmss cleaning}
+if(EDGI == TRUE){
+
+edgi.nmss.raw.id <- edgi.nmss.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         nmss.ability_taste_food_change = nmss.taste_food_ability_smell,
+         nmss.severe_taste_smell_loss
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(edgi.nmss.raw.id)
+# Inspect colnames
+colnames(edgi.nmss.raw.id)
+#Differences
+dim(edgi.nmss.raw)[1]-dim(edgi.nmss.raw.id)[1]
+}
+```
+
+```{r edgi copy nmss}
+if(EDGI == TRUE){
+nmss.raw.id <- edgi.nmss.raw.id
+}
+```
+
+### NBR
+Read in data
+```{r nbr nmss cols}
+if(NBR == TRUE){
+nbr.nmss.raw <- readRDS(file = paste0(data.raw_path, "/nbr/nmss_coping_nbr.rds"))
+dim(nbr.nmss.raw)
+colnames(nbr.nmss.raw)
+}
+```
+
+Select variables
+```{r nbr nmss cleaning}
+if(NBR == TRUE){
+
+nbr.nmss.raw.id <- nbr.nmss.raw %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         nmss.ability_taste_food_change,
+         nmss.severe_taste_smell_loss 
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(nbr.nmss.raw.id)
+# Inspect colnames
+colnames(nbr.nmss.raw.id)
+#Differences
+dim(nbr.nmss.raw)[1]-dim(nbr.nmss.raw.id)[1]
+}
+```
+
+```{r nbr copy nmss}
+if(NBR == TRUE){
+nmss.raw.id <- nbr.nmss.raw.id
+}
+```
+
+### RAMP
+Read in data
+```{r ramp nmss cols}
+if(RAMP == TRUE){
+ramp.nmss.raw <- readRDS(file = paste0(data.raw_path, "/ramp/nmss_ramp.rds"))
+dim(ramp.nmss.raw)
+colnames(ramp.nmss.raw)
+}
+```
+
+Select variables
+```{r ramp nmss cleaning}
+if(RAMP == TRUE){
+
+ramp.nmss.raw.id <- ramp.nmss.raw %>%
+  drop_na(`Login ID`) %>% # Drop NAs
+  distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(`Login ID`, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         nmss.ability_taste_food_change,
+         nmss.severe_taste_smell_loss 
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(ramp.nmss.raw.id)
+# Inspect colnames
+colnames(ramp.nmss.raw.id)
+#Differences
+dim(ramp.nmss.raw)[1]-dim(ramp.nmss.raw.id)[1]
+}
+```
+
+```{r ramp copy nmss}
+if(RAMP == TRUE){
+nmss.raw.id <- ramp.nmss.raw.id
+}
+```
+
+## Non-motor symptoms (nmsw)
+
+### GLAD
+Read in data
+```{r glad nmsw cols}
+if(GLAD == TRUE){
+glad.nmsw.raw <- readRDS(file = paste0(data.raw_path, "/glad/nmsw_coping_glad.rds"))
+dim(glad.nmsw.raw)
+colnames(glad.nmsw.raw)
+}
+```
+
+Select variables
+```{r glad nmsw cleaning}
+if(GLAD == TRUE){
+
+glad.nmsw.raw.id <- glad.nmsw.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         nmsw.drink_problems_choking_difficulty,
+         nmsw.night_regularly_pass_urine,
+         nmsw.sex_finding_difficult,
+         nmsw.weak_standing_feeling_light,
+         nmsw.acting_moving_sleep_talking,
+         nmsw.double_vision     
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(glad.nmsw.raw.id)
+# Inspect colnames
+colnames(glad.nmsw.raw.id)
+#Differences
+dim(glad.nmsw.raw)[1]-dim(glad.nmsw.raw.id)[1]
+}
+```
+
+```{r glad copy nmsw}
+if(GLAD == TRUE){
+nmsw.raw.id <- glad.nmsw.raw.id
+}
+```
+
+### EDGI
+Read in data
+```{r edgi nmsw cols}
+if(EDGI == TRUE){
+edgi.nmsw.raw <- readRDS(file = paste0(data.raw_path, "/edgi/nmsw_coping_edgi.rds"))
+dim(edgi.nmsw.raw)
+colnames(edgi.nmsw.raw)
+}
+```
+
+Select variables
+```{r edgi nmsw cleaning}
+if(EDGI == TRUE){
+
+edgi.nmsw.raw.id <- edgi.nmsw.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         nmsw.drink_problems_choking_difficulty,
+         nmsw.night_regularly_pass_urine = nmsw.regularly_night_pass_urine,
+         nmsw.sex_finding_difficult = nmsw.sex_difficult_finding,
+         nmsw.weak_standing_feeling_light,
+         nmsw.acting_moving_sleep_talking,
+         nmsw.double_vision
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(edgi.nmsw.raw.id)
+# Inspect colnames
+colnames(edgi.nmsw.raw.id)
+#Differences
+dim(edgi.nmsw.raw)[1]-dim(edgi.nmsw.raw.id)[1]
+}
+```
+
+```{r edgi copy nmsw}
+if(EDGI == TRUE){
+nmsw.raw.id <- edgi.nmsw.raw.id
+}
+```
+
+### NBR
+Read in data
+```{r nbr nmsw cols}
+if(NBR == TRUE){
+nbr.nmsw.raw <- readRDS(file = paste0(data.raw_path, "/nbr/nmsw_coping_nbr.rds"))
+dim(nbr.nmsw.raw)
+colnames(nbr.nmsw.raw)
+}
+```
+
+Select variables
+```{r nbr nmsw cleaning}
+if(NBR == TRUE){
+
+nbr.nmsw.raw.id <- nbr.nmsw.raw %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         nmsw.drink_problems_choking_difficulty,
+         nmsw.night_regularly_pass_urine,
+         nmsw.sex_finding_difficult,
+         nmsw.weak_standing_feeling_light,
+         nmsw.acting_moving_sleep_talking,
+         nmsw.double_vision 
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(nbr.nmsw.raw.id)
+# Inspect colnames
+colnames(nbr.nmsw.raw.id)
+#Differences
+dim(nbr.nmsw.raw)[1]-dim(nbr.nmsw.raw.id)[1]
+}
+```
+
+```{r nbr copy nmsw}
+if(NBR == TRUE){
+nmsw.raw.id <- nbr.nmsw.raw.id
+}
+```
+
+### RAMP
+Read in data
+```{r ramp nmsw cols}
+if(RAMP == TRUE){
+ramp.nmsw.raw <- readRDS(file = paste0(data.raw_path, "/ramp/nmsw_ramp.rds"))
+dim(ramp.nmsw.raw)
+colnames(ramp.nmsw.raw)
+}
+```
+
+Select variables
+```{r ramp nmsw cleaning}
+if(RAMP == TRUE){
+
+ramp.nmsw.raw.id <- ramp.nmsw.raw %>%
+  drop_na(`Login ID`) %>% # Drop NAs
+  distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(`Login ID`, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         nmsw.drink_problems_choking_difficulty,
+         nmsw.night_regularly_pass_urine,
+         nmsw.sex_finding_difficult,
+         nmsw.weak_standing_feeling_light,
+         nmsw.acting_moving_sleep_talking,
+         nmsw.double_vision 
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(ramp.nmsw.raw.id)
+# Inspect colnames
+colnames(ramp.nmsw.raw.id)
+#Differences
+dim(ramp.nmsw.raw)[1]-dim(ramp.nmsw.raw.id)[1]
+}
+```
+
+```{r ramp copy nmsw}
+if(RAMP == TRUE){
+nmsw.raw.id <- ramp.nmsw.raw.id
+}
+```
+
+## Tinnitus
+
+### GLAD
+Read in data
+```{r glad tinnitus cols}
+if(GLAD == TRUE){
+glad.tinnitus.raw <- readRDS(file = paste0(data.raw_path, "/glad/tinnitus_coping_glad.rds"))
+dim(glad.tinnitus.raw)
+colnames(glad.tinnitus.raw)
+}
+```
+
+Select variables
+```{r glad tinnitus cleaning}
+if(GLAD == TRUE){
+
+glad.tinnitus.raw.id <- glad.tinnitus.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         tinnitus.ears_noises_head_minutes,
+         tinnitus.lasts_ears_noises_head,
+         tinnitus.noises_worry_worst_upset    
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(glad.tinnitus.raw.id)
+# Inspect colnames
+colnames(glad.tinnitus.raw.id)
+#Differences
+dim(glad.tinnitus.raw)[1]-dim(glad.tinnitus.raw.id)[1]
+}
+```
+
+```{r glad copy tinnitus}
+if(GLAD == TRUE){
+tinnitus.raw.id <- glad.tinnitus.raw.id
+}
+```
+
+### EDGI
+Read in data
+```{r edgi tinnitus cols}
+if(EDGI == TRUE){
+edgi.tinnitus.raw <- readRDS(file = paste0(data.raw_path, "/edgi/tinnitus_coping_edgi.rds"))
+dim(edgi.tinnitus.raw)
+colnames(edgi.tinnitus.raw)
+}
+```
+
+Select variables
+```{r edgi tinnitus cleaning}
+if(EDGI == TRUE){
+
+edgi.tinnitus.raw.id <- edgi.tinnitus.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+  distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         tinnitus.ears_noises_head_minutes = tinnitus.ears_noises_minutes_head,
+         tinnitus.lasts_ears_noises_head = tinnitus.ears_noises_minutes_head.1,
+         tinnitus.noises_worry_worst_upset
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(edgi.tinnitus.raw.id)
+# Inspect colnames
+colnames(edgi.tinnitus.raw.id)
+#Differences
+dim(edgi.tinnitus.raw)[1]-dim(edgi.tinnitus.raw.id)[1]
+}
+```
+
+```{r edgi copy tinnitus}
+if(EDGI == TRUE){
+tinnitus.raw.id <- edgi.tinnitus.raw.id
+}
+```
+
+### NBR
+Read in data
+```{r nbr tinnitus cols}
+if(NBR == TRUE){
+nbr.tinnitus.raw <- readRDS(file = paste0(data.raw_path, "/nbr/tinnitus_coping_nbr.rds"))
+dim(nbr.tinnitus.raw)
+colnames(nbr.tinnitus.raw)
+}
+```
+
+Select variables
+```{r nbr tinnitus cleaning}
+if(NBR == TRUE){
+
+nbr.tinnitus.raw.id <- nbr.tinnitus.raw %>%
+  drop_na(subjectid) %>% # Drop NAs
+  distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         tinnitus.ears_noises_head_minutes,
+         tinnitus.lasts_ears_noises_head,
+         tinnitus.noises_worry_worst_upset 
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(nbr.tinnitus.raw.id)
+# Inspect colnames
+colnames(nbr.tinnitus.raw.id)
+#Differences
+dim(nbr.tinnitus.raw)[1]-dim(nbr.tinnitus.raw.id)[1]
+}
+```
+
+```{r nbr copy tinnitus}
+if(NBR == TRUE){
+tinnitus.raw.id <- nbr.tinnitus.raw.id
+}
+```
+
+### RAMP
+Read in data
+```{r ramp tinnitus cols}
+if(RAMP == TRUE){
+ramp.tinnitus.raw <- readRDS(file = paste0(data.raw_path, "/ramp/tinnitus_ramp.rds"))
+dim(ramp.tinnitus.raw)
+colnames(ramp.tinnitus.raw)
+}
+```
+
+Select variables
+```{r ramp tinnitus cleaning}
+if(RAMP == TRUE){
+
+ramp.tinnitus.raw.id <- ramp.tinnitus.raw %>%
+  drop_na(`Login ID`) %>% # Drop NAs
+  distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
+  separate(`Login ID`, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  mutate(ID = as.numeric(ID)) %>%
+  select(
+         Sample, # Sample
+         ID, # ID
+         tinnitus.ears_noises_head_minutes,
+         tinnitus.lasts_ears_noises_head,
+         tinnitus.noises_worry_worst_upset
+         ) %>%
+  add_numeric(., exclude = exclude_cols) %>%
+  mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
+  mutate_if(is.numeric, ~na_if(., -99)) %>%
+  mutate_if(is.numeric, ~na_if(., -77)) %>%
+  mutate_if(is.factor, ~na_if(., "Seen but not answered")) %>% # Recode missing values to NAs in factor variables
+  mutate_if(is.factor, ~na_if(., "Don't know")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to say")) %>%
+  mutate_if(is.factor, ~na_if(., "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Seen but not answered")) %>% # Drop empty factor levels
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
+  mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
+
+# Inspect dimensions
+dim(ramp.tinnitus.raw.id)
+# Inspect colnames
+colnames(ramp.tinnitus.raw.id)
+#Differences
+dim(ramp.tinnitus.raw)[1]-dim(ramp.tinnitus.raw.id)[1]
+}
+```
+
+```{r ramp copy tinnitus}
+if(RAMP == TRUE){
+tinnitus.raw.id <- ramp.tinnitus.raw.id
+}
+```
+
+
 # Join tibbles together
 
 ```{r edgi employment and coping ocir}
@@ -6014,7 +7449,13 @@ dfs.list <- list(
   prepan.ocir.raw.id,
   coping.gad.raw.id,
   coping.pcl.raw.id,
-  coping.phq.raw.id
+  coping.phq.raw.id,
+  als.raw.id,
+  ess.raw.id,
+  midas.raw.id,
+  nmss.raw.id,
+  nmsw.raw.id,
+  tinnitus.raw.id
 #  coping.ocir.raw.id
 )
 }
@@ -6034,7 +7475,13 @@ dfs.list <- list(
   coping.gad.raw.id,
   coping.pcl.raw.id,
   coping.phq.raw.id,
-  coping.ocir.raw.id
+  coping.ocir.raw.id,
+  als.raw.id,
+  ess.raw.id,
+  midas.raw.id,
+  nmss.raw.id,
+  nmsw.raw.id,
+  tinnitus.raw.id
 )
 }
 ```
@@ -6050,7 +7497,13 @@ dfs.list <- list(
   coping.gad.raw.id,
   coping.pcl.raw.id,
   coping.phq.raw.id,
-  coping.ocir.raw.id
+  coping.ocir.raw.id,
+  als.raw.id,
+  ess.raw.id,
+  midas.raw.id,
+  nmss.raw.id,
+  nmsw.raw.id,
+  tinnitus.raw.id
 )
 }
 ```
@@ -7250,7 +8703,7 @@ Variables required:
 - "respiratory.skipped_meals_binary": Skipped meals
 
 The COVID prediction model has coded the sexes opposite to our data set
-```{r create numeric sex variable with male=1}
+```{r create numeric sex variable with male eq 1}
 if(GLAD == TRUE | NBR == TRUE | EDGI == TRUE){
 dat.coping <- dat.coping %>%
   mutate(
@@ -7266,7 +8719,7 @@ dat.coping <- dat.coping %>%
 ```
 
 Sex is no available in the RAMP dataset, therefore a proxy sex variable is created whereby Gender = Male and Transgender = No. 
-```{r create numeric sex variable with male=1 for ramp}
+```{r create numeric sex variable with male eq 1 for ramp}
 if(RAMP == TRUE){
 dat.coping <- dat.coping %>%
   mutate(
@@ -7425,6 +8878,7 @@ summarytools::dfSummary(
   valid.col = F,
   labels.col = F)
 ```
+
 
 # Rename NBR Sample ID 
 ```{r rename NBR sample ID}
