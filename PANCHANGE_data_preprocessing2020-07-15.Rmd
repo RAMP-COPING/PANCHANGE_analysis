@@ -48,9 +48,9 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = TRUE
+EDGI = FALSE
 NBR = FALSE
-RAMP = FALSE
+RAMP = TRUE
 ```
 
 
@@ -6120,7 +6120,8 @@ if(NBR == TRUE){
 nbr.als.raw.id <- nbr.als.raw %>%
   drop_na(subjectid) %>% # Drop NAs
   distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
   mutate(ID = as.numeric(ID)) %>%
   select(
          Sample, # Sample
@@ -6184,7 +6185,7 @@ ramp.als.raw.id <- ramp.als.raw %>%
   select(
          Sample, # Sample
          ID, # ID
-         alsfrs.limb_weakness_noticed_past,
+         alsfrs.limb_weakness_noticed_past = alsfrs.limb_weakness_past_month,
          alsfrs.normal,
          alsfrs.slow_or_sloppy_all_words_are_legible,
          alsfrs.not_all_words_are_legible,
@@ -6245,11 +6246,11 @@ glad.ess.raw.id <- glad.ess.raw %>%
   select(
          Sample, # Sample
          ID, # ID
-         ess.felt_excessively_sleepy_past= ess.day_past_month_felt,
+         ess.felt_excessively_sleepy_past,
          ess.sitting_and_reading,
          ess.watching_tv,
          ess.sitting_inactive_in_a_public_place,
-         ess.break_passenger_hour_car,
+         ess.break_passenger_car_hour,
          ess.afternoon_rest_circumstances_lying,
          ess.sitting_and_talking_to_someone,
          ess.sitting_quietly_after_a_lunch_without_alcohol,
@@ -6318,7 +6319,7 @@ edgi.ess.raw.id <- edgi.ess.raw %>%
          ess.sitting_and_reading,
          ess.watching_tv,
          ess.sitting_inactive_in_a_public_place,
-         ess.break_passenger_hour_car,
+         ess.break_passenger_car_hour = ess.break_passenger_hour_car,
          ess.afternoon_rest_circumstances_lying,
          ess.sitting_and_talking_to_someone,
          ess.sitting_quietly_after_a_lunch_without_alcohol,
@@ -6378,7 +6379,8 @@ if(NBR == TRUE){
 nbr.ess.raw.id <- nbr.ess.raw %>%
   drop_na(subjectid) %>% # Drop NAs
   distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
   mutate(ID = as.numeric(ID)) %>%
   select(
          Sample, # Sample
@@ -6387,7 +6389,7 @@ nbr.ess.raw.id <- nbr.ess.raw %>%
          ess.sitting_and_reading,
          ess.watching_tv,
          ess.sitting_inactive_in_a_public_place,
-         ess.break_passenger_hour_car,
+         ess.break_passenger_car_hour,
          ess.afternoon_rest_circumstances_lying,
          ess.sitting_and_talking_to_someone,
          ess.sitting_quietly_after_a_lunch_without_alcohol,
@@ -6452,25 +6454,36 @@ ramp.ess.raw.id <- ramp.ess.raw %>%
   select(
          Sample, # Sample
          ID, # ID
-         ess.felt_excessively_sleepy_past,
+         ess.felt_excessively_sleepy_past = ess.felt_excessively_sleepy_day,
          ess.sitting_and_reading,
          ess.watching_tv,
          ess.sitting_inactive_in_a_public_place,
-         ess.break_passenger_hour_car,
+         ess.break_passenger_car_hour = ess.break_hour_passenger_car,
          ess.afternoon_rest_circumstances_lying,
          ess.sitting_and_talking_to_someone,
          ess.sitting_quietly_after_a_lunch_without_alcohol,
-         ess.car_minutes_stopped_traffic,
-         ess.insomnia,
-         ess.narcolepsy,
-         ess.rem_sleep_behaviour_disorder,
-         ess.restless_legs_syndrome,
-         ess.sleep_apnea,
-         ess.sleep_terrors,
-         ess.sleepwalking,
-         ess.other,
-         ess.none  
+         ess.car_minutes_stopped_traffic#,
+#         ess.insomnia, # questions are not asked in RAMP
+#         ess.narcolepsy,
+#         ess.rem_sleep_behaviour_disorder,
+#         ess.restless_legs_syndrome,
+#         ess.sleep_apnea,
+#         ess.sleep_terrors,
+#         ess.sleepwalking,
+#         ess.other,
+#         ess.none  
          ) %>%
+  add_column(
+    ess.insomnia = NA_real_,
+    ess.narcolepsy = NA_real_,
+    ess.rem_sleep_behaviour_disorder = NA_real_,
+    ess.restless_legs_syndrome = NA_real_,
+    ess.sleep_apnea = NA_real_,
+    ess.sleep_terrors = NA_real_,
+    ess.sleepwalking = NA_real_,
+    ess.other = NA_real_,
+    ess.none = NA_real_
+    ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
@@ -6524,11 +6537,11 @@ glad.midas.raw.id <- glad.midas.raw %>%
          Sample, # Sample
          ID, # ID
          midas.headaches_suffered_past_month,
-         midas.days_past_month_miss_work_school = midas.days_past_month,
-         midas.days_past_month_work_school_half_productivity = midas.days_past_month.1,
-         midas.days_past_month_miss_housework = midas.days_past_month.2,
-         midas.days_past_month_housework_half_productivity = midas.days_past_month.3,
-         midas.days_past_month_miss_social_activities = midas.days_past_month.4
+         midas.days_past_month_miss_work_school = midas.past_month_days,
+         midas.days_past_month_work_school_half_productivity = midas.past_month_days.1,
+         midas.days_past_month_miss_housework = midas.past_month_days.2,
+         midas.days_past_month_housework_half_productivity = midas.past_month_days.3,
+         midas.days_past_month_miss_social_activities = midas.past_month_days.4
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -6625,6 +6638,19 @@ colnames(nbr.midas.raw)
 }
 ```
 
+```{r nbr midas summary labels}
+if(NBR == TRUE) {
+summarytools::dfSummary(
+  nbr.midas.raw,
+  graph.col = F,
+  valid.col = F
+  #labels.col = F
+)
+}
+```
+
+
+
 Select variables
 ```{r nbr midas cleaning}
 if(NBR == TRUE){
@@ -6632,29 +6658,18 @@ if(NBR == TRUE){
 nbr.midas.raw.id <- nbr.midas.raw %>%
   drop_na(subjectid) %>% # Drop NAs
   distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
   mutate(ID = as.numeric(ID)) %>%
   select(
          Sample, # Sample
          ID, # ID
-         midas.day_past_month_felt,
-         midas.sitting_and_reading,
-         midas.watching_tv,
-         midas.sitting_inactive_in_a_public_place,
-         midas.break_passenger_hour_car,
-         midas.afternoon_rest_circumstances_lying,
-         midas.sitting_and_talking_to_someone,
-         midas.sitting_quietly_after_a_lunch_without_alcohol,
-         midas.car_minutes_stopped_traffic,
-         midas.insomnia,
-         midas.narcolepsy,
-         midas.rem_sleep_behaviour_disorder,
-         midas.restlmidas_legs_syndrome,
-         midas.sleep_apnea,
-         midas.sleep_terrors,
-         midas.sleepwalking,
-         midas.other,
-         midas.none  
+         midas.headaches_suffered_past_month,
+         midas.days_past_month_miss_work_school = midas.past_month_days,
+         midas.days_past_month_work_school_half_productivity = midas.past_month_days.1,
+         midas.days_past_month_miss_housework = midas.past_month_days.2,
+         midas.days_past_month_housework_half_productivity = midas.past_month_days.3,
+         midas.days_past_month_miss_social_activities = midas.past_month_days.4 
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -6694,6 +6709,17 @@ colnames(ramp.midas.raw)
 }
 ```
 
+```{r ramp midas summary labels}
+if(RAMP == TRUE) {
+summarytools::dfSummary(
+  ramp.midas.raw,
+  graph.col = F,
+  valid.col = F
+  #labels.col = F
+)
+}
+```
+
 Select variables
 ```{r ramp midas cleaning}
 if(RAMP == TRUE){
@@ -6706,24 +6732,12 @@ ramp.midas.raw.id <- ramp.midas.raw %>%
   select(
          Sample, # Sample
          ID, # ID
-         midas.day_past_month_felt,
-         midas.sitting_and_reading,
-         midas.watching_tv,
-         midas.sitting_inactive_in_a_public_place,
-         midas.break_passenger_hour_car,
-         midas.afternoon_rest_circumstances_lying,
-         midas.sitting_and_talking_to_someone,
-         midas.sitting_quietly_after_a_lunch_without_alcohol,
-         midas.car_minutes_stopped_traffic,
-         midas.insomnia,
-         midas.narcolepsy,
-         midas.rem_sleep_behaviour_disorder,
-         midas.restlmidas_legs_syndrome,
-         midas.sleep_apnea,
-         midas.sleep_terrors,
-         midas.sleepwalking,
-         midas.other,
-         midas.none  
+         midas.headaches_suffered_past_month,
+         midas.days_past_month_miss_work_school = midas.scale_line_click_firmly,
+         midas.days_past_month_work_school_half_productivity = midas.scale_line_click_firmly.1,
+         midas.days_past_month_miss_housework = midas.scale_line_click_firmly.2,
+         midas.days_past_month_housework_half_productivity = midas.scale_line_click_firmly.3,
+         midas.days_past_month_miss_social_activities = midas.scale_line_click_firmly.4
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -6777,7 +6791,7 @@ glad.nmss.raw.id <- glad.nmss.raw %>%
   select(
          Sample, # Sample
          ID, # ID
-         nmss.ability_taste_food_change,
+         nmss.ability_taste_food_smell,
          nmss.severe_taste_smell_loss
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
@@ -6830,7 +6844,7 @@ edgi.nmss.raw.id <- edgi.nmss.raw %>%
   select(
          Sample, # Sample
          ID, # ID
-         nmss.ability_taste_food_change = nmss.taste_food_ability_smell,
+         nmss.ability_taste_food_smell = nmss.taste_food_ability_smell, # different to glad
          nmss.severe_taste_smell_loss
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
@@ -6878,12 +6892,13 @@ if(NBR == TRUE){
 nbr.nmss.raw.id <- nbr.nmss.raw %>%
   drop_na(subjectid) %>% # Drop NAs
   distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
   mutate(ID = as.numeric(ID)) %>%
   select(
          Sample, # Sample
          ID, # ID
-         nmss.ability_taste_food_change,
+         nmss.ability_taste_food_smell,
          nmss.severe_taste_smell_loss 
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
@@ -6936,8 +6951,8 @@ ramp.nmss.raw.id <- ramp.nmss.raw %>%
   select(
          Sample, # Sample
          ID, # ID
-         nmss.ability_taste_food_change,
-         nmss.severe_taste_smell_loss 
+         nmss.ability_taste_food_smell,
+         nmss.severe_taste_smell_loss = nmss.severe_taste_loss_smell 
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -6992,8 +7007,8 @@ glad.nmsw.raw.id <- glad.nmsw.raw %>%
          Sample, # Sample
          ID, # ID
          nmsw.drink_problems_choking_difficulty,
-         nmsw.night_regularly_pass_urine,
-         nmsw.sex_finding_difficult,
+         nmsw.regularly_night_pass_urine,
+         nmsw.sex_difficult_finding,
          nmsw.weak_standing_feeling_light,
          nmsw.acting_moving_sleep_talking,
          nmsw.double_vision     
@@ -7049,8 +7064,8 @@ edgi.nmsw.raw.id <- edgi.nmsw.raw %>%
          Sample, # Sample
          ID, # ID
          nmsw.drink_problems_choking_difficulty,
-         nmsw.night_regularly_pass_urine = nmsw.regularly_night_pass_urine,
-         nmsw.sex_finding_difficult = nmsw.sex_difficult_finding,
+         nmsw.regularly_night_pass_urine,
+         nmsw.sex_difficult_finding,
          nmsw.weak_standing_feeling_light,
          nmsw.acting_moving_sleep_talking,
          nmsw.double_vision
@@ -7100,14 +7115,15 @@ if(NBR == TRUE){
 nbr.nmsw.raw.id <- nbr.nmsw.raw %>%
   drop_na(subjectid) %>% # Drop NAs
   distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
   mutate(ID = as.numeric(ID)) %>%
   select(
          Sample, # Sample
          ID, # ID
          nmsw.drink_problems_choking_difficulty,
-         nmsw.night_regularly_pass_urine,
-         nmsw.sex_finding_difficult,
+         nmsw.regularly_night_pass_urine,
+         nmsw.sex_difficult_finding,
          nmsw.weak_standing_feeling_light,
          nmsw.acting_moving_sleep_talking,
          nmsw.double_vision 
@@ -7163,9 +7179,9 @@ ramp.nmsw.raw.id <- ramp.nmsw.raw %>%
          Sample, # Sample
          ID, # ID
          nmsw.drink_problems_choking_difficulty,
-         nmsw.night_regularly_pass_urine,
-         nmsw.sex_finding_difficult,
-         nmsw.weak_standing_feeling_light,
+         nmsw.regularly_night_pass_urine = nmsw.night_regularly_pass_urine, # different glad
+         nmsw.sex_difficult_finding = nmsw.sex_finding_difficult, # different glad
+         nmsw.weak_standing_feeling_light = nmsw.weak_standing_dizzy_feeling, # different glad
          nmsw.acting_moving_sleep_talking,
          nmsw.double_vision 
          ) %>%
@@ -7221,8 +7237,8 @@ glad.tinnitus.raw.id <- glad.tinnitus.raw %>%
   select(
          Sample, # Sample
          ID, # ID
-         tinnitus.ears_noises_head_minutes,
-         tinnitus.lasts_ears_noises_head,
+         tinnitus.ears_noises_minutes_head,
+         tinnitus.ears_noises_minutes_head_frequency = tinnitus.ears_noises_minutes_head.1,
          tinnitus.noises_worry_worst_upset    
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
@@ -7275,9 +7291,9 @@ edgi.tinnitus.raw.id <- edgi.tinnitus.raw %>%
   select(
          Sample, # Sample
          ID, # ID
-         tinnitus.ears_noises_head_minutes = tinnitus.ears_noises_minutes_head,
-         tinnitus.lasts_ears_noises_head = tinnitus.ears_noises_minutes_head.1,
-         tinnitus.noises_worry_worst_upset
+         tinnitus.ears_noises_minutes_head,
+         tinnitus.ears_noises_minutes_head_frequency = tinnitus.ears_noises_minutes_head.1,
+         tinnitus.noises_worry_worst_upset 
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -7317,6 +7333,19 @@ colnames(nbr.tinnitus.raw)
 }
 ```
 
+```{r ramp tinnitus summary labels}
+if(NBR == TRUE) {
+summarytools::dfSummary(
+  nbr.tinnitus.raw,
+  graph.col = F,
+  valid.col = F
+  #labels.col = F
+)
+}
+```
+
+
+
 Select variables
 ```{r nbr tinnitus cleaning}
 if(NBR == TRUE){
@@ -7324,14 +7353,15 @@ if(NBR == TRUE){
 nbr.tinnitus.raw.id <- nbr.tinnitus.raw %>%
   drop_na(subjectid) %>% # Drop NAs
   distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
-  separate(subjectid, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+  separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+  separate(ID.intm, into = "ID", sep = 7) %>%
   mutate(ID = as.numeric(ID)) %>%
   select(
          Sample, # Sample
          ID, # ID
-         tinnitus.ears_noises_head_minutes,
-         tinnitus.lasts_ears_noises_head,
-         tinnitus.noises_worry_worst_upset 
+         tinnitus.ears_noises_minutes_head,
+         tinnitus.ears_noises_minutes_head_frequency = tinnitus.ears_noises_minutes_head.1,
+         tinnitus.noises_worry_worst_upset
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -7383,9 +7413,9 @@ ramp.tinnitus.raw.id <- ramp.tinnitus.raw %>%
   select(
          Sample, # Sample
          ID, # ID
-         tinnitus.ears_noises_head_minutes,
-         tinnitus.lasts_ears_noises_head,
-         tinnitus.noises_worry_worst_upset
+         tinnitus.ears_noises_minutes_head,
+         tinnitus.ears_noises_minutes_head_frequency = tinnitus.lasts_ears_noises_minutes,
+         tinnitus.noises_worry_worst_upset = tinnitus.noises_worry_worst_annoy
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -7450,13 +7480,13 @@ dfs.list <- list(
   coping.gad.raw.id,
   coping.pcl.raw.id,
   coping.phq.raw.id,
+#  coping.ocir.raw.id,
   als.raw.id,
   ess.raw.id,
   midas.raw.id,
   nmss.raw.id,
   nmsw.raw.id,
   tinnitus.raw.id
-#  coping.ocir.raw.id
 )
 }
 ```
