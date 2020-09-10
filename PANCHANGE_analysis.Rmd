@@ -205,7 +205,7 @@ Exclude GLAD/EDGI individuals that didn't take part in COPING
 Exclude individuals with NA for the MHD categories
 Individuals with NAs for age/gender have already been excluded in pre-processing script.
 
-++MD: There's an issue with the EDGI obsessive_compulsive_disorders variable. There are >400 NAs so we are only left with 78 EDGI participants in the dataset.
+
 ```{r exclusion criteria for diagnoses analysis}
 dat <- dat.raw %>%
   filter(

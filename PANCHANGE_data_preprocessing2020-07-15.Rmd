@@ -7489,7 +7489,7 @@ dfs.list <- list(
   coping.gad.raw.id,
   coping.pcl.raw.id,
   coping.phq.raw.id,
-#  coping.ocir.raw.id,
+#  coping.ocir.raw.id, # joint in the chunk before because it was missing the EDGI ID in any column
   als.raw.id,
   ess.raw.id,
   midas.raw.id,
