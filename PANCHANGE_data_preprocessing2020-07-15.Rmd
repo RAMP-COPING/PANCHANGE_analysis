@@ -6473,18 +6473,27 @@ ramp.ess.raw.id <- ramp.ess.raw %>%
 #         ess.other,
 #         ess.none  
          ) %>%
-  add_column(
-    ess.insomnia = NA_real_,
-    ess.narcolepsy = NA_real_,
-    ess.rem_sleep_behaviour_disorder = NA_real_,
-    ess.restless_legs_syndrome = NA_real_,
-    ess.sleep_apnea = NA_real_,
-    ess.sleep_terrors = NA_real_,
-    ess.sleepwalking = NA_real_,
-    ess.other = NA_real_,
-    ess.none = NA_real_
-    ) %>%
   add_numeric(., exclude = exclude_cols) %>%
+    add_column(
+    ess.insomnia = NA_character_,
+    ess.narcolepsy = NA_character_,
+    ess.rem_sleep_behaviour_disorder = NA_character_,
+    ess.restless_legs_syndrome = NA_character_,
+    ess.sleep_apnea = NA_character_,
+    ess.sleep_terrors = NA_character_,
+    ess.sleepwalking = NA_character_,
+    ess.other = NA_character_,
+    ess.none = NA_character_,
+    ess.insomnia_numeric = NA_real_,
+    ess.narcolepsy_numeric = NA_real_,
+    ess.rem_sleep_behaviour_disorder_numeric = NA_real_,
+    ess.restless_legs_syndrome_numeric = NA_real_,
+    ess.sleep_apnea_numeric = NA_real_,
+    ess.sleep_terrors_numeric = NA_real_,
+    ess.sleepwalking_numeric = NA_real_,
+    ess.other_numeric = NA_real_,
+    ess.none_numeric = NA_real_
+    ) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
   mutate_if(is.numeric, ~na_if(., -77)) %>%
