@@ -1,0 +1,1572 @@
+---
+title: "PANCHANGE_descriptives"
+author: "Katie Thompson, Topher Huebel, Molly Davies, Kirstin Purves"
+date: Sys.Date()
+output:  
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: false
+    number_sections: false
+    highlight: monochrome
+    theme: cerulean
+code_folding: show
+
+html_notebook:
+  theme: cerulean
+toc: yes
+---
+
+This is the analysis script to prepare the data to run analyses for the project "Anxiety, depression and trauma symptom change during the COVID-19 pandemic: retrospective versus objective assessment" - Young et al (2020)
+
+Script written by K Purves, K Thompson, C Huebel and M Davies.
+Email: kirstin.purves@kcl.ac.uk, katie.thompson@kcl.ac.uk, christopher.1.huebel@kcl.ac.uk, molly.davies@kcl.ac.uk
+
+#Set up
+```{r Setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      comment=NA,
+                      prompt=FALSE,
+                      cache=FALSE)
+
+
+options(bitmapType = 'quartz') # to render fonts better
+```
+
+Clear global environment
+```{r Clear global environment}
+remove(list = ls())
+```
+
+Retrieve the current date to use it for file endings to not overwrite files when one exports files
+```{r Recent date}
+date = Sys.Date()
+```
+
+#Packages
+Install packages (if they are not available in your version of R)
+```{r Installing packages}
+#install.packages("summarytools")
+#install.packages("tidyverse")
+#install.packages("psych")
+#install.packages("broom")
+#install.packages("skimr")
+#install.packages("polycor")
+#install.packages("corrplot")
+#install.packages("patchwork")
+#instlal.packages("ggpubr")
+```
+
+Load packages
+```{r Load packages}
+library(knitr)
+library(summarytools)
+library(psych)
+library(polycor)
+library(corrplot)
+library(patchwork)
+library(broom)
+library(tidyverse)
+library(ggpubr)
+```
+
+# Colour palettes
+Define colours for plotting this are the standard coping colours
+```{r Colour palettes: COPING}
+COPINGpalette2 <- c("#78D9C5",
+                    "#F5BE5E")
+
+COPINGpalette3 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9")
+
+COPINGpalette4 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73")
+
+COPINGpalette5 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73", 
+                    "#FFED98")
+
+COPINGpalette6 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73",
+                    "#FFED98",
+                    "#BFD2EB")
+
+COPINGpalette7 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73", 
+                    "#FFED98",
+                    "#BFD2EB", 
+                    "#808080")
+
+COPINGpaletteGRAD <- c("#F5BE5E",
+                       "#FFD284",
+                       "#FFEED1",
+                       "#B5B5B5",
+                       "#DEFFF8",
+                       "#94F6E1",
+                       "#78D9C5")
+
+COPINGNeuCenterpalette <- c("#78D9C5",
+                            "#808080",
+                            "#F5BE5E")
+
+RAMPworseGRADpalette <- c("#78D9C5",
+                          "#FFEED1",
+                          "#F5BE5E",
+                          "#FFB1B5")
+GLADpalette = c("#efc00b", 
+                "#b7dee8")  
+```
+
+Choose in this chunk which palette to use
+04.07.2020 - Default to 2 colour COPING palette
+```{r Choose colour palette}
+palette = COPINGpalette2
+```
+
+# ggplot theme
+Set up ggplot theme for the plots
+```{r ggplot theme}
+theme_personal <-  theme(
+    text = element_text(color = "black"),
+    axis.title = element_text(color = "black"),
+    axis.text = element_text(color = "black"),
+    axis.title.y = element_blank(), 
+    legend.background = element_blank(),
+    legend.box.background = element_blank(),
+    panel.background = element_blank(), 
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.x = element_line(
+      colour = "gray",
+      linetype = "dashed",
+      size = 0.2
+      ),
+    axis.ticks = element_blank()
+    )
+```
+
+# Data import
+
+## Source data file paths 
+
+```{r source file path}
+#source data directory: data_path
+source("../PANCHANGE_raw_path.R")
+```
+
+
+## Read in data
+```{r read in data}
+dat.raw <- readRDS(file = paste0(data_path, "/four_cohorts_variables.rds")) # NEEDS CHANGING TO THE DATA SET THAT COMES OUT OF THE VARIABLE CREATION
+dim(dat.raw)
+colnames(dat.raw)
+```
+
+## Important vectors with collections of columns
+
+## Vectors for sum_score
+
+```{r Vectors with sum_score_cols}
+sum_score_cols <- dat.raw %>%
+  select(contains("sum_score")) %>%
+  select(-ends_with("raw")) %>%
+  colnames()
+
+sum_score_cols
+
+phq.sum_score_cols <- dat.raw %>%
+  select(contains("phq")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  select(-contains("8items")) %>%
+  colnames()
+
+phq.sum_score_cols
+
+gad.sum_score_cols <- dat.raw %>%
+  select(contains("gad")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  colnames()
+
+gad.sum_score_cols
+
+ocir.sum_score_cols <- dat.raw %>%
+  select(contains("ocir")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  colnames()
+
+ocir.sum_score_cols
+
+pcl.sum_score_cols <- dat.raw %>%
+  select(contains("pcl")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  colnames()
+
+pcl.sum_score_cols
+```
+
+## Vectors for diff_score
+
+```{r Vectors with diff_score_cols}
+diff_score_cols <- dat.raw %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+diff_score_cols
+
+phq.diff_score_cols <- dat.raw %>%
+  select(contains("phq")) %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+phq.diff_score_cols
+
+gad.diff_score_cols <- dat.raw %>%
+  select(contains("gad")) %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+gad.diff_score_cols
+
+ocir.diff_score_cols <- dat.raw %>%
+  select(contains("ocir")) %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+ocir.diff_score_cols
+```
+
+
+
+# Exclusions
+
+Exclude GLAD/EDGI individuals that didn't take part in COPING
+Exclude individuals with NA for the MHD categories
+Individuals with NAs for age/gender have already been excluded in pre-processing script.
+
+
+```{r exclusion criteria for diagnoses analysis}
+dat <- dat.raw %>%
+  filter(
+    !is.na(depressive_disorders) &
+      !is.na(eating_disorders) &
+      !is.na(psychotic_disorders) &
+      !is.na(obsessive_compulsive_disorders) &
+      !is.na(autism_spectrum_disorder) &
+      !is.na(mhd.mania_hypomania_bipolar_or_manicdepression_numeric) &
+      !is.na(mhd.posttraumatic_stress_disorder_ptsd_numeric) &
+      !is.na(control)
+  ) %>% 
+  drop_na(startDate.coping)
+
+dim(dat.raw)
+dim(dat)
+nrow(dat.raw)-nrow(dat)
+```
+
+# Data availability per questionnaire GAD, PHQ, PCL, and OCI-R
+
+Data availability GAD
+```{r gad availability}
+dat.raw %>%
+  freq(
+    data_group_gad,
+    cumul = F)
+```
+
+Data availability PHQ
+```{r phq availability}
+dat.raw %>%
+  freq(
+    data_group_phq,
+    cumul = F)
+```
+
+Data availability PCL
+```{r pcl availability}
+dat.raw %>%
+  freq(
+    data_group_pcl,
+    cumul = F)
+```
+
+Data availability OCI-R
+```{r ocir availability}
+dat.raw %>%
+  freq(
+    data_group_ocir,
+    cumul = F)
+```
+
+# Whole sample
+
+## Participants per Sample
+Eating Disorders Genetics Initative
+Genetic Links to Anxiety and Depression
+National BioResource
+Rapid Assessment of MP
+```{r participants per subsample frequencies}
+dat %>%
+  freq(Sample)
+```
+
+
+# Psychiatric disorders
+
+```{r disorders total count}
+dat %>%
+  freq(disorders_total_count)
+```
+
+```{r psychiatric disorders frequencies}
+#Ppts with least one psychiatric disorder
+dat %>%
+  count(disorders_total_count >= 1)
+
+#Ppts with anxiety OR depressive disorder
+dat %>% 
+  count(anxiety_disorders_numeric == 1 | depressive_disorders == 1)
+
+#Ppts with anxiety & depression
+dat %>% 
+  count(depression_and_anxiety_numeric == 1)
+```
+
+## Vector
+```{r vector with psychiatric disorders}
+disorder_columns <- c(
+  "control_numeric",  
+  "depressive_disorders_numeric",
+    "anxiety_disorders_numeric",
+    "mhd.posttraumatic_stress_disorder_ptsd_numeric",
+    "eating_disorders_numeric",
+    "obsessive_compulsive_disorders_numeric",
+    "mhd.attention_deficit_hyperactivity_disorder_numeric",
+    "mhd.personality_disorder_numeric",
+    "autism_spectrum_disorder_numeric",
+    "mhd.mania_hypomania_bipolar_or_manicdepression_numeric",
+    "psychotic_disorders_numeric"
+)
+```
+
+## Correlation matrix
+```{r Correlation matrix of psychiatric disorders}
+# Select items for correlation matrix
+mhd.items <- c(
+    "depressive_disorders",
+    "anxiety_disorders",
+    "eating_disorders",
+    "obsessive_compulsive_disorders",
+    "psychotic_disorders",
+    "mhd.mania_hypomania_bipolar_or_manicdepression",
+    "mhd.posttraumatic_stress_disorder_ptsd",
+    "autism_spectrum_disorder",
+    "mhd.attention_deficit_hyperactivity_disorder",
+    "mhd.personality_disorder",
+    "control"
+)
+
+# Calculate correlation matrix on specific columns (variables) from your data frame
+mhd.corr.mat <- hetcor(
+  as.data.frame(dat[,mhd.items]), # Specify the data
+  use = "pairwise.complete.obs" # Use all pairwise observations
+)
+
+# Print the correlation matrix
+print(mhd.corr.mat, digits = max(3, getOption("digits") - 3)) 
+
+# Save the correlations from the correlation matrix in an object
+mhd.corr.matrix <- as.matrix(mhd.corr.mat)
+
+# Save the p values from the correlation matrix in an object
+mhd.p.matrix <- as.matrix(mhd.corr.mat$tests)
+```
+
+Create the correlation matrix plot using the corrplot package
+```{r Correlation matrix of psychiatric disorders plot, fig.height=7}
+corrplot(mhd.corr.matrix, 
+         method = "color", # objects to represent the correlations on plot
+         type = "lower", # only use the lower triangle of the matrix
+         diag = FALSE, # do not show the correlations on the diagonal
+         addgrid.col = NA,
+         addCoef.col = "black", # colour for the correlation coefficients in the plot
+         tl.cex = 0.8,
+         tl.col = "black",
+         col=colorRampPalette(c("dodgerblue4","white","firebrick4"))(200), # colours for correlations
+         # Combine with significance
+         p.mat = mhd.p.matrix, # Matrix with p values
+         sig.level = 0.01, # Choose significant level
+         insig = "blank" # Nonsignificant correlations have no colour
+         )
+```
+
+## Create long data frame
+```{r gather to long format Disorder_hierarchical}
+dat.long.psych <- dat %>%
+  gather(
+    key = "Disorder_inc_raw",
+    value = "Diagnosis",
+    all_of(disorder_columns)) %>%
+  select(
+    ID,
+    Sample,
+    Gender_collapsed,
+    Ethnicity_collapsed,
+    all_of(diff_score_cols),
+    Disorder_inc_raw,
+    Diagnosis
+  ) %>%
+  mutate(Disorder_inc =
+           recode_factor(
+             Disorder_inc_raw,
+             anxiety_disorders_numeric = "Anxiety disorders",
+             depressive_disorders_numeric = "Depressive disorders",
+             eating_disorders_numeric = "Eating disorders",
+             obsessive_compulsive_disorders_numeric = "OCDs",
+             psychotic_disorders_numeric = "Psychotic disorders",
+             mhd.mania_hypomania_bipolar_or_manicdepression_numeric = "Bipolar disorders",
+             mhd.posttraumatic_stress_disorder_ptsd_numeric = "PTSD",
+             autism_spectrum_disorder_numeric = "Autism",
+             mhd.attention_deficit_hyperactivity_disorder_numeric = "ADHD",
+             mhd.personality_disorder_numeric = "Personality disorders",
+             control_numeric = "Controls"
+           ))
+
+head(dat.long.psych)
+```
+
+## Disorders per Gender
+```{r Disorder_inc by Gender_collapsed}
+Disorder_inc_by_Gender_collapsed <- dat.long.psych %>%
+  filter(Diagnosis == 1) %>%
+  count(Disorder_inc, Gender_collapsed) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+Disorder_inc_by_Gender_collapsed
+```
+
+```{r Disorder_inc by Gender_collapsed prop}
+Disorder_inc_by_Gender_collapsed <- dat.long.psych %>%
+  group_by(Disorder_inc) %>%
+  filter(Diagnosis == 1) %>%
+  count(Gender_collapsed) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+Disorder_inc_by_Gender_collapsed
+```
+
+
+```{r Disorder_inc by Gender_collapsed count plot}
+Disorder_inc_by_Gender_collapsed_count_plot <- Disorder_inc_by_Gender_collapsed %>%
+  ggplot(mapping = aes(
+    x = Disorder_inc,
+    y = n)
+    ) +
+  geom_bar(
+    aes(fill = Gender_collapsed),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Disorders",
+    y = "Number of participants",
+    fill = "Gender_collapsed") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette4
+    ) +
+  coord_flip()
+
+Disorder_inc_by_Gender_collapsed_count_plot
+```
+
+```{r Disorder_inc by Gender_collapsed prop plot}
+Disorder_inc_by_Gender_collapsed_prop_plot <- Disorder_inc_by_Gender_collapsed %>%
+  ggplot(mapping = aes(
+    x = Disorder_inc,
+    y = Prop)
+    ) +
+  geom_bar(
+    aes(fill = Gender_collapsed),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Disorders",
+    y = "Number of participants",
+    fill = "Gender_collapsed") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette4
+    ) +
+  coord_flip()
+
+Disorder_inc_by_Gender_collapsed_prop_plot
+```
+
+
+100% bar per diagnosis with percentages of contribution per sample
+
+## Disorders per sample
+```{r Disorder_inc by Sample}
+Disorder_inc_by_Sample <- dat.long.psych %>%
+  filter(Diagnosis == 1) %>%
+  count(Disorder_inc, Sample)
+```
+
+```{r Disorder_inc by Sample plot}
+Disorder_inc_by_Sample %>%
+  ggplot(mapping = aes(
+    x = Disorder_inc,
+    y = n)
+    ) +
+  geom_bar(
+    aes(fill = Sample),
+#    position = "dodge",
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Disorders",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette4,
+#    labels = c("Prepandemic", "Retrospective")
+    ) +
+  coord_flip()
+```
+
+## Disorder per ethnicity
+```{r Disorder_inc by Ethnicity_collapsed}
+Disorder_inc_by_Ethnicity <- dat.long.psych %>%
+  filter(Diagnosis == 1) %>%
+  count(Disorder_inc, Ethnicity_collapsed) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+Disorder_inc_by_Ethnicity
+```
+
+```{r Disorder_inc by Ethnicity_collapsed plot}
+Disorder_inc_by_Ethnicity %>%
+  ggplot(mapping = aes(
+    x = Disorder_inc,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Ethnicity_collapsed),
+    #    position = "dodge",
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Disorders",
+    y = "Number of participants",
+    fill = "Ethnicity_collapsed") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+```
+
+## Age categories
+Age bar plot for whole sample (not grouped)
+Summary dataset for age and display it as a bar plot
+```{r age_category prop total (ungrouped)}
+age_category_prop_total <- dat %>%
+  count(age_category) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+# add a column to help order the factor
+age_category_prop_total$order <- c(1,2,3,4,5,6,7,8,9,10,11,12,13)
+
+# total responders
+ageN <- sum(age_category_prop_total$n)
+
+kable(age_category_prop_total)
+age_category_prop_total
+```
+
+## Education
+
+### Pie charts
+
+summary dataset with frequencies
+
+```{r highest education prop per total}
+highest_education_prop_total <- dat %>%
+  count(highest_education) %>%
+  mutate(freq = round(n/sum(n), 2)) %>% 
+  drop_na()
+
+kable(highest_education_prop_total)
+highest_education_prop_total
+
+# total responders
+eduN <- sum(highest_education_prop_total$n)
+
+edubindat <- dat %>%
+  mutate(demographics.education_binary =
+           case_when(
+             highest_education_numeric == "4" ~ "Bachelors or higher",
+             highest_education_numeric == "3" ~ "A-levels or lower",
+             highest_education_numeric == "2" ~ "A-levels or lower",
+             highest_education_numeric == "1" ~ "A-levels or lower"
+           )) %>%
+  count(demographics.education_binary) %>%
+  mutate(freq = round(n/sum(n), 2)) %>% 
+  drop_na()
+
+educatdat <- dat %>%
+  mutate(demographics.education_three = 
+           case_when(
+             highest_education_numeric == "4" ~ "Bachelors or higher",
+             highest_education_numeric == "3" ~ "A-levels",
+             highest_education_numeric == "1" ~ "GCSEs or lower"
+           )) %>%
+  count(demographics.education_three) %>%
+  mutate(freq = round(n/sum(n), 2)) %>% 
+  drop_na()
+
+
+```
+
+pie chart labels
+
+```{r education pie chart all labels}
+
+edu_pie_alllabel <- 
+  
+    highest_education_prop_total %>%
+    mutate(demographics.highest_level_of_education = fct_reorder(highest_education,-n)) %>%
+
+  
+  ggplot(aes(x="", y=freq, fill=demographics.highest_level_of_education)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette7) +
+  scale_color_manual(values =  COPINGpalette7) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported level of education",
+                      sep=" "),
+        subtitle = paste("n", sum(highest_education_prop_total$n),
+                         sep = " "),
+        fill = "Self reported level of education")  +
+    geom_text(aes(y = c(0.13,0.04,0.3,0.65),
+                  x = c(1.2,1.2,1.2,1.2), #GCSE, NVQ, A-levels, university
+                  label= paste0(round((freq*100),0),"%")),
+             size=5,
+             face="bold"
+             )
+
+edu_pie_alllabel
+
+```
+
+```{r binary education pie chart all labels}
+edu_pie_binlabel <- 
+    edubindat %>%
+    mutate(demographics.education_binary = fct_reorder(demographics.education_binary,-n)) %>%
+  ggplot(aes(x="", y=freq, fill=demographics.education_binary)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette7) +
+  scale_color_manual(values =  COPINGpalette7) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported highest level of education, above or below bachelor degree or equivalent",
+                      sep=" "),
+        subtitle = paste("n", sum(edubindat$n),
+                         sep = " "),
+        fill = "Self reported level of education")  +
+    geom_text(aes(y = c(0.25,0.75),
+                  label= paste0(round((freq*100),0),"%")),
+             size=5,
+             face="bold"
+             )
+
+edu_pie_binlabel
+```
+
+```{r 3 category education pie chart all labels}
+
+edu_pie_catlabel <- 
+  
+    educatdat %>%
+    mutate(demographics.education_three = fct_reorder(demographics.education_three,-n)) %>%
+
+  
+  ggplot(aes(x="", y=freq, fill=demographics.education_three)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette7) +
+  scale_color_manual(values =  COPINGpalette7) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported highest level of education, above or below bachelor degree or equivalent",
+                      sep=" "),
+        subtitle = paste("n", sum(educatdat$n),
+                         sep = " "),
+        fill = "Self reported level of education")  +
+    geom_text(aes(y = c(0.23,0.65,0.05),
+                  label= c(paste0(round((freq[1:3]*100),0),"%")),
+             size=5,
+             face="bold"
+             ))
+
+edu_pie_catlabel
+
+```
+
+pie chart -  no labels
+
+```{r education pie chart no labels }
+edu_pie_nolabel <-
+  
+    highest_education_prop_total %>%
+    mutate(demographics.highest_level_of_education = fct_reorder(highest_education,-n)) %>%
+
+  
+  ggplot(aes(x="", y=freq, fill=demographics.highest_level_of_education)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette7) +
+  scale_color_manual(values =  COPINGpalette7) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported level of education",
+                      sep=" "),
+        subtitle = paste("n =", sum(highest_education_prop_total$n),
+                         sep = " "),
+        fill = "Self reported level of education")
+
+edu_pie_nolabel
+```
+
+## Ethnicity_collapsed
+### Pie charts
+
+```{r Ethnicity_collapsed prop per total summary}
+Ethnicity_collapsed_prop_Sample <- dat %>%
+  count(Ethnicity_collapsed) %>%
+  drop_na() %>%
+  mutate(freq = round(n/sum(n), 2))
+  
+# total responders
+ethN <- sum(Ethnicity_collapsed_prop_Sample$n)
+
+kable(Ethnicity_collapsed_prop_Sample)
+Ethnicity_collapsed_prop_Sample
+```
+
+pie chart with only European label
+
+```{r ethnicity pie chart biggest group label}
+eth_pie_alllabel <- 
+  Ethnicity_collapsed_prop_Sample %>%
+   mutate(Ethnicity_collapsed = fct_reorder(Ethnicity_collapsed,-n)) %>%
+  
+  ggplot(aes(x="", y=freq, fill=Ethnicity_collapsed)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette6) +
+  scale_color_manual(values =  COPINGpalette6) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported ethnicity",
+                      sep=" "),
+        subtitle = paste("n =", sum(Ethnicity_collapsed_prop_Sample$n),
+                         sep = " "),
+        fill = "Self reported ethnicity")  +
+    geom_text(aes(y = c(0.5),
+                  label= c(paste0(round((freq[1]*100),0),"%"))), #Frequency of European only
+             size=5,
+             face="bold"
+             )  
+
+eth_pie_alllabel
+```
+
+
+Pie chart - no labels
+
+```{r ethnicity pie chart no label}
+eth_pie_nolabel <- 
+  Ethnicity_collapsed_prop_Sample %>%
+   mutate(Ethnicity_collapsed = fct_reorder(Ethnicity_collapsed,-n)) %>%
+  
+  ggplot(aes(x="", y=freq, fill=Ethnicity_collapsed)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette6) +
+  scale_color_manual(values =  COPINGpalette6) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported ethnicity",
+                      sep=" "),
+        subtitle = paste("n =", sum(Ethnicity_collapsed_prop_Sample$n),
+                         sep = " "),
+        fill = "Self reported ethnicity")
+
+eth_pie_nolabel
+```
+
+## Gender collapsed
+### Pie charts
+```{r Gender_collapsed prop per total}
+Gender_collapsed_prop_total <- dat %>%
+  count(Gender_collapsed) %>%
+  mutate(freq = round(n/sum(n), 2))
+
+kable(Gender_collapsed_prop_total)
+Gender_collapsed_prop_total
+```
+
+
+```{r gender pie chart - all labels}
+gen_pie_alllabel <- 
+  ggplot(Gender_collapsed_prop_total, aes(x="", y=freq, fill=Gender_collapsed)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette5) +
+  scale_color_manual(values =  COPINGpalette5) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported gender",
+                      sep=" "),
+        subtitle = paste("n", sum(Gender_collapsed_prop_total$n),
+                         sep = " "),
+        fill = "Self reported gender")  +
+    geom_text(aes(y = c(0.85,0.35,0),
+                  x = c(1.2,1.2,1.8),
+                  label= c(paste0(round((freq[1:2]*100),0),"%"),paste0(round((freq[3]*100),1),"%"))),
+             size=5,
+             face="bold"
+             ) 
+
+gen_pie_alllabel
+```
+
+
+Pie chart - only labelling two largest groups (male and female)
+```{r gender pie chart - male/female labels only}
+gen_pie <- 
+  ggplot(Gender_collapsed_prop_total, aes(x="", y=freq, fill=Gender_collapsed)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette5) +
+  scale_color_manual(values =  COPINGpalette5) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported gender",
+                      sep=" "),
+        subtitle = paste("n", sum(Gender_collapsed_prop_total$n),
+                         sep = " "),
+        fill = "Self reported gender")  +
+    geom_text(aes(y = c(0.85,0.35,0),
+                  x = c(1.2,1.2,1.8),
+                  label= c(paste0(round((freq[1:2]*100),0),"%"),"")),
+             size=5,
+             face="bold"
+             ) 
+
+gen_pie
+```
+
+Pie chart -  no labels
+```{r gender pie chart - no labels }
+gen_pie_nolabel <- 
+  ggplot(Gender_collapsed_prop_total, aes(x="", y=freq, fill=Gender_collapsed)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette5) +
+  scale_color_manual(values =  COPINGpalette5) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported gender",
+                      sep=" "),
+        subtitle = paste("n", sum(Gender_collapsed_prop_total$n),
+                         sep = " "),
+        fill = "Self reported gender")
+
+gen_pie_nolabel
+```
+
+
+
+```{r age_category prop total (ungrouped) plot}
+#Colour palette
+RAMPagepalette <- c(
+  "#00D9AC",
+  "#21D9B3",
+  "#4DD9BC",
+  "#78D9C5",
+  "#8ED9C9",
+  "#A3D9CE",
+  "#CFD9D7",
+  "#DAD0BA",
+  "#DAC38F",
+  "#DAC38F",
+  "#DAB663",
+  "#DAA937",
+  "#DA9C0C"
+  )
+
+# Bar plot
+plot.age <- 
+  age_category_prop_total %>%
+    mutate(age_category = fct_reorder(age_category, order)) %>%
+  ggplot(aes(x = age_category)) +
+  geom_bar(aes(
+    y = n,
+    color = age_category,
+    fill = age_category,
+    alpha = 1),
+    stat ="identity"
+    ) +
+  scale_fill_manual(values =  RAMPagepalette) +
+  scale_color_manual(values =  RAMPagepalette) +
+  labs(x = "",
+       y = "Total count",
+       title = "Number of participants in each age category",
+       subtitle = paste0("n = ", ageN),
+       fill = "Age category") +
+   guides(
+     alpha = FALSE, # Display no guide for alpha
+     color = FALSE, # Display no guide for color
+     fill = FALSE # Display no guide for fill
+     ) +
+  scale_x_discrete(
+    limits = (levels(age_category_prop_total$age_category))
+    ) +
+  theme_classic2() +
+   theme(
+     axis.text.x = element_text(
+       colour="black",
+       size = 12,
+       angle = 45,
+       vjust = 0.5),
+     axis.text.y = element_text(
+       colour="black",
+       size = 12)
+     ) 
+
+plot.age
+```
+
+# Compare the GLAD/EDGI and COPING subcohorts: EDGI, GLAD, NBR, RAMP
++++CH: Diagnosis, ethnicity, gender, age
+
+# age_category
+## Proportion tables
+```{r age_category per Sample prop per total}
+age_category_per_Sample_prop_total <- dat %>%
+  count(age_category, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(age_category_per_Sample_prop_total)
+age_category_per_Sample_prop_total
+```
+
+```{r age_category per Sample prop per Sample}
+age_category_per_Sample_prop_Sample <- dat %>%
+  group_by(Sample) %>%
+  count(age_category, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(age_category_per_Sample_prop_Sample)
+age_category_per_Sample_prop_Sample
+```
+
+## Cross tables
+```{r age_category per Sample prop cross table}
+age_category_per_Sample_prop_Sample_cross_table <- dat %>%
+  group_by(Sample) %>%
+  count(age_category, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+
+kable(age_category_per_Sample_prop_Sample_cross_table)
+age_category_per_Sample_prop_Sample_cross_table
+```
+
+
+```{r age_category per Sample count cross table}
+age_category_per_Sample_count_cross_table <- dat %>%
+  count(age_category, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  )
+
+kable(age_category_per_Sample_count_cross_table)
+age_category_per_Sample_count_cross_table
+```
+
+## Chi square test
+```{r age_category per Sample chisquare test}
+age_category_per_Sample_chissquare_test <- dat %>%
+  count(age_category, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-age_category) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  ) %>%
+  chisq.test() %>%
+  glance()
+
+kable(age_category_per_Sample_chissquare_test)
+age_category_per_Sample_chissquare_test
+```
+
+```{r age_category by Sample count plot}
+age_category_by_Sample_count_plot <- age_category_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = age_category,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "age_category",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+age_category_by_Sample_count_plot
+```
+
+```{r age_category by Sample prop plot}
+age_category_by_Sample_prop_plot <- age_category_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = age_category,
+    y = Prop)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "age_category",
+    y = "Percentage per sample",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+age_category_by_Sample_prop_plot
+```
+
+
+
+# Ethnicity_collapsed
+## Proportion tables
+```{r Ethnicity_collapsed per Sample prop per total}
+Ethnicity_collapsed_per_Sample_prop_total <- dat %>%
+  count(Ethnicity_collapsed, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(Ethnicity_collapsed_per_Sample_prop_total)
+Ethnicity_collapsed_per_Sample_prop_total
+```
+
+```{r Ethnicity_collapsed per Sample prop per Sample}
+Ethnicity_collapsed_per_Sample_prop_Sample <- dat %>%
+  group_by(Sample) %>%
+  count(Ethnicity_collapsed, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(Ethnicity_collapsed_per_Sample_prop_Sample)
+Ethnicity_collapsed_per_Sample_prop_Sample
+```
+
+## Cross tables
+```{r Ethnicity_collapsed per Sample prop cross table}
+Ethnicity_collapsed_per_Sample_prop_Sample_cross_table <- dat %>%
+  group_by(Sample) %>%
+  count(Ethnicity_collapsed, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+
+kable(Ethnicity_collapsed_per_Sample_prop_Sample_cross_table)
+Ethnicity_collapsed_per_Sample_prop_Sample_cross_table
+```
+
+
+```{r Ethnicity_collapsed per Sample count cross table}
+Ethnicity_collapsed_per_Sample_count_cross_table <- dat %>%
+  count(Ethnicity_collapsed, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  )
+
+kable(Ethnicity_collapsed_per_Sample_count_cross_table)
+Ethnicity_collapsed_per_Sample_count_cross_table
+```
+
+## Chi square test
+```{r Ethnicity_collapsed per Sample chisquare test}
+Ethnicity_collapsed_per_Sample_chissquare_test <- dat %>%
+  count(Ethnicity_collapsed, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-Ethnicity_collapsed) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  ) %>%
+  chisq.test() %>%
+  glance()
+
+kable(Ethnicity_collapsed_per_Sample_chissquare_test)
+Ethnicity_collapsed_per_Sample_chissquare_test
+```
+
+```{r Ethnicity_collapsed by Sample count plot}
+Ethnicity_collapsed_by_Sample_count_plot <- Ethnicity_collapsed_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = Ethnicity_collapsed,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Ethnicity_collapsed",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+Ethnicity_collapsed_by_Sample_count_plot
+```
+
+```{r Ethnicity_collapsed by Sample prop plot}
+Ethnicity_collapsed_by_Sample_prop_plot <- Ethnicity_collapsed_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = Ethnicity_collapsed,
+    y = Prop)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Ethnicity_collapsed",
+    y = "Percentage per sample",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+Ethnicity_collapsed_by_Sample_prop_plot
+```
+
+
+# Gender_collapsed
+## Proportion tables
+```{r Gender_collapsed per Sample prop per total}
+Gender_collapsed_per_Sample_prop_total <- dat %>%
+  count(Gender_collapsed, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(Gender_collapsed_per_Sample_prop_total)
+Gender_collapsed_per_Sample_prop_total
+```
+
+```{r Gender_collapsed per Sample prop per Sample}
+Gender_collapsed_per_Sample_prop_Sample <- dat %>%
+  group_by(Sample) %>%
+  count(Gender_collapsed, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(Gender_collapsed_per_Sample_prop_Sample)
+Gender_collapsed_per_Sample_prop_Sample
+```
+
+## Cross tables
+```{r Gender_collapsed per Sample prop cross table}
+Gender_collapsed_per_Sample_prop_Sample_cross_table <- dat %>%
+  group_by(Sample) %>%
+  count(Gender_collapsed, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+
+kable(Gender_collapsed_per_Sample_prop_Sample_cross_table)
+Gender_collapsed_per_Sample_prop_Sample_cross_table
+```
+
+
+```{r Gender_collapsed per Sample count cross table}
+Gender_collapsed_per_Sample_count_cross_table <- dat %>%
+  count(Gender_collapsed, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  )
+
+kable(Gender_collapsed_per_Sample_count_cross_table)
+Gender_collapsed_per_Sample_count_cross_table
+```
+
+## Chi square test
+```{r Gender_collapsed per Sample chisquare test}
+Gender_collapsed_per_Sample_chissquare_test <- dat %>%
+  count(Gender_collapsed, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-Gender_collapsed) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  ) %>%
+  chisq.test() %>%
+  glance()
+
+kable(Gender_collapsed_per_Sample_chissquare_test)
+Gender_collapsed_per_Sample_chissquare_test
+```
+
+```{r Gender_collapsed by Sample count plot}
+Gender_collapsed_by_Sample_count_plot <- Gender_collapsed_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = Gender_collapsed,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Gender_collapsed",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+Gender_collapsed_by_Sample_count_plot
+```
+
+```{r Gender_collapsed by Sample prop plot}
+Gender_collapsed_by_Sample_prop_plot <- Gender_collapsed_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = Gender_collapsed,
+    y = Prop)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Gender_collapsed",
+    y = "Percentage per sample",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+Gender_collapsed_by_Sample_prop_plot
+```
+
+
+# highest_education
+## Proportion tables
+```{r highest_education per Sample prop per total}
+highest_education_per_Sample_prop_total <- dat %>%
+  count(highest_education, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(highest_education_per_Sample_prop_total)
+highest_education_per_Sample_prop_total
+```
+
+```{r highest_education per Sample prop per Sample}
+highest_education_per_Sample_prop_Sample <- dat %>%
+  group_by(Sample) %>%
+  count(highest_education, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(highest_education_per_Sample_prop_Sample)
+highest_education_per_Sample_prop_Sample
+```
+
+## Cross tables
+```{r highest_education per Sample prop cross table}
+highest_education_per_Sample_prop_Sample_cross_table <- dat %>%
+  group_by(Sample) %>%
+  count(highest_education, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+
+kable(highest_education_per_Sample_prop_Sample_cross_table)
+highest_education_per_Sample_prop_Sample_cross_table
+```
+
+
+```{r highest_education per Sample count cross table}
+highest_education_per_Sample_count_cross_table <- dat %>%
+  count(highest_education, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  )
+
+kable(highest_education_per_Sample_count_cross_table)
+highest_education_per_Sample_count_cross_table
+```
+
+## Chi square test
+```{r highest_education per Sample chisquare test}
+highest_education_per_Sample_chissquare_test <- dat %>%
+  count(highest_education, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-highest_education) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  ) %>%
+  chisq.test() %>%
+  glance()
+
+kable(highest_education_per_Sample_chissquare_test)
+highest_education_per_Sample_chissquare_test
+```
+
+## Bar plots
+```{r highest_education by Sample count plot}
+highest_education_by_Sample_count_plot <- highest_education_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = highest_education,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "highest_education",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+highest_education_by_Sample_count_plot
+```
+
+```{r highest_education by Sample prop plot}
+highest_education_by_Sample_prop_plot <- highest_education_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = highest_education,
+    y = Prop)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "highest_education",
+    y = "Percentage per sample",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+highest_education_by_Sample_prop_plot
+```
+
+
+
+# key_worker
+## Proportion tables
+```{r key_worker per Sample prop per total}
+key_worker_per_Sample_prop_total <- dat %>%
+  count(key_worker, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(key_worker_per_Sample_prop_total)
+key_worker_per_Sample_prop_total
+```
+
+```{r key_worker per Sample prop per Sample}
+key_worker_per_Sample_prop_Sample <- dat %>%
+  group_by(Sample) %>%
+  count(key_worker, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(key_worker_per_Sample_prop_Sample)
+key_worker_per_Sample_prop_Sample
+```
+
+## Cross tables
+```{r key_worker per Sample prop cross table}
+key_worker_per_Sample_prop_Sample_cross_table <- dat %>%
+  group_by(Sample) %>%
+  count(key_worker, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+
+kable(key_worker_per_Sample_prop_Sample_cross_table)
+key_worker_per_Sample_prop_Sample_cross_table
+```
+
+
+```{r key_worker per Sample count cross table}
+key_worker_per_Sample_count_cross_table <- dat %>%
+  count(key_worker, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  )
+
+kable(key_worker_per_Sample_count_cross_table)
+key_worker_per_Sample_count_cross_table
+```
+
+## Chi square test
+```{r key_worker per Sample chisquare test}
+key_worker_per_Sample_chissquare_test <- dat %>%
+  count(key_worker, Sample) %>%
+  spread(key = Sample, value = n) %>%
+  select(-key_worker) %>%
+  mutate(
+    EDGI = as.integer(replace_na(EDGI, 0)),
+    GLAD = as.integer(replace_na(GLAD, 0)),
+    NBR = as.integer(replace_na(NBR, 0)),
+    RAMP = as.integer(replace_na(RAMP, 0))
+  ) %>%
+  chisq.test() %>%
+  glance()
+
+kable(key_worker_per_Sample_chissquare_test)
+key_worker_per_Sample_chissquare_test
+```
+
+## Bar plots
+```{r key_worker by Sample count plot}
+key_worker_by_Sample_count_plot <- key_worker_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = key_worker,
+    y = n)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "key_worker",
+    y = "Number of participants",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+key_worker_by_Sample_count_plot
+```
+
+```{r key_worker by Sample prop plot}
+key_worker_by_Sample_prop_plot <- key_worker_per_Sample_prop_Sample %>%
+  ggplot(mapping = aes(
+    x = key_worker,
+    y = Prop)
+  ) +
+  geom_bar(
+    aes(fill = Sample),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "key_worker",
+    y = "Percentage per sample",
+    fill = "Sample") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette6
+  ) +
+  coord_flip()
+
+key_worker_by_Sample_prop_plot
+```
+
+```{r Save four cohorts as rds file}
+saveRDS(object = dat, file = paste0(data_path, "/four_cohorts_variables_exclusion.rds"))
+```
+

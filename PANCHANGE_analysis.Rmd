@@ -169,7 +169,7 @@ source("../PANCHANGE_raw_path.R")
 
 ## Read in data
 ```{r read in data}
-dat <- readRDS(file = paste0(data_path, "/four_cohorts.rds"))
+dat <- readRDS(file = paste0(data_path, "/four_cohorts_variables_exclusion.rds"))
 dim(dat)
 colnames(dat)
 ```
@@ -1124,7 +1124,7 @@ dat.long.ocir.sum %>%
 
 
 
-Rank the disorders by the size of the change 
+++CH: Rank the disorders by the size of the change 
 
 
 
@@ -1380,6 +1380,8 @@ dim(dat.retro)
 
 Prepan-baseline analyses
 Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March
+
+++CH: exclusion criteria need double checking
 ```{r exclusion criteria for prepan-baseline analysis}
 dat.prepan <- dat %>%
   filter(
@@ -2043,11 +2045,11 @@ tidy(ocir_retro_model1b)
 +++ Everything underneath here is only SCRATCH
 
 ```{r RUBBISH 2, fig.height=7, fig.width=5}
-gad.diff_score_base_prepan_plot /
-  gad.diff_score_retro_prepan_plot /
-  gad.diff_score_base_retro_plot +
-  plot_layout(guides = "collect", heights = c(1,1,1)) +
-  plot_annotation(tag_levels = "A")
+#gad.diff_score_base_prepan_plot /
+#  gad.diff_score_retro_prepan_plot /
+#  gad.diff_score_base_retro_plot +
+#  plot_layout(guides = "collect", heights = c(1,1,1)) +
+#  plot_annotation(tag_levels = "A")
 ```
 
 
