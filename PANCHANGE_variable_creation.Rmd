@@ -167,9 +167,9 @@ source("../PANCHANGE_raw_path.R")
 
 ## Read in data
 ```{r read in data}
-dat.raw <- readRDS(file = paste0(data_path, "/four_cohorts.rds"))
-dim(dat.raw)
-colnames(dat.raw)
+dat <- readRDS(file = paste0(data_path, "/four_cohorts.rds"))
+dim(dat)
+colnames(dat)
 ```
 
 
@@ -177,7 +177,7 @@ colnames(dat.raw)
 # COVID
 ## Recode variable
 ```{r covid test positive double}
-dat.raw <- dat.raw %>%
+dat <- dat %>%
   mutate(covid_test_positive_double_numeric =
            case_when(
              (respiratory.throat_swab_test_nose_numeric == 1 &
@@ -189,7 +189,7 @@ dat.raw <- dat.raw %>%
            )
          )
 
-dat.raw <- dat.raw %>%
+dat <- dat %>%
   mutate(covid_test_positive_double =
            recode_factor(
              covid_test_positive_double_numeric,
@@ -199,12 +199,12 @@ dat.raw <- dat.raw %>%
            )
          )
 
-dat.raw %>%
+dat %>%
   freq(covid_test_positive_double)
 ```
 
 ```{r gad covid test positive}
-dat.raw <- dat.raw %>%
+dat <- dat %>%
   mutate(gad.covid_test_positive_numeric =
            case_when(
              (respiratory.throat_swab_test_nose_numeric == 1 &
@@ -216,7 +216,7 @@ dat.raw <- dat.raw %>%
            )
          )
 
-dat.raw <- dat.raw %>%
+dat <- dat %>%
   mutate(covid_test_positive =
            recode_factor(
              gad.covid_test_positive_numeric,
@@ -226,21 +226,21 @@ dat.raw <- dat.raw %>%
            )
          )
 
-dat.raw %>%
+dat %>%
   freq(covid_test_positive)
 ```
 
 
 ## COVID swab test positive
 ```{r COVID positive swap}
-dat.raw %>%
+dat %>%
   count(respiratory.throat_swab_test_nose, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ## antibody test
 ```{r COVID positive antibody test}
-dat.raw %>%
+dat %>%
   count(respiratory.results_antibody_test, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
@@ -248,14 +248,14 @@ dat.raw %>%
 
 ## COVID probable diagnosis
 ```{r COVID probable diagnosis}
-dat.raw %>%
+dat %>%
   count(covid_probable_case_incl_screening, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ## Cross table probable covid and covid test positive
 ```{r Cross table probable covid and covid test positive}
-dat.raw %>%
+dat %>%
   count(covid_test_positive, covid_probable_case_incl_screening) %>%
   spread(key = covid_test_positive, value = n)
 ```

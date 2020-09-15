@@ -169,13 +169,14 @@ source("../PANCHANGE_raw_path.R")
 
 ## Read in data
 ```{r read in data}
-dat.raw <- readRDS(file = paste0(data_path, "/four_cohorts.rds"))
-dim(dat.raw)
-colnames(dat.raw)
+dat <- readRDS(file = paste0(data_path, "/four_cohorts.rds"))
+dim(dat)
+colnames(dat)
 ```
 
+## Important vectors with collections of columns
 
-# Vectors for sum_score
+## Vectors for sum_score
 
 ```{r Vectors with sum_score_cols}
 sum_score_cols <- dat %>%
@@ -219,7 +220,7 @@ pcl.sum_score_cols <- dat %>%
 pcl.sum_score_cols
 ```
 
-# Vectors for diff_score
+## Vectors for diff_score
 
 ```{r Vectors with diff_score_cols}
 diff_score_cols <- dat %>%

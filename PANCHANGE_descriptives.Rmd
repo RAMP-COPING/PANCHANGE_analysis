@@ -167,10 +167,89 @@ source("../PANCHANGE_raw_path.R")
 
 ## Read in data
 ```{r read in data}
-dat.raw <- readRDS(file = paste0(data_path, "/four_cohorts.rds")) # NEEDS CHANGING TO THE DATA SET THAT COMES OUT OF THE VARIABLE CREATION
+dat.raw <- readRDS(file = paste0(data_path, "/four_cohorts_variables.rds")) # NEEDS CHANGING TO THE DATA SET THAT COMES OUT OF THE VARIABLE CREATION
 dim(dat.raw)
 colnames(dat.raw)
 ```
+
+## Important vectors with collections of columns
+
+## Vectors for sum_score
+
+```{r Vectors with sum_score_cols}
+sum_score_cols <- dat.raw %>%
+  select(contains("sum_score")) %>%
+  select(-ends_with("raw")) %>%
+  colnames()
+
+sum_score_cols
+
+phq.sum_score_cols <- dat.raw %>%
+  select(contains("phq")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  select(-contains("8items")) %>%
+  colnames()
+
+phq.sum_score_cols
+
+gad.sum_score_cols <- dat.raw %>%
+  select(contains("gad")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  colnames()
+
+gad.sum_score_cols
+
+ocir.sum_score_cols <- dat.raw %>%
+  select(contains("ocir")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  colnames()
+
+ocir.sum_score_cols
+
+pcl.sum_score_cols <- dat.raw %>%
+  select(contains("pcl")) %>%
+  select(contains("sum_score")) %>% 
+  select(-ends_with("raw")) %>%
+  colnames()
+
+pcl.sum_score_cols
+```
+
+## Vectors for diff_score
+
+```{r Vectors with diff_score_cols}
+diff_score_cols <- dat.raw %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+diff_score_cols
+
+phq.diff_score_cols <- dat.raw %>%
+  select(contains("phq")) %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+phq.diff_score_cols
+
+gad.diff_score_cols <- dat.raw %>%
+  select(contains("gad")) %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+gad.diff_score_cols
+
+ocir.diff_score_cols <- dat.raw %>%
+  select(contains("ocir")) %>%
+  select(contains("diff_score")) %>% 
+  colnames()
+
+ocir.diff_score_cols
+```
+
+
 
 # Exclusions
 
@@ -267,32 +346,59 @@ age_category_prop_total
 ```{r age_category prop total (ungrouped) plot}
 #Colour palette
 RAMPagepalette <- c(
-  "#00D9AC","#21D9B3","#4DD9BC","#78D9C5","#8ED9C9","#A3D9CE",
+  "#00D9AC",
+  "#21D9B3",
+  "#4DD9BC",
+  "#78D9C5",
+  "#8ED9C9",
+  "#A3D9CE",
   "#CFD9D7",
-  "#DAD0BA","#DAC38F","#DAC38F","#DAB663" ,"#DAA937","#DA9C0C")
+  "#DAD0BA",
+  "#DAC38F",
+  "#DAC38F",
+  "#DAB663",
+  "#DAA937",
+  "#DA9C0C"
+  )
 
-#Bar plot
+# Bar plot
 plot.age <- 
   age_category_prop_total %>%
-    mutate(age_category = fct_reorder(age_category,order)) %>%
-
+    mutate(age_category = fct_reorder(age_category, order)) %>%
   ggplot(aes(x = age_category)) +
-  geom_bar(aes(y = n, color=age_category, fill=age_category, alpha = 1),
-           stat ="summary") +
+  geom_bar(aes(
+    y = n,
+    color = age_category,
+    fill = age_category,
+    alpha = 1),
+    stat ="identity"
+    ) +
   scale_fill_manual(values =  RAMPagepalette) +
   scale_color_manual(values =  RAMPagepalette) +
   labs(x = "",
        y = "Total count",
-       title = paste("Number of participants in each age category",sep=" "),
-       subtitle = paste("n = ", ageN,
-                        sep = ""),
+       title = "Number of participants in each age category",
+       subtitle = paste0("n = ", ageN),
        fill = "Age category") +
-   guides(alpha = FALSE, color = FALSE, fill = FALSE) +
-  scale_x_discrete(limits = (levels(age_category_prop_total$age_category))) +
+   guides(
+     alpha = FALSE, # Display no guide for alpha
+     color = FALSE, # Display no guide for color
+     fill = FALSE # Display no guide for fill
+     ) +
+  scale_x_discrete(
+    limits = (levels(age_category_prop_total$age_category))
+    ) +
   theme_classic2() +
-   theme(axis.text.x = element_text(colour="black", size = 12,angle=45,
-                                    vjust=0.5),
-        axis.text.y = element_text(colour="black", size = 12)) 
+   theme(
+     axis.text.x = element_text(
+       colour="black",
+       size = 12,
+       angle = 45,
+       vjust = 0.5),
+     axis.text.y = element_text(
+       colour="black",
+       size = 12)
+     ) 
 
 plot.age
 ```
@@ -301,6 +407,7 @@ plot.age
 +++CH: Diagnosis, ethnicity, gender, age
 
 # age_category
+## Proportion tables
 ```{r age_category per Sample prop per total}
 age_category_per_Sample_prop_total <- dat %>%
   count(age_category, Sample) %>%
@@ -320,6 +427,7 @@ kable(age_category_per_Sample_prop_Sample)
 age_category_per_Sample_prop_Sample
 ```
 
+## Cross tables
 ```{r age_category per Sample prop cross table}
 age_category_per_Sample_prop_Sample_cross_table <- dat %>%
   group_by(Sample) %>%
@@ -419,6 +527,7 @@ age_category_by_Sample_prop_plot
 
 
 # Ethnicity_collapsed
+## Proportion tables
 ```{r Ethnicity_collapsed per Sample prop per total}
 Ethnicity_collapsed_per_Sample_prop_total <- dat %>%
   count(Ethnicity_collapsed, Sample) %>%
@@ -438,6 +547,7 @@ kable(Ethnicity_collapsed_per_Sample_prop_Sample)
 Ethnicity_collapsed_per_Sample_prop_Sample
 ```
 
+## Cross tables
 ```{r Ethnicity_collapsed per Sample prop cross table}
 Ethnicity_collapsed_per_Sample_prop_Sample_cross_table <- dat %>%
   group_by(Sample) %>%
@@ -609,6 +719,7 @@ eth_pie
 
 
 # Gender_collapsed
+## Proportion tables
 ```{r Gender_collapsed per Sample prop per total}
 Gender_collapsed_per_Sample_prop_total <- dat %>%
   count(Gender_collapsed, Sample) %>%
@@ -628,6 +739,7 @@ kable(Gender_collapsed_per_Sample_prop_Sample)
 Gender_collapsed_per_Sample_prop_Sample
 ```
 
+## Cross tables
 ```{r Gender_collapsed per Sample prop cross table}
 Gender_collapsed_per_Sample_prop_Sample_cross_table <- dat %>%
   group_by(Sample) %>%
@@ -813,6 +925,7 @@ gen_pie_nolabel
 ```
 
 # highest_education
+## Proportion tables
 ```{r highest_education per Sample prop per total}
 highest_education_per_Sample_prop_total <- dat %>%
   count(highest_education, Sample) %>%
@@ -832,6 +945,7 @@ kable(highest_education_per_Sample_prop_Sample)
 highest_education_per_Sample_prop_Sample
 ```
 
+## Cross tables
 ```{r highest_education per Sample prop cross table}
 highest_education_per_Sample_prop_Sample_cross_table <- dat %>%
   group_by(Sample) %>%
@@ -1089,6 +1203,7 @@ edu_pie_nolabel <-
 
 
 # key_worker
+## Proportion tables
 ```{r key_worker per Sample prop per total}
 key_worker_per_Sample_prop_total <- dat %>%
   count(key_worker, Sample) %>%
@@ -1108,6 +1223,7 @@ kable(key_worker_per_Sample_prop_Sample)
 key_worker_per_Sample_prop_Sample
 ```
 
+## Cross tables
 ```{r key_worker per Sample prop cross table}
 key_worker_per_Sample_prop_Sample_cross_table <- dat %>%
   group_by(Sample) %>%
@@ -1294,6 +1410,7 @@ corrplot(mhd.corr.matrix,
          )
 ```
 
+## Create long data frame
 ```{r gather to long format Disorder_hierarchical}
 dat.long.psych <- dat %>%
   gather(
@@ -1328,7 +1445,7 @@ dat.long.psych <- dat %>%
 head(dat.long.psych)
 ```
 
-
+## Disorders per Gender
 ```{r Disorder_inc by Gender_collapsed}
 Disorder_inc_by_Gender_collapsed <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
@@ -1402,6 +1519,7 @@ Disorder_inc_by_Gender_collapsed_prop_plot
 
 100% bar per diagnosis with percentages of contribution per sample
 
+## Disorders per sample
 ```{r Disorder_inc by Sample}
 Disorder_inc_by_Sample <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
@@ -1433,7 +1551,7 @@ Disorder_inc_by_Sample %>%
   coord_flip()
 ```
 
-
+## Disorder per ethnicity
 ```{r Disorder_inc by Ethnicity_collapsed}
 Disorder_inc_by_Ethnicity <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
