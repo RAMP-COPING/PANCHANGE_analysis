@@ -143,6 +143,27 @@ Choose in this chunk which palette to use
 palette = COPINGpalette2
 ```
 
+# ggplot theme
+Set up ggplot theme for the plots
+```{r ggplot theme}
+theme_personal <-  theme(
+    text = element_text(color = "black"),
+    axis.title = element_text(color = "black"),
+    axis.text = element_text(color = "black"),
+    axis.title.y = element_blank(), 
+    legend.background = element_blank(),
+    legend.box.background = element_blank(),
+    panel.background = element_blank(), 
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.x = element_line(
+      colour = "gray",
+      linetype = "dashed",
+      size = 0.2
+      ),
+    axis.ticks = element_blank()
+    )
+```
+
 
 # Data import
 
@@ -156,115 +177,10 @@ source("../PANCHANGE_raw_path.R")
 
 ## Read in data
 ```{r read in data}
-dat.raw <- readRDS(file = paste0(data_path, "/four_cohorts.rds"))
+dat.raw <- readRDS(file = paste0(data_path, "/four_cohorts.rds")) #NEEDS CHANGING
 dim(dat.raw)
 colnames(dat.raw)
 ```
-
-```{r dat.coping summary, eval=FALSE, include=FALSE}
-#summarytools::dfSummary(
-#  dat.raw,
-#  graph.col = F,
-#  valid.col = F,
-#  labels.col = F)
-```
-
-# Data availability
-
-Data availability GAD
-```{r gad availability}
-dat.raw %>%
-  freq(
-    data_group_gad,
-    cumul = F)
-```
-
-Data availability PHQ
-```{r phq availability}
-dat.raw %>%
-  freq(
-    data_group_phq,
-    cumul = F)
-```
-
-Data availability PCL
-```{r pcl availability}
-dat.raw %>%
-  freq(
-    data_group_pcl,
-    cumul = F)
-```
-
-Data availability OCI-R
-```{r ocir availability}
-dat.raw %>%
-  freq(
-    data_group_ocir,
-    cumul = F)
-```
-
-```{r sample frequencies}
-dat.raw %>%
-  freq(Sample)
-```
-
-# COVID
-## Recode variable
-```{r covid test positive double}
-dat.raw <- dat.raw %>%
-  mutate(covid_test_positive_double_numeric =
-           case_when(
-             (respiratory.throat_swab_test_nose_numeric == 1 &
-               respiratory.results_antibody_test_numeric == 1) ~ 2,
-             respiratory.throat_swab_test_nose_numeric == 1 ~ 1,
-             respiratory.throat_swab_test_nose_numeric == 2 ~ 0,
-             respiratory.results_antibody_test_numeric == 1 ~ 1,
-             respiratory.results_antibody_test_numeric == 2 ~ 0
-           )
-         )
-
-dat.raw <- dat.raw %>%
-  mutate(covid_test_positive_double =
-           recode_factor(
-             covid_test_positive_double_numeric,
-             `0` = "Negative",
-             `1` = "Positive",
-             `2` = "Double positive"
-           )
-         )
-
-dat.raw %>%
-  freq(covid_test_positive_double)
-```
-
-```{r gad covid test positive}
-dat.raw <- dat.raw %>%
-  mutate(gad.covid_test_positive_numeric =
-           case_when(
-             (respiratory.throat_swab_test_nose_numeric == 1 &
-               respiratory.results_antibody_test_numeric == 1) ~ 1, # with two positive test results get coded as positive
-             respiratory.throat_swab_test_nose_numeric == 1 ~ 1,
-             respiratory.throat_swab_test_nose_numeric == 2 ~ 0,
-             respiratory.results_antibody_test_numeric == 1 ~ 1,
-             respiratory.results_antibody_test_numeric == 2 ~ 0
-           )
-         )
-
-dat.raw <- dat.raw %>%
-  mutate(covid_test_positive =
-           recode_factor(
-             gad.covid_test_positive_numeric,
-             `0` = "Negative",
-             `1` = "Positive"
-#             `2` = "Double positive"
-           )
-         )
-
-dat.raw %>%
-  freq(covid_test_positive)
-```
-
-
 
 ## COVID swab test positive
 ```{r COVID positive swap}
