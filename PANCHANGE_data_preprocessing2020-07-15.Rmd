@@ -47,10 +47,10 @@ date = Sys.Date()
 
 # Specify cohort
 ```{r Specify cohort}
-GLAD = FALSE
+GLAD = TRUE
 EDGI = FALSE
 NBR = FALSE
-RAMP = TRUE
+RAMP = FALSE
 ```
 
 
@@ -7784,7 +7784,7 @@ dat %>%
 ```
 
 Calculate the time difference between starting the COPING questionnaire and the beginning of the pandemic
-```{r time difference between starting the COP|NG questionnaire and the beginning of the pandemic}
+```{r time difference between starting the COPING questionnaire and the beginning of the pandemic}
 if(GLAD == TRUE | EDGI == TRUE | RAMP == TRUE | NBR == TRUE){
 # using date of pandemic as 23rd of March
 dat <- dat %>%
@@ -7840,6 +7840,107 @@ dat %>%
     var = time_diff_coping_first_case_uk_jan_31,
     stats = "common"
     )
+}
+```
+
+Calculate the time difference between sign up questionnaire and the beginning of the pandemic
+```{r time difference between sign up and the beginning of the pandemic}
+if(GLAD == TRUE | EDGI == TRUE){
+# using date of pandemic as 23rd of March
+dat <- dat %>%
+  mutate(
+    time_diff_signup_lockdown_march_23 =
+        as.numeric(
+        difftime(           #this function does time1 - time2 as difftime(time1, time2...)
+          date_uk_lockdown_march_23,    # should be start date of the pandemic (time1)
+          startDate.prepandemic),    # should be start date for sign up questionnaire EDGI or GLAD (time2)
+          units = c("weeks")  #can also be "secs", "mins", "hours", "weeks"
+          )
+        )
+
+dat %>%
+  descr(
+    var = time_diff_signup_lockdown_march_23,
+    stats = "common"
+    )
+
+# using date as 1st of March  
+dat <- dat %>%
+  mutate(
+    time_diff_signup_awareness_march_1 =
+        as.numeric(
+        difftime(           #this function does time1 - time2 as difftime(time1, time2...)
+          date_higher_awareness_march_1,    # should be start date of the pandemic (time1)
+          startDate.prepandemic),    # should be start date for sign up questionnaire EDGI or GLAD (time2)
+          units = c("weeks")  #can also be "secs", "mins", "hours", "weeks"
+          )
+        )
+
+dat %>%
+  descr(
+    var = time_diff_signup_awareness_march_1,
+    stats = "common"
+    )
+
+# using date as 31st January 
+
+dat <- dat %>%
+  mutate(
+    time_diff_signup_first_case_uk_jan_31 =
+        as.numeric(
+        difftime(           #this function does time1 - time2 as difftime(time1, time2...)
+          date_first_case_uk_january_31,    # should be start date of the pandemic (time1)
+          startDate.prepandemic),    # should be start date for sign up questionnaire EDGI or GLAD (time2)
+          units = c("weeks")  #can also be "secs", "mins", "hours", "weeks"
+          )
+        )
+
+dat %>%
+  descr(
+    var = time_diff_signup_first_case_uk_jan_31,
+    stats = "common"
+    )
+}
+```
+
+Testing 3, 6, and 9 months before pandemic
+```{r Testing 3, 6, and 6 months before pandemic}
+if(GLAD == TRUE | EDGI == TRUE){
+dat %>%
+  filter(time_diff_signup_lockdown_march_23 < 12) %>%
+  nrow()
+
+dat %>%
+  filter(time_diff_signup_lockdown_march_23 < 24) %>%
+  nrow()
+
+dat %>%
+  filter(time_diff_signup_lockdown_march_23 < 36) %>%
+  nrow()
+
+dat %>%
+  filter(time_diff_signup_awareness_march_1 < 12) %>%
+  nrow()
+
+dat %>%
+  filter(time_diff_signup_awareness_march_1 < 24) %>%
+  nrow()
+
+dat %>%
+  filter(time_diff_signup_awareness_march_1 < 36) %>%
+  nrow()
+
+dat %>%
+  filter(time_diff_signup_first_case_uk_jan_31 < 12) %>%
+  nrow()
+
+dat %>%
+  filter(time_diff_signup_first_case_uk_jan_31 < 24) %>%
+  nrow()
+
+dat %>%
+  filter(time_diff_signup_first_case_uk_jan_31 < 36) %>%
+  nrow()
 }
 ```
 
