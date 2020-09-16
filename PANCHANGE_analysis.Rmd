@@ -1442,6 +1442,8 @@ b - overlapping disorder categories
 
 ## Prepan-baseline change
 
+### CHANGE SCORES
+
 ### GAD
 Model 0a: Disorder_hierarchical, Unadjusted
 ```{r GAD prepan Model 0a}
@@ -1730,6 +1732,298 @@ ocir_prepan_model1b <- lm(
 summary(ocir_prepan_model1b)
 tidy(ocir_prepan_model1b)
 ```
+
+### PANDEMIC BASELINE CONTROLLING FOR PREPANDEMIC
+
+### GAD
+Model 0a: Disorder_hierarchical, Unadjusted
+```{r GAD prepan Model 0a}
+gad_prepan_model0a <- lm(
+  formula = gad.sum_score_base ~ gad.sum_score_prepan + 
+    Disorder_hierarchical,
+  data = dat.prepan)
+
+summary(gad_prepan_model0a)
+tidy(gad_prepan_model0a)
+```
+
+Model 0b: Overlapping disorders, Unadjusted
+```{r GAD prepan Model 0b}
+gad_prepan_model0b <- lm(
+  formula = gad.sum_score_base ~ gad.sum_score_prepan +
+    anxiety_disorders +
+    depressive_disorders +
+    depression_and_anxiety +
+    eating_disorders +
+    obsessive_compulsive_disorders +
+    psychotic_disorders +
+    mhd.mania_hypomania_bipolar_or_manicdepression +
+    mhd.posttraumatic_stress_disorder_ptsd +
+    autism_spectrum_disorder +
+    mhd.attention_deficit_hyperactivity_disorder +
+    mhd.personality_disorder,
+  data = dat.prepan)
+
+summary(gad_prepan_model0b)
+tidy(gad_prepan_model0b)
+```
+
+Model 1a: Disorder hierarchical, Adjusted
+  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
+```{r GAD prepan Model 1a}
+gad_prepan_model1a <- lm(
+  formula = gad.sum_score_base ~ gad.sum_score_prepan + 
+    Disorder_hierarchical + 
+    Gender_collapsed + 
+    age_category + 
+    Ethnicity_collapsed + 
+    time_diff_sign_up_coping,
+  data = dat.prepan)
+
+summary(gad_prepan_model1a)
+tidy(gad_prepan_model1a)
+```
+
+Model 1b: Overlapping disorders, Adjusted
+  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
+```{r GAD prepan Model 1b}
+gad_prepan_model1b <- lm(
+  formula = gad.sum_score_base ~ gad.sum_score_prepan +
+    anxiety_disorders +
+    depressive_disorders +
+    depression_and_anxiety +
+    eating_disorders +
+    obsessive_compulsive_disorders +
+    psychotic_disorders +
+    mhd.mania_hypomania_bipolar_or_manicdepression +
+    mhd.posttraumatic_stress_disorder_ptsd +
+    autism_spectrum_disorder +
+    mhd.attention_deficit_hyperactivity_disorder +
+    mhd.personality_disorder +
+    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+  data = dat.prepan)
+
+summary(gad_prepan_model1b)
+tidy(gad_prepan_model1b)
+```
+
+### PHQ
+Model 0a: Disorder_hierarchical, Unadjusted
+```{r PHQ prepan Model 0a}
+phq_prepan_model0a <- lm(
+  formula = phq.sum_score_base ~ phq.sum_score_prepan + 
+    Disorder_hierarchical,
+  data = dat.prepan)
+
+summary(phq_prepan_model0a)
+tidy(phq_prepan_model0a)
+```
+
+Model 0b: Overlapping disorders, Unadjusted
+```{r PHQ prepan Model 0b}
+phq_prepan_model0b <- lm(
+  formula = phq.sum_score_base ~ phq.sum_score_prepan +
+    anxiety_disorders +
+    depressive_disorders +
+    depression_and_anxiety +
+    eating_disorders +
+    obsessive_compulsive_disorders +
+    psychotic_disorders +
+    mhd.mania_hypomania_bipolar_or_manicdepression +
+    mhd.posttraumatic_stress_disorder_ptsd +
+    autism_spectrum_disorder +
+    mhd.attention_deficit_hyperactivity_disorder +
+    mhd.personality_disorder,
+  data = dat.prepan)
+
+summary(phq_prepan_model0b)
+tidy(phq_prepan_model0b)
+```
+
+Model 1a: Disorder hierarchical, Adjusted
+  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
+```{r PHQ prepan Model 1a}
+phq_prepan_model1a <- lm(
+  formula = phq.sum_score_base ~ phq.sum_score_prepan + 
+    Disorder_hierarchical + 
+    Gender_collapsed + 
+    age_category + 
+    Ethnicity_collapsed + 
+    time_diff_sign_up_coping,
+  data = dat.prepan)
+
+summary(phq_prepan_model1a)
+tidy(phq_prepan_model1a)
+```
+
+Model 1b: Overlapping disorders, Adjusted
+  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
+```{r PHQ prepan Model 1b}
+phq_prepan_model1b <- lm(
+  formula = phq.sum_score_base ~ phq.sum_score_prepan +
+    anxiety_disorders +
+    depressive_disorders +
+    depression_and_anxiety +
+    eating_disorders +
+    obsessive_compulsive_disorders +
+    psychotic_disorders +
+    mhd.mania_hypomania_bipolar_or_manicdepression +
+    mhd.posttraumatic_stress_disorder_ptsd +
+    autism_spectrum_disorder +
+    mhd.attention_deficit_hyperactivity_disorder +
+    mhd.personality_disorder +
+    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+  data = dat.prepan)
+
+summary(phq_prepan_model1b)
+tidy(phq_prepan_model1b)
+```
+
+
+### PCL
+Model 0a: Disorder_hierarchical, Unadjusted
+```{r PCL prepan Model 0a}
+pcl_prepan_model0a <- lm(
+  formula = pcl.sum_score_base ~ pcl.sum_score_prepan + 
+    Disorder_hierarchical,
+  data = dat.prepan)
+
+summary(pcl_prepan_model0a)
+tidy(pcl_prepan_model0a)
+```
+
+Model 0b: Overlapping disorders, Unadjusted
+```{r PCL prepan Model 0b}
+pcl_prepan_model0b <- lm(
+  formula = pcl.sum_score_base ~ pcl.sum_score_prepan +
+    anxiety_disorders +
+    depressive_disorders +
+    depression_and_anxiety +
+    eating_disorders +
+    obsessive_compulsive_disorders +
+    psychotic_disorders +
+    mhd.mania_hypomania_bipolar_or_manicdepression +
+    mhd.posttraumatic_stress_disorder_ptsd +
+    autism_spectrum_disorder +
+    mhd.attention_deficit_hyperactivity_disorder +
+    mhd.personality_disorder,
+  data = dat.prepan)
+
+summary(pcl_prepan_model0b)
+tidy(pcl_prepan_model0b)
+```
+
+Model 1a: Disorder hierarchical, Adjusted
+  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
+```{r PCL prepan Model 1a}
+pcl_prepan_model1a <- lm(
+  formula = pcl.sum_score_base ~ pcl.sum_score_prepan + 
+    Disorder_hierarchical + 
+    Gender_collapsed + 
+    age_category + 
+    Ethnicity_collapsed + 
+    time_diff_sign_up_coping,
+  data = dat.prepan)
+
+summary(pcl_prepan_model1a)
+tidy(pcl_prepan_model1a)
+```
+
+Model 1b: Overlapping disorders, Adjusted
+  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
+```{r PCL prepan Model 1b}
+pcl_prepan_model1b <- lm(
+  formula = pcl.sum_score_base ~ pcl.sum_score_prepan +
+    anxiety_disorders +
+    depressive_disorders +
+    depression_and_anxiety +
+    eating_disorders +
+    obsessive_compulsive_disorders +
+    psychotic_disorders +
+    mhd.mania_hypomania_bipolar_or_manicdepression +
+    mhd.posttraumatic_stress_disorder_ptsd +
+    autism_spectrum_disorder +
+    mhd.attention_deficit_hyperactivity_disorder +
+    mhd.personality_disorder +
+    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+  data = dat.prepan)
+
+summary(pcl_prepan_model1b)
+tidy(pcl_prepan_model1b)
+```
+
+### OCIR
+Model 0a: Disorder_hierarchical, Unadjusted
+```{r OCIR prepan Model 0a}
+ocir_prepan_model0a <- lm(
+  formula = ocir.sum_score_base ~ ocir.sum_score_prepan + 
+    Disorder_hierarchical,
+  data = dat.prepan)
+
+summary(ocir_prepan_model0a)
+tidy(ocir_prepan_model0a)
+```
+
+Model 0b: Overlapping disorders, Unadjusted
+```{r OCIR prepan Model 0b}
+ocir_prepan_model0b <- lm(
+  formula = ocir.sum_score_base ~ ocir.sum_score_prepan +
+    anxiety_disorders +
+    depressive_disorders +
+    depression_and_anxiety +
+    eating_disorders +
+    obsessive_compulsive_disorders +
+    psychotic_disorders +
+    mhd.mania_hypomania_bipolar_or_manicdepression +
+    mhd.posttraumatic_stress_disorder_ptsd +
+    autism_spectrum_disorder +
+    mhd.attention_deficit_hyperactivity_disorder +
+    mhd.personality_disorder,
+  data = dat.prepan)
+
+summary(ocir_prepan_model0b)
+tidy(ocir_prepan_model0b)
+```
+
+Model 1a: Disorder hierarchical, Adjusted
+  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
+```{r OCIR prepan Model 1a}
+ocir_prepan_model1a <- lm(
+  formula = ocir.sum_score_base ~ ocir.sum_score_prepan + 
+    Disorder_hierarchical + 
+    Gender_collapsed + 
+    age_category + 
+    Ethnicity_collapsed + 
+    time_diff_sign_up_coping,
+  data = dat.prepan)
+
+summary(ocir_prepan_model1a)
+tidy(ocir_prepan_model1a)
+```
+
+Model 1b: Overlapping disorders, Adjusted
+  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
+```{r OCIR prepan Model 1b}
+ocir_prepan_model1b <- lm(
+  formula = ocir.sum_score_base ~ ocir.sum_score_prepan +
+    anxiety_disorders +
+    depressive_disorders +
+    depression_and_anxiety +
+    eating_disorders +
+    obsessive_compulsive_disorders +
+    psychotic_disorders +
+    mhd.mania_hypomania_bipolar_or_manicdepression +
+    mhd.posttraumatic_stress_disorder_ptsd +
+    autism_spectrum_disorder +
+    mhd.attention_deficit_hyperactivity_disorder +
+    mhd.personality_disorder +
+    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+  data = dat.prepan)
+
+summary(ocir_prepan_model1b)
+tidy(ocir_prepan_model1b)
+```
+
 
 
 ## Retro-baseline change
