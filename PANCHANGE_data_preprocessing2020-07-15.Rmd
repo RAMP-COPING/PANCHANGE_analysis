@@ -2087,7 +2087,7 @@ mhd.raw.id %>%
 }
 ```
 
-```{r mhd restricting_vs_binge_eating_eating_disorders}
+```{r EDGI mhd restricting_vs_binge_eating_eating_disorders}
 if(EDGI == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
@@ -2127,7 +2127,7 @@ mhd.raw.id %>%
 ```
 
 ```{r Check eating_disorders}
-if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
+if(GLAD == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id %>%
   select(
     eating_disorders,
@@ -2146,7 +2146,7 @@ mhd.raw.id %>%
 }
 ```
 
-```{r Check eating_disorders}
+```{r EDGI Check eating_disorders}
 if(EDGI == TRUE) {
 mhd.raw.id %>%
   select(
@@ -2645,7 +2645,7 @@ mhd.raw.id %>%
 ```
 
 
-```{r mhd check none of the above}
+```{r RAMP mhd check none of the above}
 if(RAMP == TRUE) {
 mhd.raw.id %>%
   select(
@@ -2664,7 +2664,7 @@ mhd.raw.id %>%
 }
 ```
 
-```{r mhd check none of the above}
+```{r NBR EDGI mhd check none of the above}
 if(NBR == TRUE | EDGI == TRUE) {
 mhd.raw.id %>%
   group_by(control) %>%
@@ -2864,7 +2864,7 @@ mhd.raw.categories <- mhd.raw.id %>%
 }
 ```
 
-```{r mhd categories}
+```{r EDGI mhd categories}
 if(EDGI == TRUE) {
 mhd.raw.categories <- mhd.raw.id %>%
   select(
@@ -4918,7 +4918,7 @@ dim(coping.glad.phq.raw)[1]-dim(coping.glad.phq.raw.id)[1]
 }
 ```
 
-```{r coping glad gad copy}
+```{r coping glad phq copy}
 if(GLAD == TRUE) {
   coping.phq.raw.id <- coping.glad.phq.raw.id
 }
@@ -4999,7 +4999,7 @@ dim(coping.edgi.phq.raw)[1]-dim(coping.edgi.phq.raw.id)[1]
 }
 ```
 
-```{r coping edgi gad copy}
+```{r coping edgi phq copy}
 if(EDGI == TRUE) {
   coping.phq.raw.id <- coping.edgi.phq.raw.id
 }
@@ -5081,7 +5081,7 @@ dim(coping.nbr.phq.raw)[1]-dim(coping.nbr.phq.raw.id)[1]
 }
 ```
 
-```{r coping nbr gad copy}
+```{r coping nbr phq copy}
 if(NBR == TRUE) {
   coping.phq.raw.id <- coping.nbr.phq.raw.id
 }
@@ -5163,7 +5163,7 @@ dim(ramp.phq.raw)[1]-dim(ramp.phq.raw.id)[1]
 }
 ```
 
-```{r coping ramp gad copy}
+```{r coping ramp phq copy}
 if(RAMP == TRUE) {
   coping.phq.raw.id <- ramp.phq.raw.id
 }
@@ -7584,9 +7584,13 @@ dat.no.sex <- dat.raw %>%
 dim(dat.no.sex)
 
 dim(dat.raw)[1]-dim(dat.no.sex)[1]
+
+excluded_no_sex <- dim(dat.raw)[1]-dim(dat.no.sex)[1]
+
+paste("N =", excluded_no_sex, "were excluded because they did not report their sex", sep = " ")
 }
 ```
-`r dim(dat.glad.raw)[1]-dim(dat.no.sex)[1]` were excluded because they did not report their sex
+
 
 ```{r Rename dataset for ramp}
 if(RAMP == TRUE){
@@ -7613,8 +7617,10 @@ dat.no.sex.no.gender.no.age <- dat.no.sex.no.gender %>%
 dim(dat.no.sex.no.gender.no.age)
 
 dim(dat.no.sex.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]
+
+
 ```
-`r dim(dat.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]` were excluded because they did not report their age
+`dim(dat.no.sex.no.gender)[1]-dim(dat.no.sex.no.gender.no.age)[1]` were excluded because they did not report their age
 
 Exclusion of inflammatory bowel disease (IBD) and GLAD BioResource (NBR) cohort
 ++MD: 3,410 participants from NBR IBD cohort excluded
@@ -7995,7 +8001,7 @@ dat %>%
 ```
 
 Proportion of people signed up over half a year ago
-```{r glad/edgi ppts signed up over half a year ago, r eval=FALSE, include=FALSE}
+```{r glad/edgi ppts signed up over half a year ago, eval=FALSE, include=FALSE}
 if(GLAD == TRUE | EDGI == TRUE){
 dat <- dat %>%
   mutate(
