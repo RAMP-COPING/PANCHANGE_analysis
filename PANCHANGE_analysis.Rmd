@@ -1449,6 +1449,733 @@ b - overlapping disorder categories
 
 ## Prepan-baseline change
 
+```{r model0a function}
+model0a.estimates <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model0a"),
+         lm( formula = glm.formula,
+              data = get(data_set)
+              )
+  )
+  
+  assign(paste0(outcome,"model0a_estimates"),
+         tidy(get(paste0(outcome,".model0a")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "Disorder_hierarchicalAnxiety disorders" = "Anxiety disorders",
+               "Disorder_hierarchicalEating disorders" = "Eating disorders",
+               "Disorder_hierarchicalOCDs" = "OCDs",
+               "Disorder_hierarchicalPTSD" = "PTSD",
+               "Disorder_hierarchicalDepressive disorders" = "Depressive disorders",
+               "Disorder_hierarchicalBipolar disorders" = "Bipolar disorders"
+             ),
+    "Estimate" = format(
+      round(estimate,
+            digits = 2),
+      nsmall = 2),
+    "95% CI low" = format(
+      round(conf.low,
+            digits = 2),
+      nsmall = 2),
+    "95% CI up" = format(
+      round(conf.high,
+            digits = 2),
+      nsmall = 2),
+    "SE" = format(
+      round(std.error,
+            digits = 2),
+      nsmall = 2),
+    "z score" = format(
+      round(statistic,
+            digits = 2),
+      nsmall = 2),
+    "p value" = case_when(
+      p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+      p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+      p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+  )
+  ) %>%
+  select(
+    "Indepent variable",
+    "Estimate",
+    "95% CI low",
+    "95% CI up",
+    "SE",
+#    "z score",
+    "p value"
+  )
+  )
+        
+  return(get(paste0(outcome,"model0a_estimates")))
+}
+
+model0a.reg.stats <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model0a"),
+         lm( formula = glm.formula,
+              data = get(data_set)
+              )
+  )
+  
+  assign(paste0(outcome,"model0a_reg_stats"),
+         glance(get(paste0(outcome,".model0a"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+  
+  return(get(paste0(outcome,"model0a_reg_stats")))
+}
+```
+
+```{r}
+model0a.estimates(outcome = "gad.diff_score_base_prepan", data_set = "dat.prepan")
+model0a.reg.stats(outcome = "gad.diff_score_base_prepan", data_set = "dat.prepan")
+```
+
+```{r model0b function}
+model0b.estimates <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("anxiety_disorders",
+                             "depressive_disorders",
+                             "depression_and_anxiety",
+                             "eating_disorders",
+                             "obsessive_compulsive_disorders",
+                             "psychotic_disorders",
+                             "mhd.mania_hypomania_bipolar_or_manicdepression",
+                             "mhd.posttraumatic_stress_disorder_ptsd",
+                             "autism_spectrum_disorder",
+                             "mhd.attention_deficit_hyperactivity_disorder",
+                             "mhd.personality_disorder"
+                                )
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model0b"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,"model0b_estimates"),
+         tidy(get(paste0(outcome,".model0b")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "anxiety_disordersAnxiety disorder" = "Anxiety disorders",
+               "depressive_disordersDepressive disorder" = "Depressive disorders",
+               "depression_and_anxietyDepressive and anxiety disorder" = "Depressive and anxiety disorder",
+               "depression_and_anxietyOnly depressive disorder" = "Only depressive disorder",
+               "depression_and_anxietyOnly anxiety disorder" = "Only anxiety disorder",
+               "eating_disordersEating disorder" = "Eating disorders",
+               "obsessive_compulsive_disordersObsessive compulsive disorder" = "OCDs",
+               "psychotic_disordersPsychotic disorder" = "Psychotic disorder",
+               "mhd.mania_hypomania_bipolar_or_manicdepressionMania, hypomania, bipolar or manic-depression" = "Bipolar disorder",
+               "mhd.posttraumatic_stress_disorder_ptsdPost-traumatic stress disorder (PTSD)" = "PTSD",
+               "autism_spectrum_disorderAutism spectrum disorder" = "ASD",
+               "mhd.attention_deficit_hyperactivity_disorderAttention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)" = "ADHD",
+               "mhd.personality_disorderPersonality disorder" = "Personality disorder"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+  
+  return(get(paste0(outcome,"model0b_estimates")))
+}
+
+model0b.reg.stats <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model0b"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,"model0b_reg_stats"),
+         glance(get(paste0(outcome,".model0b"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+  
+  return(get(paste0(outcome,"model0b_reg_stats")))
+}
+```
+
+```{r}
+model0b.estimates(outcome = "gad.diff_score_base_prepan", data_set = "dat.prepan")
+model0b.reg.stats(outcome = "gad.diff_score_base_prepan", data_set = "dat.prepan")
+```
+
+
+```{r model1a function}
+model1a.estimates <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical",
+                            "Gender_collapsed",
+                            "age_category_collapsed",
+                            "Ethnicity_collapsed",
+                            "time_diff_sign_up_coping"
+                            )
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model1a"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,"model1a_estimates"),
+         tidy(get(paste0(outcome,".model1a")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "Disorder_hierarchicalAnxiety disorders" = "Anxiety disorders",
+               "Disorder_hierarchicalEating disorders" = "Eating disorders",
+               "Disorder_hierarchicalOCDs" = "OCDs",
+               "Disorder_hierarchicalPTSD" = "PTSD",
+               "Disorder_hierarchicalDepressive disorders" = "Depressive disorders",
+               "Disorder_hierarchicalBipolar disorders" = "Bipolar disorders",
+               "Gender_collapsedFemale" = "Female",
+               "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+               "age_category_collapsed19-25" = "19-25 years",
+               "age_category_collapsed26-35" = "26-35 years",
+               "age_category_collapsed36-45" = "36-45 years",
+               "age_category_collapsed46-55" = "46-55 years",
+               "age_category_collapsed56-65" = "56-65 years",
+               "age_category_collapsed66-70" = "66-70 years",
+               "age_category_collapsed71-75" = "71-75 years",
+               "age_category_collapsed76+" = "76+ years",
+               "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+               "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
+               "Ethnicity_collapsedAfrican or African British" = "African or African British",
+               "Ethnicity_collapsedOther" = "Other ethnicity",
+               "time_diff_sign_up_coping" = "Time difference: prepandemic to COPING"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+  
+  return(get(paste0(outcome,"model1a_estimates")))
+}
+
+model1a.reg.stats <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model1a"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,"model1a_reg_stats"),
+         glance(get(paste0(outcome,".model1a"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+  
+  return(get(paste0(outcome,"model1a_reg_stats")))
+}
+```
+
+```{r}
+model1a.estimates(outcome = "gad.diff_score_base_prepan", data_set = "dat.prepan")
+model1a.reg.stats(outcome = "gad.diff_score_base_prepan", data_set = "dat.prepan")
+```
+
+```{r model1b function}
+model1b.estimates <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("anxiety_disorders",
+                             "depressive_disorders",
+                             "depression_and_anxiety",
+                             "eating_disorders",
+                             "obsessive_compulsive_disorders",
+                             "psychotic_disorders",
+                             "mhd.mania_hypomania_bipolar_or_manicdepression",
+                             "mhd.posttraumatic_stress_disorder_ptsd",
+                             "autism_spectrum_disorder",
+                             "mhd.attention_deficit_hyperactivity_disorder",
+                             "mhd.personality_disorder",
+                             "Gender_collapsed",
+                             "age_category_collapsed",
+                             "Ethnicity_collapsed",
+                             "time_diff_sign_up_coping"
+                                )
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model1b"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,"model1b_estimates"),
+         tidy(get(paste0(outcome,".model1b")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "anxiety_disordersAnxiety disorder" = "Anxiety disorders",
+               "depressive_disordersDepressive disorder" = "Depressive disorders",
+               "depression_and_anxietyDepressive and anxiety disorder" = "Depressive and anxiety disorder",
+               "depression_and_anxietyOnly depressive disorder" = "Only depressive disorder",
+               "depression_and_anxietyOnly anxiety disorder" = "Only anxiety disorder",
+               "eating_disordersEating disorder" = "Eating disorders",
+               "obsessive_compulsive_disordersObsessive compulsive disorder" = "OCDs",
+               "psychotic_disordersPsychotic disorder" = "Psychotic disorder",
+               "mhd.mania_hypomania_bipolar_or_manicdepressionMania, hypomania, bipolar or manic-depression" = "Bipolar disorder",
+               "mhd.posttraumatic_stress_disorder_ptsdPost-traumatic stress disorder (PTSD)" = "PTSD",
+               "autism_spectrum_disorderAutism spectrum disorder" = "ASD",
+               "mhd.attention_deficit_hyperactivity_disorderAttention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)" = "ADHD",
+               "mhd.personality_disorderPersonality disorder" = "Personality disorder",
+               "Gender_collapsedFemale" = "Female",
+               "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+               "age_category_collapsed19-25" = "19-25 years",
+               "age_category_collapsed26-35" = "26-35 years",
+               "age_category_collapsed36-45" = "36-45 years",
+               "age_category_collapsed46-55" = "46-55 years",
+               "age_category_collapsed56-65" = "56-65 years",
+               "age_category_collapsed66-70" = "66-70 years",
+               "age_category_collapsed71-75" = "71-75 years",
+               "age_category_collapsed76+" = "76+ years",
+               "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+               "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
+               "Ethnicity_collapsedAfrican or African British" = "African or African British",
+               "Ethnicity_collapsedOther" = "Other ethnicity",
+               "time_diff_sign_up_coping" = "Time difference: prepandemic to COPING"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+  
+  return(get(paste0(outcome,"model1b_estimates")))
+}
+
+model1b.reg.stats <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model1b"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,"model1b_reg_stats"),
+         glance(get(paste0(outcome,".model1b"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+  
+  return(get(paste0(outcome,"model1b_reg_stats")))
+}
+```
+
+```{r}
+model1b.estimates(outcome = "gad.diff_score_base_prepan", data_set = "dat.prepan")
+model1b.reg.stats(outcome = "gad.diff_score_base_prepan", data_set = "dat.prepan")
+```
+
+
+```{r model0a.explan function}
+model0a.explan.estimates <- function(outcome, explan_var, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c(explan_var, "Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".",explan_var,".model0a.explan"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,".",explan_var,"model0a.explan_estimates"),
+         tidy(get(paste0(outcome,".",explan_var,".model0a.explan")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "Disorder_hierarchicalAnxiety disorders" = "Anxiety disorders",
+               "Disorder_hierarchicalEating disorders" = "Eating disorders",
+               "Disorder_hierarchicalOCDs" = "OCDs",
+               "Disorder_hierarchicalPTSD" = "PTSD",
+               "Disorder_hierarchicalDepressive disorders" = "Depressive disorders",
+               "Disorder_hierarchicalBipolar disorders" = "Bipolar disorders"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+  
+  return(get(paste0(outcome,".",explan_var,"model0a.explan_estimates")))
+}
+
+model0a.explan.reg.stats <- function(outcome, explan_var, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c(explan_var, "Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".",explan_var,".model0a.explan"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,".",explan_var,"model0a.explan_reg_stats"),
+         glance(get(paste0(outcome,".",explan_var,".model0a.explan"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+  
+  return(get(paste0(outcome,".",explan_var,"model0a.explan_reg_stats")))
+}
+```
+
+```{r}
+model0a.explan.estimates(outcome = "gad.diff_score_base_prepan", explan_var = "gad.sum_score_retro", data_set = "dat.prepan")
+model0a.explan.reg.stats(outcome = "gad.diff_score_base_prepan", explan_var = "gad.sum_score_retro", data_set = "dat.prepan")
+```
+
 ### CHANGE SCORES
 
 ### GAD
@@ -1500,7 +2227,7 @@ kable(gad_prepan_model0a_reg_stats)
 gad_prepan_model0a_reg_stats
 
 # Estimate summary table
-gad_prepan_model0a_estimates <- tidy(gad_prepan_model0a) %>%
+gad_prepan_model0a_estimates <- tidy(gad_prepan_model0a, conf.int = TRUE) %>%
   mutate(
     "Indepent variable" = recode_factor(
       term,
@@ -1514,6 +2241,14 @@ gad_prepan_model0a_estimates <- tidy(gad_prepan_model0a) %>%
     ),
     "Estimate" = format(
       round(estimate,
+            digits = 2),
+      nsmall = 2),
+    "95% CI low" = format(
+      round(conf.low,
+            digits = 2),
+      nsmall = 2),
+    "95% CI up" = format(
+      round(conf.high,
             digits = 2),
       nsmall = 2),
     "SE" = format(
@@ -1533,6 +2268,8 @@ gad_prepan_model0a_estimates <- tidy(gad_prepan_model0a) %>%
   select(
     "Indepent variable",
     "Estimate",
+    "95% CI low",
+    "95% CI up",
     "SE",
 #    "z score",
     "p value"
