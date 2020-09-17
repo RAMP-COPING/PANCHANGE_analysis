@@ -251,8 +251,15 @@ ocir.diff_score_cols <- dat %>%
 ocir.diff_score_cols
 ```
 
+#ANALYSIS PLAN
+1. Calculate mean change per disorder group 
+    i. Disorders (9)
+      a. Rank the disorders by the size of the change
+    ii. Sex
+    iii. Age (13; RAMP; potentially collapse above 65 depending on group sizes) 
+    iv. Ethnicity groups (5; White European, Black (British), Asian, Arab, Mixed)
 
-# Questionnaire comparions
+# 1. Questionnaire comparions: Calculate mean change per group 
 
 ## gad
 ### Summary scores
@@ -519,7 +526,7 @@ dat.long.gad.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-    labels = c("Baseline", "Prepandemic", "Retrospective")
+ #   labels = c("Baseline", "Prepandemic", "Retrospective")
     )
 ```
 
@@ -1361,7 +1368,15 @@ Filter data frame to create 2 additional datasets. Additional exclusion criteria
           ii. Exclude individuals with prepandemic data collected after 1st March.
 
 Retro-baseline analyses
-Exclude individuals with NA for MHD, age, gender
+++CH: need to discuss exclusion criteria
+Exclude individuals with NA for MHD, age, gender 
+
+```{r Exclusion criteria}
+
+```
+
+
+
 ```{r exclusion criteria for retro-baseline analysis}
 dat.retro <- dat %>%
   filter(
@@ -1403,13 +1418,6 @@ dat.prepan <- dat %>%
 dim(dat.prepan)
 ```
 
-#ANALYSIS PLAN
-1. Calculate mean change per disorder group 
-    i. Disorders (9)
-      a. Rank the disorders by the size of the change
-    ii. Sex 
-    iii. Age (13; RAMP; potentially collapse above 65 depending on group sizes) 
-    iv. Ethnicity groups (5; White European, Black (British), Asian, Arab, Mixed) 
 
 2. Regression models (Regress covariates out of the change? Which?)
     i. Model 0: Disorders  
@@ -1426,7 +1434,6 @@ dim(dat.prepan)
           b. Calculate a variable PCL pandemic score 
           c. If one item is highly endorsed due to pandemic -> exclude in sensitivity analysis 
 
-# 1. Calculate mean change per group 
 
 
 # 2. Regression
@@ -1447,13 +1454,92 @@ b - overlapping disorder categories
 ### GAD
 Model 0a: Disorder_hierarchical, Unadjusted
 ```{r GAD prepan Model 0a}
+# Model
 gad_prepan_model0a <- lm(
   formula = gad.diff_score_base_prepan ~ 
     Disorder_hierarchical,
   data = dat.prepan)
 
 summary(gad_prepan_model0a)
-tidy(gad_prepan_model0a)
+
+# Regression statistics
+gad_prepan_model0a_reg_stats <- glance(gad_prepan_model0a) %>%
+  mutate(
+    "n" = format(
+      round(nobs,
+            digits = 0),
+      nsmall = 0),
+    "R2" = format(
+      round(r.squared,
+            digits = 2),
+      nsmall = 2),
+    "adjust. R2" = format(
+      round(adj.r.squared,
+            digits = 2),
+      nsmall = 2),
+    "F" = format(
+      round(statistic,
+            digits = 2),
+      nsmall = 2),
+    "p value" = case_when(
+      p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+      p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+      p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+  )
+  ) %>%
+  select(
+    "n",
+    "R2",
+    "adjust. R2",
+    "F",
+    "p value",
+    "df"
+  )
+
+kable(gad_prepan_model0a_reg_stats)
+gad_prepan_model0a_reg_stats
+
+# Estimate summary table
+gad_prepan_model0a_estimates <- tidy(gad_prepan_model0a) %>%
+  mutate(
+    "Indepent variable" = recode_factor(
+      term,
+      "(Intercept)" = "Intercept",
+      "Disorder_hierarchicalAnxiety disorders" = "Anxiety disorders",
+      "Disorder_hierarchicalEating disorders" = "Eating disorders",
+      "Disorder_hierarchicalOCDs" = "OCDs",
+      "Disorder_hierarchicalPTSD" = "PTSD",
+      "Disorder_hierarchicalDepressive disorders" = "Depressive disorders",
+      "Disorder_hierarchicalBipolar disorders" = "Bipolar disorders"
+    ),
+    "Estimate" = format(
+      round(estimate,
+            digits = 2),
+      nsmall = 2),
+    "SE" = format(
+      round(std.error,
+            digits = 2),
+      nsmall = 2),
+    "z score" = format(
+      round(statistic,
+            digits = 2),
+      nsmall = 2),
+    "p value" = case_when(
+      p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+      p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+      p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+  )
+  ) %>%
+  select(
+    "Indepent variable",
+    "Estimate",
+    "SE",
+#    "z score",
+    "p value"
+  )
+
+kable(gad_prepan_model0a_estimates)
+gad_prepan_model0a_estimates
 ```
 
 Model 0b: Overlapping disorders, Unadjusted
@@ -1474,7 +1560,93 @@ gad_prepan_model0b <- lm(
   data = dat.prepan)
 
 summary(gad_prepan_model0b)
-tidy(gad_prepan_model0b)
+
+
+# Regression statistics
+gad_prepan_model0b_reg_stats <- glance(gad_prepan_model0b) %>%
+  mutate(
+    "n" = format(
+      round(nobs,
+            digits = 0),
+      nsmall = 0),
+    "R2" = format(
+      round(r.squared,
+            digits = 2),
+      nsmall = 2),
+    "adjust. R2" = format(
+      round(adj.r.squared,
+            digits = 2),
+      nsmall = 2),
+    "F" = format(
+      round(statistic,
+            digits = 2),
+      nsmall = 2),
+    "p value" = case_when(
+      p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+      p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+      p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+  )
+  ) %>%
+  select(
+    "n",
+    "R2",
+    "adjust. R2",
+    "F",
+    "p value",
+    "df"
+  )
+
+kable(gad_prepan_model0b_reg_stats)
+gad_prepan_model0b_reg_stats
+
+# Estimate summary table
+gad_prepan_model0b_estimates <- tidy(gad_prepan_model0b) %>%
+  mutate(
+    "Indepent variable" = recode_factor(
+      term,
+      "(Intercept)" = "Intercept",
+      "anxiety_disordersAnxiety disorder" = "Anxiety disorders",
+      "depressive_disordersDepressive disorder" = "Depressive disorders",
+      "depression_and_anxietyDepressive and anxiety disorder" = "Depressive and anxiety disorder",
+      "depression_and_anxietyOnly depressive disorder" = "Only depressive disorder",
+      "depression_and_anxietyOnly anxiety disorder" = "Only anxiety disorder",
+      "eating_disordersEating disorder" = "Eating disorders",
+      "obsessive_compulsive_disordersObsessive compulsive disorder" = "OCDs",
+      "psychotic_disordersPsychotic disorder" = "Psychotic disorder",
+      "mhd.mania_hypomania_bipolar_or_manicdepressionMania, hypomania, bipolar or manic-depression" = "Bipolar disorder",
+      "mhd.posttraumatic_stress_disorder_ptsdPost-traumatic stress disorder (PTSD)" = "PTSD",
+      "autism_spectrum_disorderAutism spectrum disorder" = "ASD",
+      "mhd.attention_deficit_hyperactivity_disorderAttention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)" = "ADHD",
+      "mhd.personality_disorderPersonality disorder" = "Personality disorder"
+    ),
+    "Estimate" = format(
+      round(estimate,
+            digits = 2),
+      nsmall = 2),
+    "SE" = format(
+      round(std.error,
+            digits = 2),
+      nsmall = 2),
+    "z score" = format(
+      round(statistic,
+            digits = 2),
+      nsmall = 2),
+    "p value" = case_when(
+      p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+      p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+      p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+  )
+  ) %>%
+  select(
+    "Indepent variable",
+    "Estimate",
+    "SE",
+#    "z score",
+    "p value"
+  )
+
+kable(gad_prepan_model0b_estimates)
+gad_prepan_model0b_estimates
 ```
 
 Model 1a: Disorder hierarchical, Adjusted
@@ -1484,13 +1656,106 @@ gad_prepan_model1a <- lm(
   formula = gad.diff_score_base_prepan ~ 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.prepan)
 
 summary(gad_prepan_model1a)
-tidy(gad_prepan_model1a)
+
+# Regression statistics
+gad_prepan_model1a_reg_stats <- glance(gad_prepan_model1a) %>%
+  mutate(
+    "n" = format(
+      round(nobs,
+            digits = 0),
+      nsmall = 0),
+    "R2" = format(
+      round(r.squared,
+            digits = 2),
+      nsmall = 2),
+    "adjust. R2" = format(
+      round(adj.r.squared,
+            digits = 2),
+      nsmall = 2),
+    "F" = format(
+      round(statistic,
+            digits = 2),
+      nsmall = 2),
+    "p value" = case_when(
+      p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+      p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+      p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+    )
+  ) %>%
+  select(
+    "n",
+    "R2",
+    "adjust. R2",
+    "F",
+    "p value",
+    "df"
+  )
+
+kable(gad_prepan_model1a_reg_stats)
+gad_prepan_model1a_reg_stats
+
+# Estimate summary table
+gad_prepan_model1a_estimates <- tidy(gad_prepan_model1a) %>%
+  mutate(
+    "Indepent variable" = recode_factor(
+      term,
+      "(Intercept)" = "Intercept",
+      "Disorder_hierarchicalAnxiety disorders" = "Anxiety disorders",
+      "Disorder_hierarchicalEating disorders" = "Eating disorders",
+      "Disorder_hierarchicalOCDs" = "OCDs",
+      "Disorder_hierarchicalPTSD" = "PTSD",
+      "Disorder_hierarchicalDepressive disorders" = "Depressive disorders",
+      "Disorder_hierarchicalBipolar disorders" = "Bipolar disorders",
+      "Gender_collapsedFemale" = "Female",
+      "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+      "age_category_collapsed19-25" = "19-25 years",
+      "age_category_collapsed26-35" = "26-35 years",
+      "age_category_collapsed36-45" = "36-45 years",
+      "age_category_collapsed46-55" = "46-55 years",
+      "age_category_collapsed56-65" = "56-65 years",
+      "age_category_collapsed66-70" = "66-70 years",
+      "age_category_collapsed71-75" = "71-75 years",
+      "age_category_collapsed76+" = "76+ years",
+      "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+      "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
+      "Ethnicity_collapsedAfrican or African British" = "African or African British",
+      "Ethnicity_collapsedOther" = "Other ethnicity",
+      "time_diff_sign_up_coping" = "Time difference: prepandemic to COPING"
+    ),
+    "Estimate" = format(
+      round(estimate,
+            digits = 2),
+      nsmall = 2),
+    "SE" = format(
+      round(std.error,
+            digits = 2),
+      nsmall = 2),
+    "z score" = format(
+      round(statistic,
+            digits = 2),
+      nsmall = 2),
+    "p value" = case_when(
+      p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+      p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+      p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+    )
+  ) %>%
+  select(
+    "Indepent variable",
+    "Estimate",
+    "SE",
+    #    "z score",
+    "p value"
+  )
+
+kable(gad_prepan_model1a_estimates)
+gad_prepan_model1a_estimates
 ```
 
 Model 1b: Overlapping disorders, Adjusted
@@ -1509,7 +1774,7 @@ gad_prepan_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.prepan)
 
 summary(gad_prepan_model1b)
@@ -1556,7 +1821,7 @@ phq_prepan_model1a <- lm(
   formula = phq.diff_score_base_prepan ~ 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.prepan)
@@ -1581,7 +1846,7 @@ phq_prepan_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.prepan)
 
 summary(phq_prepan_model1b)
@@ -1629,7 +1894,7 @@ pcl_prepan_model1a <- lm(
   formula = pcl.diff_score_base_prepan ~ 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.prepan)
@@ -1654,7 +1919,7 @@ pcl_prepan_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.prepan)
 
 summary(pcl_prepan_model1b)
@@ -1701,7 +1966,7 @@ ocir_prepan_model1a <- lm(
   formula = ocir.diff_score_base_prepan ~ 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.prepan)
@@ -1726,7 +1991,7 @@ ocir_prepan_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.prepan)
 
 summary(ocir_prepan_model1b)
@@ -1775,7 +2040,7 @@ gad_prepan_model1a <- lm(
   formula = gad.sum_score_base ~ gad.sum_score_prepan + 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.prepan)
@@ -1800,7 +2065,7 @@ gad_prepan_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.prepan)
 
 summary(gad_prepan_model1b)
@@ -1847,7 +2112,7 @@ phq_prepan_model1a <- lm(
   formula = phq.sum_score_base ~ phq.sum_score_prepan + 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.prepan)
@@ -1872,7 +2137,7 @@ phq_prepan_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.prepan)
 
 summary(phq_prepan_model1b)
@@ -1920,7 +2185,7 @@ pcl_prepan_model1a <- lm(
   formula = pcl.sum_score_base ~ pcl.sum_score_prepan + 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.prepan)
@@ -1945,7 +2210,7 @@ pcl_prepan_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.prepan)
 
 summary(pcl_prepan_model1b)
@@ -1992,7 +2257,7 @@ ocir_prepan_model1a <- lm(
   formula = ocir.sum_score_base ~ ocir.sum_score_prepan + 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.prepan)
@@ -2017,7 +2282,7 @@ ocir_prepan_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.prepan)
 
 summary(ocir_prepan_model1b)
@@ -2070,7 +2335,7 @@ gad_retro_model1a <- lm(
   formula = gad.diff_score_base_retro ~ 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.retro)
@@ -2095,7 +2360,7 @@ gad_retro_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.retro)
 
 summary(gad_retro_model1b)
@@ -2142,7 +2407,7 @@ phq_retro_model1a <- lm(
   formula = phq.diff_score_base_retro ~ 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.retro)
@@ -2167,7 +2432,7 @@ phq_retro_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.retro)
 
 summary(phq_retro_model1b)
@@ -2226,7 +2491,7 @@ pcl_retro_model1a <- lm(
   formula = pcl.sum_score_retro ~ 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.retro)
@@ -2251,7 +2516,7 @@ pcl_retro_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.retro)
 
 summary(pcl_retro_model1b)
@@ -2298,7 +2563,7 @@ ocir_retro_model1a <- lm(
   formula = ocir.diff_score_base_retro ~ 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.retro)
@@ -2323,7 +2588,7 @@ ocir_retro_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.retro)
 
 summary(ocir_retro_model1b)
@@ -2374,7 +2639,7 @@ gad_retro_model1a <- lm(
   formula = gad.sum_score_base ~ gad.sum_score_retro + 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.retro)
@@ -2399,7 +2664,7 @@ gad_retro_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.retro)
 
 summary(gad_retro_model1b)
@@ -2446,7 +2711,7 @@ phq_retro_model1a <- lm(
   formula = phq.sum_score_base ~ phq.sum_score_retro + 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.retro)
@@ -2471,7 +2736,7 @@ phq_retro_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.retro)
 
 summary(phq_retro_model1b)
@@ -2519,7 +2784,7 @@ pcl_retro_model1a <- lm(
   formula = pcl.sum_score_base ~ pcl.sum_score_retro + 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.retro)
@@ -2544,7 +2809,7 @@ pcl_retro_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.retro)
 
 summary(pcl_retro_model1b)
@@ -2591,7 +2856,7 @@ ocir_retro_model1a <- lm(
   formula = ocir.sum_score_base ~ ocir.sum_score_retro + 
     Disorder_hierarchical + 
     Gender_collapsed + 
-    age_category + 
+    age_category_collapsed + 
     Ethnicity_collapsed + 
     time_diff_sign_up_coping,
   data = dat.retro)
@@ -2616,7 +2881,7 @@ ocir_retro_model1b <- lm(
     autism_spectrum_disorder +
     mhd.attention_deficit_hyperactivity_disorder +
     mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
+    Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + time_diff_sign_up_coping,
   data = dat.retro)
 
 summary(ocir_retro_model1b)
