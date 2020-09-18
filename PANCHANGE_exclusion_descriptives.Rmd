@@ -257,38 +257,6 @@ Exclude GLAD/EDGI individuals that didn't take part in COPING
 Exclude individuals with NA for the MHD categories
 Individuals with NAs for age/gender have already been excluded in pre-processing script, but they get excluded here to be save and to double check previous programming.
 
-"anxiety_disorders",
-                             "depressive_disorders",
-                             "depression_and_anxiety",
-                             "eating_disorders",
-                             "obsessive_compulsive_disorders",
-                             "psychotic_disorders",
-                             "mhd.mania_hypomania_bipolar_or_manicdepression",
-                             "mhd.posttraumatic_stress_disorder_ptsd",
-                             "autism_spectrum_disorder",
-                             "mhd.attention_deficit_hyperactivity_disorder",
-                             "mhd.personality_disorder",
-                             "Gender_collapsed",
-                             "age_category_collapsed",
-                             "Ethnicity_collapsed",
-                             "time_diff_sign_up_coping"
-                             
-```{r}
-             anxiety_disorders_numeric = "Anxiety disorders",
-             depressive_disorders_numeric = "Depressive disorders",
-             eating_disorders_numeric = "Eating disorders",
-             obsessive_compulsive_disorders_numeric = "OCDs",
-             psychotic_disorders_numeric = "Psychotic disorders",
-             mhd.mania_hypomania_bipolar_or_manicdepression_numeric = "Bipolar disorders",
-             mhd.posttraumatic_stress_disorder_ptsd_numeric = "PTSD",
-             autism_spectrum_disorder_numeric = "Autism",
-             mhd.attention_deficit_hyperactivity_disorder_numeric = "ADHD",
-             mhd.personality_disorder_numeric = "Personality disorders",
-             control_numeric = "Controls"
-```
-
-
-
 ```{r Exclusion criteria for PANCHANGE}
 dat <- dat.raw %>%
   filter( # Participants should have responded to the mental health diagnosis (MHD) questionnaire
