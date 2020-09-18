@@ -167,7 +167,7 @@ source("../PANCHANGE_raw_path.R")
 
 ## Read in data
 ```{r read in data}
-dat.raw <- readRDS(file = paste0(data_path, "/four_cohorts_variables.rds")) # NEEDS CHANGING TO THE DATA SET THAT COMES OUT OF THE VARIABLE CREATION
+dat.raw <- readRDS(file = paste0(data_path, "/four_cohorts_variables.rds"))
 dim(dat.raw)
 colnames(dat.raw)
 ```
@@ -255,22 +255,63 @@ ocir.diff_score_cols
 
 Exclude GLAD/EDGI individuals that didn't take part in COPING
 Exclude individuals with NA for the MHD categories
-Individuals with NAs for age/gender have already been excluded in pre-processing script.
+Individuals with NAs for age/gender have already been excluded in pre-processing script, but they get excluded here to be save and to double check previous programming.
+
+"anxiety_disorders",
+                             "depressive_disorders",
+                             "depression_and_anxiety",
+                             "eating_disorders",
+                             "obsessive_compulsive_disorders",
+                             "psychotic_disorders",
+                             "mhd.mania_hypomania_bipolar_or_manicdepression",
+                             "mhd.posttraumatic_stress_disorder_ptsd",
+                             "autism_spectrum_disorder",
+                             "mhd.attention_deficit_hyperactivity_disorder",
+                             "mhd.personality_disorder",
+                             "Gender_collapsed",
+                             "age_category_collapsed",
+                             "Ethnicity_collapsed",
+                             "time_diff_sign_up_coping"
+                             
+```{r}
+             anxiety_disorders_numeric = "Anxiety disorders",
+             depressive_disorders_numeric = "Depressive disorders",
+             eating_disorders_numeric = "Eating disorders",
+             obsessive_compulsive_disorders_numeric = "OCDs",
+             psychotic_disorders_numeric = "Psychotic disorders",
+             mhd.mania_hypomania_bipolar_or_manicdepression_numeric = "Bipolar disorders",
+             mhd.posttraumatic_stress_disorder_ptsd_numeric = "PTSD",
+             autism_spectrum_disorder_numeric = "Autism",
+             mhd.attention_deficit_hyperactivity_disorder_numeric = "ADHD",
+             mhd.personality_disorder_numeric = "Personality disorders",
+             control_numeric = "Controls"
+```
 
 
-```{r exclusion criteria for diagnoses analysis}
+
+```{r Exclusion criteria for PANCHANGE}
 dat <- dat.raw %>%
-  filter(
-    !is.na(depressive_disorders) &
-      !is.na(eating_disorders) &
-      !is.na(psychotic_disorders) &
-      !is.na(obsessive_compulsive_disorders) &
-      !is.na(autism_spectrum_disorder) &
-      !is.na(mhd.mania_hypomania_bipolar_or_manicdepression_numeric) &
-      !is.na(mhd.posttraumatic_stress_disorder_ptsd_numeric) &
-      !is.na(control)
+  filter( # Participants should have responded to the mental health diagnosis (MHD) questionnaire
+  !is.na(depressive_disorders) &
+ !is.na(anxiety_disorders) &
+  !is.na(eating_disorders) &
+  !is.na(obsessive_compulsive_disorders) &
+ !is.na(psychotic_disorders) &
+  !is.na(mhd.mania_hypomania_bipolar_or_manicdepression) &
+  !is.na(mhd.posttraumatic_stress_disorder_ptsd) &    
+  !is.na(autism_spectrum_disorder) &
+  !is.na(mhd.attention_deficit_hyperactivity_disorder) &
+  !is.na(mhd.personality_disorder) &
+  !is.na(control)
   ) %>% 
-  drop_na(startDate.coping)
+ filter(
+   !is.na(data_group_gad) & # Participants should have answered at least the GAD, the PHQ, or the PCL once
+   !is.na(data_group_phq) &
+   !is.na(data_group_pcl)
+ ) %>%
+  drop_na(startDate.coping) %>% # Participant has answered the COPING/RAMP baseline questionnaire
+  drop_na(Gender_collapsed) %>% # Participant has self-reported their gender
+  drop_na(age_category_collapsed) # Participant has self-reported their age
 
 dim(dat.raw)
 dim(dat)

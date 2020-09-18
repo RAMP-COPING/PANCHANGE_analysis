@@ -1359,7 +1359,7 @@ dat.long.pcl.sum %>%
 
 
 
-# Create additional datasets for analyses
+# Create subsets of data for analyses
 Filter data frame to create 2 additional datasets. Additional exclusion criteria (beyond those listed above) are specified below:
 
   1. Retrospective - baseline change anlyses
