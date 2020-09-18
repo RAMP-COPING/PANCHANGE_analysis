@@ -461,7 +461,9 @@ dat.long.gad.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective"))
+  scale_fill_manual(
+    values = palette,
+    labels = c("Prepandemic", "Retrospective"))
 ```
 
 
@@ -481,7 +483,9 @@ dat.long.gad.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
+  scale_fill_manual(
+    values = palette,
+    labels = c("Prepandemic", "Retrospective")) +
   facet_wrap("Disorder_hierarchical")
 ```
 
@@ -503,7 +507,9 @@ dat.long.gad.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nRetrospective vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Prepandemic"))
+  scale_fill_manual(
+    values = palette,
+    labels = c("Prepandemic"))
 ```
 
 ### Plots sum
@@ -526,7 +532,8 @@ dat.long.gad.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
- #   labels = c("Baseline", "Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
     )
 ```
 
@@ -548,7 +555,8 @@ dat.long.gad.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-#    labels = c("Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
     ) +
   facet_wrap("Disorder_hierarchical")
 ```
@@ -753,7 +761,9 @@ dat.long.phq.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective"))
+  scale_fill_manual(
+    values = palette,
+    labels = c("Prepandemic", "Retrospective"))
 ```
 
 ```{r phq plot retro_prepan diff}
@@ -772,7 +782,9 @@ dat.long.phq.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nPrepandemic vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Retrospective"))
+  scale_fill_manual(
+    values = palette,
+    labels = c("Retrospective"))
 ```
 
 ```{r phq percentage plot retro_prepan resized, fig.height=6, fig.width=10}
@@ -791,7 +803,10 @@ dat.long.phq.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
+  scale_fill_manual(
+    values = palette,
+    labels = c("Prepandemic", "Retrospective")
+    ) +
   facet_wrap("Disorder_hierarchical")
 ```
 
@@ -815,7 +830,8 @@ dat.long.phq.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-    labels = c("Baseline", "Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
   )
 ```
 
@@ -837,7 +853,8 @@ dat.long.phq.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-    labels = c("Baseline", "Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
   ) +
   facet_wrap("Disorder_hierarchical")
 ```
@@ -1042,7 +1059,9 @@ dat.long.ocir.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective"))
+  scale_fill_manual(
+    values = palette,
+    labels = c("Prepandemic", "Retrospective"))
 ```
 
 ```{r ocir plot retro_prepan diff}
@@ -1061,7 +1080,9 @@ dat.long.ocir.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nPrepandemic vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Retrospective"))
+  scale_fill_manual(
+    values = palette,
+    labels = c("Retrospective"))
 ```
 
 ```{r ocir percentage plot retro_prepan resized, fig.height=6, fig.width=10}
@@ -1080,7 +1101,9 @@ dat.long.ocir.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
+  scale_fill_manual(
+    values = palette,
+    labels = c("Prepandemic", "Retrospective")) +
   facet_wrap("Disorder_hierarchical")
 ```
 
@@ -1103,7 +1126,8 @@ dat.long.ocir.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-    labels = c("Baseline", "Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
   )
 ```
 
@@ -1124,7 +1148,8 @@ dat.long.ocir.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-    labels = c("Baseline", "Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
   ) +
   facet_wrap("Disorder_hierarchical")
 ```
@@ -1331,7 +1356,8 @@ dat.long.pcl.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-    labels = c("Baseline", "Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
   )
 ```
 
@@ -1352,7 +1378,8 @@ dat.long.pcl.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-    labels = c("Baseline", "Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
   ) +
   facet_wrap("Disorder_hierarchical")
 ```
@@ -1573,13 +1600,10 @@ model0b.estimates <- function(outcome, data_set) {
   # define the variable name of the dependent variable
   dependent.variable <- outcome
   # define the independent variables
-  independent.variables <- c("anxiety_disorders",
-                             "depressive_disorders",
-                             "depression_and_anxiety",
+  independent.variables <- c("depression_and_anxiety",
                              "eating_disorders",
                              "obsessive_compulsive_disorders",
-                             "psychotic_disorders",
-                             "mhd.mania_hypomania_bipolar_or_manicdepression",
+                             "bipolar_and_schizophrenia",
                              "mhd.posttraumatic_stress_disorder_ptsd",
                              "autism_spectrum_disorder",
                              "mhd.attention_deficit_hyperactivity_disorder",
@@ -1609,6 +1633,9 @@ model0b.estimates <- function(outcome, data_set) {
                "depression_and_anxietyOnly anxiety disorder" = "Only anxiety disorder",
                "eating_disordersEating disorder" = "Eating disorders",
                "obsessive_compulsive_disordersObsessive compulsive disorder" = "OCDs",
+               "bipolar_and_schizophreniaPsychotic and bipolar disorder" = "Psychotic and bipolar disorder",
+               "bipolar_and_schizophreniaOnly psychotic disorder" = "Only psychotic disorder",
+               "bipolar_and_schizophreniaOnly bipolar disorder" = "Only bipolar disorder",
                "psychotic_disordersPsychotic disorder" = "Psychotic disorder",
                "mhd.mania_hypomania_bipolar_or_manicdepressionMania, hypomania, bipolar or manic-depression" = "Bipolar disorder",
                "mhd.posttraumatic_stress_disorder_ptsdPost-traumatic stress disorder (PTSD)" = "PTSD",
@@ -1862,13 +1889,10 @@ model1b.estimates <- function(outcome, data_set) {
   # define the variable name of the dependent variable
   dependent.variable <- outcome
   # define the independent variables
-  independent.variables <- c("anxiety_disorders",
-                             "depressive_disorders",
-                             "depression_and_anxiety",
+  independent.variables <- c("depression_and_anxiety",
                              "eating_disorders",
                              "obsessive_compulsive_disorders",
-                             "psychotic_disorders",
-                             "mhd.mania_hypomania_bipolar_or_manicdepression",
+                             "bipolar_and_schizophrenia",
                              "mhd.posttraumatic_stress_disorder_ptsd",
                              "autism_spectrum_disorder",
                              "mhd.attention_deficit_hyperactivity_disorder",
@@ -1902,6 +1926,9 @@ model1b.estimates <- function(outcome, data_set) {
                "depression_and_anxietyOnly anxiety disorder" = "Only anxiety disorder",
                "eating_disordersEating disorder" = "Eating disorders",
                "obsessive_compulsive_disordersObsessive compulsive disorder" = "OCDs",
+               "bipolar_and_schizophreniaPsychotic and bipolar disorder" = "Psychotic and bipolar disorder",
+               "bipolar_and_schizophreniaOnly psychotic disorder" = "Only psychotic disorder",
+               "bipolar_and_schizophreniaOnly bipolar disorder" = "Only bipolar disorder",
                "psychotic_disordersPsychotic disorder" = "Psychotic disorder",
                "mhd.mania_hypomania_bipolar_or_manicdepressionMania, hypomania, bipolar or manic-depression" = "Bipolar disorder",
                "mhd.posttraumatic_stress_disorder_ptsdPost-traumatic stress disorder (PTSD)" = "PTSD",
@@ -2152,13 +2179,10 @@ model0b.explan.estimates <- function(outcome, explan_var, data_set) {
   dependent.variable <- outcome
   # define the independent variables
   independent.variables <- c(explan_var, 
-                             "anxiety_disorders",
-                             "depressive_disorders",
                              "depression_and_anxiety",
                              "eating_disorders",
                              "obsessive_compulsive_disorders",
-                             "psychotic_disorders",
-                             "mhd.mania_hypomania_bipolar_or_manicdepression",
+                             "bipolar_and_schizophrenia",
                              "mhd.posttraumatic_stress_disorder_ptsd",
                              "autism_spectrum_disorder",
                              "mhd.attention_deficit_hyperactivity_disorder",
@@ -2188,6 +2212,9 @@ model0b.explan.estimates <- function(outcome, explan_var, data_set) {
                "depression_and_anxietyOnly anxiety disorder" = "Only anxiety disorder",
                "eating_disordersEating disorder" = "Eating disorders",
                "obsessive_compulsive_disordersObsessive compulsive disorder" = "OCDs",
+               "bipolar_and_schizophreniaPsychotic and bipolar disorder" = "Psychotic and bipolar disorder",
+               "bipolar_and_schizophreniaOnly psychotic disorder" = "Only psychotic disorder",
+               "bipolar_and_schizophreniaOnly bipolar disorder" = "Only bipolar disorder",
                "psychotic_disordersPsychotic disorder" = "Psychotic disorder",
                "mhd.mania_hypomania_bipolar_or_manicdepressionMania, hypomania, bipolar or manic-depression" = "Bipolar disorder",
                "mhd.posttraumatic_stress_disorder_ptsdPost-traumatic stress disorder (PTSD)" = "PTSD",
@@ -2445,13 +2472,10 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
   dependent.variable <- outcome
   # define the independent variables
   independent.variables <- c(explan_var,
-                             "anxiety_disorders",
-                             "depressive_disorders",
                              "depression_and_anxiety",
                              "eating_disorders",
                              "obsessive_compulsive_disorders",
-                             "psychotic_disorders",
-                             "mhd.mania_hypomania_bipolar_or_manicdepression",
+                             "bipolar_and_schizophrenia",
                              "mhd.posttraumatic_stress_disorder_ptsd",
                              "autism_spectrum_disorder",
                              "mhd.attention_deficit_hyperactivity_disorder",
@@ -2485,6 +2509,9 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
                "depression_and_anxietyOnly anxiety disorder" = "Only anxiety disorder",
                "eating_disordersEating disorder" = "Eating disorders",
                "obsessive_compulsive_disordersObsessive compulsive disorder" = "OCDs",
+               "bipolar_and_schizophreniaPsychotic and bipolar disorder" = "Psychotic and bipolar disorder",
+               "bipolar_and_schizophreniaOnly psychotic disorder" = "Only psychotic disorder",
+               "bipolar_and_schizophreniaOnly bipolar disorder" = "Only bipolar disorder",
                "psychotic_disordersPsychotic disorder" = "Psychotic disorder",
                "mhd.mania_hypomania_bipolar_or_manicdepressionMania, hypomania, bipolar or manic-depression" = "Bipolar disorder",
                "mhd.posttraumatic_stress_disorder_ptsdPost-traumatic stress disorder (PTSD)" = "PTSD",
