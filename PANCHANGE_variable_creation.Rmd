@@ -1,0 +1,597 @@
+---
+title: "PANCHANGE_variable_creation"
+author: "Katie Thompson, Topher Huebel, Molly Davies, Kirstin Purves"
+date: Sys.Date()
+output:  
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: false
+    number_sections: false
+    highlight: monochrome
+    theme: cerulean
+code_folding: show
+
+html_notebook:
+  theme: cerulean
+toc: yes
+---
+
+This is the analysis script to prepare the data to run analyses for the project "Anxiety, depression and trauma symptom change during the COVID-19 pandemic: retrospective versus objective assessment" - Young et al (2020)
+
+Script written by K Purves, K Thompson, C Huebel and M Davies.
+Email: kirstin.purves@kcl.ac.uk, katie.thompson@kcl.ac.uk, christopher.1.huebel@kcl.ac.uk, molly.davies@kcl.ac.uk
+
+#Set up
+```{r Setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      comment=NA,
+                      prompt=FALSE,
+                      cache=FALSE)
+
+
+options(bitmapType = 'quartz') # to render fonts better
+```
+
+Clear global environment
+```{r Clear global environment}
+remove(list = ls())
+```
+
+Retrieve the current date to use it for file endings to not overwrite files when one exports files
+```{r Recent date}
+date = Sys.Date()
+```
+
+#Packages
+Install packages (if they are not available in your version of R)
+```{r Installing packages}
+#install.packages("summarytools")
+#install.packages("tidyverse")
+#install.packages("psych")
+#install.packages("broom")
+#install.packages("skimr")
+#install.packages("polycor")
+#install.packages("corrplot")
+#install.packages("patchwork")
+#instlal.packages("ggpubr")
+```
+
+Load packages
+```{r Load packages}
+library(knitr)
+library(summarytools)
+library(psych)
+library(polycor)
+library(corrplot)
+library(patchwork)
+library(broom)
+library(tidyverse)
+library(ggpubr)
+```
+
+# Colour palettes
+Define colours for plotting this are the standard coping colours
+```{r Colour palettes: COPING}
+COPINGpalette2 <- c("#78D9C5",
+                    "#F5BE5E")
+
+COPINGpalette3 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9")
+
+COPINGpalette4 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73")
+
+COPINGpalette5 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73", 
+                    "#FFED98")
+
+COPINGpalette6 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73",
+                    "#FFED98",
+                    "#BFD2EB")
+
+COPINGpalette7 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73", 
+                    "#FFED98",
+                    "#BFD2EB", 
+                    "#808080")
+
+COPINGpaletteGRAD <- c("#F5BE5E",
+                       "#FFD284",
+                       "#FFEED1",
+                       "#B5B5B5",
+                       "#DEFFF8",
+                       "#94F6E1",
+                       "#78D9C5")
+
+COPINGNeuCenterpalette <- c("#78D9C5",
+                            "#808080",
+                            "#F5BE5E")
+
+RAMPworseGRADpalette <- c("#78D9C5",
+                          "#FFEED1",
+                          "#F5BE5E",
+                          "#FFB1B5")
+GLADpalette = c("#efc00b", 
+                "#b7dee8")  
+```
+
+Choose in this chunk which palette to use
+04.07.2020 - Default to 2 colour COPING palette
+```{r Choose colour palette}
+palette = COPINGpalette2
+```
+
+# ggplot theme
+Set up ggplot theme for the plots
+```{r ggplot theme}
+theme_personal <-  theme(
+    text = element_text(color = "black"),
+    axis.title = element_text(color = "black"),
+    axis.text = element_text(color = "black"),
+    axis.title.y = element_blank(), 
+    legend.background = element_blank(),
+    legend.box.background = element_blank(),
+    panel.background = element_blank(), 
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.x = element_line(
+      colour = "gray",
+      linetype = "dashed",
+      size = 0.2
+      ),
+    axis.ticks = element_blank()
+    )
+```
+
+# Data import
+
+## Source data file paths 
+
+```{r source file path}
+#source data directory: data_path
+source("../PANCHANGE_raw_path.R")
+```
+
+
+## Read in data
+```{r read in data}
+dat <- readRDS(file = paste0(data_path, "/four_cohorts.rds"))
+dim(dat)
+colnames(dat)
+```
+
+
+
+# COVID
+## Recode variable
+```{r covid test positive double}
+dat <- dat %>%
+  mutate(covid_test_positive_double_numeric =
+           case_when(
+             (respiratory.throat_swab_test_nose_numeric == 1 &
+               respiratory.results_antibody_test_numeric == 1) ~ 2,
+             respiratory.throat_swab_test_nose_numeric == 1 ~ 1,
+             respiratory.throat_swab_test_nose_numeric == 2 ~ 0,
+             respiratory.results_antibody_test_numeric == 1 ~ 1,
+             respiratory.results_antibody_test_numeric == 2 ~ 0
+           )
+         )
+
+dat <- dat %>%
+  mutate(covid_test_positive_double =
+           recode_factor(
+             covid_test_positive_double_numeric,
+             `0` = "Negative",
+             `1` = "Positive",
+             `2` = "Double positive"
+           )
+         )
+
+dat %>%
+  freq(covid_test_positive_double)
+```
+
+```{r gad covid test positive}
+dat <- dat %>%
+  mutate(gad.covid_test_positive_numeric =
+           case_when(
+             (respiratory.throat_swab_test_nose_numeric == 1 &
+               respiratory.results_antibody_test_numeric == 1) ~ 1, # with two positive test results get coded as positive
+             respiratory.throat_swab_test_nose_numeric == 1 ~ 1,
+             respiratory.throat_swab_test_nose_numeric == 2 ~ 0,
+             respiratory.results_antibody_test_numeric == 1 ~ 1,
+             respiratory.results_antibody_test_numeric == 2 ~ 0
+           )
+         )
+
+dat <- dat %>%
+  mutate(covid_test_positive =
+           recode_factor(
+             gad.covid_test_positive_numeric,
+             `0` = "Negative",
+             `1` = "Positive"
+#             `2` = "Double positive"
+           )
+         )
+
+dat %>%
+  freq(covid_test_positive)
+```
+
+
+## COVID swab test positive
+```{r COVID positive swap}
+dat %>%
+  count(respiratory.throat_swab_test_nose, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+```
+
+## antibody test
+```{r COVID positive antibody test}
+dat %>%
+  count(respiratory.results_antibody_test, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+```
+
+
+## COVID probable diagnosis
+```{r COVID probable diagnosis}
+dat %>%
+  count(covid_probable_case_incl_screening, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+```
+
+## Cross table probable covid and covid test positive
+```{r Cross table probable covid and covid test positive}
+dat %>%
+  count(covid_test_positive, covid_probable_case_incl_screening) %>%
+  spread(key = covid_test_positive, value = n)
+```
+
+# Collapsing categories
+
+## age_category
+```{r Inspect age_category}
+dat %>%
+  freq(age_category)
+
+dat %>%
+  freq(age_category_numeric)
+```
+
+```{r Collapse age_category}
+dat <- dat %>%
+  mutate(age_category_collapsed_numeric =
+           case_when(
+             age_category_numeric == 1 ~ 0,
+             age_category_numeric == 2 ~ 1,
+             age_category_numeric == 3 ~ 2,
+             age_category_numeric == 4 ~ 3,
+             age_category_numeric == 5 ~ 4,
+             age_category_numeric == 6 ~ 5,
+             age_category_numeric == 7 ~ 6,
+             age_category_numeric == 8 ~ 7,
+             age_category_numeric == 9 ~ 8,
+             age_category_numeric == 10 ~ 8,
+             age_category_numeric == 11 ~ 8,
+             age_category_numeric == 12 ~ 8,
+             age_category_numeric == 13 ~ 8
+             
+           )
+  )
+
+dat <- dat %>%
+  mutate(age_category_collapsed =
+           recode_factor(
+             age_category_collapsed_numeric,
+             `0` = "16-18",
+             `1` = "19-25",
+             `2` = "26-35",
+             `3` = "36-45",
+             `4` = "46-55",
+             `5` = "56-65",
+             `6` = "66-70",
+             `7` = "71-75",
+             `8` = "76+"
+           )
+  )
+
+dat %>%
+  freq(age_category_collapsed)
+```
+
+
+
+## Gender
+```{r Inspect Gender}
+dat %>%
+  freq(Gender)
+
+dat %>%
+  freq(Gender_numeric)
+```
+
+```{r Collapse Gender}
+dat <- dat %>%
+  mutate(Gender_collapsed_numeric =
+           case_when(
+             Gender_numeric == 0 ~ 0,
+             Gender_numeric == 1 ~ 1,
+             Gender_numeric == 2 ~ 2,
+             Gender_numeric == 3 ~ 2
+           )
+         )
+
+dat <- dat %>%
+  mutate(Gender_collapsed =
+           recode_factor(
+             Gender_collapsed_numeric,
+             `0` = "Male",
+             `1` = "Female",
+             `2` = "Non-binary/Self-defined"
+           )
+         )
+
+dat %>%
+  freq(Gender_collapsed)
+```
+
+## Ethnicity
+```{r Inspect Ethnicity}
+dat %>%
+  freq(Ethnicity)
+
+dat %>%
+  freq(Ethnicity_numeric)
+```
+
+
+```{r Collapse Ethnicity}
+dat <- dat %>%
+  mutate(Ethnicity_collapsed_numeric =
+           case_when(
+             Ethnicity_numeric == 1 ~ 0, #European
+             Ethnicity_numeric == 2 ~ 1, #Mixed or multiple ethnic origins 
+             Ethnicity_numeric == 3 ~ 2, #Asian or Asian British
+             Ethnicity_numeric == 4 ~ 3, #African or African British
+             Ethnicity_numeric == 5 ~ 3, #Arab - combined with African/African British
+             Ethnicity_numeric == 6 ~ 4  #Other ethnic group
+           )
+  )
+
+dat <- dat %>%
+  mutate(Ethnicity_collapsed =
+           recode_factor(
+             Ethnicity_collapsed_numeric,
+             `0` = "European",
+             `1` = "Mixed or multiple ethnic origins",
+             `2` = "Asian or Asian British",
+             `3` = "African or African British",
+             `4` = "Other"
+           )
+  )
+
+dat %>%
+  freq(Ethnicity_collapsed)
+```
+
+
+# Psychiatric disorder hierarchy
+- - - -
+OLD VERSIONS:
+control_numeric == 1 ~ 0,
+depressive_disorders_numeric == 1 ~ 1,
+anxiety_disorders_numeric == 1 ~ 2,
+mhd.posttraumatic_stress_disorder_ptsd_numeric == 1 ~ 3,
+eating_disorders_numeric == 1 ~ 4,
+obsessive_compulsive_disorders_numeric == 1 ~ 5,
+mhd.attention_deficit_hyperactivity_disorder_numeric == 1 ~ 6,
+mhd.personality_disorder_numeric == 1 ~ 7,
+autism_spectrum_disorder_numeric == 1 ~ 8,
+mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 9,
+psychotic_disorders_numeric == 1 ~ 10
+
+psychotic_disorders_numeric == 1 ~ 10
+mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 9,
+autism_spectrum_disorder_numeric == 1 ~ 8,
+mhd.personality_disorder_numeric == 1 ~ 7,
+mhd.attention_deficit_hyperactivity_disorder_numeric == 1 ~ 6,
+obsessive_compulsive_disorders_numeric == 1 ~ 5,
+eating_disorders_numeric == 1 ~ 4,
+mhd.posttraumatic_stress_disorder_ptsd_numeric == 1 ~ 3,
+anxiety_disorders_numeric == 1 ~ 2,
+depressive_disorders_numeric == 1 ~ 1,
+control_numeric == 1 ~ 0,
+- - - -
+
+Disorder hierarchy
+1: Psychotic disorders (create one with, create one without to test in analyses)
+2: Bipolar disorder
+3: MDD
+4: PTSD
+5: OCD
+6: Eating disorders
+7: Anxiety disorders
+
+```{r Psychiatric disorders hierarchy including psychosis}
+dat <- dat %>%
+  mutate(
+    Disorder_hierarchical_psychosis_numeric =
+      case_when(
+        psychotic_disorders_numeric == 1 ~ 7,
+        mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 6,
+        depressive_disorders_numeric == 1 ~ 5,
+        mhd.posttraumatic_stress_disorder_ptsd_numeric == 1 ~ 4,
+        obsessive_compulsive_disorders_numeric == 1 ~ 3,
+        eating_disorders_numeric == 1 ~ 2,
+        anxiety_disorders_numeric == 1 ~ 1,
+        control_numeric == 1 ~ 0
+      )
+  )
+
+dat <- dat %>%
+  mutate(
+    Disorder_hierarchical_psychosis =
+      recode_factor(
+        Disorder_hierarchical_psychosis_numeric,
+        `0` = "Controls",
+        `1` = "Anxiety disorders",
+        `2` = "Eating disorders",
+        `3` = "OCDs",
+        `4` = "PTSD",
+        `5` = "Depressive disorders",
+        `6` = "Bipolar disorders",
+        `7` = "Psychotic disorders"
+      )
+  )
+
+
+dat %>%
+  freq(Disorder_hierarchical_psychosis)
+```
+
+
+```{r Psychiatric disorders hierarchy without psychosis}
+dat <- dat %>%
+  mutate(
+    Disorder_hierarchical_numeric =
+      case_when(
+        mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1 ~ 6,
+        depressive_disorders_numeric == 1 ~ 5,
+        mhd.posttraumatic_stress_disorder_ptsd_numeric == 1 ~ 4,
+        obsessive_compulsive_disorders_numeric == 1 ~ 3,
+        eating_disorders_numeric == 1 ~ 2,
+        anxiety_disorders_numeric == 1 ~ 1,
+        control_numeric == 1 ~ 0
+      )
+  )
+
+dat <- dat %>%
+  mutate(
+    Disorder_hierarchical =
+      recode_factor(
+        Disorder_hierarchical_numeric,
+        `0` = "Controls",
+        `1` = "Anxiety disorders",
+        `2` = "Eating disorders",
+        `3` = "OCDs",
+        `4` = "PTSD",
+        `5` = "Depressive disorders",
+        `6` = "Bipolar disorders"
+      )
+  )
+
+
+dat %>%
+  freq(Disorder_hierarchical) 
+dat %>% 
+  freq(Disorder_hierarchical_psychosis)
+```
+
+Investigate NAs 
+NAs are coded for individuals that don't have one of the listed disorders in the hierarchy, but who have another diagnosis that excludes them from being a control (e.g. personality disorder, ADHD, ASD). These individuals will be excluded from the analyses.
+```{r NAs in diagnosis}
+dat %>%
+  filter(is.na(Disorder_hierarchical)) %>%
+  freq(Sample)
+```
+
+# Create variables for improvement and worsening
+
+## gad
+```{r gad improvment worsening stratification}
+dat <- dat %>%
+  mutate(gad.change_binary_numeric =
+           case_when(
+             gad.pandemic_felt_feelings_numeric == 1 ~ 1,
+             gad.pandemic_felt_feelings_numeric == 2 ~ 1,
+             gad.pandemic_felt_feelings_numeric == 3 ~ 0,
+             gad.pandemic_felt_feelings_numeric == 4 ~ 2,
+             gad.pandemic_felt_feelings_numeric == 5 ~ 2
+           )
+         )
+
+dat <- dat %>%
+  mutate(gad.change_binary =
+           recode_factor(
+             gad.change_binary_numeric,
+             `0` = "No change",
+             `1` = "Worsening",
+             `2` = "Improvement"
+           )
+         )
+
+dat %>%
+  freq(gad.change_binary)
+```
+
+## phq
+```{r phq improvment worsening stratification}
+dat <- dat %>%
+  mutate(phq.change_binary_numeric =
+           case_when(
+             phq.pandemic_felt_feelings_numeric == 1 ~ 1,
+             phq.pandemic_felt_feelings_numeric == 2 ~ 1,
+             phq.pandemic_felt_feelings_numeric == 3 ~ 0,
+             phq.pandemic_felt_feelings_numeric == 4 ~ 2,
+             phq.pandemic_felt_feelings_numeric == 5 ~ 2
+           )
+  )
+
+dat <- dat %>%
+  mutate(phq.change_binary =
+           recode_factor(
+             phq.change_binary_numeric,
+             `0` = "No change",
+             `1` = "Worsening",
+             `2` = "Improvement"
+           )
+  )
+
+dat %>%
+  freq(phq.change_binary)
+```
+
+
+## ocir
+```{r ocir improvment worsening stratification}
+dat <- dat %>%
+  mutate(ocir.change_binary_numeric =
+           case_when(
+             ocir.felt_pandemic_feelings_numeric == 1 ~ 1,
+             ocir.felt_pandemic_feelings_numeric == 2 ~ 1,
+             ocir.felt_pandemic_feelings_numeric == 3 ~ 0,
+             ocir.felt_pandemic_feelings_numeric == 4 ~ 2,
+             ocir.felt_pandemic_feelings_numeric == 5 ~ 2
+           )
+  )
+
+dat <- dat %>%
+  mutate(ocir.change_binary =
+           recode_factor(
+             ocir.change_binary_numeric,
+             `0` = "No change",
+             `1` = "Worsening",
+             `2` = "Improvement"
+           )
+  )
+
+dat %>%
+  freq(ocir.change_binary)
+```
+
+```{r Save four cohorts as rds file}
+saveRDS(object = dat, file = paste0(data_path, "/four_cohorts_variables.rds"))
+```
