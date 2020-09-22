@@ -251,8 +251,15 @@ ocir.diff_score_cols <- dat %>%
 ocir.diff_score_cols
 ```
 
+#ANALYSIS PLAN
+1. Calculate mean change per disorder group 
+    i. Disorders (9)
+      a. Rank the disorders by the size of the change
+    ii. Sex
+    iii. Age (13; RAMP; potentially collapse above 65 depending on group sizes) 
+    iv. Ethnicity groups (5; White European, Black (British), Asian, Arab, Mixed)
 
-# Questionnaire comparions
+# 1. Questionnaire comparions: Calculate mean change per group 
 
 ## gad
 ### Summary scores
@@ -454,7 +461,9 @@ dat.long.gad.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective"))
+  scale_fill_manual(
+    values = palette,
+    labels = c("Prepandemic", "Retrospective"))
 ```
 
 
@@ -474,7 +483,9 @@ dat.long.gad.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
+  scale_fill_manual(
+    values = palette,
+    labels = c("Prepandemic", "Retrospective")) +
   facet_wrap("Disorder_hierarchical")
 ```
 
@@ -496,7 +507,9 @@ dat.long.gad.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nRetrospective vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Prepandemic"))
+  scale_fill_manual(
+    values = palette,
+    labels = c("Prepandemic"))
 ```
 
 ### Plots sum
@@ -519,7 +532,8 @@ dat.long.gad.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-    labels = c("Baseline", "Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
     )
 ```
 
@@ -541,7 +555,8 @@ dat.long.gad.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-#    labels = c("Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
     ) +
   facet_wrap("Disorder_hierarchical")
 ```
@@ -746,7 +761,9 @@ dat.long.phq.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective"))
+  scale_fill_manual(
+    values = palette,
+    labels = c("Prepandemic", "Retrospective"))
 ```
 
 ```{r phq plot retro_prepan diff}
@@ -765,7 +782,9 @@ dat.long.phq.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nPrepandemic vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Retrospective"))
+  scale_fill_manual(
+    values = palette,
+    labels = c("Retrospective"))
 ```
 
 ```{r phq percentage plot retro_prepan resized, fig.height=6, fig.width=10}
@@ -784,7 +803,10 @@ dat.long.phq.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
+  scale_fill_manual(
+    values = palette,
+    labels = c("Prepandemic", "Retrospective")
+    ) +
   facet_wrap("Disorder_hierarchical")
 ```
 
@@ -808,7 +830,8 @@ dat.long.phq.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-    labels = c("Baseline", "Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
   )
 ```
 
@@ -830,7 +853,8 @@ dat.long.phq.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-    labels = c("Baseline", "Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
   ) +
   facet_wrap("Disorder_hierarchical")
 ```
@@ -1035,7 +1059,9 @@ dat.long.ocir.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective"))
+  scale_fill_manual(
+    values = palette,
+    labels = c("Prepandemic", "Retrospective"))
 ```
 
 ```{r ocir plot retro_prepan diff}
@@ -1054,7 +1080,9 @@ dat.long.ocir.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nPrepandemic vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Retrospective"))
+  scale_fill_manual(
+    values = palette,
+    labels = c("Retrospective"))
 ```
 
 ```{r ocir percentage plot retro_prepan resized, fig.height=6, fig.width=10}
@@ -1073,7 +1101,9 @@ dat.long.ocir.diff %>%
     y = "Percentage of participants",
     fill = "Comparison:\nBaseline vs") +
   theme_personal +
-  scale_fill_manual(values = palette, labels = c("Prepandemic", "Retrospective")) +
+  scale_fill_manual(
+    values = palette,
+    labels = c("Prepandemic", "Retrospective")) +
   facet_wrap("Disorder_hierarchical")
 ```
 
@@ -1096,7 +1126,8 @@ dat.long.ocir.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-    labels = c("Baseline", "Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
   )
 ```
 
@@ -1117,7 +1148,8 @@ dat.long.ocir.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-    labels = c("Baseline", "Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
   ) +
   facet_wrap("Disorder_hierarchical")
 ```
@@ -1130,7 +1162,7 @@ dat.long.ocir.sum %>%
 
 PCL:  
 Calculate the total GLAD, COPING, RAMP baseline 
-## pcl
+## PCL
 
 ```{r descriptives pcl.diff_score_cols}
 pcl.numeric_table <- dat %>% 
@@ -1300,6 +1332,7 @@ pcl.percentages.summary <- dat %>%
   mutate(prop = round(n/sum(n), 3)*100) %>%
   mutate(n_prop = paste0(n," (",prop, "%)"))
 
+kable(pcl.percentages.summary)
 pcl.percentages.summary
 ```
 
@@ -1323,7 +1356,8 @@ dat.long.pcl.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-    labels = c("Baseline", "Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
   )
 ```
 
@@ -1344,14 +1378,15 @@ dat.long.pcl.sum %>%
   theme_personal +
   scale_fill_manual(
     values = COPINGpalette3,
-    labels = c("Baseline", "Prepandemic", "Retrospective")
+    breaks = c("prepan", "retro", "base"),
+    labels = c("base" = "Baseline", "prepan" = "Prepandemic", "retro" = "Retrospective")
   ) +
   facet_wrap("Disorder_hierarchical")
 ```
 
 
 
-# Create additional datasets for analyses
+# Create subsets of data for analyses
 Filter data frame to create 2 additional datasets. Additional exclusion criteria (beyond those listed above) are specified below:
 
   1. Retrospective - baseline change anlyses
@@ -1361,8 +1396,9 @@ Filter data frame to create 2 additional datasets. Additional exclusion criteria
           ii. Exclude individuals with prepandemic data collected after 1st March.
 
 Retro-baseline analyses
-Exclude individuals with NA for MHD, age, gender
-```{r exclusion criteria for retro-baseline analysis}
+
+
+```{r subsample for retro-baseline analysis}
 dat.retro <- dat %>%
   filter(
     ((data_group_gad == "Baseline and retrospective data" |
@@ -1381,8 +1417,7 @@ dim(dat.retro)
 Prepan-baseline analyses
 Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March
 
-++CH: exclusion criteria need double checking
-```{r exclusion criteria for prepan-baseline analysis}
+```{r subsample for prepan-baseline analysis}
 dat.prepan <- dat %>%
   filter(
     ((data_group_gad == "Baseline and retrospective data" |
@@ -1403,13 +1438,6 @@ dat.prepan <- dat %>%
 dim(dat.prepan)
 ```
 
-#ANALYSIS PLAN
-1. Calculate mean change per disorder group 
-    i. Disorders (9)
-      a. Rank the disorders by the size of the change
-    ii. Sex 
-    iii. Age (13; RAMP; potentially collapse above 65 depending on group sizes) 
-    iv. Ethnicity groups (5; White European, Black (British), Asian, Arab, Mixed) 
 
 2. Regression models (Regress covariates out of the change? Which?)
     i. Model 0: Disorders  
@@ -1426,7 +1454,6 @@ dim(dat.prepan)
           b. Calculate a variable PCL pandemic score 
           c. If one item is highly endorsed due to pandemic -> exclude in sensitivity analysis 
 
-# 1. Calculate mean change per group 
 
 
 # 2. Regression
@@ -1440,1201 +1467,2119 @@ b - overlapping disorder categories
 
 ++MD: We may want to exclude disorders from Model b that aren't including in the hierarchy (e.g. ADHD, ASD)
 
-## Prepan-baseline change
-
-### CHANGE SCORES
-
-### GAD
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r GAD prepan Model 0a}
-gad_prepan_model0a <- lm(
-  formula = gad.diff_score_base_prepan ~ 
-    Disorder_hierarchical,
-  data = dat.prepan)
-
-summary(gad_prepan_model0a)
-tidy(gad_prepan_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r GAD prepan Model 0b}
-gad_prepan_model0b <- lm(
-  formula = gad.diff_score_base_prepan ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.prepan)
-
-summary(gad_prepan_model0b)
-tidy(gad_prepan_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r GAD prepan Model 1a}
-gad_prepan_model1a <- lm(
-  formula = gad.diff_score_base_prepan ~ 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(gad_prepan_model1a)
-tidy(gad_prepan_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r GAD prepan Model 1b}
-gad_prepan_model1b <- lm(
-  formula = gad.diff_score_base_prepan ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(gad_prepan_model1b)
-tidy(gad_prepan_model1b)
-```
-
-### PHQ
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r PHQ prepan Model 0a}
-phq_prepan_model0a <- lm(
-  formula = phq.diff_score_base_prepan ~ 
-    Disorder_hierarchical,
-  data = dat.prepan)
-
-summary(phq_prepan_model0a)
-tidy(phq_prepan_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r PHQ prepan Model 0b}
-phq_prepan_model0b <- lm(
-  formula = phq.diff_score_base_prepan ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.prepan)
-
-summary(phq_prepan_model0b)
-tidy(phq_prepan_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PHQ prepan Model 1a}
-phq_prepan_model1a <- lm(
-  formula = phq.diff_score_base_prepan ~ 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(phq_prepan_model1a)
-tidy(phq_prepan_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PHQ prepan Model 1b}
-phq_prepan_model1b <- lm(
-  formula = phq.diff_score_base_prepan ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(phq_prepan_model1b)
-tidy(phq_prepan_model1b)
-```
-
-
-### PCL
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r PCL prepan Model 0a}
-pcl_prepan_model0a <- lm(
-  formula = pcl.diff_score_base_prepan ~ 
-    Disorder_hierarchical,
-  data = dat.prepan)
-
-summary(pcl_prepan_model0a)
-tidy(pcl_prepan_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r PCL prepan Model 0b}
-pcl_prepan_model0b <- lm(
-  formula = pcl.diff_score_base_prepan ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.prepan)
-
-summary(pcl_prepan_model0b)
-tidy(pcl_prepan_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PCL prepan Model 1a}
-pcl_prepan_model1a <- lm(
-  formula = pcl.diff_score_base_prepan ~ 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(pcl_prepan_model1a)
-tidy(pcl_prepan_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PCL prepan Model 1b}
-pcl_prepan_model1b <- lm(
-  formula = pcl.diff_score_base_prepan ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(pcl_prepan_model1b)
-tidy(pcl_prepan_model1b)
-```
-
-### OCIR
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r OCIR prepan Model 0a}
-ocir_prepan_model0a <- lm(
-  formula = ocir.diff_score_base_prepan ~ 
-    Disorder_hierarchical,
-  data = dat.prepan)
-
-summary(ocir_prepan_model0a)
-tidy(ocir_prepan_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r OCIR prepan Model 0b}
-ocir_prepan_model0b <- lm(
-  formula = ocir.diff_score_base_prepan ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.prepan)
-
-summary(ocir_prepan_model0b)
-tidy(ocir_prepan_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r OCIR prepan Model 1a}
-ocir_prepan_model1a <- lm(
-  formula = ocir.diff_score_base_prepan ~ 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(ocir_prepan_model1a)
-tidy(ocir_prepan_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r OCIR prepan Model 1b}
-ocir_prepan_model1b <- lm(
-  formula = ocir.diff_score_base_prepan ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(ocir_prepan_model1b)
-tidy(ocir_prepan_model1b)
-```
-
-### PANDEMIC BASELINE CONTROLLING FOR PREPANDEMIC
-
-### GAD
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r GAD prepan Model absolute values absolute values 0a}
-gad_prepan_model0a <- lm(
-  formula = gad.sum_score_base ~ gad.sum_score_prepan + 
-    Disorder_hierarchical,
-  data = dat.prepan)
-
-summary(gad_prepan_model0a)
-tidy(gad_prepan_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r GAD prepan Model absolute values 0b}
-gad_prepan_model0b <- lm(
-  formula = gad.sum_score_base ~ gad.sum_score_prepan +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.prepan)
-
-summary(gad_prepan_model0b)
-tidy(gad_prepan_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r GAD prepan Model absolute values 1a}
-gad_prepan_model1a <- lm(
-  formula = gad.sum_score_base ~ gad.sum_score_prepan + 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(gad_prepan_model1a)
-tidy(gad_prepan_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r GAD prepan Model absolute values 1b}
-gad_prepan_model1b <- lm(
-  formula = gad.sum_score_base ~ gad.sum_score_prepan +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(gad_prepan_model1b)
-tidy(gad_prepan_model1b)
-```
-
-### PHQ
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r PHQ prepan Model absolute values 0a}
-phq_prepan_model0a <- lm(
-  formula = phq.sum_score_base ~ phq.sum_score_prepan + 
-    Disorder_hierarchical,
-  data = dat.prepan)
-
-summary(phq_prepan_model0a)
-tidy(phq_prepan_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r PHQ prepan Model absolute values 0b}
-phq_prepan_model0b <- lm(
-  formula = phq.sum_score_base ~ phq.sum_score_prepan +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.prepan)
-
-summary(phq_prepan_model0b)
-tidy(phq_prepan_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PHQ prepan Model absolute values 1a}
-phq_prepan_model1a <- lm(
-  formula = phq.sum_score_base ~ phq.sum_score_prepan + 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(phq_prepan_model1a)
-tidy(phq_prepan_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PHQ prepan Model absolute values 1b}
-phq_prepan_model1b <- lm(
-  formula = phq.sum_score_base ~ phq.sum_score_prepan +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(phq_prepan_model1b)
-tidy(phq_prepan_model1b)
-```
-
-
-### PCL
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r PCL prepan Model absolute values 0a}
-pcl_prepan_model0a <- lm(
-  formula = pcl.sum_score_base ~ pcl.sum_score_prepan + 
-    Disorder_hierarchical,
-  data = dat.prepan)
-
-summary(pcl_prepan_model0a)
-tidy(pcl_prepan_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r PCL prepan Model absolute values 0b}
-pcl_prepan_model0b <- lm(
-  formula = pcl.sum_score_base ~ pcl.sum_score_prepan +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.prepan)
-
-summary(pcl_prepan_model0b)
-tidy(pcl_prepan_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PCL prepan Model absolute values 1a}
-pcl_prepan_model1a <- lm(
-  formula = pcl.sum_score_base ~ pcl.sum_score_prepan + 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(pcl_prepan_model1a)
-tidy(pcl_prepan_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PCL prepan Model absolute values 1b}
-pcl_prepan_model1b <- lm(
-  formula = pcl.sum_score_base ~ pcl.sum_score_prepan +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(pcl_prepan_model1b)
-tidy(pcl_prepan_model1b)
-```
-
-### OCIR
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r OCIR prepan Model absolute values 0a}
-ocir_prepan_model0a <- lm(
-  formula = ocir.sum_score_base ~ ocir.sum_score_prepan + 
-    Disorder_hierarchical,
-  data = dat.prepan)
-
-summary(ocir_prepan_model0a)
-tidy(ocir_prepan_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r OCIR prepan Model absolute values 0b}
-ocir_prepan_model0b <- lm(
-  formula = ocir.sum_score_base ~ ocir.sum_score_prepan +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.prepan)
-
-summary(ocir_prepan_model0b)
-tidy(ocir_prepan_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r OCIR prepan Model absolute values 1a}
-ocir_prepan_model1a <- lm(
-  formula = ocir.sum_score_base ~ ocir.sum_score_prepan + 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(ocir_prepan_model1a)
-tidy(ocir_prepan_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r OCIR prepan Model absolute values 1b}
-ocir_prepan_model1b <- lm(
-  formula = ocir.sum_score_base ~ ocir.sum_score_prepan +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.prepan)
-
-summary(ocir_prepan_model1b)
-tidy(ocir_prepan_model1b)
-```
-
-
-
-## Retro-baseline change
-
-### CHANGE SCORES
-
-### GAD
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r GAD retro Model 0a}
-gad_retro_model0a <- lm(
-  formula = gad.diff_score_base_retro ~ 
-    Disorder_hierarchical,
-  data = dat.retro)
-
-summary(gad_retro_model0a)
-tidy(gad_retro_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r GAD retro Model 0b}
-gad_retro_model0b <- lm(
-  formula = gad.diff_score_base_retro ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.retro)
-
-summary(gad_retro_model0b)
-tidy(gad_retro_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r GAD retro Model 1a}
-gad_retro_model1a <- lm(
-  formula = gad.diff_score_base_retro ~ 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(gad_retro_model1a)
-tidy(gad_retro_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r GAD retro Model 1b}
-gad_retro_model1b <- lm(
-  formula = gad.diff_score_base_retro ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(gad_retro_model1b)
-tidy(gad_retro_model1b)
-```
-
-### PHQ
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r PHQ retro Model 0a}
-phq_retro_model0a <- lm(
-  formula = phq.diff_score_base_retro ~ 
-    Disorder_hierarchical,
-  data = dat.retro)
-
-summary(phq_retro_model0a)
-tidy(phq_retro_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r PHQ retro Model 0b}
-phq_retro_model0b <- lm(
-  formula = phq.diff_score_base_retro ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.retro)
-
-summary(phq_retro_model0b)
-tidy(phq_retro_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PHQ retro Model 1a}
-phq_retro_model1a <- lm(
-  formula = phq.diff_score_base_retro ~ 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(phq_retro_model1a)
-tidy(phq_retro_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PHQ retro Model 1b}
-phq_retro_model1b <- lm(
-  formula = phq.diff_score_base_retro ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(phq_retro_model1b)
-tidy(phq_retro_model1b)
-```
-
-
-### PCL
-
-++MD: Not sure if this is how we want to run the PCL regression - the outcome variable I've included is "How many PCL items the participants report are related to the pandemic", but I think we might want a more nuanced approach than this.
-
-```{r recode PCL retro variable as numeric}
-dat.retro <- dat.retro %>% 
-  mutate(
-    pcl.sum_score_retro = 
-      as.numeric(pcl.sum_score_retro_raw)
+# Functions
+
+```{r model0a function}
+model0a.estimates <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model0a"),
+         lm( formula = glm.formula,
+              data = get(data_set)
+              )
   )
-```
+  
+  assign(paste0(outcome,"model0a_estimates"),
+         tidy(get(paste0(outcome,".model0a")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "Disorder_hierarchicalAnxiety disorders" = "Anxiety disorders",
+               "Disorder_hierarchicalEating disorders" = "Eating disorders",
+               "Disorder_hierarchicalOCDs" = "OCDs",
+               "Disorder_hierarchicalPTSD" = "PTSD",
+               "Disorder_hierarchicalDepressive disorders" = "Depressive disorders",
+               "Disorder_hierarchicalBipolar disorders" = "Bipolar disorders"
+             ),
+    "Estimate" = format(
+      round(estimate,
+            digits = 2),
+      nsmall = 2),
+    "95% CI low" = format(
+      round(conf.low,
+            digits = 2),
+      nsmall = 2),
+    "95% CI up" = format(
+      round(conf.high,
+            digits = 2),
+      nsmall = 2),
+    "SE" = format(
+      round(std.error,
+            digits = 2),
+      nsmall = 2),
+    "z score" = format(
+      round(statistic,
+            digits = 2),
+      nsmall = 2),
+    "p value" = case_when(
+      p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+      p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+      p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+  )
+  ) %>%
+  select(
+    "Indepent variable",
+    "Estimate",
+    "95% CI low",
+    "95% CI up",
+    "SE",
+#    "z score",
+    "p value"
+  )
+  )
+        
+  return(get(paste0(outcome,"model0a_estimates")))
+}
 
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r PCL retro Model 0a}
-pcl_retro_model0a <- lm(
-  formula = pcl.sum_score_retro ~ 
-    Disorder_hierarchical,
-  data = dat.retro)
-
-summary(pcl_retro_model0a)
-tidy(pcl_retro_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r PCL retro Model 0b}
-pcl_retro_model0b <- lm(
-  formula = pcl.sum_score_retro ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.retro)
-
-summary(pcl_retro_model0b)
-tidy(pcl_retro_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PCL retro Model 1a}
-pcl_retro_model1a <- lm(
-  formula = pcl.sum_score_retro ~ 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(pcl_retro_model1a)
-tidy(pcl_retro_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PCL retro Model 1b}
-pcl_retro_model1b <- lm(
-  formula = pcl.sum_score_retro ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(pcl_retro_model1b)
-tidy(pcl_retro_model1b)
-```
-
-### OCIR
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r OCIR retro Model 0a}
-ocir_retro_model0a <- lm(
-  formula = ocir.diff_score_base_retro ~ 
-    Disorder_hierarchical,
-  data = dat.retro)
-
-summary(ocir_retro_model0a)
-tidy(ocir_retro_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r OCIR retro Model 0b}
-ocir_retro_model0b <- lm(
-  formula = ocir.diff_score_base_retro ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.retro)
-
-summary(ocir_retro_model0b)
-tidy(ocir_retro_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r OCIR retro Model 1a}
-ocir_retro_model1a <- lm(
-  formula = ocir.diff_score_base_retro ~ 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(ocir_retro_model1a)
-tidy(ocir_retro_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r OCIR retro Model 1b}
-ocir_retro_model1b <- lm(
-  formula = ocir.diff_score_base_retro ~
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(ocir_retro_model1b)
-tidy(ocir_retro_model1b)
+model0a.reg.stats <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model0a"),
+         lm( formula = glm.formula,
+              data = get(data_set)
+              )
+  )
+  
+  assign(paste0(outcome,"model0a_reg_stats"),
+         glance(get(paste0(outcome,".model0a"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+  
+  return(get(paste0(outcome,"model0a_reg_stats")))
+}
 ```
 
 
+```{r model0b function}
+model0b.estimates <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("depression_and_anxiety",
+                             "eating_disorders",
+                             "obsessive_compulsive_disorders",
+                             "bipolar_and_schizophrenia",
+                             "mhd.posttraumatic_stress_disorder_ptsd",
+                             "autism_spectrum_disorder",
+                             "mhd.attention_deficit_hyperactivity_disorder",
+                             "mhd.personality_disorder"
+                                )
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model0b"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,"model0b_estimates"),
+         tidy(get(paste0(outcome,".model0b")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "anxiety_disordersAnxiety disorder" = "Anxiety disorders",
+               "depressive_disordersDepressive disorder" = "Depressive disorders",
+               "depression_and_anxietyDepressive and anxiety disorder" = "Depressive and anxiety disorder",
+               "depression_and_anxietyOnly depressive disorder" = "Only depressive disorder",
+               "depression_and_anxietyOnly anxiety disorder" = "Only anxiety disorder",
+               "eating_disordersEating disorder" = "Eating disorders",
+               "obsessive_compulsive_disordersObsessive compulsive disorder" = "OCDs",
+               "bipolar_and_schizophreniaPsychotic and bipolar disorder" = "Psychotic and bipolar disorder",
+               "bipolar_and_schizophreniaOnly psychotic disorder" = "Only psychotic disorder",
+               "bipolar_and_schizophreniaOnly bipolar disorder" = "Only bipolar disorder",
+               "psychotic_disordersPsychotic disorder" = "Psychotic disorder",
+               "mhd.mania_hypomania_bipolar_or_manicdepressionMania, hypomania, bipolar or manic-depression" = "Bipolar disorder",
+               "mhd.posttraumatic_stress_disorder_ptsdPost-traumatic stress disorder (PTSD)" = "PTSD",
+               "autism_spectrum_disorderAutism spectrum disorder" = "ASD",
+               "mhd.attention_deficit_hyperactivity_disorderAttention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)" = "ADHD",
+               "mhd.personality_disorderPersonality disorder" = "Personality disorder"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+  
+  return(get(paste0(outcome,"model0b_estimates")))
+}
 
-### PANDEMIC BASELINE CONTROLLING FOR RETROSPECTIVE
-
-### GAD
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r GAD retro Model absolute values 0a}
-gad_retro_model0a <- lm(
-  formula = gad.sum_score_base ~ gad.sum_score_retro + 
-    Disorder_hierarchical,
-  data = dat.retro)
-
-summary(gad_retro_model0a)
-tidy(gad_retro_model0a)
+model0b.reg.stats <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model0b"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,"model0b_reg_stats"),
+         glance(get(paste0(outcome,".model0b"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+  
+  return(get(paste0(outcome,"model0b_reg_stats")))
+}
 ```
 
-Model 0b: Overlapping disorders, Unadjusted
-```{r GAD retro Model absolute values 0b}
-gad_retro_model0b <- lm(
-  formula = gad.sum_score_base ~ gad.sum_score_retro +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.retro)
+```{r model1a function}
+model1a.estimates <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical",
+                            "Gender_collapsed",
+                            "age_category_collapsed",
+                            "Ethnicity_collapsed",
+                            "time_diff_sign_up_coping"
+                            )
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model1a"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,"model1a_estimates"),
+         tidy(get(paste0(outcome,".model1a")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "Disorder_hierarchicalAnxiety disorders" = "Anxiety disorders",
+               "Disorder_hierarchicalEating disorders" = "Eating disorders",
+               "Disorder_hierarchicalOCDs" = "OCDs",
+               "Disorder_hierarchicalPTSD" = "PTSD",
+               "Disorder_hierarchicalDepressive disorders" = "Depressive disorders",
+               "Disorder_hierarchicalBipolar disorders" = "Bipolar disorders",
+               "Gender_collapsedFemale" = "Female",
+               "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+               "age_category_collapsed19-25" = "19-25 years",
+               "age_category_collapsed26-35" = "26-35 years",
+               "age_category_collapsed36-45" = "36-45 years",
+               "age_category_collapsed46-55" = "46-55 years",
+               "age_category_collapsed56-65" = "56-65 years",
+               "age_category_collapsed66-70" = "66-70 years",
+               "age_category_collapsed71-75" = "71-75 years",
+               "age_category_collapsed76+" = "76+ years",
+               "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+               "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
+               "Ethnicity_collapsedAfrican or African British" = "African or African British",
+               "Ethnicity_collapsedOther" = "Other ethnicity",
+               "time_diff_sign_up_coping" = "Time difference: prepandemic to COPING"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+  
+  return(get(paste0(outcome,"model1a_estimates")))
+}
 
-summary(gad_retro_model0b)
-tidy(gad_retro_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r GAD retro Model absolute values 1a}
-gad_retro_model1a <- lm(
-  formula = gad.sum_score_base ~ gad.sum_score_retro + 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(gad_retro_model1a)
-tidy(gad_retro_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r GAD retro Model absolute values 1b}
-gad_retro_model1b <- lm(
-  formula = gad.sum_score_base ~ gad.sum_score_retro +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(gad_retro_model1b)
-tidy(gad_retro_model1b)
-```
-
-### PHQ
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r PHQ retro Model absolute values 0a}
-phq_retro_model0a <- lm(
-  formula = phq.sum_score_base ~ phq.sum_score_retro + 
-    Disorder_hierarchical,
-  data = dat.retro)
-
-summary(phq_retro_model0a)
-tidy(phq_retro_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r PHQ retro Model absolute values 0b}
-phq_retro_model0b <- lm(
-  formula = phq.sum_score_base ~ phq.sum_score_retro +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.retro)
-
-summary(phq_retro_model0b)
-tidy(phq_retro_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PHQ retro Model absolute values 1a}
-phq_retro_model1a <- lm(
-  formula = phq.sum_score_base ~ phq.sum_score_retro + 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(phq_retro_model1a)
-tidy(phq_retro_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PHQ retro Model absolute values 1b}
-phq_retro_model1b <- lm(
-  formula = phq.sum_score_base ~ phq.sum_score_retro +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(phq_retro_model1b)
-tidy(phq_retro_model1b)
-```
-
-
-### PCL
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r PCL retro Model absolute values 0a}
-pcl_retro_model0a <- lm(
-  formula = pcl.sum_score_base ~ pcl.sum_score_retro + 
-    Disorder_hierarchical,
-  data = dat.retro)
-
-summary(pcl_retro_model0a)
-tidy(pcl_retro_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r PCL retro Model absolute values 0b}
-pcl_retro_model0b <- lm(
-  formula = pcl.sum_score_base ~ pcl.sum_score_retro +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.retro)
-
-summary(pcl_retro_model0b)
-tidy(pcl_retro_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PCL retro Model absolute values 1a}
-pcl_retro_model1a <- lm(
-  formula = pcl.sum_score_base ~ pcl.sum_score_retro + 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(pcl_retro_model1a)
-tidy(pcl_retro_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r PCL retro Model absolute values 1b}
-pcl_retro_model1b <- lm(
-  formula = pcl.sum_score_base ~ pcl.sum_score_retro +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(pcl_retro_model1b)
-tidy(pcl_retro_model1b)
-```
-
-### OCIR
-Model 0a: Disorder_hierarchical, Unadjusted
-```{r OCIR retro Model absolute values 0a}
-ocir_retro_model0a <- lm(
-  formula = ocir.sum_score_base ~ ocir.sum_score_retro + 
-    Disorder_hierarchical,
-  data = dat.retro)
-
-summary(ocir_retro_model0a)
-tidy(ocir_retro_model0a)
-```
-
-Model 0b: Overlapping disorders, Unadjusted
-```{r OCIR retro Model absolute values 0b}
-ocir_retro_model0b <- lm(
-  formula = ocir.sum_score_base ~ ocir.sum_score_retro +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder,
-  data = dat.retro)
-
-summary(ocir_retro_model0b)
-tidy(ocir_retro_model0b)
-```
-
-Model 1a: Disorder hierarchical, Adjusted
-  Model 0a + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r OCIR retro Model absolute values 1a}
-ocir_retro_model1a <- lm(
-  formula = ocir.sum_score_base ~ ocir.sum_score_retro + 
-    Disorder_hierarchical + 
-    Gender_collapsed + 
-    age_category + 
-    Ethnicity_collapsed + 
-    time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(ocir_retro_model1a)
-tidy(ocir_retro_model1a)
-```
-
-Model 1b: Overlapping disorders, Adjusted
-  Model 0b + Sex + Age + Ethnicity_collapsed + Time registration and baseline
-```{r OCIR retro Model absolute values 1b}
-ocir_retro_model1b <- lm(
-  formula = ocir.sum_score_base ~ ocir.sum_score_retro +
-    anxiety_disorders +
-    depressive_disorders +
-    depression_and_anxiety +
-    eating_disorders +
-    obsessive_compulsive_disorders +
-    psychotic_disorders +
-    mhd.mania_hypomania_bipolar_or_manicdepression +
-    mhd.posttraumatic_stress_disorder_ptsd +
-    autism_spectrum_disorder +
-    mhd.attention_deficit_hyperactivity_disorder +
-    mhd.personality_disorder +
-    Gender_collapsed + age_category + Ethnicity_collapsed + time_diff_sign_up_coping,
-  data = dat.retro)
-
-summary(ocir_retro_model1b)
-tidy(ocir_retro_model1b)
+model1a.reg.stats <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model1a"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,"model1a_reg_stats"),
+         glance(get(paste0(outcome,".model1a"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+  
+  return(get(paste0(outcome,"model1a_reg_stats")))
+}
 ```
 
 
+```{r model1b function}
+model1b.estimates <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("depression_and_anxiety",
+                             "eating_disorders",
+                             "obsessive_compulsive_disorders",
+                             "bipolar_and_schizophrenia",
+                             "mhd.posttraumatic_stress_disorder_ptsd",
+                             "autism_spectrum_disorder",
+                             "mhd.attention_deficit_hyperactivity_disorder",
+                             "mhd.personality_disorder",
+                             "Gender_collapsed",
+                             "age_category_collapsed",
+                             "Ethnicity_collapsed",
+                             "time_diff_sign_up_coping"
+                                )
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model1b"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,"model1b_estimates"),
+         tidy(get(paste0(outcome,".model1b")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "anxiety_disordersAnxiety disorder" = "Anxiety disorders",
+               "depressive_disordersDepressive disorder" = "Depressive disorders",
+               "depression_and_anxietyDepressive and anxiety disorder" = "Depressive and anxiety disorder",
+               "depression_and_anxietyOnly depressive disorder" = "Only depressive disorder",
+               "depression_and_anxietyOnly anxiety disorder" = "Only anxiety disorder",
+               "eating_disordersEating disorder" = "Eating disorders",
+               "obsessive_compulsive_disordersObsessive compulsive disorder" = "OCDs",
+               "bipolar_and_schizophreniaPsychotic and bipolar disorder" = "Psychotic and bipolar disorder",
+               "bipolar_and_schizophreniaOnly psychotic disorder" = "Only psychotic disorder",
+               "bipolar_and_schizophreniaOnly bipolar disorder" = "Only bipolar disorder",
+               "psychotic_disordersPsychotic disorder" = "Psychotic disorder",
+               "mhd.mania_hypomania_bipolar_or_manicdepressionMania, hypomania, bipolar or manic-depression" = "Bipolar disorder",
+               "mhd.posttraumatic_stress_disorder_ptsdPost-traumatic stress disorder (PTSD)" = "PTSD",
+               "autism_spectrum_disorderAutism spectrum disorder" = "ASD",
+               "mhd.attention_deficit_hyperactivity_disorderAttention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)" = "ADHD",
+               "mhd.personality_disorderPersonality disorder" = "Personality disorder",
+               "Gender_collapsedFemale" = "Female",
+               "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+               "age_category_collapsed19-25" = "19-25 years",
+               "age_category_collapsed26-35" = "26-35 years",
+               "age_category_collapsed36-45" = "36-45 years",
+               "age_category_collapsed46-55" = "46-55 years",
+               "age_category_collapsed56-65" = "56-65 years",
+               "age_category_collapsed66-70" = "66-70 years",
+               "age_category_collapsed71-75" = "71-75 years",
+               "age_category_collapsed76+" = "76+ years",
+               "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+               "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
+               "Ethnicity_collapsedAfrican or African British" = "African or African British",
+               "Ethnicity_collapsedOther" = "Other ethnicity",
+               "time_diff_sign_up_coping" = "Time difference: prepandemic to COPING"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+  
+  return(get(paste0(outcome,"model1b_estimates")))
+}
 
-# RUBBISH
+model1b.reg.stats <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".model1b"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,"model1b_reg_stats"),
+         glance(get(paste0(outcome,".model1b"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+  
+  return(get(paste0(outcome,"model1b_reg_stats")))
+}
+```
 
-+++ Everything underneath here is only SCRATCH
 
-```{r RUBBISH 2, fig.height=7, fig.width=5}
-#gad.diff_score_base_prepan_plot /
-#  gad.diff_score_retro_prepan_plot /
-#  gad.diff_score_base_retro_plot +
-#  plot_layout(guides = "collect", heights = c(1,1,1)) +
-#  plot_annotation(tag_levels = "A")
+```{r model0a.explan function}
+model0a.explan.estimates <- function(outcome, explan_var, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c(explan_var, "Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".",explan_var,".model0a.explan"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,".",explan_var,"model0a.explan_estimates"),
+         tidy(get(paste0(outcome,".",explan_var,".model0a.explan")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "Disorder_hierarchicalAnxiety disorders" = "Anxiety disorders",
+               "Disorder_hierarchicalEating disorders" = "Eating disorders",
+               "Disorder_hierarchicalOCDs" = "OCDs",
+               "Disorder_hierarchicalPTSD" = "PTSD",
+               "Disorder_hierarchicalDepressive disorders" = "Depressive disorders",
+               "Disorder_hierarchicalBipolar disorders" = "Bipolar disorders"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+  
+  return(get(paste0(outcome,".",explan_var,"model0a.explan_estimates")))
+}
+
+model0a.explan.reg.stats <- function(outcome, explan_var, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c(explan_var, "Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".",explan_var,".model0a.explan"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,".",explan_var,"model0a.explan_reg_stats"),
+         glance(get(paste0(outcome,".",explan_var,".model0a.explan"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+  
+  return(get(paste0(outcome,".",explan_var,"model0a.explan_reg_stats")))
+}
+```
+
+
+```{r model0b.explan function}
+model0b.explan.estimates <- function(outcome, explan_var, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c(explan_var, 
+                             "depression_and_anxiety",
+                             "eating_disorders",
+                             "obsessive_compulsive_disorders",
+                             "bipolar_and_schizophrenia",
+                             "mhd.posttraumatic_stress_disorder_ptsd",
+                             "autism_spectrum_disorder",
+                             "mhd.attention_deficit_hyperactivity_disorder",
+                             "mhd.personality_disorder"
+  )
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".",explan_var,".model0b.explan"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,".",explan_var,"model0b.explan_estimates"),
+         tidy(get(paste0(outcome,".",explan_var,".model0b.explan")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "anxiety_disordersAnxiety disorder" = "Anxiety disorders",
+               "depressive_disordersDepressive disorder" = "Depressive disorders",
+               "depression_and_anxietyDepressive and anxiety disorder" = "Depressive and anxiety disorder",
+               "depression_and_anxietyOnly depressive disorder" = "Only depressive disorder",
+               "depression_and_anxietyOnly anxiety disorder" = "Only anxiety disorder",
+               "eating_disordersEating disorder" = "Eating disorders",
+               "obsessive_compulsive_disordersObsessive compulsive disorder" = "OCDs",
+               "bipolar_and_schizophreniaPsychotic and bipolar disorder" = "Psychotic and bipolar disorder",
+               "bipolar_and_schizophreniaOnly psychotic disorder" = "Only psychotic disorder",
+               "bipolar_and_schizophreniaOnly bipolar disorder" = "Only bipolar disorder",
+               "psychotic_disordersPsychotic disorder" = "Psychotic disorder",
+               "mhd.mania_hypomania_bipolar_or_manicdepressionMania, hypomania, bipolar or manic-depression" = "Bipolar disorder",
+               "mhd.posttraumatic_stress_disorder_ptsdPost-traumatic stress disorder (PTSD)" = "PTSD",
+               "autism_spectrum_disorderAutism spectrum disorder" = "ASD",
+               "mhd.attention_deficit_hyperactivity_disorderAttention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)" = "ADHD",
+               "mhd.personality_disorderPersonality disorder" = "Personality disorder"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+  
+  return(get(paste0(outcome,".",explan_var,"model0b.explan_estimates")))
+}
+
+model0b.explan.reg.stats <- function(outcome, explan_var, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".",explan_var,".model0b.explan"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,".",explan_var,"model0b.explan_reg_stats"),
+         glance(get(paste0(outcome,".",explan_var,".model0b.explan"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+  
+  return(get(paste0(outcome,".",explan_var,"model0b.explan_reg_stats")))
+}
+```
+
+
+
+```{r model1a.explan function}
+model1a.explan.estimates <- function(outcome, explan_var, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c(explan_var,
+                             "Disorder_hierarchical",
+                             "Gender_collapsed",
+                             "age_category_collapsed",
+                             "Ethnicity_collapsed",
+                             "time_diff_sign_up_coping"
+  )
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".",explan_var,".model1a.explan"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,".",explan_var,"model1a.explan_estimates"),
+         tidy(get(paste0(outcome,".",explan_var,".model1a.explan")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "Disorder_hierarchicalAnxiety disorders" = "Anxiety disorders",
+               "Disorder_hierarchicalEating disorders" = "Eating disorders",
+               "Disorder_hierarchicalOCDs" = "OCDs",
+               "Disorder_hierarchicalPTSD" = "PTSD",
+               "Disorder_hierarchicalDepressive disorders" = "Depressive disorders",
+               "Disorder_hierarchicalBipolar disorders" = "Bipolar disorders",
+               "Gender_collapsedFemale" = "Female",
+               "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+               "age_category_collapsed19-25" = "19-25 years",
+               "age_category_collapsed26-35" = "26-35 years",
+               "age_category_collapsed36-45" = "36-45 years",
+               "age_category_collapsed46-55" = "46-55 years",
+               "age_category_collapsed56-65" = "56-65 years",
+               "age_category_collapsed66-70" = "66-70 years",
+               "age_category_collapsed71-75" = "71-75 years",
+               "age_category_collapsed76+" = "76+ years",
+               "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+               "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
+               "Ethnicity_collapsedAfrican or African British" = "African or African British",
+               "Ethnicity_collapsedOther" = "Other ethnicity",
+               "time_diff_sign_up_coping" = "Time difference: prepandemic to COPING"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+  
+  return(get(paste0(outcome,".",explan_var,"model1a.explan_estimates")))
+}
+
+model1a.explan.reg.stats <- function(outcome, explan_var, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".",explan_var,".model1a.explan"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,".",explan_var,"model1a.explan_reg_stats"),
+         glance(get(paste0(outcome,".",explan_var,".model1a.explan"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+  
+  return(get(paste0(outcome,".",explan_var,"model1a.explan_reg_stats")))
+}
+```
+
+
+```{r model1b.explan function}
+model1b.explan.estimates <- function(outcome, explan_var, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c(explan_var,
+                             "depression_and_anxiety",
+                             "eating_disorders",
+                             "obsessive_compulsive_disorders",
+                             "bipolar_and_schizophrenia",
+                             "mhd.posttraumatic_stress_disorder_ptsd",
+                             "autism_spectrum_disorder",
+                             "mhd.attention_deficit_hyperactivity_disorder",
+                             "mhd.personality_disorder",
+                             "Gender_collapsed",
+                             "age_category_collapsed",
+                             "Ethnicity_collapsed",
+                             "time_diff_sign_up_coping"
+  )
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".",explan_var,".model1b.explan"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,".",explan_var,"model1b.explan_estimates"),
+         tidy(get(paste0(outcome,".",explan_var,".model1b.explan")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "anxiety_disordersAnxiety disorder" = "Anxiety disorders",
+               "depressive_disordersDepressive disorder" = "Depressive disorders",
+               "depression_and_anxietyDepressive and anxiety disorder" = "Depressive and anxiety disorder",
+               "depression_and_anxietyOnly depressive disorder" = "Only depressive disorder",
+               "depression_and_anxietyOnly anxiety disorder" = "Only anxiety disorder",
+               "eating_disordersEating disorder" = "Eating disorders",
+               "obsessive_compulsive_disordersObsessive compulsive disorder" = "OCDs",
+               "bipolar_and_schizophreniaPsychotic and bipolar disorder" = "Psychotic and bipolar disorder",
+               "bipolar_and_schizophreniaOnly psychotic disorder" = "Only psychotic disorder",
+               "bipolar_and_schizophreniaOnly bipolar disorder" = "Only bipolar disorder",
+               "psychotic_disordersPsychotic disorder" = "Psychotic disorder",
+               "mhd.mania_hypomania_bipolar_or_manicdepressionMania, hypomania, bipolar or manic-depression" = "Bipolar disorder",
+               "mhd.posttraumatic_stress_disorder_ptsdPost-traumatic stress disorder (PTSD)" = "PTSD",
+               "autism_spectrum_disorderAutism spectrum disorder" = "ASD",
+               "mhd.attention_deficit_hyperactivity_disorderAttention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)" = "ADHD",
+               "mhd.personality_disorderPersonality disorder" = "Personality disorder",
+               "Gender_collapsedFemale" = "Female",
+               "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+               "age_category_collapsed19-25" = "19-25 years",
+               "age_category_collapsed26-35" = "26-35 years",
+               "age_category_collapsed36-45" = "36-45 years",
+               "age_category_collapsed46-55" = "46-55 years",
+               "age_category_collapsed56-65" = "56-65 years",
+               "age_category_collapsed66-70" = "66-70 years",
+               "age_category_collapsed71-75" = "71-75 years",
+               "age_category_collapsed76+" = "76+ years",
+               "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+               "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
+               "Ethnicity_collapsedAfrican or African British" = "African or African British",
+               "Ethnicity_collapsedOther" = "Other ethnicity",
+               "time_diff_sign_up_coping" = "Time difference: prepandemic to COPING"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+  
+  return(get(paste0(outcome,".",explan_var,"model1b.explan_estimates")))
+}
+
+model1b.explan.reg.stats <- function(outcome, explan_var, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+  
+  # run the glm
+  assign(paste0(outcome,".",explan_var,".model1b.explan"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+  
+  assign(paste0(outcome,".",explan_var,"model1b.explan_reg_stats"),
+         glance(get(paste0(outcome,".",explan_var,".model1b.explan"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+  
+  return(get(paste0(outcome,".",explan_var,"model1b.explan_reg_stats")))
+}
+```
+
+# GAD prepan
+## Regression: Change scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r gad model0a diff_score prepan}
+# Regression coefficients
+gad_prepan_model0a_estimates <- model0a.estimates(outcome = "gad.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(gad_prepan_model0a_estimates)
+gad_prepan_model0a_estimates
+
+# Regression diagnostic statistics
+gad_prepan_model0a_reg_stats <- model0a.reg.stats(outcome = "gad.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(gad_prepan_model0a_reg_stats)
+gad_prepan_model0a_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r gad model0b diff_score prepan}
+# Regression coefficients
+gad_prepan_model0b_estimates <- model0b.estimates(outcome = "gad.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(gad_prepan_model0b_estimates)
+gad_prepan_model0b_estimates
+
+# Regression diagnostic statistics
+gad_prepan_model0b_reg_stats <- model0b.reg.stats(outcome = "gad.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(gad_prepan_model0b_reg_stats)
+gad_prepan_model0b_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r gad model1a diff_score prepan}
+# Regression coefficients
+gad_prepan_model1a_estimates <- model1a.estimates(outcome = "gad.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(gad_prepan_model1a_estimates)
+gad_prepan_model1a_estimates
+
+# Regression diagnostic statistics
+gad_prepan_model1a_reg_stats <- model1a.reg.stats(outcome = "gad.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(gad_prepan_model1a_reg_stats)
+gad_prepan_model1a_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r gad model1b diff_score prepan}
+# Regression coefficients
+gad_prepan_model1b_estimates <- model1b.estimates(outcome = "gad.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(gad_prepan_model1b_estimates)
+gad_prepan_model1b_estimates
+
+# Regression diagnostic statistics
+gad_prepan_model1b_reg_stats <- model1b.reg.stats(outcome = "gad.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(gad_prepan_model1b_reg_stats)
+gad_prepan_model1b_reg_stats
+```
+
+## Regression: Absolute scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r gad model0a sum_score prepan}
+# Regression coefficients
+gad_prepan_model0a_explan_estimates <- model0a.explan.estimates(outcome = "gad.sum_score_base",
+                         explan_var = "gad.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(gad_prepan_model0a_explan_estimates)
+gad_prepan_model0a_explan_estimates
+
+# Regression diagnostic statistics
+gad_prepan_model0a_explan_reg_stats <- model0a.explan.reg.stats(outcome = "gad.sum_score_base",
+                         explan_var = "gad.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(gad_prepan_model0a_explan_reg_stats)
+gad_prepan_model0a_explan_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r gad model0b sum_score prepan}
+# Regression coefficients
+gad_prepan_model0b_explan_estimates <- model0b.explan.estimates(outcome = "gad.sum_score_base",
+                         explan_var = "gad.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(gad_prepan_model0b_explan_estimates)
+gad_prepan_model0b_explan_estimates
+
+# Regression diagnostic statistics
+gad_prepan_model0b_explan_reg_stats <- model0b.explan.reg.stats(outcome = "gad.sum_score_base",
+                         explan_var = "gad.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(gad_prepan_model0b_explan_reg_stats)
+gad_prepan_model0b_explan_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r gad model1a sum_score prepan}
+# Regression coefficients
+gad_prepan_model1a_explan_estimates <- model1a.explan.estimates(outcome = "gad.sum_score_base",
+                         explan_var = "gad.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(gad_prepan_model1a_explan_estimates)
+gad_prepan_model1a_explan_estimates
+
+# Regression diagnostic statistics
+gad_prepan_model1a_explan_reg_stats <- model1a.explan.reg.stats(outcome = "gad.sum_score_base",
+                         explan_var = "gad.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(gad_prepan_model1a_explan_reg_stats)
+gad_prepan_model1a_explan_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r gad model1b sum_score prepan}
+# Regression coefficients
+gad_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
+                         explan_var = "gad.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(gad_prepan_model1b_explan_estimates)
+gad_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+gad_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "gad.sum_score_base",
+                         explan_var = "gad.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(gad_prepan_model1b_explan_reg_stats)
+gad_prepan_model1b_explan_reg_stats
+```
+
+
+# GAD retro
+## Regression: Change scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r gad model0a diff_score retro}
+# Regression coefficients
+gad_retro_model0a_estimates <- model0a.estimates(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(gad_retro_model0a_estimates)
+gad_retro_model0a_estimates
+
+# Regression diagnostic statistics
+gad_retro_model0a_reg_stats <- model0a.reg.stats(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(gad_retro_model0a_reg_stats)
+gad_retro_model0a_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r gad model0b diff_score retro}
+# Regression coefficients
+gad_retro_model0b_estimates <- model0b.estimates(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(gad_retro_model0b_estimates)
+gad_retro_model0b_estimates
+
+# Regression diagnostic statistics
+gad_retro_model0b_reg_stats <- model0b.reg.stats(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(gad_retro_model0b_reg_stats)
+gad_retro_model0b_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r gad model1a diff_score retro}
+# Regression coefficients
+gad_retro_model1a_estimates <- model1a.estimates(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(gad_retro_model1a_estimates)
+gad_retro_model1a_estimates
+
+# Regression diagnostic statistics
+gad_retro_model1a_reg_stats <- model1a.reg.stats(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(gad_retro_model1a_reg_stats)
+gad_retro_model1a_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r gad model1b diff_score retro}
+# Regression coefficients
+gad_retro_model1b_estimates <- model1b.estimates(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(gad_retro_model1b_estimates)
+gad_retro_model1b_estimates
+
+# Regression diagnostic statistics
+gad_retro_model1b_reg_stats <- model1b.reg.stats(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(gad_retro_model1b_reg_stats)
+gad_retro_model1b_reg_stats
+```
+
+## Regression: Absolute scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r gad model0a sum_score retro}
+# Regression coefficients
+gad_retro_model0a_explan_estimates <- model0a.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(gad_retro_model0a_explan_estimates)
+gad_retro_model0a_explan_estimates
+
+# Regression diagnostic statistics
+gad_retro_model0a_explan_reg_stats <- model0a.explan.reg.stats(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(gad_retro_model0a_explan_reg_stats)
+gad_retro_model0a_explan_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r gad model0b sum_score retro}
+# Regression coefficients
+gad_retro_model0b_explan_estimates <- model0b.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(gad_retro_model0b_explan_estimates)
+gad_retro_model0b_explan_estimates
+
+# Regression diagnostic statistics
+gad_retro_model0b_explan_reg_stats <- model0b.explan.reg.stats(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(gad_retro_model0b_explan_reg_stats)
+gad_retro_model0b_explan_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r gad model1a sum_score retro}
+# Regression coefficients
+gad_retro_model1a_explan_estimates <- model1a.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(gad_retro_model1a_explan_estimates)
+gad_retro_model1a_explan_estimates
+
+# Regression diagnostic statistics
+gad_retro_model1a_explan_reg_stats <- model1a.explan.reg.stats(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(gad_retro_model1a_explan_reg_stats)
+gad_retro_model1a_explan_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r gad model1b sum_score retro}
+# Regression coefficients
+gad_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(gad_retro_model1b_explan_estimates)
+gad_retro_model1b_explan_estimates
+
+# Regression diagnostic statistics
+gad_retro_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(gad_retro_model1b_explan_reg_stats)
+gad_retro_model1b_explan_reg_stats
+```
+
+
+
+# PHQ prepan
+## Regression: Change scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r phq model0a diff_score prepan}
+# Regression coefficients
+phq_prepan_model0a_estimates <- model0a.estimates(outcome = "phq.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(phq_prepan_model0a_estimates)
+phq_prepan_model0a_estimates
+
+# Regression diagnostic statistics
+phq_prepan_model0a_reg_stats <- model0a.reg.stats(outcome = "phq.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(phq_prepan_model0a_reg_stats)
+phq_prepan_model0a_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r phq model0b diff_score prepan}
+# Regression coefficients
+phq_prepan_model0b_estimates <- model0b.estimates(outcome = "phq.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(phq_prepan_model0b_estimates)
+phq_prepan_model0b_estimates
+
+# Regression diagnostic statistics
+phq_prepan_model0b_reg_stats <- model0b.reg.stats(outcome = "phq.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(phq_prepan_model0b_reg_stats)
+phq_prepan_model0b_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r phq model1a diff_score prepan}
+# Regression coefficients
+phq_prepan_model1a_estimates <- model1a.estimates(outcome = "phq.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(phq_prepan_model1a_estimates)
+phq_prepan_model1a_estimates
+
+# Regression diagnostic statistics
+phq_prepan_model1a_reg_stats <- model1a.reg.stats(outcome = "phq.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(phq_prepan_model1a_reg_stats)
+phq_prepan_model1a_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r phq model1b diff_score prepan}
+# Regression coefficients
+phq_prepan_model1b_estimates <- model1b.estimates(outcome = "phq.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(phq_prepan_model1b_estimates)
+phq_prepan_model1b_estimates
+
+# Regression diagnostic statistics
+phq_prepan_model1b_reg_stats <- model1b.reg.stats(outcome = "phq.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(phq_prepan_model1b_reg_stats)
+phq_prepan_model1b_reg_stats
+```
+
+## Regression: Absolute scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r phq model0a sum_score prepan}
+# Regression coefficients
+phq_prepan_model0a_explan_estimates <- model0a.explan.estimates(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(phq_prepan_model0a_explan_estimates)
+phq_prepan_model0a_explan_estimates
+
+# Regression diagnostic statistics
+phq_prepan_model0a_explan_reg_stats <- model0a.explan.reg.stats(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(phq_prepan_model0a_explan_reg_stats)
+phq_prepan_model0a_explan_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r phq model0b sum_score prepan}
+# Regression coefficients
+phq_prepan_model0b_explan_estimates <- model0b.explan.estimates(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(phq_prepan_model0b_explan_estimates)
+phq_prepan_model0b_explan_estimates
+
+# Regression diagnostic statistics
+phq_prepan_model0b_explan_reg_stats <- model0b.explan.reg.stats(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(phq_prepan_model0b_explan_reg_stats)
+phq_prepan_model0b_explan_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r phq model1a sum_score prepan}
+# Regression coefficients
+phq_prepan_model1a_explan_estimates <- model1a.explan.estimates(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(phq_prepan_model1a_explan_estimates)
+phq_prepan_model1a_explan_estimates
+
+# Regression diagnostic statistics
+phq_prepan_model1a_explan_reg_stats <- model1a.explan.reg.stats(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(phq_prepan_model1a_explan_reg_stats)
+phq_prepan_model1a_explan_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r phq model1b sum_score prepan}
+# Regression coefficients
+phq_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(phq_prepan_model1b_explan_estimates)
+phq_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+phq_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(phq_prepan_model1b_explan_reg_stats)
+phq_prepan_model1b_explan_reg_stats
+```
+
+
+# PHQ retro
+## Regression: Change scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r phq model0a diff_score retro}
+# Regression coefficients
+phq_retro_model0a_estimates <- model0a.estimates(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(phq_retro_model0a_estimates)
+phq_retro_model0a_estimates
+
+# Regression diagnostic statistics
+phq_retro_model0a_reg_stats <- model0a.reg.stats(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(phq_retro_model0a_reg_stats)
+phq_retro_model0a_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r phq model0b diff_score retro}
+# Regression coefficients
+phq_retro_model0b_estimates <- model0b.estimates(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(phq_retro_model0b_estimates)
+phq_retro_model0b_estimates
+
+# Regression diagnostic statistics
+phq_retro_model0b_reg_stats <- model0b.reg.stats(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(phq_retro_model0b_reg_stats)
+phq_retro_model0b_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r phq model1a diff_score retro}
+# Regression coefficients
+phq_retro_model1a_estimates <- model1a.estimates(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(phq_retro_model1a_estimates)
+phq_retro_model1a_estimates
+
+# Regression diagnostic statistics
+phq_retro_model1a_reg_stats <- model1a.reg.stats(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(phq_retro_model1a_reg_stats)
+phq_retro_model1a_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r phq model1b diff_score retro}
+# Regression coefficients
+phq_retro_model1b_estimates <- model1b.estimates(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(phq_retro_model1b_estimates)
+phq_retro_model1b_estimates
+
+# Regression diagnostic statistics
+phq_retro_model1b_reg_stats <- model1b.reg.stats(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(phq_retro_model1b_reg_stats)
+phq_retro_model1b_reg_stats
+```
+
+## Regression: Absolute scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r phq model0a sum_score retro}
+# Regression coefficients
+phq_retro_model0a_explan_estimates <- model0a.explan.estimates(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(phq_retro_model0a_explan_estimates)
+phq_retro_model0a_explan_estimates
+
+# Regression diagnostic statistics
+phq_retro_model0a_explan_reg_stats <- model0a.explan.reg.stats(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(phq_retro_model0a_explan_reg_stats)
+phq_retro_model0a_explan_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r phq model0b sum_score retro}
+# Regression coefficients
+phq_retro_model0b_explan_estimates <- model0b.explan.estimates(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(phq_retro_model0b_explan_estimates)
+phq_retro_model0b_explan_estimates
+
+# Regression diagnostic statistics
+phq_retro_model0b_explan_reg_stats <- model0b.explan.reg.stats(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(phq_retro_model0b_explan_reg_stats)
+phq_retro_model0b_explan_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r phq model1a sum_score retro}
+# Regression coefficients
+phq_retro_model1a_explan_estimates <- model1a.explan.estimates(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(phq_retro_model1a_explan_estimates)
+phq_retro_model1a_explan_estimates
+
+# Regression diagnostic statistics
+phq_retro_model1a_explan_reg_stats <- model1a.explan.reg.stats(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(phq_retro_model1a_explan_reg_stats)
+phq_retro_model1a_explan_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r phq model1b sum_score retro}
+# Regression coefficients
+phq_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(phq_retro_model1b_explan_estimates)
+phq_retro_model1b_explan_estimates
+
+# Regression diagnostic statistics
+phq_retro_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(phq_retro_model1b_explan_reg_stats)
+phq_retro_model1b_explan_reg_stats
+```
+
+
+# OCIR prepan
+## Regression: Change scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r ocir model0a diff_score prepan}
+# Regression coefficients
+ocir_prepan_model0a_estimates <- model0a.estimates(outcome = "ocir.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(ocir_prepan_model0a_estimates)
+ocir_prepan_model0a_estimates
+
+# Regression diagnostic statistics
+ocir_prepan_model0a_reg_stats <- model0a.reg.stats(outcome = "ocir.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(ocir_prepan_model0a_reg_stats)
+ocir_prepan_model0a_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r ocir model0b diff_score prepan}
+# Regression coefficients
+ocir_prepan_model0b_estimates <- model0b.estimates(outcome = "ocir.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(ocir_prepan_model0b_estimates)
+ocir_prepan_model0b_estimates
+
+# Regression diagnostic statistics
+ocir_prepan_model0b_reg_stats <- model0b.reg.stats(outcome = "ocir.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(ocir_prepan_model0b_reg_stats)
+ocir_prepan_model0b_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r ocir model1a diff_score prepan}
+# Regression coefficients
+ocir_prepan_model1a_estimates <- model1a.estimates(outcome = "ocir.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(ocir_prepan_model1a_estimates)
+ocir_prepan_model1a_estimates
+
+# Regression diagnostic statistics
+ocir_prepan_model1a_reg_stats <- model1a.reg.stats(outcome = "ocir.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(ocir_prepan_model1a_reg_stats)
+ocir_prepan_model1a_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r ocir model1b diff_score prepan}
+# Regression coefficients
+ocir_prepan_model1b_estimates <- model1b.estimates(outcome = "ocir.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(ocir_prepan_model1b_estimates)
+ocir_prepan_model1b_estimates
+
+# Regression diagnostic statistics
+ocir_prepan_model1b_reg_stats <- model1b.reg.stats(outcome = "ocir.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(ocir_prepan_model1b_reg_stats)
+ocir_prepan_model1b_reg_stats
+```
+
+## Regression: Absolute scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r ocir model0a sum_score prepan}
+# Regression coefficients
+ocir_prepan_model0a_explan_estimates <- model0a.explan.estimates(outcome = "ocir.sum_score_base",
+                         explan_var = "ocir.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(ocir_prepan_model0a_explan_estimates)
+ocir_prepan_model0a_explan_estimates
+
+# Regression diagnostic statistics
+ocir_prepan_model0a_explan_reg_stats <- model0a.explan.reg.stats(outcome = "ocir.sum_score_base",
+                         explan_var = "ocir.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(ocir_prepan_model0a_explan_reg_stats)
+ocir_prepan_model0a_explan_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r ocir model0b sum_score prepan}
+# Regression coefficients
+ocir_prepan_model0b_explan_estimates <- model0b.explan.estimates(outcome = "ocir.sum_score_base",
+                         explan_var = "ocir.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(ocir_prepan_model0b_explan_estimates)
+ocir_prepan_model0b_explan_estimates
+
+# Regression diagnostic statistics
+ocir_prepan_model0b_explan_reg_stats <- model0b.explan.reg.stats(outcome = "ocir.sum_score_base",
+                         explan_var = "ocir.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(ocir_prepan_model0b_explan_reg_stats)
+ocir_prepan_model0b_explan_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r ocir model1a sum_score prepan}
+# Regression coefficients
+ocir_prepan_model1a_explan_estimates <- model1a.explan.estimates(outcome = "ocir.sum_score_base",
+                         explan_var = "ocir.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(ocir_prepan_model1a_explan_estimates)
+ocir_prepan_model1a_explan_estimates
+
+# Regression diagnostic statistics
+ocir_prepan_model1a_explan_reg_stats <- model1a.explan.reg.stats(outcome = "ocir.sum_score_base",
+                         explan_var = "ocir.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(ocir_prepan_model1a_explan_reg_stats)
+ocir_prepan_model1a_explan_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r ocir model1b sum_score prepan}
+# Regression coefficients
+ocir_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "ocir.sum_score_base",
+                         explan_var = "ocir.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(ocir_prepan_model1b_explan_estimates)
+ocir_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+ocir_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "ocir.sum_score_base",
+                         explan_var = "ocir.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(ocir_prepan_model1b_explan_reg_stats)
+ocir_prepan_model1b_explan_reg_stats
+```
+
+
+# OCIR retro
+## Regression: Change scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r ocir model0a diff_score retro}
+# Regression coefficients
+ocir_retro_model0a_estimates <- model0a.estimates(outcome = "ocir.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(ocir_retro_model0a_estimates)
+ocir_retro_model0a_estimates
+
+# Regression diagnostic statistics
+ocir_retro_model0a_reg_stats <- model0a.reg.stats(outcome = "ocir.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(ocir_retro_model0a_reg_stats)
+ocir_retro_model0a_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r ocir model0b diff_score retro}
+# Regression coefficients
+ocir_retro_model0b_estimates <- model0b.estimates(outcome = "ocir.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(ocir_retro_model0b_estimates)
+ocir_retro_model0b_estimates
+
+# Regression diagnostic statistics
+ocir_retro_model0b_reg_stats <- model0b.reg.stats(outcome = "ocir.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(ocir_retro_model0b_reg_stats)
+ocir_retro_model0b_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r ocir model1a diff_score retro}
+# Regression coefficients
+ocir_retro_model1a_estimates <- model1a.estimates(outcome = "ocir.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(ocir_retro_model1a_estimates)
+ocir_retro_model1a_estimates
+
+# Regression diagnostic statistics
+ocir_retro_model1a_reg_stats <- model1a.reg.stats(outcome = "ocir.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(ocir_retro_model1a_reg_stats)
+ocir_retro_model1a_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r ocir model1b diff_score retro}
+# Regression coefficients
+ocir_retro_model1b_estimates <- model1b.estimates(outcome = "ocir.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(ocir_retro_model1b_estimates)
+ocir_retro_model1b_estimates
+
+# Regression diagnostic statistics
+ocir_retro_model1b_reg_stats <- model1b.reg.stats(outcome = "ocir.diff_score_base_retro",
+                                                 data_set = "dat.retro")
+kable(ocir_retro_model1b_reg_stats)
+ocir_retro_model1b_reg_stats
+```
+
+## Regression: Absolute scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r ocir model0a sum_score retro}
+# Regression coefficients
+ocir_retro_model0a_explan_estimates <- model0a.explan.estimates(outcome = "ocir.sum_score_base",
+                                                               explan_var = "ocir.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(ocir_retro_model0a_explan_estimates)
+ocir_retro_model0a_explan_estimates
+
+# Regression diagnostic statistics
+ocir_retro_model0a_explan_reg_stats <- model0a.explan.reg.stats(outcome = "ocir.sum_score_base",
+                                                               explan_var = "ocir.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(ocir_retro_model0a_explan_reg_stats)
+ocir_retro_model0a_explan_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r ocir model0b sum_score retro}
+# Regression coefficients
+ocir_retro_model0b_explan_estimates <- model0b.explan.estimates(outcome = "ocir.sum_score_base",
+                                                               explan_var = "ocir.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(ocir_retro_model0b_explan_estimates)
+ocir_retro_model0b_explan_estimates
+
+# Regression diagnostic statistics
+ocir_retro_model0b_explan_reg_stats <- model0b.explan.reg.stats(outcome = "ocir.sum_score_base",
+                                                               explan_var = "ocir.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(ocir_retro_model0b_explan_reg_stats)
+ocir_retro_model0b_explan_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r ocir model1a sum_score retro}
+# Regression coefficients
+ocir_retro_model1a_explan_estimates <- model1a.explan.estimates(outcome = "ocir.sum_score_base",
+                                                               explan_var = "ocir.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(ocir_retro_model1a_explan_estimates)
+ocir_retro_model1a_explan_estimates
+
+# Regression diagnostic statistics
+ocir_retro_model1a_explan_reg_stats <- model1a.explan.reg.stats(outcome = "ocir.sum_score_base",
+                                                               explan_var = "ocir.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(ocir_retro_model1a_explan_reg_stats)
+ocir_retro_model1a_explan_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r ocir model1b sum_score retro}
+# Regression coefficients
+ocir_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "ocir.sum_score_base",
+                                                               explan_var = "ocir.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(ocir_retro_model1b_explan_estimates)
+ocir_retro_model1b_explan_estimates
+
+# Regression diagnostic statistics
+ocir_retro_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "ocir.sum_score_base",
+                                                               explan_var = "ocir.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(ocir_retro_model1b_explan_reg_stats)
+ocir_retro_model1b_explan_reg_stats
+```
+
+
+
+# PCL prepan
+## Regression: Change scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r pcl model0a diff_score prepan}
+# Regression coefficients
+pcl_prepan_model0a_estimates <- model0a.estimates(outcome = "pcl.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(pcl_prepan_model0a_estimates)
+pcl_prepan_model0a_estimates
+
+# Regression diagnostic statistics
+pcl_prepan_model0a_reg_stats <- model0a.reg.stats(outcome = "pcl.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(pcl_prepan_model0a_reg_stats)
+pcl_prepan_model0a_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r pcl model0b diff_score prepan}
+# Regression coefficients
+pcl_prepan_model0b_estimates <- model0b.estimates(outcome = "pcl.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(pcl_prepan_model0b_estimates)
+pcl_prepan_model0b_estimates
+
+# Regression diagnostic statistics
+pcl_prepan_model0b_reg_stats <- model0b.reg.stats(outcome = "pcl.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(pcl_prepan_model0b_reg_stats)
+pcl_prepan_model0b_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r pcl model1a diff_score prepan}
+# Regression coefficients
+pcl_prepan_model1a_estimates <- model1a.estimates(outcome = "pcl.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(pcl_prepan_model1a_estimates)
+pcl_prepan_model1a_estimates
+
+# Regression diagnostic statistics
+pcl_prepan_model1a_reg_stats <- model1a.reg.stats(outcome = "pcl.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(pcl_prepan_model1a_reg_stats)
+pcl_prepan_model1a_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r pcl model1b diff_score prepan}
+# Regression coefficients
+pcl_prepan_model1b_estimates <- model1b.estimates(outcome = "pcl.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(pcl_prepan_model1b_estimates)
+pcl_prepan_model1b_estimates
+
+# Regression diagnostic statistics
+pcl_prepan_model1b_reg_stats <- model1b.reg.stats(outcome = "pcl.diff_score_base_prepan",
+                  data_set = "dat.prepan")
+kable(pcl_prepan_model1b_reg_stats)
+pcl_prepan_model1b_reg_stats
+```
+
+## Regression: Absolute scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r pcl model0a sum_score prepan}
+# Regression coefficients
+pcl_prepan_model0a_explan_estimates <- model0a.explan.estimates(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(pcl_prepan_model0a_explan_estimates)
+pcl_prepan_model0a_explan_estimates
+
+# Regression diagnostic statistics
+pcl_prepan_model0a_explan_reg_stats <- model0a.explan.reg.stats(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(pcl_prepan_model0a_explan_reg_stats)
+pcl_prepan_model0a_explan_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r pcl model0b sum_score prepan}
+# Regression coefficients
+pcl_prepan_model0b_explan_estimates <- model0b.explan.estimates(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(pcl_prepan_model0b_explan_estimates)
+pcl_prepan_model0b_explan_estimates
+
+# Regression diagnostic statistics
+pcl_prepan_model0b_explan_reg_stats <- model0b.explan.reg.stats(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(pcl_prepan_model0b_explan_reg_stats)
+pcl_prepan_model0b_explan_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r pcl model1a sum_score prepan}
+# Regression coefficients
+pcl_prepan_model1a_explan_estimates <- model1a.explan.estimates(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(pcl_prepan_model1a_explan_estimates)
+pcl_prepan_model1a_explan_estimates
+
+# Regression diagnostic statistics
+pcl_prepan_model1a_explan_reg_stats <- model1a.explan.reg.stats(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(pcl_prepan_model1a_explan_reg_stats)
+pcl_prepan_model1a_explan_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r pcl model1b sum_score prepan}
+# Regression coefficients
+pcl_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(pcl_prepan_model1b_explan_estimates)
+pcl_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+pcl_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan")
+kable(pcl_prepan_model1b_explan_reg_stats)
+pcl_prepan_model1b_explan_reg_stats
 ```
 
 
