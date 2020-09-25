@@ -2629,6 +2629,71 @@ model1b.explan.reg.stats <- function(outcome, explan_var, data_set) {
 }
 ```
 
+
+#GAD baseline, not controlling for prior symptoms
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r gad model0a absolute whole sample}
+# Regression coefficients
+gad_baseline_model0a_estimates <- model0a.estimates(outcome = "gad.sum_score_base",
+                                                 data_set = "dat")
+kable(gad_baseline_model0a_estimates)
+gad_baseline_model0a_estimates
+
+# Regression diagnostic statistics
+gad_baseline_model0a_reg_stats <- model0a.reg.stats(outcome = "gad.sum_score_base",
+                                                 data_set = "dat")
+kable(gad_baseline_model0a_reg_stats)
+gad_baseline_model0a_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r gad model0b absolute whole sample}
+# Regression coefficients
+gad_baseline_model0b_estimates <- model0b.estimates(outcome = "gad.sum_score_base",
+                                                 data_set = "dat")
+kable(gad_baseline_model0b_estimates)
+gad_baseline_model0b_estimates
+
+# Regression diagnostic statistics
+gad_baseline_model0b_reg_stats <- model0b.reg.stats(outcome = "gad.sum_score_base",
+                                                 data_set = "dat")
+kable(gad_baseline_model0b_reg_stats)
+gad_baseline_model0b_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r gad model1a absolute whole sample}
+# Regression coefficients
+gad_baseline_model1a_estimates <- model1a.estimates(outcome = "gad.sum_score_base",
+                                                 data_set = "dat")
+kable(gad_baseline_model1a_estimates)
+gad_baseline_model1a_estimates
+
+# Regression diagnostic statistics
+gad_baseline_model1a_reg_stats <- model1a.reg.stats(outcome = "gad.sum_score_base",
+                                                 data_set = "dat")
+kable(gad_baseline_model1a_reg_stats)
+gad_baseline_model1a_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r gad model1b absolute whole sample}
+# Regression coefficients
+gad_baseline_model1b_estimates <- model1b.estimates(outcome = "gad.sum_score_base",
+                                                 data_set = "dat")
+kable(gad_baseline_model1b_estimates)
+gad_baseline_model1b_estimates
+
+# Regression diagnostic statistics
+gad_baseline_model1b_reg_stats <- model1b.reg.stats(outcome = "gad.sum_score_base",
+                                                 data_set = "dat")
+kable(gad_baseline_model1b_reg_stats)
+gad_baseline_model1b_reg_stats
+```
+
+
 # GAD prepan
 ## Regression: Change scores
 ### Model 0a: Disorder_hierarchical, Unadjusted
@@ -2829,6 +2894,7 @@ kable(gad_retro_model1b_reg_stats)
 gad_retro_model1b_reg_stats
 ```
 
+
 ## Regression: Absolute scores
 ### Model 0a: Disorder_hierarchical, Unadjusted
 ```{r gad model0a sum_score retro}
@@ -2899,6 +2965,70 @@ gad_retro_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "gad.su
 kable(gad_retro_model1b_explan_reg_stats)
 gad_retro_model1b_explan_reg_stats
 ```
+
+#PHQ baseline, not controlling for prior symptoms
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r phq model0a absolute whole sample}
+# Regression coefficients
+phq_baseline_model0a_estimates <- model0a.estimates(outcome = "phq.sum_score_base",
+                                                 data_set = "dat")
+kable(phq_baseline_model0a_estimates)
+phq_baseline_model0a_estimates
+
+# Regression diagnostic statistics
+phq_baseline_model0a_reg_stats <- model0a.reg.stats(outcome = "phq.sum_score_base",
+                                                 data_set = "dat")
+kable(phq_baseline_model0a_reg_stats)
+phq_baseline_model0a_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r phq model0b absolute whole sample}
+# Regression coefficients
+phq_baseline_model0b_estimates <- model0b.estimates(outcome = "phq.sum_score_base",
+                                                 data_set = "dat")
+kable(phq_baseline_model0b_estimates)
+phq_baseline_model0b_estimates
+
+# Regression diagnostic statistics
+phq_baseline_model0b_reg_stats <- model0b.reg.stats(outcome = "phq.sum_score_base",
+                                                 data_set = "dat")
+kable(phq_baseline_model0b_reg_stats)
+phq_baseline_model0b_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r phq model1a absolute whole sample}
+# Regression coefficients
+phq_baseline_model1a_estimates <- model1a.estimates(outcome = "phq.sum_score_base",
+                                                 data_set = "dat")
+kable(phq_baseline_model1a_estimates)
+phq_baseline_model1a_estimates
+
+# Regression diagnostic statistics
+phq_baseline_model1a_reg_stats <- model1a.reg.stats(outcome = "phq.sum_score_base",
+                                                 data_set = "dat")
+kable(phq_baseline_model1a_reg_stats)
+phq_baseline_model1a_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r phq model1b absolute whole sample}
+# Regression coefficients
+phq_baseline_model1b_estimates <- model1b.estimates(outcome = "phq.sum_score_base",
+                                                 data_set = "dat")
+kable(phq_baseline_model1b_estimates)
+phq_baseline_model1b_estimates
+
+# Regression diagnostic statistics
+phq_baseline_model1b_reg_stats <- model1b.reg.stats(outcome = "phq.sum_score_base",
+                                                 data_set = "dat")
+kable(phq_baseline_model1b_reg_stats)
+phq_baseline_model1b_reg_stats
+```
+
 
 
 
@@ -3171,6 +3301,69 @@ phq_retro_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.su
                                                                data_set = "dat.retro")
 kable(phq_retro_model1b_explan_reg_stats)
 phq_retro_model1b_explan_reg_stats
+```
+
+# OCI-R baseline, not controlling for prior symptoms
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r ocir model0a absolute whole sample}
+# Regression coefficients
+ocir_baseline_model0a_estimates <- model0a.estimates(outcome = "ocir.sum_score_base",
+                                                 data_set = "dat")
+kable(ocir_baseline_model0a_estimates)
+ocir_baseline_model0a_estimates
+
+# Regression diagnostic statistics
+ocir_baseline_model0a_reg_stats <- model0a.reg.stats(outcome = "ocir.sum_score_base",
+                                                 data_set = "dat")
+kable(ocir_baseline_model0a_reg_stats)
+ocir_baseline_model0a_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r ocir model0b absolute whole sample}
+# Regression coefficients
+ocir_baseline_model0b_estimates <- model0b.estimates(outcome = "ocir.sum_score_base",
+                                                 data_set = "dat")
+kable(ocir_baseline_model0b_estimates)
+ocir_baseline_model0b_estimates
+
+# Regression diagnostic statistics
+ocir_baseline_model0b_reg_stats <- model0b.reg.stats(outcome = "ocir.sum_score_base",
+                                                 data_set = "dat")
+kable(ocir_baseline_model0b_reg_stats)
+ocir_baseline_model0b_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r ocir model1a absolute whole sample}
+# Regression coefficients
+ocir_baseline_model1a_estimates <- model1a.estimates(outcome = "ocir.sum_score_base",
+                                                 data_set = "dat")
+kable(ocir_baseline_model1a_estimates)
+ocir_baseline_model1a_estimates
+
+# Regression diagnostic statistics
+ocir_baseline_model1a_reg_stats <- model1a.reg.stats(outcome = "ocir.sum_score_base",
+                                                 data_set = "dat")
+kable(ocir_baseline_model1a_reg_stats)
+ocir_baseline_model1a_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r ocir model1b absolute whole sample}
+# Regression coefficients
+ocir_baseline_model1b_estimates <- model1b.estimates(outcome = "ocir.sum_score_base",
+                                                 data_set = "dat")
+kable(ocir_baseline_model1b_estimates)
+ocir_baseline_model1b_estimates
+
+# Regression diagnostic statistics
+ocir_baseline_model1b_reg_stats <- model1b.reg.stats(outcome = "ocir.sum_score_base",
+                                                 data_set = "dat")
+kable(ocir_baseline_model1b_reg_stats)
+ocir_baseline_model1b_reg_stats
 ```
 
 
@@ -3446,6 +3639,69 @@ ocir_retro_model1b_explan_reg_stats
 ```
 
 
+
+# PCL baseline, not controlling for prior symptoms
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r pcl model0a absolute whole sample}
+# Regression coefficients
+pcl_baseline_model0a_estimates <- model0a.estimates(outcome = "pcl.sum_score_base",
+                                                 data_set = "dat")
+kable(pcl_baseline_model0a_estimates)
+pcl_baseline_model0a_estimates
+
+# Regression diagnostic statistics
+pcl_baseline_model0a_reg_stats <- model0a.reg.stats(outcome = "pcl.sum_score_base",
+                                                 data_set = "dat")
+kable(pcl_baseline_model0a_reg_stats)
+pcl_baseline_model0a_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r pcl model0b absolute whole sample}
+# Regression coefficients
+pcl_baseline_model0b_estimates <- model0b.estimates(outcome = "pcl.sum_score_base",
+                                                 data_set = "dat")
+kable(pcl_baseline_model0b_estimates)
+pcl_baseline_model0b_estimates
+
+# Regression diagnostic statistics
+pcl_baseline_model0b_reg_stats <- model0b.reg.stats(outcome = "pcl.sum_score_base",
+                                                 data_set = "dat")
+kable(pcl_baseline_model0b_reg_stats)
+pcl_baseline_model0b_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r pcl model1a absolute whole sample}
+# Regression coefficients
+pcl_baseline_model1a_estimates <- model1a.estimates(outcome = "pcl.sum_score_base",
+                                                 data_set = "dat")
+kable(pcl_baseline_model1a_estimates)
+pcl_baseline_model1a_estimates
+
+# Regression diagnostic statistics
+pcl_baseline_model1a_reg_stats <- model1a.reg.stats(outcome = "pcl.sum_score_base",
+                                                 data_set = "dat")
+kable(pcl_baseline_model1a_reg_stats)
+pcl_baseline_model1a_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r pcl model1b absolute whole sample}
+# Regression coefficients
+pcl_baseline_model1b_estimates <- model1b.estimates(outcome = "pcl.sum_score_base",
+                                                 data_set = "dat")
+kable(pcl_baseline_model1b_estimates)
+pcl_baseline_model1b_estimates
+
+# Regression diagnostic statistics
+pcl_baseline_model1b_reg_stats <- model1b.reg.stats(outcome = "pcl.sum_score_base",
+                                                 data_set = "dat")
+kable(pcl_baseline_model1b_reg_stats)
+pcl_baseline_model1b_reg_stats
+```
 
 # PCL prepan
 ## Regression: Change scores
