@@ -1900,6 +1900,7 @@ model1b.estimates <- function(outcome, data_set) {
                              "Gender_collapsed",
                              "age_category_collapsed",
                              "Ethnicity_collapsed",
+                             "key_worker_numeric",
                              "time_diff_coping_lockdown_march_23"
                                 )
   # create the formula
