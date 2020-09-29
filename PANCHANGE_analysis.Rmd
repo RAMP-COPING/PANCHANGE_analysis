@@ -1900,7 +1900,7 @@ model1b.estimates <- function(outcome, data_set) {
                              "Gender_collapsed",
                              "age_category_collapsed",
                              "Ethnicity_collapsed",
-                             "key_worker_numeric",
+                             "key_worker",
                              "time_diff_coping_lockdown_march_23"
                                 )
   # create the formula
@@ -1950,6 +1950,7 @@ model1b.estimates <- function(outcome, data_set) {
                "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
                "Ethnicity_collapsedAfrican or African British" = "African or African British",
                "Ethnicity_collapsedOther" = "Other ethnicity",
+               "key_workerKey worker" = "Key worker",
                "time_diff_coping_lockdown_march_23" = "Time difference: Lockdown to baseline"
              ),
              "Estimate" = format(
@@ -2330,6 +2331,7 @@ model1a.explan.estimates <- function(outcome, explan_var, data_set) {
                              "Gender_collapsed",
                              "age_category_collapsed",
                              "Ethnicity_collapsed",
+                             "key_worker",
                              "time_diff_coping_lockdown_march_23"
   )
   # create the formula
@@ -2369,6 +2371,7 @@ model1a.explan.estimates <- function(outcome, explan_var, data_set) {
                "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
                "Ethnicity_collapsedAfrican or African British" = "African or African British",
                "Ethnicity_collapsedOther" = "Other ethnicity",
+               "key_workerKey worker" = "Key worker",
                "time_diff_coping_lockdown_march_23" = "Time difference: Lockdown to baseline"
              ),
              "Estimate" = format(
@@ -2484,6 +2487,7 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
                              "Gender_collapsed",
                              "age_category_collapsed",
                              "Ethnicity_collapsed",
+                             "key_worker",
                              "time_diff_coping_lockdown_march_23"
   )
   # create the formula
@@ -2533,6 +2537,7 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
                "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
                "Ethnicity_collapsedAfrican or African British" = "African or African British",
                "Ethnicity_collapsedOther" = "Other ethnicity",
+               "key_workerKey worker" = "Key worker",
                "time_diff_coping_lockdown_march_23" = "Time difference: Lockdown to baseline"
              ),
              "Estimate" = format(
@@ -2631,7 +2636,7 @@ model1b.explan.reg.stats <- function(outcome, explan_var, data_set) {
 ```
 
 
-#GAD baseline, not controlling for prior symptoms
+# GAD baseline, not controlling for prior symptoms
 ### Model 0a: Disorder_hierarchical, Unadjusted
 ```{r gad model0a absolute whole sample}
 # Regression coefficients
@@ -2967,7 +2972,7 @@ kable(gad_retro_model1b_explan_reg_stats)
 gad_retro_model1b_explan_reg_stats
 ```
 
-#PHQ baseline, not controlling for prior symptoms
+# PHQ baseline, not controlling for prior symptoms
 ### Model 0a: Disorder_hierarchical, Unadjusted
 ```{r phq model0a absolute whole sample}
 # Regression coefficients
