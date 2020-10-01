@@ -8042,7 +8042,7 @@ dat <- dat %>%
       )
   )
 
-summary(dat$phq.diff_score_prepan_retro)
+summary(dat$phq.diff_score_retro_prepan)
 
 # Difference score for prepandemic and baseline phq sum scores
 dat <- dat %>%
@@ -8053,7 +8053,7 @@ dat <- dat %>%
       )
   )
 
-summary(dat$phq.diff_score_prepan_base)
+summary(dat$phq.diff_score_base_prepan)
 } 
 
 # Difference score for retrospective and baseline phq sum scores
@@ -8092,7 +8092,7 @@ dat <- dat %>%
       )
   )
 
-summary(dat$gad.diff_score_prepan_base)
+summary(dat$gad.diff_score_base_prepan)
 }
 
 # Difference score for retrospective and baseline gad sum scores
@@ -8121,7 +8121,7 @@ dat <- dat %>%
       )
   )
 
-summary(dat$pcl.diff_score_prepan_base)
+summary(dat$pcl.diff_score_base_prepan)
 }
 ```
 
@@ -8159,7 +8159,7 @@ dat <- dat %>%
       )
   )
 
-summary(dat$ocir.diff_score_prepan_base)
+summary(dat$ocir.diff_score_base_prepan)
 }
 # Difference score for retrospective and baseline ocir sum scores
 dat <- dat %>%
