@@ -275,7 +275,7 @@ Attaching package: 'polycor'</code></pre>
 <pre><code>corrplot 0.84 loaded</code></pre>
 <pre><code>Warning: package 'patchwork' was built under R version 3.6.2</code></pre>
 <pre><code>Warning: package 'broom' was built under R version 3.6.2</code></pre>
-<pre><code>── Attaching packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>── Attaching packages ────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
 <pre><code>✓ ggplot2 3.3.2     ✓ purrr   0.3.4
 ✓ tibble  3.0.3     ✓ dplyr   1.0.0
 ✓ tidyr   1.1.0     ✓ stringr 1.4.0
@@ -285,7 +285,7 @@ Attaching package: 'polycor'</code></pre>
 <pre><code>Warning: package 'tidyr' was built under R version 3.6.2</code></pre>
 <pre><code>Warning: package 'purrr' was built under R version 3.6.2</code></pre>
 <pre><code>Warning: package 'dplyr' was built under R version 3.6.2</code></pre>
-<pre><code>── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>── Conflicts ───────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 x ggplot2::%+%()   masks psych::%+%()
 x ggplot2::alpha() masks psych::alpha()
 x dplyr::filter()  masks stats::filter()
@@ -309,7 +309,7 @@ x tibble::view()   masks summarytools::view()</code></pre>
 </div>
 <div id="read-in-data" class="section level2">
 <h2>Read in data</h2>
-<pre><code>[1] 63266   582</code></pre>
+<pre><code>[1] 65223   582</code></pre>
 <pre><code>  [1] &quot;Sample&quot;                                                          
   [2] &quot;ID&quot;                                                              
   [3] &quot;startDate.prepandemic&quot;                                           
@@ -904,27 +904,27 @@ Type: Factor
 
                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 --------------------- ------- --------- -------------- --------- --------------
-             Negative     540     81.33          81.33      0.85           0.85
-             Positive     116     17.47          98.80      0.18           1.04
-      Double positive       8      1.20         100.00      0.01           1.05
-                 &lt;NA&gt;   62602                              98.95         100.00
-                Total   63266    100.00         100.00    100.00         100.00</code></pre>
+             Negative     553     81.56          81.56      0.85           0.85
+             Positive     116     17.11          98.67      0.18           1.03
+      Double positive       9      1.33         100.00      0.01           1.04
+                 &lt;NA&gt;   64545                              98.96         100.00
+                Total   65223    100.00         100.00    100.00         100.00</code></pre>
 <pre><code>Frequencies  
 dat$covid_test_positive  
 Type: Factor  
 
                   Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 -------------- ------- --------- -------------- --------- --------------
-      Negative     540     81.33          81.33      0.85           0.85
-      Positive     124     18.67         100.00      0.20           1.05
-          &lt;NA&gt;   62602                              98.95         100.00
-         Total   63266    100.00         100.00    100.00         100.00</code></pre>
+      Negative     553     81.56          81.56      0.85           0.85
+      Positive     125     18.44         100.00      0.19           1.04
+          &lt;NA&gt;   64545                              98.96         100.00
+         Total   65223    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="covid-swab-test-positive" class="section level2">
 <h2>COVID swab test positive</h2>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["respiratory.throat_swab_test_nose"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["Sample"],"name":[2],"type":["chr"],"align":["left"]},{"label":["n"],"name":[3],"type":["int"],"align":["right"]},{"label":["Prop"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Positive","2":"EDGI","3":"1","4":"0.00"},{"1":"Positive","2":"GLAD","3":"59","4":"0.00"},{"1":"Positive","2":"NBR","3":"46","4":"0.00"},{"1":"Positive","2":"RAMP","3":"10","4":"0.00"},{"1":"Negative","2":"EDGI","3":"7","4":"0.00"},{"1":"Negative","2":"GLAD","3":"363","4":"0.01"},{"1":"Negative","2":"NBR","3":"122","4":"0.00"},{"1":"Negative","2":"RAMP","3":"27","4":"0.00"},{"1":"Result awaited","2":"EDGI","3":"2","4":"0.00"},{"1":"Result awaited","2":"GLAD","3":"80","4":"0.00"},{"1":"Result awaited","2":"NBR","3":"49","4":"0.00"},{"1":"Result awaited","2":"RAMP","3":"7","4":"0.00"},{"1":"NA","2":"EDGI","3":"1940","4":"0.03"},{"1":"NA","2":"GLAD","3":"38120","4":"0.60"},{"1":"NA","2":"NBR","3":"13772","4":"0.22"},{"1":"NA","2":"RAMP","3":"8661","4":"0.14"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["respiratory.throat_swab_test_nose"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["Sample"],"name":[2],"type":["chr"],"align":["left"]},{"label":["n"],"name":[3],"type":["int"],"align":["right"]},{"label":["Prop"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Positive","2":"EDGI","3":"1","4":"0.00"},{"1":"Positive","2":"GLAD","3":"60","4":"0.00"},{"1":"Positive","2":"NBR","3":"46","4":"0.00"},{"1":"Positive","2":"RAMP","3":"10","4":"0.00"},{"1":"Negative","2":"EDGI","3":"9","4":"0.00"},{"1":"Negative","2":"GLAD","3":"367","4":"0.01"},{"1":"Negative","2":"NBR","3":"122","4":"0.00"},{"1":"Negative","2":"RAMP","3":"30","4":"0.00"},{"1":"Result awaited","2":"EDGI","3":"2","4":"0.00"},{"1":"Result awaited","2":"GLAD","3":"81","4":"0.00"},{"1":"Result awaited","2":"NBR","3":"49","4":"0.00"},{"1":"Result awaited","2":"RAMP","3":"7","4":"0.00"},{"1":"NA","2":"EDGI","3":"2174","4":"0.03"},{"1":"NA","2":"GLAD","3":"38562","4":"0.59"},{"1":"NA","2":"NBR","3":"13772","4":"0.21"},{"1":"NA","2":"RAMP","3":"9931","4":"0.15"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -932,7 +932,7 @@ Type: Factor
 <h2>antibody test</h2>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["respiratory.results_antibody_test"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["Sample"],"name":[2],"type":["chr"],"align":["left"]},{"label":["n"],"name":[3],"type":["int"],"align":["right"]},{"label":["Prop"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Positive","2":"EDGI","3":"1","4":"0.00"},{"1":"Positive","2":"GLAD","3":"12","4":"0.00"},{"1":"Positive","2":"NBR","3":"7","4":"0.00"},{"1":"Positive","2":"RAMP","3":"2","4":"0.00"},{"1":"Negative","2":"EDGI","3":"3","4":"0.00"},{"1":"Negative","2":"GLAD","3":"25","4":"0.00"},{"1":"Negative","2":"NBR","3":"12","4":"0.00"},{"1":"Negative","2":"RAMP","3":"2","4":"0.00"},{"1":"Result awaited","2":"GLAD","3":"18","4":"0.00"},{"1":"Result awaited","2":"NBR","3":"5","4":"0.00"},{"1":"Result awaited","2":"RAMP","3":"2","4":"0.00"},{"1":"NA","2":"EDGI","3":"1946","4":"0.03"},{"1":"NA","2":"GLAD","3":"38567","4":"0.61"},{"1":"NA","2":"NBR","3":"13965","4":"0.22"},{"1":"NA","2":"RAMP","3":"8699","4":"0.14"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["respiratory.results_antibody_test"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["Sample"],"name":[2],"type":["chr"],"align":["left"]},{"label":["n"],"name":[3],"type":["int"],"align":["right"]},{"label":["Prop"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"Positive","2":"EDGI","3":"1","4":"0.00"},{"1":"Positive","2":"GLAD","3":"14","4":"0.00"},{"1":"Positive","2":"NBR","3":"7","4":"0.00"},{"1":"Positive","2":"RAMP","3":"2","4":"0.00"},{"1":"Negative","2":"EDGI","3":"4","4":"0.00"},{"1":"Negative","2":"GLAD","3":"30","4":"0.00"},{"1":"Negative","2":"NBR","3":"12","4":"0.00"},{"1":"Negative","2":"RAMP","3":"2","4":"0.00"},{"1":"Result awaited","2":"GLAD","3":"18","4":"0.00"},{"1":"Result awaited","2":"NBR","3":"5","4":"0.00"},{"1":"Result awaited","2":"RAMP","3":"2","4":"0.00"},{"1":"NA","2":"EDGI","3":"2181","4":"0.03"},{"1":"NA","2":"GLAD","3":"39008","4":"0.60"},{"1":"NA","2":"NBR","3":"13965","4":"0.21"},{"1":"NA","2":"RAMP","3":"9972","4":"0.15"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -940,7 +940,7 @@ Type: Factor
 <h2>COVID probable diagnosis</h2>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["covid_probable_case_incl_screening"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["Sample"],"name":[2],"type":["chr"],"align":["left"]},{"label":["n"],"name":[3],"type":["int"],"align":["right"]},{"label":["Prop"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"No COVID","2":"EDGI","3":"443","4":"0.01"},{"1":"No COVID","2":"GLAD","3":"10650","4":"0.17"},{"1":"No COVID","2":"NBR","3":"12015","4":"0.19"},{"1":"No COVID","2":"RAMP","3":"8177","4":"0.13"},{"1":"Probable COVID","2":"EDGI","3":"44","4":"0.00"},{"1":"Probable COVID","2":"GLAD","3":"1153","4":"0.02"},{"1":"Probable COVID","2":"NBR","3":"609","4":"0.01"},{"1":"Probable COVID","2":"RAMP","3":"183","4":"0.00"},{"1":"NA","2":"EDGI","3":"1463","4":"0.02"},{"1":"NA","2":"GLAD","3":"26819","4":"0.42"},{"1":"NA","2":"NBR","3":"1365","4":"0.02"},{"1":"NA","2":"RAMP","3":"345","4":"0.01"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["covid_probable_case_incl_screening"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["Sample"],"name":[2],"type":["chr"],"align":["left"]},{"label":["n"],"name":[3],"type":["int"],"align":["right"]},{"label":["Prop"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"No COVID","2":"EDGI","3":"460","4":"0.01"},{"1":"No COVID","2":"GLAD","3":"10710","4":"0.16"},{"1":"No COVID","2":"NBR","3":"12015","4":"0.18"},{"1":"No COVID","2":"RAMP","3":"8307","4":"0.13"},{"1":"Probable COVID","2":"EDGI","3":"45","4":"0.00"},{"1":"Probable COVID","2":"GLAD","3":"1162","4":"0.02"},{"1":"Probable COVID","2":"NBR","3":"609","4":"0.01"},{"1":"Probable COVID","2":"RAMP","3":"187","4":"0.00"},{"1":"NA","2":"EDGI","3":"1681","4":"0.03"},{"1":"NA","2":"GLAD","3":"27198","4":"0.42"},{"1":"NA","2":"NBR","3":"1365","4":"0.02"},{"1":"NA","2":"RAMP","3":"1484","4":"0.02"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -948,7 +948,7 @@ Type: Factor
 <h2>Cross table probable covid and covid test positive</h2>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["covid_probable_case_incl_screening"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["Negative"],"name":[2],"type":["int"],"align":["right"]},{"label":["Positive"],"name":[3],"type":["int"],"align":["right"]},{"label":["<NA>"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"No COVID","2":"322","3":"33","4":"30930"},{"1":"Probable COVID","2":"139","3":"85","4":"1765"},{"1":"NA","2":"79","3":"6","4":"29907"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["covid_probable_case_incl_screening"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["Negative"],"name":[2],"type":["int"],"align":["right"]},{"label":["Positive"],"name":[3],"type":["int"],"align":["right"]},{"label":["<NA>"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"No COVID","2":"328","3":"33","4":"31131"},{"1":"Probable COVID","2":"146","3":"86","4":"1771"},{"1":"NA","2":"79","3":"6","4":"31643"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -963,59 +963,59 @@ Type: Factor
 
                 Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ------------ ------- --------- -------------- --------- --------------
-       16-18    2860      4.52           4.52      4.52           4.52
-       19-25    8995     14.22          18.74     14.22          18.74
-       26-35   12920     20.42          39.16     20.42          39.16
-       36-45    9912     15.67          54.83     15.67          54.83
-       46-55   11454     18.10          72.93     18.10          72.93
-       56-65   10397     16.43          89.37     16.43          89.37
-       66-70    3689      5.83          95.20      5.83          95.20
-       71-75    2274      3.59          98.79      3.59          98.79
-       76-80     592      0.94          99.73      0.94          99.73
-       81-85     123      0.19          99.92      0.19          99.92
-       86-90      36      0.06          99.98      0.06          99.98
+       16-18    3117      4.78           4.78      4.78           4.78
+       19-25    9322     14.29          19.07     14.29          19.07
+       26-35   13254     20.32          39.39     20.32          39.39
+       36-45   10147     15.56          54.95     15.56          54.95
+       46-55   11759     18.03          72.98     18.03          72.98
+       56-65   10695     16.40          89.38     16.40          89.38
+       66-70    3788      5.81          95.18      5.81          95.18
+       71-75    2342      3.59          98.77      3.59          98.77
+       76-80     614      0.94          99.72      0.94          99.72
+       81-85     134      0.21          99.92      0.21          99.92
+       86-90      37      0.06          99.98      0.06          99.98
       91-100       9      0.01          99.99      0.01          99.99
         100+       5      0.01         100.00      0.01         100.00
         &lt;NA&gt;       0                               0.00         100.00
-       Total   63266    100.00         100.00    100.00         100.00</code></pre>
+       Total   65223    100.00         100.00    100.00         100.00</code></pre>
 <pre><code>Frequencies  
 dat$age_category_numeric  
 Type: Numeric  
 
                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ----------- ------- --------- -------------- --------- --------------
-          1    2860      4.52           4.52      4.52           4.52
-          2    8995     14.22          18.74     14.22          18.74
-          3   12920     20.42          39.16     20.42          39.16
-          4    9912     15.67          54.83     15.67          54.83
-          5   11454     18.10          72.93     18.10          72.93
-          6   10397     16.43          89.37     16.43          89.37
-          7    3689      5.83          95.20      5.83          95.20
-          8    2274      3.59          98.79      3.59          98.79
-          9     592      0.94          99.73      0.94          99.73
-         10     123      0.19          99.92      0.19          99.92
-         11      36      0.06          99.98      0.06          99.98
+          1    3117      4.78           4.78      4.78           4.78
+          2    9322     14.29          19.07     14.29          19.07
+          3   13254     20.32          39.39     20.32          39.39
+          4   10147     15.56          54.95     15.56          54.95
+          5   11759     18.03          72.98     18.03          72.98
+          6   10695     16.40          89.38     16.40          89.38
+          7    3788      5.81          95.18      5.81          95.18
+          8    2342      3.59          98.77      3.59          98.77
+          9     614      0.94          99.72      0.94          99.72
+         10     134      0.21          99.92      0.21          99.92
+         11      37      0.06          99.98      0.06          99.98
          12       9      0.01          99.99      0.01          99.99
          13       5      0.01         100.00      0.01         100.00
        &lt;NA&gt;       0                               0.00         100.00
-      Total   63266    100.00         100.00    100.00         100.00</code></pre>
+      Total   65223    100.00         100.00    100.00         100.00</code></pre>
 <pre><code>Frequencies  
 dat$age_category_collapsed  
 Type: Factor  
 
                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ----------- ------- --------- -------------- --------- --------------
-      16-18    2860      4.52           4.52      4.52           4.52
-      19-25    8995     14.22          18.74     14.22          18.74
-      26-35   12920     20.42          39.16     20.42          39.16
-      36-45    9912     15.67          54.83     15.67          54.83
-      46-55   11454     18.10          72.93     18.10          72.93
-      56-65   10397     16.43          89.37     16.43          89.37
-      66-70    3689      5.83          95.20      5.83          95.20
-      71-75    2274      3.59          98.79      3.59          98.79
-        76+     765      1.21         100.00      1.21         100.00
+      16-18    3117      4.78           4.78      4.78           4.78
+      19-25    9322     14.29          19.07     14.29          19.07
+      26-35   13254     20.32          39.39     20.32          39.39
+      36-45   10147     15.56          54.95     15.56          54.95
+      46-55   11759     18.03          72.98     18.03          72.98
+      56-65   10695     16.40          89.38     16.40          89.38
+      66-70    3788      5.81          95.18      5.81          95.18
+      71-75    2342      3.59          98.77      3.59          98.77
+        76+     799      1.23         100.00      1.23         100.00
        &lt;NA&gt;       0                               0.00         100.00
-      Total   63266    100.00         100.00    100.00         100.00</code></pre>
+      Total   65223    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="gender" class="section level2">
 <h2>Gender</h2>
@@ -1025,35 +1025,35 @@ Type: Factor
 
                                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 --------------------------- ------- --------- -------------- --------- --------------
-                       Male   15770     24.93          24.93     24.93          24.93
-                     Female   46546     73.57          98.50     73.57          98.50
-                 Non-binary     697      1.10          99.60      1.10          99.60
-      Prefer to self-define     253      0.40         100.00      0.40         100.00
+                       Male   16172     24.79          24.79     24.79          24.79
+                     Female   48064     73.69          98.49     73.69          98.49
+                 Non-binary     728      1.12          99.60      1.12          99.60
+      Prefer to self-define     259      0.40         100.00      0.40         100.00
                        &lt;NA&gt;       0                               0.00         100.00
-                      Total   63266    100.00         100.00    100.00         100.00</code></pre>
+                      Total   65223    100.00         100.00    100.00         100.00</code></pre>
 <pre><code>Frequencies  
 dat$Gender_numeric  
 Type: Numeric  
 
                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ----------- ------- --------- -------------- --------- --------------
-          0   15770     24.93          24.93     24.93          24.93
-          1   46546     73.57          98.50     73.57          98.50
-          2     697      1.10          99.60      1.10          99.60
-          3     253      0.40         100.00      0.40         100.00
+          0   16172     24.79          24.79     24.79          24.79
+          1   48064     73.69          98.49     73.69          98.49
+          2     728      1.12          99.60      1.12          99.60
+          3     259      0.40         100.00      0.40         100.00
        &lt;NA&gt;       0                               0.00         100.00
-      Total   63266    100.00         100.00    100.00         100.00</code></pre>
+      Total   65223    100.00         100.00    100.00         100.00</code></pre>
 <pre><code>Frequencies  
 dat$Gender_collapsed  
 Type: Factor  
 
                                  Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ----------------------------- ------- --------- -------------- --------- --------------
-                         Male   15770     24.93          24.93     24.93          24.93
-                       Female   46546     73.57          98.50     73.57          98.50
-      Non-binary/Self-defined     950      1.50         100.00      1.50         100.00
+                         Male   16172     24.79          24.79     24.79          24.79
+                       Female   48064     73.69          98.49     73.69          98.49
+      Non-binary/Self-defined     987      1.51         100.00      1.51         100.00
                          &lt;NA&gt;       0                               0.00         100.00
-                        Total   63266    100.00         100.00    100.00         100.00</code></pre>
+                        Total   65223    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="ethnicity" class="section level2">
 <h2>Ethnicity</h2>
@@ -1063,41 +1063,41 @@ Type: Factor
 
                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 -------------------------------------- ------- --------- -------------- --------- --------------
-                              European   56732     95.01          95.01     89.67          89.67
-      Mixed or multiple ethnic origins    1322      2.21          97.22      2.09          91.76
-                Asian or Asian British     868      1.45          98.68      1.37          93.13
-            African or African British     278      0.47          99.14      0.44          93.57
-                                  Arab      49      0.08          99.23      0.08          93.65
-                    Other ethnic group     462      0.77         100.00      0.73          94.38
-                                  &lt;NA&gt;    3555                               5.62         100.00
-                                 Total   63266    100.00         100.00    100.00         100.00</code></pre>
+                                 White   58435     94.83          94.83     89.59          89.59
+      Mixed or multiple ethnic origins    1383      2.24          97.07      2.12          91.71
+                Asian or Asian British     934      1.52          98.58      1.43          93.15
+                Black or Black British     336      0.55          99.13      0.52          93.66
+                                  Arab      54      0.09          99.22      0.08          93.74
+                    Other ethnic group     482      0.78         100.00      0.74          94.48
+                                  &lt;NA&gt;    3599                               5.52         100.00
+                                 Total   65223    100.00         100.00    100.00         100.00</code></pre>
 <pre><code>Frequencies  
 dat$Ethnicity_numeric  
 Type: Numeric  
 
                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ----------- ------- --------- -------------- --------- --------------
-          1   56732     95.01          95.01     89.67          89.67
-          2    1322      2.21          97.22      2.09          91.76
-          3     868      1.45          98.68      1.37          93.13
-          4     278      0.47          99.14      0.44          93.57
-          5      49      0.08          99.23      0.08          93.65
-          6     462      0.77         100.00      0.73          94.38
-       &lt;NA&gt;    3555                               5.62         100.00
-      Total   63266    100.00         100.00    100.00         100.00</code></pre>
+          1   58435     94.83          94.83     89.59          89.59
+          2    1383      2.24          97.07      2.12          91.71
+          3     934      1.52          98.58      1.43          93.15
+          4     336      0.55          99.13      0.52          93.66
+          5      54      0.09          99.22      0.08          93.74
+          6     482      0.78         100.00      0.74          94.48
+       &lt;NA&gt;    3599                               5.52         100.00
+      Total   65223    100.00         100.00    100.00         100.00</code></pre>
 <pre><code>Frequencies  
 dat$Ethnicity_collapsed  
 Type: Factor  
 
                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 -------------------------------------- ------- --------- -------------- --------- --------------
-                              European   56732     95.01          95.01     89.67          89.67
-      Mixed or multiple ethnic origins    1322      2.21          97.22      2.09          91.76
-                Asian or Asian British     868      1.45          98.68      1.37          93.13
-            African or African British     327      0.55          99.23      0.52          93.65
-                                 Other     462      0.77         100.00      0.73          94.38
-                                  &lt;NA&gt;    3555                               5.62         100.00
-                                 Total   63266    100.00         100.00    100.00         100.00</code></pre>
+                              European   58435     94.83          94.83     89.59          89.59
+      Mixed or multiple ethnic origins    1383      2.24          97.07      2.12          91.71
+                Asian or Asian British     934      1.52          98.58      1.43          93.15
+            African or African British     390      0.63          99.22      0.60          93.74
+                                 Other     482      0.78         100.00      0.74          94.48
+                                  &lt;NA&gt;    3599                               5.52         100.00
+                                 Total   65223    100.00         100.00    100.00         100.00</code></pre>
 </div>
 </div>
 <div id="psychiatric-disorder-hierarchy" class="section level1">
@@ -1131,47 +1131,47 @@ Type: Factor
 
                               Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 -------------------------- ------- --------- -------------- --------- --------------
-                  Controls   12904     21.42          21.42     20.40          20.40
-         Anxiety disorders    3503      5.82          27.24      5.54          25.93
-          Eating disorders     619      1.03          28.27      0.98          26.91
-                      OCDs     571      0.95          29.21      0.90          27.81
-                      PTSD     433      0.72          29.93      0.68          28.50
-      Depressive disorders   38060     63.19          93.12     60.16          88.66
-         Bipolar disorders    2519      4.18          97.30      3.98          92.64
-       Psychotic disorders    1624      2.70         100.00      2.57          95.21
-                      &lt;NA&gt;    3033                               4.79         100.00
-                     Total   63266    100.00         100.00    100.00         100.00</code></pre>
+                  Controls   13213     21.41          21.41     20.26          20.26
+         Anxiety disorders    3632      5.89          27.30      5.57          25.83
+          Eating disorders     664      1.08          28.37      1.02          26.84
+                      OCDs     601      0.97          29.35      0.92          27.77
+                      PTSD     458      0.74          30.09      0.70          28.47
+      Depressive disorders   38921     63.07          93.16     59.67          88.14
+         Bipolar disorders    2571      4.17          97.32      3.94          92.08
+       Psychotic disorders    1651      2.68         100.00      2.53          94.62
+                      &lt;NA&gt;    3512                               5.38         100.00
+                     Total   65223    100.00         100.00    100.00         100.00</code></pre>
 <pre><code>Frequencies  
 dat$Disorder_hierarchical  
 Type: Factor  
 
                               Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 -------------------------- ------- --------- -------------- --------- --------------
-                  Controls   12904     21.43          21.43     20.40          20.40
-         Anxiety disorders    3522      5.85          27.28      5.57          25.96
-          Eating disorders     628      1.04          28.32      0.99          26.96
-                      OCDs     576      0.96          29.28      0.91          27.87
-                      PTSD     441      0.73          30.01      0.70          28.56
-      Depressive disorders   38962     64.71          94.73     61.58          90.15
-         Bipolar disorders    3176      5.27         100.00      5.02          95.17
-                      &lt;NA&gt;    3057                               4.83         100.00
-                     Total   63266    100.00         100.00    100.00         100.00</code></pre>
+                  Controls   13213     21.42          21.42     20.26          20.26
+         Anxiety disorders    3651      5.92          27.34      5.60          25.86
+          Eating disorders     673      1.09          28.43      1.03          26.89
+                      OCDs     606      0.98          29.41      0.93          27.82
+                      PTSD     466      0.76          30.17      0.71          28.53
+      Depressive disorders   39840     64.58          94.75     61.08          89.61
+         Bipolar disorders    3238      5.25         100.00      4.96          94.58
+                      &lt;NA&gt;    3536                               5.42         100.00
+                     Total   65223    100.00         100.00    100.00         100.00</code></pre>
 <pre><code>Frequencies  
 dat$Disorder_hierarchical_psychosis  
 Type: Factor  
 
                               Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 -------------------------- ------- --------- -------------- --------- --------------
-                  Controls   12904     21.42          21.42     20.40          20.40
-         Anxiety disorders    3503      5.82          27.24      5.54          25.93
-          Eating disorders     619      1.03          28.27      0.98          26.91
-                      OCDs     571      0.95          29.21      0.90          27.81
-                      PTSD     433      0.72          29.93      0.68          28.50
-      Depressive disorders   38060     63.19          93.12     60.16          88.66
-         Bipolar disorders    2519      4.18          97.30      3.98          92.64
-       Psychotic disorders    1624      2.70         100.00      2.57          95.21
-                      &lt;NA&gt;    3033                               4.79         100.00
-                     Total   63266    100.00         100.00    100.00         100.00</code></pre>
+                  Controls   13213     21.41          21.41     20.26          20.26
+         Anxiety disorders    3632      5.89          27.30      5.57          25.83
+          Eating disorders     664      1.08          28.37      1.02          26.84
+                      OCDs     601      0.97          29.35      0.92          27.77
+                      PTSD     458      0.74          30.09      0.70          28.47
+      Depressive disorders   38921     63.07          93.16     59.67          88.14
+         Bipolar disorders    2571      4.17          97.32      3.94          92.08
+       Psychotic disorders    1651      2.68         100.00      2.53          94.62
+                      &lt;NA&gt;    3512                               5.38         100.00
+                     Total   65223    100.00         100.00    100.00         100.00</code></pre>
 <p>Investigate NAs NAs are coded for individuals that don't have one of the listed disorders in the hierarchy, but who have another diagnosis that excludes them from being a control (e.g. personality disorder, ADHD, ASD). These individuals will be excluded from the analyses.</p>
 <pre><code>Frequencies  
 dat$Sample  
@@ -1179,12 +1179,12 @@ Type: Character
 
               Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ----------- ------ --------- -------------- --------- --------------
-       EDGI    102      3.34           3.34      3.34           3.34
-       GLAD   1351     44.19          47.53     44.19          47.53
-        NBR    389     12.72          60.26     12.72          60.26
-       RAMP   1215     39.74         100.00     39.74         100.00
+       EDGI    113      3.20           3.20      3.20           3.20
+       GLAD   1419     40.13          43.33     40.13          43.33
+        NBR    389     11.00          54.33     11.00          54.33
+       RAMP   1615     45.67         100.00     45.67         100.00
        &lt;NA&gt;      0                               0.00         100.00
-      Total   3057    100.00         100.00    100.00         100.00</code></pre>
+      Total   3536    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="create-variables-for-improvement-and-worsening" class="section level1">
 <h1>Create variables for improvement and worsening</h1>
@@ -1196,11 +1196,11 @@ Type: Factor
 
                      Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ----------------- ------- --------- -------------- --------- --------------
-        No change   13938     39.53          39.53     22.03          22.03
-        Worsening   18978     53.83          93.36     30.00          52.03
-      Improvement    2342      6.64         100.00      3.70          55.73
-             &lt;NA&gt;   28008                              44.27         100.00
-            Total   63266    100.00         100.00    100.00         100.00</code></pre>
+        No change   14234     38.90          38.90     21.82          21.82
+        Worsening   19933     54.47          93.37     30.56          52.38
+      Improvement    2425      6.63         100.00      3.72          56.10
+             &lt;NA&gt;   28631                              43.90         100.00
+            Total   65223    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="phq" class="section level2">
 <h2>phq</h2>
@@ -1210,11 +1210,11 @@ Type: Factor
 
                      Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ----------------- ------- --------- -------------- --------- --------------
-        No change   12850     36.27          36.27     20.31          20.31
-        Worsening   19888     56.13          92.40     31.44          51.75
-      Improvement    2692      7.60         100.00      4.26          56.00
-             &lt;NA&gt;   27836                              44.00         100.00
-            Total   63266    100.00         100.00    100.00         100.00</code></pre>
+        No change   13122     35.69          35.69     20.12          20.12
+        Worsening   20854     56.72          92.41     31.97          52.09
+      Improvement    2791      7.59         100.00      4.28          56.37
+             &lt;NA&gt;   28456                              43.63         100.00
+            Total   65223    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="ocir" class="section level2">
 <h2>ocir</h2>
@@ -1224,11 +1224,11 @@ Type: Factor
 
                      Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ----------------- ------- --------- -------------- --------- --------------
-        No change    3175     38.29          38.29      5.02           5.02
-        Worsening    4943     59.60          97.89      7.81          12.83
-      Improvement     175      2.11         100.00      0.28          13.11
-             &lt;NA&gt;   54973                              86.89         100.00
-            Total   63266    100.00         100.00    100.00         100.00</code></pre>
+        No change    3357     37.74          37.74      5.15           5.15
+        Worsening    5348     60.12          97.85      8.20          13.35
+      Improvement     191      2.15         100.00      0.29          13.64
+             &lt;NA&gt;   56327                              86.36         100.00
+            Total   65223    100.00         100.00    100.00         100.00</code></pre>
 </div>
 </div>
 
