@@ -660,10 +660,10 @@ dem.raw.id <- dem.raw.id %>%
   mutate(
     Ethnicity = 
       recode_factor(Ethnicity_unc,
-        "White" = "European",
+        "White" = "White",
         "Mixed" = "Mixed or multiple ethnic origins",
         "Asian or Asian British" = "Asian or Asian British",
-        "Black or Black British" = "African or African British",
+        "Black or Black British" = "Black or Black British",
         "Arab" = "Arab",
         "Other ethnic group:" = "Other ethnic group"
       )
@@ -681,10 +681,10 @@ dem.raw.id <- dem.raw.id %>%
   mutate(
     Ethnicity = 
       recode_factor(Ethnicity_unc,
-        "White, white European or Caucasian" = "European",
+        "White, white European or Caucasian" = "White",
         "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
         "Asian or Asian British (including Chinese)" = "Asian or Asian British",
-        "Black or Black British" = "African or African British",
+        "Black or Black British" = "Black or Black British",
         "Arab" = "Arab",
         "Other ethnic group (please specify)" = "Other ethnic group"
       )
@@ -702,10 +702,10 @@ dem.raw.id <- dem.raw.id %>%
   mutate(
     Ethnicity = 
       recode_factor(Ethnicity_unc,
-        "White, white European or Caucasian" = "European",
+        "White, white European or Caucasian" = "White",
         "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
         "Asian or Asian British (including Chinese)" = "Asian or Asian British",
-        "Black or Black British" = "African or African British",
+        "Black or Black British" = "Black or Black British",
         "Arab" = "Arab",
         "Other ethnic group (please specify)" = "Other ethnic group"
       )
@@ -713,10 +713,10 @@ dem.raw.id <- dem.raw.id %>%
   mutate(
     Ethnicity_numeric = 
       recode(Ethnicity,
-        "European" = 1,
+        "White" = 1,
         "Mixed or multiple ethnic origins" = 2,
         "Asian or Asian British" = 3,
-        "African or African British" = 4,
+        "Black or Black British" = 4,
         "Arab" = 5,
         "Other ethnic group" = 6
       )
