@@ -2047,6 +2047,22 @@ dat.prepan <- dat %>%
 dim(dat.prepan)
 ```
 
+Prepan-baseline analyses
+Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March
+
+```{r subsample for retro sensitivity analysis}
+dat.retro_sensitivity <- dat %>%
+  filter(
+    ((data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      prepandemic_march_1_numeric == 1 # Exclude participants that signed up after the 1. March
+  )
+
+dim(dat.prepan)
+```
+
 
 2. Regression models (Regress covariates out of the change? Which?)
     i. Model 0: Disorders
@@ -3581,6 +3597,142 @@ kable(gad_retro_model1b_explan_reg_stats)
 gad_retro_model1b_explan_reg_stats
 ```
 
+# GAD retro: sensitivity
+## Regression: Change scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r gad model0a diff_score retro (sensitivity analysis)}
+# Regression coefficients
+gad_retro_model0a_estimates <- model0a.estimates(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(gad_retro_model0a_estimates)
+gad_retro_model0a_estimates
+
+# Regression diagnostic statistics
+gad_retro_model0a_reg_stats <- model0a.reg.stats(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(gad_retro_model0a_reg_stats)
+gad_retro_model0a_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r gad model0b diff_score retro (sensitivity analysis)}
+# Regression coefficients
+gad_retro_model0b_estimates <- model0b.estimates(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(gad_retro_model0b_estimates)
+gad_retro_model0b_estimates
+
+# Regression diagnostic statistics
+gad_retro_model0b_reg_stats <- model0b.reg.stats(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(gad_retro_model0b_reg_stats)
+gad_retro_model0b_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r gad model1a diff_score retro (sensitivity analysis)}
+# Regression coefficients
+gad_retro_model1a_estimates <- model1a.estimates(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(gad_retro_model1a_estimates)
+gad_retro_model1a_estimates
+
+# Regression diagnostic statistics
+gad_retro_model1a_reg_stats <- model1a.reg.stats(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(gad_retro_model1a_reg_stats)
+gad_retro_model1a_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r gad model1b diff_score retro (sensitivity analysis)}
+# Regression coefficients
+gad_retro_model1b_estimates <- model1b.estimates(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(gad_retro_model1b_estimates)
+gad_retro_model1b_estimates
+
+# Regression diagnostic statistics
+gad_retro_model1b_reg_stats <- model1b.reg.stats(outcome = "gad.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(gad_retro_model1b_reg_stats)
+gad_retro_model1b_reg_stats
+```
+
+
+## Regression: Absolute scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r gad model0a sum_score retro (sensitivity analysis)}
+# Regression coefficients
+gad_retro_model0a_explan_estimates <- model0a.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(gad_retro_model0a_explan_estimates)
+gad_retro_model0a_explan_estimates
+
+# Regression diagnostic statistics
+gad_retro_model0a_explan_reg_stats <- model0a.explan.reg.stats(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(gad_retro_model0a_explan_reg_stats)
+gad_retro_model0a_explan_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r gad model0b sum_score retro (sensitivity analysis)}
+# Regression coefficients
+gad_retro_model0b_explan_estimates <- model0b.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(gad_retro_model0b_explan_estimates)
+gad_retro_model0b_explan_estimates
+
+# Regression diagnostic statistics
+gad_retro_model0b_explan_reg_stats <- model0b.explan.reg.stats(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(gad_retro_model0b_explan_reg_stats)
+gad_retro_model0b_explan_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r gad model1a sum_score retro (sensitivity analysis)}
+# Regression coefficients
+gad_retro_model1a_explan_estimates <- model1a.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(gad_retro_model1a_explan_estimates)
+gad_retro_model1a_explan_estimates
+
+# Regression diagnostic statistics
+gad_retro_model1a_explan_reg_stats <- model1a.explan.reg.stats(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(gad_retro_model1a_explan_reg_stats)
+gad_retro_model1a_explan_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r gad model1b sum_score retro (sensitivity analysis)}
+# Regression coefficients
+gad_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(gad_retro_model1b_explan_estimates)
+gad_retro_model1b_explan_estimates
+
+# Regression diagnostic statistics
+gad_retro_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(gad_retro_model1b_explan_reg_stats)
+gad_retro_model1b_explan_reg_stats
+```
+
 # PHQ baseline, not controlling for prior symptoms
 ### Model 0a: Disorder_hierarchical, Unadjusted
 ```{r phq model0a absolute whole sample}
@@ -3917,6 +4069,144 @@ phq_retro_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.su
 kable(phq_retro_model1b_explan_reg_stats)
 phq_retro_model1b_explan_reg_stats
 ```
+
+
+# PHQ retro: Sensitivity
+## Regression: Change scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r phq model0a diff_score retro (sensitivity analysis)}
+# Regression coefficients
+phq_retro_model0a_estimates <- model0a.estimates(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(phq_retro_model0a_estimates)
+phq_retro_model0a_estimates
+
+# Regression diagnostic statistics
+phq_retro_model0a_reg_stats <- model0a.reg.stats(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(phq_retro_model0a_reg_stats)
+phq_retro_model0a_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r phq model0b diff_score retro (sensitivity analysis)}
+# Regression coefficients
+phq_retro_model0b_estimates <- model0b.estimates(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(phq_retro_model0b_estimates)
+phq_retro_model0b_estimates
+
+# Regression diagnostic statistics
+phq_retro_model0b_reg_stats <- model0b.reg.stats(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(phq_retro_model0b_reg_stats)
+phq_retro_model0b_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r phq model1a diff_score retro (sensitivity analysis)}
+# Regression coefficients
+phq_retro_model1a_estimates <- model1a.estimates(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(phq_retro_model1a_estimates)
+phq_retro_model1a_estimates
+
+# Regression diagnostic statistics
+phq_retro_model1a_reg_stats <- model1a.reg.stats(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(phq_retro_model1a_reg_stats)
+phq_retro_model1a_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r phq model1b diff_score retro (sensitivity analysis)}
+# Regression coefficients
+phq_retro_model1b_estimates <- model1b.estimates(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(phq_retro_model1b_estimates)
+phq_retro_model1b_estimates
+
+# Regression diagnostic statistics
+phq_retro_model1b_reg_stats <- model1b.reg.stats(outcome = "phq.diff_score_base_retro",
+                                                 data_set = "dat.retro_sensitivity")
+kable(phq_retro_model1b_reg_stats)
+phq_retro_model1b_reg_stats
+```
+
+## Regression: Absolute scores
+### Model 0a: Disorder_hierarchical, Unadjusted
+```{r phq model0a sum_score retro (sensitivity analysis)}
+# Regression coefficients
+phq_retro_model0a_explan_estimates <- model0a.explan.estimates(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(phq_retro_model0a_explan_estimates)
+phq_retro_model0a_explan_estimates
+
+# Regression diagnostic statistics
+phq_retro_model0a_explan_reg_stats <- model0a.explan.reg.stats(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(phq_retro_model0a_explan_reg_stats)
+phq_retro_model0a_explan_reg_stats
+```
+
+### Model 0b: Overlapping disorders, Unadjusted
+```{r phq model0b sum_score retro (sensitivity analysis)}
+# Regression coefficients
+phq_retro_model0b_explan_estimates <- model0b.explan.estimates(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(phq_retro_model0b_explan_estimates)
+phq_retro_model0b_explan_estimates
+
+# Regression diagnostic statistics
+phq_retro_model0b_explan_reg_stats <- model0b.explan.reg.stats(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(phq_retro_model0b_explan_reg_stats)
+phq_retro_model0b_explan_reg_stats
+```
+
+### Model 1a: Disorder hierarchical, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r phq model1a sum_score retro (sensitivity analysis)}
+# Regression coefficients
+phq_retro_model1a_explan_estimates <- model1a.explan.estimates(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(phq_retro_model1a_explan_estimates)
+phq_retro_model1a_explan_estimates
+
+# Regression diagnostic statistics
+phq_retro_model1a_explan_reg_stats <- model1a.explan.reg.stats(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(phq_retro_model1a_explan_reg_stats)
+phq_retro_model1a_explan_reg_stats
+```
+
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+```{r phq model1b sum_score retro (sensitivity analysis)}
+# Regression coefficients
+phq_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(phq_retro_model1b_explan_estimates)
+phq_retro_model1b_explan_estimates
+
+# Regression diagnostic statistics
+phq_retro_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro_sensitivity")
+kable(phq_retro_model1b_explan_reg_stats)
+phq_retro_model1b_explan_reg_stats
+```
+
+
 
 # OCI-R baseline, not controlling for prior symptoms
 ### Model 0a: Disorder_hierarchical, Unadjusted
