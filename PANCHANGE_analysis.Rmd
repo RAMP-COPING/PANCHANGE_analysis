@@ -2048,7 +2048,7 @@ dim(dat.prepan)
 ```
 
 Prepan-baseline analyses
-Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March
+Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March (to ensure comparability with prepan analyses)
 
 ```{r subsample for retro sensitivity analysis}
 dat.retro_sensitivity <- dat %>%
