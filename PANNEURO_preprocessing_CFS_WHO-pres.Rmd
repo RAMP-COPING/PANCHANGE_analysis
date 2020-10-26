@@ -234,6 +234,18 @@ dim(cfs.raw)[1]-dim(cfs.raw.id)[1]
 
 ```
 
+```{r recode NBR sample}
+cfs.raw.id <- cfs.raw.id %>% 
+  mutate(Sample = 
+           case_when(
+             Sample == "SP0068" ~ "NBR",
+             Sample == "GLAD" ~ "GLAD",
+             Sample == "EDGI" ~ "EDGI"
+           ))
+freq(cfs.raw.id$Sample)
+```
+
+
 #Select subsample
 Chalder Fatigue Scale was added to Set B on July 28.
 
@@ -253,6 +265,11 @@ dim(cfs.raw.id_wave6)
 #Differences
 dim(cfs.raw.id)[1]-dim(cfs.raw.id_wave6)[1]
 ```
+
+```{r check complete cases}
+sum(complete.cases(cfs.raw.id_wave6))
+```
+
 
 #Export dataset
 ```{r export data}
