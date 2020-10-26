@@ -234,7 +234,7 @@ dat.raw %>%
 
 ## Age
 ### Proportion tables
-```{r age_category per Sample prop per total}
+```{r age_category per Covid prop per total}
 age_category_per_Covid_prop_total <- dat.raw %>%
   count(age_category, covid_probable_case_incl_screening) %>%
   mutate(Prop = round(n/sum(n), 2)) %>% 
@@ -244,7 +244,7 @@ kable(age_category_per_Covid_prop_total)
 age_category_per_Covid_prop_total
 ```
 
-```{r age_category per Sample prop per Sample}
+```{r age_category per Covid prop per Covid}
 age_category_per_Covid_prop_Covid <- dat.raw %>%
   group_by(covid_probable_case_incl_screening) %>%
   count(age_category, covid_probable_case_incl_screening) %>%
@@ -256,7 +256,7 @@ age_category_per_Covid_prop_Covid
 ```
 
 ### Cross tables
-```{r age_category per Sample prop cross table}
+```{r age_category per Covid prop cross table}
 age_category_per_Covid_prop_Covid_cross_table <- dat.raw %>%
   group_by(covid_probable_case_incl_screening) %>%
   count(age_category, covid_probable_case_incl_screening) %>%
@@ -360,12 +360,43 @@ age_category_per_Covid_chissquare_test
 ```
 
 ## Sex
+```{r sex according to probable Covid}
+sex_category_per_Covid_prop_total <- dat.raw %>%
+  filter(!is.na(Sex)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  count(Sex, covid_probable_case_incl_screening) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(sex_category_per_Covid_prop_total)
+sex_category_per_Covid_prop_total
+```
+
+## Smoking not available 
+
+
+## BMI not available 
+
+## Key worker status
+
+```{r}
+key_worker_category_per_Covid_prop_total <- dat.raw %>%
+  filter(!is.na(key_worker)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  count(key_worker, covid_probable_case_incl_screening) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(key_worker_category_per_Covid_prop_total)
+key_worker_category_per_Covid_prop_total
+```
+
+
 
 ## Smoking
 
 ## BMI
 
 ## Key worker status
+
 
 ## Ethnicity_collapsed
 ### Pie charts
@@ -462,8 +493,8 @@ ethnicity_per_Covid_chissquare_test
 ```{r neurological frequencies alsfrs}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
-  group_by(covid_test_positive) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
   select(
     starts_with("alsfrs"),
     -ends_with("numeric")
@@ -484,49 +515,49 @@ alsfrs.do_you_have_any_difficulty_climbing_stairs
 ```{r neurological frequencies alsfrs.limb_weakness_noticed_past}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(alsfrs.limb_weakness_noticed_past)) %>%
-  count(covid_test_positive, alsfrs.limb_weakness_noticed_past) %>%
+  count(covid_probable_case_incl_screening, alsfrs.limb_weakness_noticed_past) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies alsfrs.normal}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(alsfrs.normal)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, alsfrs.normal) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, alsfrs.normal) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies alsfrs.slow_or_sloppy_all_words_are_legible}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(alsfrs.slow_or_sloppy_all_words_are_legible)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, alsfrs.slow_or_sloppy_all_words_are_legible) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, alsfrs.slow_or_sloppy_all_words_are_legible) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies alsfrs.not_all_words_are_legible}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(alsfrs.not_all_words_are_legible)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, alsfrs.not_all_words_are_legible) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, alsfrs.not_all_words_are_legible) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies alsfrs.able_to_grip_pen}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(alsfrs.able_to_grip_pen)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, alsfrs.able_to_grip_pen) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, alsfrs.able_to_grip_pen) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
@@ -534,10 +565,10 @@ dat.raw %>%
 ```{r neurological frequencies alsfrs.unable_to_grip_pen}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(alsfrs.unable_to_grip_pen)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, alsfrs.unable_to_grip_pen) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, alsfrs.unable_to_grip_pen) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
@@ -545,20 +576,20 @@ dat.raw %>%
 ```{r neurological frequencies alsfrs.have_you_noticed_any_difficulty_walking}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(alsfrs.have_you_noticed_any_difficulty_walking)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, alsfrs.have_you_noticed_any_difficulty_walking) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, alsfrs.have_you_noticed_any_difficulty_walking) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies alsfrs.do_you_have_any_difficulty_climbing_stairs}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(alsfrs.do_you_have_any_difficulty_climbing_stairs)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, alsfrs.do_you_have_any_difficulty_climbing_stairs) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, alsfrs.do_you_have_any_difficulty_climbing_stairs) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
@@ -566,8 +597,8 @@ dat.raw %>%
 ```{r neurological frequencies ess}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
-  group_by(covid_test_positive) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
   select(
     starts_with("ess"),
     -ends_with("numeric")
@@ -578,188 +609,188 @@ dat.raw %>%
 ```{r neurological frequencies ess.felt_excessively_sleepy_past}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.felt_excessively_sleepy_past)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.felt_excessively_sleepy_past) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.felt_excessively_sleepy_past) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.sitting_and_reading}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.sitting_and_reading)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.sitting_and_reading) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.sitting_and_reading) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.watching_tv}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.watching_tv)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.watching_tv) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.watching_tv) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.sitting_inactive_in_a_public_place}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.sitting_inactive_in_a_public_place)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.sitting_inactive_in_a_public_place) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.sitting_inactive_in_a_public_place) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.break_passenger_car_hour}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.break_passenger_car_hour)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.break_passenger_car_hour) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.break_passenger_car_hour) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.afternoon_rest_circumstances_lying}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.afternoon_rest_circumstances_lying)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.afternoon_rest_circumstances_lying) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.afternoon_rest_circumstances_lying) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.sitting_and_talking_to_someone}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.sitting_and_talking_to_someone)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.sitting_and_talking_to_someone) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.sitting_and_talking_to_someone) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.sitting_quietly_after_a_lunch_without_alcohol}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.sitting_quietly_after_a_lunch_without_alcohol)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.sitting_quietly_after_a_lunch_without_alcohol) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.sitting_quietly_after_a_lunch_without_alcohol) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.car_minutes_stopped_traffic}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.car_minutes_stopped_traffic)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.car_minutes_stopped_traffic) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.car_minutes_stopped_traffic) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.insomnia}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.insomnia)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.insomnia) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.insomnia) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.narcolepsy}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.narcolepsy)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.narcolepsy) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.narcolepsy) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.rem_sleep_behaviour_disorder}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.rem_sleep_behaviour_disorder)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.rem_sleep_behaviour_disorder) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.rem_sleep_behaviour_disorder) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.restless_legs_syndrome}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.restless_legs_syndrome)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.restless_legs_syndrome) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.restless_legs_syndrome) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.sleep_apnea}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.sleep_apnea)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.sleep_apnea) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.sleep_apnea) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.sleep_terrors}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.sleep_terrors)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.sleep_terrors) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.sleep_terrors) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.sleepwalking}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.sleepwalking)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.sleepwalking) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.sleepwalking) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.other}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.other)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.other) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.other) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies ess.none}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.none)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, ess.none) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.none) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies midas}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
-  group_by(covid_test_positive) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
   select(
     starts_with("midas"),
     -ends_with("numeric")
@@ -770,50 +801,50 @@ dat.raw %>%
 ```{r neurological frequencies midas.headaches_suffered_past_month}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(midas.headaches_suffered_past_month)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, midas.headaches_suffered_past_month) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, midas.headaches_suffered_past_month) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies midas.days_past_month_miss_work_school}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(midas.days_past_month_miss_work_school)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, midas.days_past_month_miss_work_school) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, midas.days_past_month_miss_work_school) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies midas.days_past_month_work_school_half_productivity}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(midas.days_past_month_work_school_half_productivity)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, midas.days_past_month_work_school_half_productivity) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, midas.days_past_month_work_school_half_productivity) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies midas.days_past_month_miss_housework}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(midas.days_past_month_miss_housework)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, midas.days_past_month_miss_housework) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, midas.days_past_month_miss_housework) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies midas.days_past_month_housework_half_productivity}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(midas.days_past_month_housework_half_productivity)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, midas.days_past_month_housework_half_productivity) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, midas.days_past_month_housework_half_productivity) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
@@ -821,10 +852,10 @@ dat.raw %>%
 ```{r neurological frequencies midas.days_past_month_miss_social_activities}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(midas.days_past_month_miss_social_activities)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, midas.days_past_month_miss_social_activities) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, midas.days_past_month_miss_social_activities) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
@@ -832,8 +863,8 @@ dat.raw %>%
 ```{r neurological frequencies nmss}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
-  group_by(covid_test_positive) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
   select(
     starts_with("nmss"),
     -ends_with("numeric")
@@ -845,10 +876,10 @@ dat.raw %>%
 ```{r neurological frequencies nmss.ability_taste_food_smell}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(nmss.ability_taste_food_smell)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, nmss.ability_taste_food_smell) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, nmss.ability_taste_food_smell) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
@@ -856,10 +887,10 @@ dat.raw %>%
 ```{r neurological frequencies nmss.severe_taste_smell_loss}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(nmss.severe_taste_smell_loss)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, nmss.severe_taste_smell_loss) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, nmss.severe_taste_smell_loss) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
@@ -867,8 +898,8 @@ dat.raw %>%
 ```{r neurological frequencies nmsw}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
-  group_by(covid_test_positive) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
   select(
     starts_with("nmsw"),
     -ends_with("numeric")
@@ -879,60 +910,60 @@ dat.raw %>%
 ```{r neurological frequencies nmsw.drink_problems_choking_difficulty}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(nmsw.drink_problems_choking_difficulty)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, nmsw.drink_problems_choking_difficulty) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, nmsw.drink_problems_choking_difficulty) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies nmsw.regularly_night_pass_urine}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(nmsw.regularly_night_pass_urine)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, nmsw.regularly_night_pass_urine) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, nmsw.regularly_night_pass_urine) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies nmsw.sex_difficult_finding}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(nmsw.sex_difficult_finding)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, nmsw.sex_difficult_finding) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, nmsw.sex_difficult_finding) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies nmsw.weak_standing_feeling_light}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(nmsw.weak_standing_feeling_light)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, nmsw.weak_standing_feeling_light) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, nmsw.weak_standing_feeling_light) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies nmsw.acting_moving_sleep_talking}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(nmsw.acting_moving_sleep_talking)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, nmsw.acting_moving_sleep_talking) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, nmsw.acting_moving_sleep_talking) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies nmsw.double_vision}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(nmsw.double_vision)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, nmsw.double_vision) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, nmsw.double_vision) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
@@ -940,8 +971,8 @@ dat.raw %>%
 ```{r neurological frequencies tinnitus}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
-  group_by(covid_test_positive) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
   select(
     starts_with("tinnitus"),
     -ends_with("numeric")
@@ -952,34 +983,89 @@ dat.raw %>%
 ```{r neurological frequencies tinnitus.ears_noises_minutes_head}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(tinnitus.ears_noises_minutes_head)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, tinnitus.ears_noises_minutes_head) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, tinnitus.ears_noises_minutes_head) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies tinnitus.ears_noises_minutes_head_frequency}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(tinnitus.ears_noises_minutes_head_frequency)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, tinnitus.ears_noises_minutes_head_frequency) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, tinnitus.ears_noises_minutes_head_frequency) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 ```{r neurological frequencies tinnitus.noises_worry_worst_upset}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(tinnitus.noises_worry_worst_upset)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, tinnitus.noises_worry_worst_upset) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, tinnitus.noises_worry_worst_upset) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
 # Scoring for neuro measures
+
+# ALSfrs
+```{ALSfrs col names r}
+als.col.names <- dat.raw %>%
+  select(
+    starts_with("alsfrs") & ends_with("numeric")
+  ) %>%
+  colnames()
+
+```
+
+```{ALSfrs row sums r}
+dat.raw <- dat.raw %>%
+  mutate(als.sum.score =
+  rowSums(select(.,als.col.names), na.rm = F)
+   )
+```
+
+```{ALSfrs frequencies r}
+dat.raw %>%
+  filter(!is.na(startDate.coping)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  filter(!is.na(als.sum.score)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, als.sum.score) %>%
+  mutate(Prop = round(n/sum(n), 2)) 
+
+```
+# ESS
+```{ESS col names r}
+ess.col.names <- dat.raw %>%
+  select(
+    starts_with("ess") & ends_with("numeric")
+  ) %>%
+  colnames()
+
+```
+
+```{ESS row sums r}
+dat.raw <- dat.raw %>%
+  mutate(ess.col.names =
+   rowSums(select(.,ess.col.names), na.rm = F)
+   )
+```
+
+```{ESS frequencies r}
+dat.raw %>%
+  filter(!is.na(startDate.coping)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  filter(!is.na(ess.col.names)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.col.names) %>%
+  mutate(Prop = round(n/sum(n), 2))
+```
+
 
 ```{r nmsw col names}
 nmsw.col.names <- dat.raw %>%
@@ -1000,22 +1086,89 @@ dat.raw <- dat.raw %>%
 ```
 
 
+
+## CFS
+
 ```{r}
-nmsw.col.names <- dat.raw %>%
+cfs.col.names <- dat.raw %>%
   select(
-    starts_with("ess") & ends_with("numeric")
-  ) %>% 
+    starts_with("cfs") & ends_with("numeric")
+  ) %>%
   colnames()
-nmsw.col.names
+cfs.col.names
 ```
 ```{r}
-dat.raw <- dat.raw %>% 
-  filter(ess.felt_excessively_sleepy_past_numeric == 1) %>%
-  mutate(ess.sum_score = 
-           rowSums(select(.,nmsw.col.names), na.rm = FALSE)
-           )
+dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score =
+   rowSums(select(.,cfs.col.names), na.rm = F) - 11
+   )
+cfs.col.names.physio <- cfs.col.names[1:7]
+
+dat.raw <- dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score_physical=
+   rowSums(select(.,cfs.col.names.physio), na.rm = F) - 7
+   )
+
+cfs.col.names.psych <- cfs.col.names[8:11]
+
+dat.raw <- dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score_psyhchological =
+   rowSums(select(.,cfs.col.names.psych), na.rm = F) -4
+   )
+```
+
+```{r}
+dat.raw %>%
+  filter(!is.na(startDate.coping)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  filter(!is.na(cfs.sum_score)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  summarise(mean_total = mean(cfs.sum_score, na.rm = TRUE),
+            mean_physical = mean(cfs.sum_score_physical, na.rm = TRUE),
+            mean_psychological = mean (cfs.sum_score_psyhchological, na.rm = TRUE)) 
 
 ```
 
+```{r}
+dat.raw$cfs.correct_word_find_difficult_binary <- if_else(dat.raw$cfs.correct_word_find_difficult_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_have_problems_with_tiredness_binary<- if_else(dat.raw$cfs.do_you_have_problems_with_tiredness_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_feel_sleepy_or_drowsy_binary <- if_else(dat.raw$cfs.do_you_feel_sleepy_or_drowsy_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_feel_weak_binary <- if_else(dat.raw$cfs.do_you_feel_weak_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_have_difficulty_concentrating_binary <- if_else(dat.raw$cfs.do_you_have_difficulty_concentrating_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_have_problems_starting_things_binary <- if_else(dat.raw$cfs.do_you_have_problems_starting_things_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_lack_energy_binary <- if_else(dat.raw$cfs.do_you_lack_energy_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_need_to_rest_more_binary <- if_else(dat.raw$cfs.do_you_need_to_rest_more_numeric >= 3, 1,0)
+dat.raw$cfs.how_is_your_memory_numeric_binary <- if_else(dat.raw$cfs.how_is_your_memory_numeric >= 3, 1,0) 
+dat.raw$cfs.make_slips_speaking_tongue_binary <- if_else(dat.raw$cfs.make_slips_speaking_tongue_numeric >= 3, 1,0)
+dat.raw$cfs.strength_muscles_binary <- if_else(dat.raw$cfs.strength_muscles_numeric >= 3, 1,0)
+```
 
+```{r}
+cfs.col.names.bi <- dat.raw %>%
+  select(
+    starts_with("cfs") & ends_with("binary")
+  ) %>%
+  colnames()
+cfs.col.names.bi
+```
+```{r}
+dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score_binary =
+   rowSums(select(.,cfs.col.names.bi), na.rm = F) 
+   )
+
+dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score_case = if_else(cfs.sum_score_binary >= 4, "Fatigue", "No fatigue")) 
+   
+```
+
+```{r}
+dat.raw %>%
+  filter(!is.na(startDate.coping)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  filter(!is.na(cfs.sum_score_case)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, cfs.sum_score_case) %>%
+  mutate(Prop = round(n/sum(n), 2))
+```
 
