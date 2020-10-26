@@ -231,12 +231,106 @@ dat.raw %>%
 ```
 
 # Demographics
+
+## Age
+## Proportion tables
+```{r age_category per Sample prop per total}
+age_category_per_Covid_prop_total <- dat.raw %>%
+  count(age_category, covid_probable_case_incl_screening) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(age_category_per_Covid_prop_total)
+age_category_per_Covid_prop_total
+```
+
+```{r age_category per Sample prop per Sample}
+age_category_per_Sample_prop_Sample <- dat.raw %>%
+  group_by(Sample) %>%
+  count(age_category, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(age_category_per_Sample_prop_Sample)
+age_category_per_Sample_prop_Sample
+```
+
+## Cross tables
+```{r age_category per Sample prop cross table}
+age_category_per_Sample_prop_Sample_cross_table <- dat.raw %>%
+  group_by(Sample) %>%
+  count(age_category, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+
+kable(age_category_per_Sample_prop_Sample_cross_table)
+age_category_per_Sample_prop_Sample_cross_table
+```
+
+## Sex
+
+```{r sex according to probable Covid}
+sex_category_per_Covid_prop_total <- dat.raw %>%
+  filter(!is.na(Sex)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  count(Sex, covid_probable_case_incl_screening) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(sex_category_per_Covid_prop_total)
+sex_category_per_Covid_prop_total
+```
+
+## Smoking not available 
+
+
+## BMI not available 
+
+## Key worker status
+
+```{r}
+key_worker_category_per_Covid_prop_total <- dat.raw %>%
+  filter(!is.na(key_worker)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  count(key_worker, covid_probable_case_incl_screening) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(key_worker_category_per_Covid_prop_total)
+key_worker_category_per_Covid_prop_total
+```
+
+
 ## Ethnicity_collapsed
 ### Pie charts
-**NEED TO CREATE ETHNICITY_collapsed variable**
+```{r Collapse Ethnicity}
+dat.raw <- dat.raw %>%
+  mutate(Ethnicity_collapsed_numeric =
+           case_when(
+             Ethnicity_numeric == 1 ~ 0, #European
+             Ethnicity_numeric == 2 ~ 1, #Mixed or multiple ethnic origins 
+             Ethnicity_numeric == 3 ~ 2, #Asian or Asian British
+             Ethnicity_numeric == 4 ~ 3, #African or African British
+             Ethnicity_numeric == 5 ~ 3, #Arab - combined with African/African British
+             Ethnicity_numeric == 6 ~ 4  #Other ethnic group
+           )
+  )
+
+dat.raw <- dat.raw %>%
+  mutate(Ethnicity_collapsed =
+           recode_factor(
+             Ethnicity_collapsed_numeric,
+             `0` = "European",
+             `1` = "Mixed or multiple ethnic origins",
+             `2` = "Asian or Asian British",
+             `3` = "African or African British",
+             `4` = "Other"
+           )
+  )
+
+dat.raw %>%
+  freq(Ethnicity_collapsed)
+```
+
 ```{r Ethnicity_collapsed prop per total summary}
 Ethnicity_collapsed_prop_Covid <- dat.raw %>%
-  count(Ethnicity_collapsed, covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, Ethnicity_collapsed) %>%
   drop_na() %>%
   mutate(freq = round(n/sum(n), 2))
   
@@ -250,52 +344,34 @@ Ethnicity_collapsed_prop_Covid
 pie chart with only European label
 
 ```{r ethnicity pie chart biggest group label}
-eth_pie_alllabel <- 
-  Ethnicity_collapsed_prop_Sample %>%
-   mutate(Ethnicity_collapsed = fct_reorder(Ethnicity_collapsed,-n)) %>%
-  
-  ggplot(aes(x="", y=freq, fill=Ethnicity_collapsed)) +
-  geom_bar(width = 1, stat = "identity") +
-  scale_fill_manual(values =  COPINGpalette6) +
-  scale_color_manual(values =  COPINGpalette6) +
-  coord_polar("y",start=0) +
-  theme_void() +
-   labs(title = paste("RAMP/COPING sample self reported ethnicity",
-                      sep=" "),
-        subtitle = paste("n =", sum(Ethnicity_collapsed_prop_Sample$n),
-                         sep = " "),
-        fill = "Self reported ethnicity")  +
-    geom_text(aes(y = c(0.5),
-                  label= c(paste0(round((freq[1]*100),0),"%"))), #Frequency of European only
-             size=5,
-             face="bold"
-             )  
+Ethnicity_by_Covid_collapsed_count <- Ethnicity_collapsed_prop_Covid %>%
+  mutate(Ethnicity_collapsed = fct_reorder(Ethnicity_collapsed,-n)) %>%
+  group_by(covid_probable_case_incl_screening) %>% 
+  ggplot(mapping = aes(
+    x = Ethnicity_collapsed,
+    y = n)
+    ) +
+  geom_bar(
+    aes(fill = covid_probable_case_incl_screening),
+    stat="identity",
+    binwidth = 1,
+    position = position_dodge2(preserve = "single")
+  ) +
+  labs(
+    x = "Ethnicity",
+    y = "Number of participants",
+    fill = "Covid status") +
+  theme_personal +
+  scale_fill_manual(
+    values = COPINGpalette4
+    ) +
+  coord_flip()
 
-eth_pie_alllabel
+Ethnicity_by_Covid_collapsed_count
+
 ```
 
 
-Pie chart - no labels
-
-```{r ethnicity pie chart no label}
-eth_pie_nolabel <- 
-  Ethnicity_collapsed_prop_Sample %>%
-   mutate(Ethnicity_collapsed = fct_reorder(Ethnicity_collapsed,-n)) %>%
-  
-  ggplot(aes(x="", y=freq, fill=Ethnicity_collapsed)) +
-  geom_bar(width = 1, stat = "identity") +
-  scale_fill_manual(values =  COPINGpalette6) +
-  scale_color_manual(values =  COPINGpalette6) +
-  coord_polar("y",start=0) +
-  theme_void() +
-   labs(title = paste("RAMP/COPING sample self reported ethnicity",
-                      sep=" "),
-        subtitle = paste("n =", sum(Ethnicity_collapsed_prop_Sample$n),
-                         sep = " "),
-        fill = "Self reported ethnicity")
-
-eth_pie_nolabel
-```
 
 # Neurological frequencies
 ** NEED TO BE CHANGED TO covid_probable_case_incl_screening **
