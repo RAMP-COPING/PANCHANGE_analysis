@@ -937,8 +937,35 @@ dat.raw %>%
 ```
 
 ```{r}
+dat.raw$cfs.correct_word_find_difficult_binary <- if_else(dat.raw$cfs.correct_word_find_difficult_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_have_problems_with_tiredness_binary<- if_else(dat.raw$cfs.do_you_have_problems_with_tiredness_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_feel_sleepy_or_drowsy_binary <- if_else(dat.raw$cfs.do_you_feel_sleepy_or_drowsy_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_feel_weak_binary <- if_else(dat.raw$cfs.do_you_feel_weak_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_have_difficulty_concentrating_binary <- if_else(dat.raw$cfs.do_you_have_difficulty_concentrating_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_have_problems_starting_things_binary <- if_else(dat.raw$cfs.do_you_have_problems_starting_things_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_lack_energy_binary <- if_else(dat.raw$cfs.do_you_lack_energy_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_need_to_rest_more_binary <- if_else(dat.raw$cfs.do_you_need_to_rest_more_numeric >= 3, 1,0)
+dat.raw$cfs.how_is_your_memory_numeric_binary <- if_else(dat.raw$cfs.how_is_your_memory_numeric >= 3, 1,0) 
+dat.raw$cfs.make_slips_speaking_tongue_binary <- if_else(dat.raw$cfs.make_slips_speaking_tongue_numeric >= 3, 1,0)
+dat.raw$cfs.strength_muscles_binary <- if_else(dat.raw$cfs.strength_muscles_numeric >= 3, 1,0)
+```
+
+```{r}
+cfs.col.names.bi <- dat.raw %>%
+  select(
+    starts_with("cfs") & ends_with("binary")
+  ) %>%
+  colnames()
+cfs.col.names.bi
+```
+```{r}
 dat.raw <- dat.raw %>%
-  mutate(cfs.sum_score_case = if_else(cfs.sum_score > 11, "Fatigue", "No fatigue")) #not sure if 11 is the right cut off
+  mutate(cfs.sum_score_binary =
+   rowSums(select(.,cfs.col.names.bi), na.rm = F) 
+   )
+
+dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score_case = if_else(cfs.sum_score_binary >= 4, "Fatigue", "No fatigue")) 
    
 ```
 
