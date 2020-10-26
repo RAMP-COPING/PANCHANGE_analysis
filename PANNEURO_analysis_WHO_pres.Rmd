@@ -244,7 +244,7 @@ age_category_per_Covid_prop_total
 ```
 
 ```{r age_category per Sample prop per Sample}
-age_category_per_Sample_prop_Sample <- dat %>%
+age_category_per_Sample_prop_Sample <- dat.raw %>%
   group_by(Sample) %>%
   count(age_category, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
@@ -255,7 +255,7 @@ age_category_per_Sample_prop_Sample
 
 ## Cross tables
 ```{r age_category per Sample prop cross table}
-age_category_per_Sample_prop_Sample_cross_table <- dat %>%
+age_category_per_Sample_prop_Sample_cross_table <- dat.raw %>%
   group_by(Sample) %>%
   count(age_category, Sample) %>%
   mutate(Prop = round(n/sum(n), 2)) %>%
@@ -266,12 +266,43 @@ age_category_per_Sample_prop_Sample_cross_table
 ```
 
 ## Sex
+```{r sex according to probable Covid}
+sex_category_per_Covid_prop_total <- dat.raw %>%
+  filter(!is.na(Sex)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  count(Sex, covid_probable_case_incl_screening) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(sex_category_per_Covid_prop_total)
+sex_category_per_Covid_prop_total
+```
+
+## Smoking not available 
+
+
+## BMI not available 
+
+## Key worker status
+
+```{r}
+key_worker_category_per_Covid_prop_total <- dat.raw %>%
+  filter(!is.na(key_worker)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  count(key_worker, covid_probable_case_incl_screening) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(key_worker_category_per_Covid_prop_total)
+key_worker_category_per_Covid_prop_total
+```
+
+
 
 ## Smoking
 
 ## BMI
 
 ## Key worker status
+
 
 ## Ethnicity_collapsed
 ### Pie charts
@@ -354,8 +385,8 @@ Ethnicity_by_Covid_collapsed_count
 ```{r neurological frequencies alsfrs}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
-  group_by(covid_test_positive) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
   select(
     starts_with("alsfrs"),
     -ends_with("numeric")
@@ -912,7 +943,7 @@ ess.col.names <- dat.raw %>%
 ```{ESS row sums r}
 dat.raw <- dat.raw %>%
   mutate(ess.col.names =
-   rowSums(select(.,als.col.names), na.rm = F)
+   rowSums(select(.,ess.col.names), na.rm = F)
    )
 ```
 
@@ -943,3 +974,88 @@ dat.raw <- dat.raw %>%
            rowSums(select(.,nmsw.col.names), na.rm = FALSE)
            )
 
+
+## CFS
+
+```{r}
+cfs.col.names <- dat.raw %>%
+  select(
+    starts_with("cfs") & ends_with("numeric")
+  ) %>%
+  colnames()
+cfs.col.names
+```
+```{r}
+dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score =
+   rowSums(select(.,cfs.col.names), na.rm = F) - 11
+   )
+cfs.col.names.physio <- cfs.col.names[1:7]
+
+dat.raw <- dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score_physical=
+   rowSums(select(.,cfs.col.names.physio), na.rm = F) - 7
+   )
+
+cfs.col.names.psych <- cfs.col.names[8:11]
+
+dat.raw <- dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score_psyhchological =
+   rowSums(select(.,cfs.col.names.psych), na.rm = F) -4
+   )
+```
+
+```{r}
+dat.raw %>%
+  filter(!is.na(startDate.coping)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  filter(!is.na(cfs.sum_score)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  summarise(mean_total = mean(cfs.sum_score, na.rm = TRUE),
+            mean_physical = mean(cfs.sum_score_physical, na.rm = TRUE),
+            mean_psychological = mean (cfs.sum_score_psyhchological, na.rm = TRUE)) 
+
+```
+
+```{r}
+dat.raw$cfs.correct_word_find_difficult_binary <- if_else(dat.raw$cfs.correct_word_find_difficult_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_have_problems_with_tiredness_binary<- if_else(dat.raw$cfs.do_you_have_problems_with_tiredness_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_feel_sleepy_or_drowsy_binary <- if_else(dat.raw$cfs.do_you_feel_sleepy_or_drowsy_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_feel_weak_binary <- if_else(dat.raw$cfs.do_you_feel_weak_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_have_difficulty_concentrating_binary <- if_else(dat.raw$cfs.do_you_have_difficulty_concentrating_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_have_problems_starting_things_binary <- if_else(dat.raw$cfs.do_you_have_problems_starting_things_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_lack_energy_binary <- if_else(dat.raw$cfs.do_you_lack_energy_numeric >= 3, 1,0)
+dat.raw$cfs.do_you_need_to_rest_more_binary <- if_else(dat.raw$cfs.do_you_need_to_rest_more_numeric >= 3, 1,0)
+dat.raw$cfs.how_is_your_memory_numeric_binary <- if_else(dat.raw$cfs.how_is_your_memory_numeric >= 3, 1,0) 
+dat.raw$cfs.make_slips_speaking_tongue_binary <- if_else(dat.raw$cfs.make_slips_speaking_tongue_numeric >= 3, 1,0)
+dat.raw$cfs.strength_muscles_binary <- if_else(dat.raw$cfs.strength_muscles_numeric >= 3, 1,0)
+```
+
+```{r}
+cfs.col.names.bi <- dat.raw %>%
+  select(
+    starts_with("cfs") & ends_with("binary")
+  ) %>%
+  colnames()
+cfs.col.names.bi
+```
+```{r}
+dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score_binary =
+   rowSums(select(.,cfs.col.names.bi), na.rm = F) 
+   )
+
+dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score_case = if_else(cfs.sum_score_binary >= 4, "Fatigue", "No fatigue")) 
+   
+```
+
+```{r}
+dat.raw %>%
+  filter(!is.na(startDate.coping)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  filter(!is.na(cfs.sum_score_case)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, cfs.sum_score_case) %>%
+  mutate(Prop = round(n/sum(n), 2))
+```
