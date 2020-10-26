@@ -754,3 +754,34 @@ dat.raw %>%
 ```
 
 **ADD SCORING FOR NEURO MEASURES**
+
+```{r nmsw col names}
+nmsw.col.names <- dat.raw %>%
+  select(
+    starts_with("nmsw") & ends_with("numeric")
+  ) %>% 
+  colnames()
+nmsw.col.names
+
+```
+
+```{r scoring NMSW}
+dat.raw <- dat.raw %>% 
+  mutate(nmsw.sum_score = 
+           rowSums(select(.,nmsw.col.names), na.rm = FALSE)
+           )
+
+```
+
+```{r NMSW sum score frequencies}
+dat.raw %>%
+  filter(!is.na(startDate.coping)) %>%
+  filter(!is.na(covid_test_positive)) %>%
+  filter(!is.na(nmsw.sum_score)) %>%
+  group_by(covid_test_positive) %>%
+  count(covid_test_positive, nmsw.sum_score) %>%
+  mutate(Prop = round(n/sum(n), 2))
+```
+
+
+
