@@ -754,3 +754,42 @@ dat.raw %>%
 ```
 
 **ADD SCORING FOR NEURO MEASURES**
+
+```{r nmsw col names}
+nmsw.col.names <- dat.raw %>%
+  select(
+    starts_with("nmsw") & ends_with("numeric")
+  ) %>% 
+  colnames()
+nmsw.col.names
+
+```
+
+```{r scoring NMSW}
+dat.raw <- dat.raw %>% 
+  mutate(nmsw.sum_score = 
+           rowSums(select(.,nmsw.col.names), na.rm = FALSE)
+           )
+
+```
+
+
+```{r}
+nmsw.col.names <- dat.raw %>%
+  select(
+    starts_with("ess") & ends_with("numeric")
+  ) %>% 
+  colnames()
+nmsw.col.names
+```
+```{r}
+dat.raw <- dat.raw %>% 
+  filter(ess.felt_excessively_sleepy_past_numeric == 1) %>%
+  mutate(ess.sum_score = 
+           rowSums(select(.,nmsw.col.names), na.rm = FALSE)
+           )
+
+```
+
+
+
