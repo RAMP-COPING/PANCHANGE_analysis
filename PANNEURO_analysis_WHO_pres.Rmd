@@ -1,14 +1,8 @@
 ---
 title: "PANNEURO_analysis"
-author: "Christopher Huebel"
+author: "Christopher Huebel, Alish Palmos, Molly Davies, and Laura Hegemann"
 date: "Sys.Date()"
 output:
-  word_document:
-    toc: yes
-    toc_depth: '2'
-  pdf_document:
-    toc: yes
-    toc_depth: '2'
   html_document:
     df_print: paged
     highlight: monochrome
@@ -18,6 +12,12 @@ output:
     toc_depth: 2
     toc_float:
       collapsed: no
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+  word_document:
+    toc: yes
+    toc_depth: '2'
 html_notebook:
   theme: cerulean
 code_folding: show
@@ -56,7 +56,7 @@ date = Sys.Date()
 
 #Packages
 Install packages (if they are not available in your version of R)
-```{r Installing packages}
+```{r Installing packages, include = FALSE}
 #install.packages("summarytools")
 #install.packages("tidyverse")
 #install.packages("psych")
@@ -69,7 +69,7 @@ Install packages (if they are not available in your version of R)
 ```
 
 Load packages
-```{r Load packages}
+```{r Load packages, include = FALSE}
 library(knitr)
 library(summarytools)
 library(psych)
@@ -83,7 +83,7 @@ library(ggpubr)
 
 # Colour palettes
 Define colours for plotting this are the standard coping colours
-```{r Colour palettes: COPING}
+```{r Colour palettes: COPING, include = FALSE}
 COPINGpalette2 <- c("#78D9C5",
                     "#F5BE5E")
 
@@ -145,7 +145,7 @@ palette = COPINGpalette2
 
 # ggplot theme
 Set up ggplot theme for the plots
-```{r ggplot theme}
+```{r ggplot theme, include=FALSE}
 theme_personal <-  theme(
     text = element_text(color = "black"),
     axis.title = element_text(color = "black"),
@@ -176,7 +176,7 @@ source("../PANCHANGE_raw_path.R")
 
 
 ## Read in data
-```{r read in data}
+```{r read in data, include = FALSE}
 dat.raw <- readRDS(file = paste0(data_path, "/baseline_and_cfs_wave6.rds")) #NEEDS CHANGING
 dim(dat.raw)
 colnames(dat.raw)
@@ -378,7 +378,7 @@ sex_category_per_Covid_prop_total
 
 ## Key worker status
 
-```{r}
+```{r key worker status frequencies by probable Covid}
 key_worker_category_per_Covid_prop_total <- dat.raw %>%
   filter(!is.na(key_worker)) %>%
   filter(!is.na(covid_probable_case_incl_screening)) %>%
@@ -1010,10 +1010,10 @@ dat.raw %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
-# Scoring for neuro measures
+# Scoring for neuro measures (NOT INCLUDED)
 
 # ALSfrs
-```{r ALSfrs col names}
+```{r ALSfrs col names, include = FALSE}
 als.col.names <- dat.raw %>%
   select(
     starts_with("alsfrs") & ends_with("numeric")
@@ -1022,14 +1022,14 @@ als.col.names <- dat.raw %>%
 
 ```
 
-```{r ALSfrs row sums}
+```{r ALSfrs row sums, include = FALSE}
 dat.raw <- dat.raw %>%
   mutate(als.sum.score =
   rowSums(select(.,als.col.names), na.rm = F)
    )
 ```
 
-```{r ALSfrs frequencies}
+```{r ALSfrs frequencies, include = FALSE}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
   filter(!is.na(covid_probable_case_incl_screening)) %>%
@@ -1040,7 +1040,7 @@ dat.raw %>%
 
 ```
 # ESS
-```{r ESS col names}
+```{r ESS col names, include = FALSE}
 ess.col.names <- dat.raw %>%
   select(
     starts_with("ess") & ends_with("numeric")
@@ -1049,14 +1049,14 @@ ess.col.names <- dat.raw %>%
 
 ```
 
-```{r ESS row sums}
+```{r ESS row sums, include = FALSE}
 dat.raw <- dat.raw %>%
   mutate(ess.col.names =
    rowSums(select(.,ess.col.names), na.rm = F)
    )
 ```
 
-```{r ESS frequencies}
+```{r ESS frequencies, include=FALSE}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
   filter(!is.na(covid_probable_case_incl_screening)) %>%
@@ -1067,7 +1067,7 @@ dat.raw %>%
 ```
 
 
-```{r nmsw col names}
+```{r nmsw col names, include = FALSE}
 nmsw.col.names <- dat.raw %>%
   select(
     starts_with("nmsw") & ends_with("numeric")
@@ -1077,7 +1077,7 @@ nmsw.col.names
 
 ```
 
-```{r scoring NMSW}
+```{r scoring NMSW, include = FALSE}
 dat.raw <- dat.raw %>% 
   mutate(nmsw.sum_score = 
            rowSums(select(.,nmsw.col.names), na.rm = FALSE)
@@ -1087,7 +1087,7 @@ dat.raw <- dat.raw %>%
 
 ## CFS
 
-```{r select cfs variables}
+```{r select cfs variables, include = FALSE}
 cfs.col.names <- dat.raw %>%
   select(
     starts_with("cfs") & ends_with("numeric")
@@ -1096,7 +1096,7 @@ cfs.col.names <- dat.raw %>%
 cfs.col.names
 ```
 
-```{r calculate sum score}
+```{r calculate sum score, include = FALSE}
 dat.raw <- dat.raw %>%
   mutate(cfs.sum_score =
    rowSums(select(.,cfs.col.names), na.rm = F) - 11
@@ -1116,7 +1116,7 @@ dat.raw <- dat.raw <- dat.raw %>%
    )
 ```
 
-```{r}
+```{r get sum scores by probable Covid}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
   filter(!is.na(covid_probable_case_incl_screening)) %>%
@@ -1128,7 +1128,9 @@ dat.raw %>%
 
 ```
 
-```{r}
+CFS cut-off scores require individual symptom-level scores to be binary.
+Script below recodes variables to binary.
+```{r recode cfs variables to binary, include = FALSE}
 dat.raw$cfs.correct_word_find_difficult_binary <- if_else(dat.raw$cfs.correct_word_find_difficult_numeric >= 3, 1,0)
 dat.raw$cfs.do_you_have_problems_with_tiredness_binary<- if_else(dat.raw$cfs.do_you_have_problems_with_tiredness_numeric >= 3, 1,0)
 dat.raw$cfs.do_you_feel_sleepy_or_drowsy_binary <- if_else(dat.raw$cfs.do_you_feel_sleepy_or_drowsy_numeric >= 3, 1,0)
@@ -1142,7 +1144,7 @@ dat.raw$cfs.make_slips_speaking_tongue_binary <- if_else(dat.raw$cfs.make_slips_
 dat.raw$cfs.strength_muscles_binary <- if_else(dat.raw$cfs.strength_muscles_numeric >= 3, 1,0)
 ```
 
-```{r}
+```{r cfs select binary variables, include = FALSE}
 cfs.col.names.bi <- dat.raw %>%
   select(
     starts_with("cfs") & ends_with("binary")
@@ -1150,7 +1152,8 @@ cfs.col.names.bi <- dat.raw %>%
   colnames()
 cfs.col.names.bi
 ```
-```{r}
+
+```{r calculate cfs cut-off groups, include = FALSE}
 dat.raw <- dat.raw %>%
   mutate(cfs.sum_score_binary =
    rowSums(select(.,cfs.col.names.bi), na.rm = F) 
@@ -1161,7 +1164,7 @@ dat.raw <- dat.raw %>%
    
 ```
 
-```{r}
+```{r cfs fatigue cases by probable covid}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
   filter(!is.na(covid_probable_case_incl_screening)) %>%
@@ -1170,3 +1173,16 @@ dat.raw %>%
   count(covid_probable_case_incl_screening, cfs.sum_score_case) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
+
+```{r cfs fatigue cases by probable covid by Sample}
+fatigue_by_covid_by_sample <- dat.raw %>%
+  filter(!is.na(startDate.coping)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  filter(!is.na(cfs.sum_score_case)) %>%
+  group_by(covid_probable_case_incl_screening, Sample) %>%
+  count(covid_probable_case_incl_screening, cfs.sum_score_case) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(fatigue_by_covid_by_sample)
+```
+

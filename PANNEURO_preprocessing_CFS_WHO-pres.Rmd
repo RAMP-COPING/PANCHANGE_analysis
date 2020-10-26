@@ -246,7 +246,6 @@ cfs.raw.id <- bind_rows(
   nbr.cfs.raw.id,
   glad.edgi.cfs.raw.id
   )
-
 ```
 
 #Select subsample
