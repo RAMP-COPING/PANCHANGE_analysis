@@ -177,7 +177,7 @@ source("../PANCHANGE_raw_path.R")
 
 ## Read in data
 ```{r read in data}
-dat.raw <- readRDS(file = paste0(data_path, "/four_cohorts.rds")) #NEEDS CHANGING
+dat.raw <- readRDS(file = paste0(data_path, "/baseline_and_cfs_wave6.rds")) #NEEDS CHANGING
 dim(dat.raw)
 colnames(dat.raw)
 ```
@@ -230,6 +230,72 @@ dat.raw %>%
   spread(key = covid_test_positive, value = n)
 ```
 
+# Demographics
+## Ethnicity_collapsed
+### Pie charts
+**NEED TO CREATE ETHNICITY_collapsed variable**
+```{r Ethnicity_collapsed prop per total summary}
+Ethnicity_collapsed_prop_Covid <- dat.raw %>%
+  count(Ethnicity_collapsed, covid_probable_case_incl_screening) %>%
+  drop_na() %>%
+  mutate(freq = round(n/sum(n), 2))
+  
+# total responders
+ethN <- sum(Ethnicity_collapsed_prop_Covid$n)
+
+kable(Ethnicity_collapsed_prop_Covid)
+Ethnicity_collapsed_prop_Covid
+```
+
+pie chart with only European label
+
+```{r ethnicity pie chart biggest group label}
+eth_pie_alllabel <- 
+  Ethnicity_collapsed_prop_Sample %>%
+   mutate(Ethnicity_collapsed = fct_reorder(Ethnicity_collapsed,-n)) %>%
+  
+  ggplot(aes(x="", y=freq, fill=Ethnicity_collapsed)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette6) +
+  scale_color_manual(values =  COPINGpalette6) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported ethnicity",
+                      sep=" "),
+        subtitle = paste("n =", sum(Ethnicity_collapsed_prop_Sample$n),
+                         sep = " "),
+        fill = "Self reported ethnicity")  +
+    geom_text(aes(y = c(0.5),
+                  label= c(paste0(round((freq[1]*100),0),"%"))), #Frequency of European only
+             size=5,
+             face="bold"
+             )  
+
+eth_pie_alllabel
+```
+
+
+Pie chart - no labels
+
+```{r ethnicity pie chart no label}
+eth_pie_nolabel <- 
+  Ethnicity_collapsed_prop_Sample %>%
+   mutate(Ethnicity_collapsed = fct_reorder(Ethnicity_collapsed,-n)) %>%
+  
+  ggplot(aes(x="", y=freq, fill=Ethnicity_collapsed)) +
+  geom_bar(width = 1, stat = "identity") +
+  scale_fill_manual(values =  COPINGpalette6) +
+  scale_color_manual(values =  COPINGpalette6) +
+  coord_polar("y",start=0) +
+  theme_void() +
+   labs(title = paste("RAMP/COPING sample self reported ethnicity",
+                      sep=" "),
+        subtitle = paste("n =", sum(Ethnicity_collapsed_prop_Sample$n),
+                         sep = " "),
+        fill = "Self reported ethnicity")
+
+eth_pie_nolabel
+```
 
 # Neurological frequencies
 ** NEED TO BE CHANGED TO covid_probable_case_incl_screening **
