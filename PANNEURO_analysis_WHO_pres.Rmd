@@ -213,7 +213,7 @@ dat.raw %>%
 
 
 ## COVID probable diagnosis
-```{r COVID probable diagnosis}
+```{r COVID probable diagnosis frequencies}
 dat.raw %>%
   count(covid_probable_case_incl_screening, Sample) %>%
   mutate(Prop = round(n/sum(n), 2))
@@ -233,36 +233,130 @@ dat.raw %>%
 # Demographics
 
 ## Age
-## Proportion tables
-```{r age_category per Sample prop per total}
+### Proportion tables
+```{r age_category per Covid prop per total}
 age_category_per_Covid_prop_total <- dat.raw %>%
   count(age_category, covid_probable_case_incl_screening) %>%
-  mutate(Prop = round(n/sum(n), 2))
+  mutate(Prop = round(n/sum(n), 2)) %>% 
+  drop_na()
 
 kable(age_category_per_Covid_prop_total)
 age_category_per_Covid_prop_total
 ```
 
-```{r age_category per Sample prop per Sample}
-age_category_per_Sample_prop_Sample <- dat.raw %>%
-  group_by(Sample) %>%
-  count(age_category, Sample) %>%
-  mutate(Prop = round(n/sum(n), 2))
+```{r age_category per Covid prop per Covid}
+age_category_per_Covid_prop_Covid <- dat.raw %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(age_category, covid_probable_case_incl_screening) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>% 
+  drop_na()
 
-kable(age_category_per_Sample_prop_Sample)
-age_category_per_Sample_prop_Sample
+kable(age_category_per_Covid_prop_Covid)
+age_category_per_Covid_prop_Covid
 ```
 
-## Cross tables
-```{r age_category per Sample prop cross table}
-age_category_per_Sample_prop_Sample_cross_table <- dat.raw %>%
-  group_by(Sample) %>%
-  count(age_category, Sample) %>%
+### Cross tables
+```{r age_category per Covid prop cross table}
+age_category_per_Covid_prop_Covid_cross_table <- dat.raw %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(age_category, covid_probable_case_incl_screening) %>%
+  drop_na() %>% 
   mutate(Prop = round(n/sum(n), 2)) %>%
-  pivot_wider(names_from = Sample, values_from = c(n, Prop))
+  pivot_wider(names_from = covid_probable_case_incl_screening, values_from = c(n, Prop))
 
-kable(age_category_per_Sample_prop_Sample_cross_table)
-age_category_per_Sample_prop_Sample_cross_table
+kable(age_category_per_Covid_prop_Covid_cross_table)
+age_category_per_Covid_prop_Covid_cross_table
+```
+
+### Collapse age categories
+```{r Collapse age_category}
+dat.raw <- dat.raw %>%
+  mutate(age_category_collapsed_numeric =
+           case_when(
+             age_category_numeric == 1 ~ 0,
+             age_category_numeric == 2 ~ 1,
+             age_category_numeric == 3 ~ 2,
+             age_category_numeric == 4 ~ 3,
+             age_category_numeric == 5 ~ 4,
+             age_category_numeric == 6 ~ 5,
+             age_category_numeric == 7 ~ 6,
+             age_category_numeric == 8 ~ 7,
+             age_category_numeric == 9 ~ 8,
+             age_category_numeric == 10 ~ 8,
+             age_category_numeric == 11 ~ 8,
+             age_category_numeric == 12 ~ 8,
+             age_category_numeric == 13 ~ 8
+             
+           )
+  )
+
+dat.raw <- dat.raw %>%
+  mutate(age_category_collapsed =
+           recode_factor(
+             age_category_collapsed_numeric,
+             `0` = "16-18",
+             `1` = "19-25",
+             `2` = "26-35",
+             `3` = "36-45",
+             `4` = "46-55",
+             `5` = "56-65",
+             `6` = "66-70",
+             `7` = "71-75",
+             `8` = "76+"
+           )
+  )
+
+dat.raw %>%
+  freq(age_category_collapsed)
+```
+
+### Proportion tables
+```{r age_category_collapsed per Sample prop per total}
+age_category_collapsed_per_Covid_prop_total <- dat.raw %>%
+  count(age_category_collapsed, covid_probable_case_incl_screening) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>% 
+  drop_na()
+
+kable(age_category_collapsed_per_Covid_prop_total)
+age_category_collapsed_per_Covid_prop_total
+```
+
+```{r age_category_collapsed per Sample prop per Sample}
+age_category_collapsed_per_Covid_prop_Covid <- dat.raw %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(age_category_collapsed, covid_probable_case_incl_screening) %>%
+  mutate(Prop = round(n/sum(n), 2)) %>% 
+  drop_na()
+
+kable(age_category_collapsed_per_Covid_prop_Covid)
+age_category_collapsed_per_Covid_prop_Covid
+```
+
+### Cross tables
+```{r age_category_collapsed per Sample prop cross table}
+age_category_collapsed_per_Covid_prop_Covid_cross_table <- dat.raw %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(age_category_collapsed, covid_probable_case_incl_screening) %>%
+  drop_na() %>% 
+  mutate(Prop = round(n/sum(n), 2)) %>%
+  pivot_wider(names_from = covid_probable_case_incl_screening, values_from = c(n, Prop))
+
+kable(age_category_collapsed_per_Covid_prop_Covid_cross_table)
+age_category_collapsed_per_Covid_prop_Covid_cross_table
+```
+
+### Chi square test
+```{r age_category per probable Covid chisquare test}
+age_category_per_Covid_chissquare_test <- dat.raw %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  count(age_category_collapsed, covid_probable_case_incl_screening) %>%
+  spread(key = covid_probable_case_incl_screening, value = n) %>%
+  select(-age_category_collapsed) %>%
+  chisq.test() %>%
+  glance()
+
+kable(age_category_per_Covid_chissquare_test)
+age_category_per_Covid_chissquare_test
 ```
 
 ## Sex
@@ -378,10 +472,24 @@ Ethnicity_by_Covid_collapsed_count
 
 ```
 
+###Chi-square
+
+```{r ethnicity per probable Covid chisquare test}
+ethnicity_per_Covid_chissquare_test <- dat.raw %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  count(Ethnicity_collapsed, covid_probable_case_incl_screening) %>%
+  spread(key = covid_probable_case_incl_screening, value = n) %>%
+  select(-Ethnicity_collapsed) %>%
+  chisq.test() %>%
+  glance()
+
+kable(ethnicity_per_Covid_chissquare_test)
+ethnicity_per_Covid_chissquare_test
+```
 
 
 # Neurological frequencies
-** NEED TO BE CHANGED TO covid_probable_case_incl_screening **
+
 ```{r neurological frequencies alsfrs}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
@@ -902,7 +1010,8 @@ dat.raw %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
-**ADD SCORING FOR NEURO MEASURES**
+# Scoring for neuro measures
+
 # ALSfrs
 ```{ALSfrs col names r}
 als.col.names <- dat.raw %>%
