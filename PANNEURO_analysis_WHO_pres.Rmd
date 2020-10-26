@@ -177,7 +177,7 @@ source("../PANCHANGE_raw_path.R")
 
 ## Read in data
 ```{r read in data}
-dat.raw <- readRDS(file = paste0(data_path, "/four_cohorts.rds")) #NEEDS CHANGING
+dat.raw <- readRDS(file = paste0(data_path, "/baseline_and_cfs_wave6.rds")) #NEEDS CHANGING
 dim(dat.raw)
 colnames(dat.raw)
 ```
