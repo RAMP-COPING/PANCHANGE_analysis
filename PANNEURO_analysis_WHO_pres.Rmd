@@ -860,7 +860,7 @@ ess.col.names <- dat.raw %>%
 ```{ESS row sums r}
 dat.raw <- dat.raw %>%
   mutate(ess.col.names =
-   rowSums(select(.,als.col.names), na.rm = F)
+   rowSums(select(.,ess.col.names), na.rm = F)
    )
 ```
 
@@ -894,4 +894,61 @@ dat.raw <- dat.raw %>%
 
 
 
+## CFS
+
+```{r}
+cfs.col.names <- dat.raw %>%
+  select(
+    starts_with("cfs") & ends_with("numeric")
+  ) %>%
+  colnames()
+cfs.col.names
+```
+```{r}
+dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score =
+   rowSums(select(.,cfs.col.names), na.rm = F) - 11
+   )
+cfs.col.names.physio <- cfs.col.names[1:7]
+
+dat.raw <- dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score_physical=
+   rowSums(select(.,cfs.col.names.physio), na.rm = F) - 7
+   )
+
+cfs.col.names.psych <- cfs.col.names[8:11]
+
+dat.raw <- dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score_psyhchological =
+   rowSums(select(.,cfs.col.names.psych), na.rm = F) -4
+   )
+```
+
+```{r}
+dat.raw %>%
+  filter(!is.na(startDate.coping)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  filter(!is.na(cfs.sum_score)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  summarise(mean_total = mean(cfs.sum_score, na.rm = TRUE),
+            mean_physical = mean(cfs.sum_score_physical, na.rm = TRUE),
+            mean_psychological = mean (cfs.sum_score_psyhchological, na.rm = TRUE)) 
+
+```
+
+```{r}
+dat.raw <- dat.raw %>%
+  mutate(cfs.sum_score_case = if_else(cfs.sum_score > 11, "Fatigue", "No fatigue")) #not sure if 11 is the right cut off
+   
+```
+
+```{r}
+dat.raw %>%
+  filter(!is.na(startDate.coping)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  filter(!is.na(cfs.sum_score_case)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, cfs.sum_score_case) %>%
+  mutate(Prop = round(n/sum(n), 2))
+```
 
