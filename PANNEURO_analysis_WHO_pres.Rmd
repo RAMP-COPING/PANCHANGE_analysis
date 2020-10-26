@@ -957,6 +957,7 @@ dat.raw %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
+
 ```{r nmsw col names}
 nmsw.col.names <- dat.raw %>%
   select(
@@ -972,9 +973,6 @@ dat.raw <- dat.raw %>%
   mutate(nmsw.sum_score = 
            rowSums(select(.,nmsw.col.names), na.rm = FALSE)
            )
-
-```
-
 
 
 ## CFS
@@ -1061,4 +1059,3 @@ dat.raw %>%
   count(covid_probable_case_incl_screening, cfs.sum_score_case) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
-
