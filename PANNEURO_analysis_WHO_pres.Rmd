@@ -773,14 +773,22 @@ dat.raw <- dat.raw %>%
 
 ```
 
-```{r NMSW sum score frequencies}
-dat.raw %>%
-  filter(!is.na(startDate.coping)) %>%
-  filter(!is.na(covid_test_positive)) %>%
-  filter(!is.na(nmsw.sum_score)) %>%
-  group_by(covid_test_positive) %>%
-  count(covid_test_positive, nmsw.sum_score) %>%
-  mutate(Prop = round(n/sum(n), 2))
+
+```{r}
+nmsw.col.names <- dat.raw %>%
+  select(
+    starts_with("ess") & ends_with("numeric")
+  ) %>% 
+  colnames()
+nmsw.col.names
+```
+```{r}
+dat.raw <- dat.raw %>% 
+  filter(ess.felt_excessively_sleepy_past_numeric == 1) %>%
+  mutate(ess.sum_score = 
+           rowSums(select(.,nmsw.col.names), na.rm = FALSE)
+           )
+
 ```
 
 
