@@ -1013,7 +1013,7 @@ dat.raw %>%
 # Scoring for neuro measures
 
 # ALSfrs
-```{ALSfrs col names r}
+```{r ALSfrs col names}
 als.col.names <- dat.raw %>%
   select(
     starts_with("alsfrs") & ends_with("numeric")
@@ -1022,14 +1022,14 @@ als.col.names <- dat.raw %>%
 
 ```
 
-```{ALSfrs row sums r}
+```{r ALSfrs row sums}
 dat.raw <- dat.raw %>%
   mutate(als.sum.score =
   rowSums(select(.,als.col.names), na.rm = F)
    )
 ```
 
-```{ALSfrs frequencies r}
+```{r ALSfrs frequencies}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
   filter(!is.na(covid_probable_case_incl_screening)) %>%
@@ -1040,7 +1040,7 @@ dat.raw %>%
 
 ```
 # ESS
-```{ESS col names r}
+```{r ESS col names}
 ess.col.names <- dat.raw %>%
   select(
     starts_with("ess") & ends_with("numeric")
@@ -1049,14 +1049,14 @@ ess.col.names <- dat.raw %>%
 
 ```
 
-```{ESS row sums r}
+```{r ESS row sums}
 dat.raw <- dat.raw %>%
   mutate(ess.col.names =
    rowSums(select(.,ess.col.names), na.rm = F)
    )
 ```
 
-```{ESS frequencies r}
+```{r ESS frequencies}
 dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
   filter(!is.na(covid_probable_case_incl_screening)) %>%
@@ -1083,10 +1083,11 @@ dat.raw <- dat.raw %>%
            rowSums(select(.,nmsw.col.names), na.rm = FALSE)
            )
 
+```
 
 ## CFS
 
-```{r}
+```{r select cfs variables}
 cfs.col.names <- dat.raw %>%
   select(
     starts_with("cfs") & ends_with("numeric")
@@ -1094,7 +1095,8 @@ cfs.col.names <- dat.raw %>%
   colnames()
 cfs.col.names
 ```
-```{r}
+
+```{r calculate sum score}
 dat.raw <- dat.raw %>%
   mutate(cfs.sum_score =
    rowSums(select(.,cfs.col.names), na.rm = F) - 11
