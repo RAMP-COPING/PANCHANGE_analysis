@@ -171,7 +171,7 @@ theme_personal <-  theme(
 
 ```{r source file path}
 #source data directory: data_path
-source("/Users/alishpalmos/Documents/GitHub//PANCHANGE_raw_path.R")
+source("../PANCHANGE_raw_path.R")
 ```
 
 
@@ -376,7 +376,7 @@ sex_category_per_Covid_prop_total
 
 ## BMI 
 
-```{r}
+```{r bmi recode}
 
 dat.raw$bmi[is.infinite(dat.raw$bmi)] = NA
 
@@ -1120,11 +1120,11 @@ dat.raw %>%
 
 ```
 
-```{r ESS raw score frequencies}
+```{r ESS raw scores by Covid case}
 ess_frequencies <- dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
   filter(!is.na(covid_probable_case_incl_screening)) %>%
-  filter(!is.na(ess.col.names)) %>%
+  filter(!is.na(ess.sum_score_raw)) %>%
   group_by(covid_probable_case_incl_screening) %>%
   count(covid_probable_case_incl_screening, ess.sum_score_raw) %>%
   mutate(Prop = round(n/sum(n), 2))
@@ -1141,10 +1141,10 @@ ESS scores: Interpretation
 ```{r ess clinical categories}
 dat.raw <- dat.raw %>% 
   mutate(ess.cutoff.scores =
-           case_when(ess.col.names <= 10 ~ "Normal sleepiness",
-                     ess.col.names > 10 & ess.col.names <= 14 ~ "Mild sleepiness",
-                     ess.col.names > 14 & ess.col.names <= 17 ~ "Moderate sleepiness",
-                     ess.col.names > 17 & ess.col.names <= 24 ~ "Severe sleepiness",
+           case_when(ess.sum_score_raw <= 10 ~ "Normal sleepiness",
+                     ess.sum_score_raw > 10 & ess.sum_score_raw <= 14 ~ "Mild sleepiness",
+                     ess.sum_score_raw > 14 & ess.sum_score_raw <= 17 ~ "Moderate sleepiness",
+                     ess.sum_score_raw > 17 & ess.sum_score_raw <= 24 ~ "Severe sleepiness",
                      )
            )
 
@@ -1152,17 +1152,19 @@ dat.raw <- dat.raw %>%
 ```
 
 ```{r ESS clinical categories frequencies}
-ess_frequencies <- dat.raw %>%
+ess_frequencies_clinical <- dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
   filter(!is.na(covid_probable_case_incl_screening)) %>%
-  filter(!is.na(ess.cutoff.scores)) %>%
+  filter(!is.na(ess.sum_score_raw)) %>%
   group_by(covid_probable_case_incl_screening) %>%
   count(covid_probable_case_incl_screening, ess.cutoff.scores) %>%
   mutate(Prop = round(n/sum(n), 2))
 
-kable(ess_frequencies)
+kable(ess_frequencies_clinical)
 ```
 
+
+# NMSW
 ```{r nmsw col names, include = FALSE}
 nmsw.col.names <- dat.raw %>%
   select(
