@@ -1010,9 +1010,9 @@ dat.raw %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
 
-# Scoring for neuro measures (NOT INCLUDED)
+# Scoring for neuro measures
 
-# ALSfrs
+# ALSfrs (not included)
 ```{r ALSfrs col names, include = FALSE}
 als.col.names <- dat.raw %>%
   select(
@@ -1039,6 +1039,7 @@ dat.raw %>%
   mutate(Prop = round(n/sum(n), 2)) 
 
 ```
+
 # ESS
 ```{r ESS col names, include = FALSE}
 ess.col.names <- dat.raw %>%
@@ -1047,25 +1048,89 @@ ess.col.names <- dat.raw %>%
   ) %>%
   colnames()
 
+ess.col.names
 ```
 
 ```{r ESS row sums, include = FALSE}
-dat.raw <- dat.raw %>%
-  mutate(ess.col.names =
-   rowSums(select(.,ess.col.names), na.rm = F)
-   )
+
+# Create vector with scoring key: If the item is reversed coded use -1. 
+# There needs to be the correct number of values for each item in the questionnaire. 
+ess.items_key <- c(1,1,1,1,1,1,1,1)
+
+# Create vector with items that are included in sum score
+ess.items <- c(
+  "ess.sitting_and_reading_numeric",
+  "ess.watching_tv_numeric",
+  "ess.sitting_inactive_in_a_public_place_numeric",
+  "ess.break_passenger_car_hour_numeric",
+  "ess.afternoon_rest_circumstances_lying_numeric",
+  "ess.sitting_and_talking_to_someone_numeric",
+  "ess.sitting_quietly_after_a_lunch_without_alcohol_numeric",
+  "ess.car_minutes_stopped_traffic_numeric"
+  )
+
+# Calculate sum score
+ess.scored_items <- scoreItems(keys = ess.items_key,
+                                        items = dat.raw[ess.items],
+                                        totals = TRUE, 
+                                        missing = TRUE, 
+                                        impute = 'none', 
+                                        min = 0, 
+                                        max = 3)
+# Add in column to tibble
+dat.raw$ess.sum_score_raw <- ess.scored_items$scores
+
+# Look at values
+dat.raw %>%
+  group_by(covid_probable_case_incl_screening) %>% 
+  descr(ess.sum_score_raw,
+        stats = "common"
+        )
+
 ```
 
-```{r ESS frequencies, include=FALSE}
-dat.raw %>%
+```{r ESS raw score frequencies}
+ess_frequencies <- dat.raw %>%
   filter(!is.na(startDate.coping)) %>%
   filter(!is.na(covid_probable_case_incl_screening)) %>%
   filter(!is.na(ess.col.names)) %>%
   group_by(covid_probable_case_incl_screening) %>%
-  count(covid_probable_case_incl_screening, ess.col.names) %>%
+  count(covid_probable_case_incl_screening, ess.sum_score_raw) %>%
   mutate(Prop = round(n/sum(n), 2))
+
+kable(ess_frequencies)
 ```
 
+ESS scores: Interpretation
+•	0 to 10 = normal range of sleepiness in healthy adults
+•	11 to 14 = mild sleepiness
+•	15 to 17 = moderate sleepiness
+•	18 to 24 = severe sleepiness
+
+```{r ess clinical categories}
+dat.raw <- dat.raw %>% 
+  mutate(ess.cutoff.scores =
+           case_when(ess.col.names <= 10 ~ "Normal sleepiness",
+                     ess.col.names > 10 & ess.col.names <= 14 ~ "Mild sleepiness",
+                     ess.col.names > 14 & ess.col.names <= 17 ~ "Moderate sleepiness",
+                     ess.col.names > 17 & ess.col.names <= 24 ~ "Severe sleepiness",
+                     )
+           )
+
+
+```
+
+```{r ESS clinical categories frequencies}
+ess_frequencies <- dat.raw %>%
+  filter(!is.na(startDate.coping)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  filter(!is.na(ess.cutoff.scores)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, ess.cutoff.scores) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(ess_frequencies)
+```
 
 ```{r nmsw col names, include = FALSE}
 nmsw.col.names <- dat.raw %>%
@@ -1184,5 +1249,12 @@ fatigue_by_covid_by_sample <- dat.raw %>%
   mutate(Prop = round(n/sum(n), 2))
 
 kable(fatigue_by_covid_by_sample)
+```
+
+
+## Memory
+
+```{r}
+
 ```
 
