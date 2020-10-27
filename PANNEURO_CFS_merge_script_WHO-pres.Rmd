@@ -1,6 +1,6 @@
 ---
-title: "PANCHANGE_data_merging"
-author: "Christopher Huebel"
+title: "Data merging for WHO presentation"
+author: "Christopher Huebel and Molly Davies"
 date: "17/08/2020"
 output: html_document
 ---
@@ -57,19 +57,31 @@ dim(coping_baseline)
 cfs_wave6 <- read_rds(path = paste0(data_path, "/cfs_wave6.rds"))
 dim(cfs_wave6)
 
-bmi <- read_rds(path = paste0(data_path, "/bmi.rds"))
+bmi_data <- read_rds(path = paste0(data_path, "/bmi.rds"))
 
 ```
 
+```{r rename NBR cohort in bmi dataset}
+bmi_data <- bmi_data%>%
+  mutate(
+    Sample = 
+    recode(
+      Sample, 
+      "SP0068" = "NBR"
+    )
+  )
+```
 
 ```{r merge data frames}
-dat <- left_join(
+dat1 <- left_join(
   coping_baseline,
   cfs_wave6, by = c("Sample", "ID")
 )
 
 dat <- left_join(
-  dat, bmi, by = c("Sample", "ID")
+  dat1,
+  bmi_data,
+  by = c("Sample", "ID")
 )
 ```
 

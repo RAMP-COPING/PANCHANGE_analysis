@@ -150,7 +150,7 @@ exclude_cols <- c("ID",
 nbr.cfs.raw.id <- cfs.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   #distinct(externalDataReference, .keep_all = TRUE) %>% # DO NOT remove duplicates based on ID. We will need to divide them by startDate. 
-  filter(startsWith(externalDataReference, 'SP', trim=TRUE)) %>%  #NBR cohort
+  filter(str_detect(externalDataReference, "SP")) %>%  #NBR cohort
   separate(externalDataReference, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
   separate(ID.intm, into = "ID", sep = 7) %>% 
   mutate(ID = as.numeric(ID)) %>%
@@ -187,7 +187,7 @@ nbr.cfs.raw.id <- cfs.raw %>%
 glad.edgi.cfs.raw.id <- cfs.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   #distinct(externalDataReference, .keep_all = TRUE) %>% # DO NOT remove duplicates based on ID. We will need to divide them by startDate. 
-  filter(startsWith(externalDataReference, 'GLAD', trim=TRUE) | startsWith(externalDataReference, 'EDGI', trim=TRUE)) %>% 
+  filter(str_detect(externalDataReference, "GLAD") | str_detect(externalDataReference, "EDGI")) %>% 
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID)) %>%
   select(
@@ -219,12 +219,6 @@ glad.edgi.cfs.raw.id <- cfs.raw %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
   mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
 
-# Merge datasets
-cfs.raw.id <- bind_rows(
-  nbr.cfs.raw.id,
-  glad.edgi.cfs.raw.id
-  )
-
 # Inspect dimensions
 dim(cfs.raw.id)
 # Inspect colnames
@@ -234,15 +228,24 @@ dim(cfs.raw)[1]-dim(cfs.raw.id)[1]
 
 ```
 
-```{r recode NBR sample}
-cfs.raw.id <- cfs.raw.id %>% 
-  mutate(Sample = 
-           case_when(
-             Sample == "SP0068" ~ "NBR",
-             Sample == "GLAD" ~ "GLAD",
-             Sample == "EDGI" ~ "EDGI"
-           ))
-freq(cfs.raw.id$Sample)
+
+```{r rename NBR cohort}
+nbr.cfs.raw.id <- nbr.cfs.raw.id%>%
+  mutate(
+    Sample = 
+    recode(
+      Sample, 
+      "SP0068" = "NBR"
+    )
+  )
+```
+
+```{r merge datasets}
+# Merge datasets
+cfs.raw.id <- bind_rows(
+  nbr.cfs.raw.id,
+  glad.edgi.cfs.raw.id
+  )
 ```
 
 
