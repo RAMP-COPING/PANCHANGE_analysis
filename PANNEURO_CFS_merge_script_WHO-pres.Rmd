@@ -44,7 +44,7 @@ library(skimr)
 
 ```{r source file path}
 #source raw data directory: data.raw_path
-source("../PANCHANGE_raw_path.R")
+source("/Users/alishpalmos/Documents/GitHub//PANCHANGE_raw_path.R")
 ```
 
 
@@ -57,6 +57,8 @@ dim(coping_baseline)
 cfs_wave6 <- read_rds(path = paste0(data_path, "/cfs_wave6.rds"))
 dim(cfs_wave6)
 
+bmi <- read_rds(path = paste0(data_path, "/bmi.rds"))
+
 ```
 
 
@@ -64,6 +66,10 @@ dim(cfs_wave6)
 dat <- left_join(
   coping_baseline,
   cfs_wave6, by = c("Sample", "ID")
+)
+
+dat <- left_join(
+  dat, bmi, by = c("Sample", "ID")
 )
 ```
 
