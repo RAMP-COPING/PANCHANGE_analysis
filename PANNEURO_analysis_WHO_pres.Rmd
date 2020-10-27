@@ -171,7 +171,7 @@ theme_personal <-  theme(
 
 ```{r source file path}
 #source data directory: data_path
-source("../PANCHANGE_raw_path.R")
+source("/Users/alishpalmos/Documents/GitHub//PANCHANGE_raw_path.R")
 ```
 
 
@@ -374,7 +374,38 @@ sex_category_per_Covid_prop_total
 ## Smoking not available 
 
 
-## BMI not available 
+## BMI 
+
+```{r}
+
+dat.raw$bmi[is.infinite(dat.raw$bmi)] = NA
+
+dat.raw <- dat.raw %>%
+  mutate(
+  bmi.categories=cut(dat.raw$bmi, breaks=c(-Inf, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55,  Inf), labels=c("too low","10 and less","10 to 15", "15 to 20", "20 to 25", "25 to 30", "30 to 35", "35 to 40", "40 to 45", "45 to 50", "50 to 55")))
+
+```
+
+```{r bmi_category per Sample prop per total}
+
+bmi_category_per_Covid_prop_total <- dat.raw %>%
+  count(bmi.categories, covid_probable_case_incl_screening) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+options(knitr.kable.NA = '')
+kable(bmi_category_per_Covid_prop_total)
+bmi_category_per_Covid_prop_total
+```
+```{r bmi_category per Sample prop per Sample}
+bmi_category_per_Sample_prop_Sample <- dat.raw %>%
+  group_by(Sample) %>%
+  count(bmi.categories, Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(bmi_category_per_Sample_prop_Sample)
+bmi_category_per_Sample_prop_Sample
+```
+
 
 ## Key worker status
 
@@ -393,7 +424,7 @@ key_worker_category_per_Covid_prop_total
 
 ## Smoking
 
-## BMI
+
 
 ## Key worker status
 

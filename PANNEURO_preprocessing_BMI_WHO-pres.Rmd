@@ -1,0 +1,278 @@
+---
+title: "PANNEURO_CFS_cleaning_WHO_pres"
+author: "Molly Davies (adapting from a script by K Purves, K Thompson, and C Huebel)"
+date: "26/10/2020"
+output: html_document
+---
+
+This is a script to quickly clean the Chalder Fatigue Scale in COPING follow-up set B, for the purpose of Gerome Breen's presentation to the WHO.
+
+#Set up
+```{r Setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      comment=NA,
+                      prompt=FALSE,
+                      cache=FALSE)
+
+
+options(bitmapType = 'quartz') # to render fonts better
+```
+
+Clear global environment
+```{r Clear global environment}
+remove(list = ls())
+```
+
+Retrieve the current date to use it for file endings to not overwrite files when one exports files
+```{r Recent date}
+date = Sys.Date()
+```
+
+#Packages
+Install packages (if they are not available in your version of R)
+```{r Installing packages}
+#install.packages("summarytools")
+#install.packages("tidyverse")
+#install.packages("psych")
+#install.packages("eeptools")
+#install.packages("skimr")
+```
+
+Load packages
+```{r Load packages}
+library(knitr)
+library(summarytools)
+library(psych)
+library(eeptools) # Needed to calculate age from birthdate
+library(tidyverse)
+```
+
+# Colour palettes
+Define colours for plotting this are the standard coping colours
+```{r Colour palettes: COPING}
+COPINGpalette2 <- c("#78D9C5",
+                    "#F5BE5E")
+
+COPINGpalette3 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9")
+
+COPINGpalette4 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73")
+
+COPINGpalette5 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73", 
+                    "#FFED98")
+
+COPINGpalette6 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73",
+                    "#FFED98",
+                    "#BFD2EB")
+
+COPINGpalette7 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73", 
+                    "#FFED98",
+                    "#BFD2EB", 
+                    "#808080")
+
+COPINGpaletteGRAD <- c("#F5BE5E",
+                       "#FFD284",
+                       "#FFEED1",
+                       "#B5B5B5",
+                       "#DEFFF8",
+                       "#94F6E1",
+                       "#78D9C5")
+
+COPINGNeuCenterpalette <- c("#78D9C5",
+                            "#808080",
+                            "#F5BE5E")
+
+RAMPworseGRADpalette <- c("#78D9C5",
+                          "#FFEED1",
+                          "#F5BE5E",
+                          "#FFB1B5")
+GLADpalette = c("#efc00b", 
+                "#b7dee8")  
+```
+
+Choose in this chunk which palette to use
+04.07.2020 - Default to 2 colour COPING palette
+```{r Choose colour palette}
+palette = COPINGpalette2
+```
+
+#Add_numeric function
+Function used to convert character variables into numeric variables. 
+```{r add_numeric function}
+add_numeric <- function(dat, exclude = NULL) {
+  dat_fct <- sjlabelled::as_label(dat)
+
+  dat <- dat[!colnames(dat) %in% exclude]
+  colnames(dat) <- paste(colnames(dat), "numeric", sep = "_")
+  return(bind_cols(dat_fct, dat))
+}
+```
+
+# Data import and merging
+
+Note: GLAD only receives current measures and RAMP questionnaire
+Note: All COPING surveys are separate surveys
+
+# Source data file paths 
+
+```{r source file path}
+#source raw data directory: data.raw_path
+source("../PANCHANGE_raw_path.R")
+```
+
+# Read in data
+```{r glad dem cols}
+nbr.bmi.raw <- readRDS(file = paste0(data.raw_path, "/nbr/dem_nbr.rds"))
+dim(nbr.bmi.raw)
+colnames(nbr.bmi.raw)
+
+glad.bmi.raw <- readRDS(file = paste0(data.raw_path, "/glad/dem_glad.rds"))
+dim(glad.bmi.raw)
+colnames(glad.bmi.raw)
+
+edgi.bmi.raw <- readRDS(file = paste0(data.raw_path, "/edgi/dem_edgi.rds"))
+dim(edgi.bmi.raw)
+colnames(edgi.bmi.raw)
+```
+
+# Select variables
+```{r cfs cleaning}
+
+# NBR cohort
+nbr.bmi.raw <- nbr.bmi.raw %>%
+    drop_na(subjectid) %>% # Drop NAs
+    distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
+    separate(ID.intm, into = "ID", sep = 7) %>%
+    mutate(ID = as.numeric(ID)) %>%
+    select(
+      Sample, # Sample
+      ID, # ID
+         height.1 = demographics.what_is_your_current_height.1, 
+         height.2 = demographics.what_is_your_current_height.2, 
+         height = demographics.what_is_your_current_height, 
+         weight = demographics.provide_current_weight_pregnant,
+         weight.1 = demographics.provide_current_weight_pregnant.1, 
+         weight.2 = demographics.provide_current_weight_pregnant.2)
+
+# GLAD cohort
+glad.bmi.raw <- glad.bmi.raw %>%
+    drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID)) %>%
+    select(
+      Sample, # Sample
+      ID, # ID
+         height.1 = demographics.what_is_your_current_height.1, 
+         height.2 = demographics.what_is_your_current_height.2, 
+         height = demographics.what_is_your_current_height, 
+         weight = demographics.current_weight_pregnant_weight,
+         weight.1 = demographics.current_weight_pregnant_weight.1, 
+         weight.2 = demographics.current_weight_pregnant_weight.2
+         )
+
+# EDGI 
+
+edgi.bmi.raw <- edgi.bmi.raw %>%
+  drop_na(externalDataReference) %>% # Drop NAs
+    distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
+    separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
+    mutate(ID = as.numeric(ID)) %>%
+    select(
+      Sample, # Sample
+      ID, # ID
+         height.1 = demographics.what_is_your_current_height.1, 
+         height.2 = demographics.what_is_your_current_height.2, 
+         height = demographics.what_is_your_current_height, 
+         weight = demographics.pregnant_current_weight_provide,
+         weight.1 = demographics.pregnant_current_weight_provide.1, 
+         weight.2 = demographics.pregnant_current_weight_provide.2
+         ) 
+
+ colnames(edgi.bmi.raw) <- c("Sample", "ID", "inch", "cm", "ft", "stn", "pnd", "kg")
+ colnames(nbr.bmi.raw) <- c("Sample", "ID", "inch", "cm", "ft", "stn", "pnd", "kg")
+ colnames(glad.bmi.raw) <- c("Sample", "ID", "ft", "inch", "cm", "kg", "stn", "pnd")
+
+
+edgi.bmi.raw$ft_cm <- (edgi.bmi.raw$ft * 30.48)
+edgi.bmi.raw$inch_cm <- (edgi.bmi.raw$inch * 2.54)
+edgi.bmi.raw$new_cm <- (edgi.bmi.raw$ft_cm + edgi.bmi.raw$inch_cm)
+edgi.bmi.raw$cm_all <- rowSums(edgi.bmi.raw[, c("cm", "new_cm")], na.rm=T)
+
+edgi.bmi.raw$stn_kg <- (edgi.bmi.raw$stn * 6.35029)
+edgi.bmi.raw$pnd_kg <- (edgi.bmi.raw$pnd * 0.453592)
+edgi.bmi.raw$new_kg <- (edgi.bmi.raw$stn_kg + edgi.bmi.raw$pnd_kg)
+edgi.bmi.raw$kg_all <- rowSums(edgi.bmi.raw[, c("kg", "new_kg")], na.rm=T)
+
+nbr.bmi.raw$cm <- as.numeric(nbr.bmi.raw$cm)
+nbr.bmi.raw$ft_cm <- (nbr.bmi.raw$ft * 30.48)
+nbr.bmi.raw$inch_cm <- (nbr.bmi.raw$inch * 2.54)
+nbr.bmi.raw$new_cm <- (nbr.bmi.raw$ft_cm + nbr.bmi.raw$inch_cm)
+nbr.bmi.raw$cm_all <- rowSums(nbr.bmi.raw[, c("cm", "new_cm")], na.rm=T)
+
+nbr.bmi.raw$stn_kg <- (nbr.bmi.raw$stn * 6.35029)
+nbr.bmi.raw$pnd_kg <- (nbr.bmi.raw$pnd * 0.453592)
+nbr.bmi.raw$new_kg <- (nbr.bmi.raw$stn_kg + nbr.bmi.raw$pnd_kg)
+nbr.bmi.raw$kg_all <- rowSums(nbr.bmi.raw[, c("kg", "new_kg")], na.rm=T)
+
+glad.bmi.raw$ft_cm <- (glad.bmi.raw$ft * 30.48)
+glad.bmi.raw$inch_cm <- (glad.bmi.raw$inch * 2.54)
+glad.bmi.raw$new_cm <- (glad.bmi.raw$ft_cm + glad.bmi.raw$inch_cm)
+glad.bmi.raw$cm_all <- rowSums(glad.bmi.raw[, c("cm", "new_cm")], na.rm=T)
+
+glad.bmi.raw$stn_kg <- (glad.bmi.raw$stn * 6.35029)
+glad.bmi.raw$pnd_kg <- (glad.bmi.raw$pnd * 0.453592)
+glad.bmi.raw$new_kg <- (glad.bmi.raw$stn_kg + glad.bmi.raw$pnd_kg)
+glad.bmi.raw$kg_all <- rowSums(glad.bmi.raw[, c("kg", "new_kg")], na.rm=T)
+
+# finally, we can calculate the BMI
+
+edgi.bmi.raw$cm_whole <- edgi.bmi.raw$cm_all/100
+edgi.bmi.raw$bmi <- edgi.bmi.raw$kg_all / (edgi.bmi.raw$cm_whole^2)
+
+nbr.bmi.raw$cm_whole <- nbr.bmi.raw$cm_all/100
+nbr.bmi.raw$bmi <- nbr.bmi.raw$kg_all / (nbr.bmi.raw$cm_whole^2)
+nbr.bmi.raw$bmi_new <- round(nbr.bmi.raw$bmi, digits = 2)
+nbr.bmi.raw$bmi <- nbr.bmi.raw$bmi_new
+
+
+glad.bmi.raw$cm_whole <- glad.bmi.raw$cm_all/100
+glad.bmi.raw$bmi <- glad.bmi.raw$kg_all / (glad.bmi.raw$cm_whole^2)
+
+# then let's get this into the main COPING data frame and delete this one and also tidy up 
+
+# Merge datasets
+
+glad.bmi.raw <- glad.bmi.raw %>%
+  select(Sample, ID, bmi)
+
+edgi.bmi.raw <- edgi.bmi.raw %>%
+  select(Sample, ID, bmi)
+
+nbr.bmi.raw <- nbr.bmi.raw %>%
+  select(Sample, ID, bmi)
+  
+ bmi <- as.data.frame(rbind(nbr.bmi.raw, 
+                                 glad.bmi.raw, 
+                                 edgi.bmi.raw))
+ 
+ 
+#Export dataset
+
+saveRDS(object = bmi, file = paste0(data_path, "/bmi.rds"))
+
+
