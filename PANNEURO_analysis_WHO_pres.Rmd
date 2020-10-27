@@ -1084,7 +1084,9 @@ dat.raw <- dat.raw %>%
            )
 
 
-## CFS
+
+```
+##CFS
 
 ```{r}
 cfs.col.names <- dat.raw %>%
@@ -1135,7 +1137,7 @@ dat.raw$cfs.do_you_have_difficulty_concentrating_binary <- if_else(dat.raw$cfs.d
 dat.raw$cfs.do_you_have_problems_starting_things_binary <- if_else(dat.raw$cfs.do_you_have_problems_starting_things_numeric >= 3, 1,0)
 dat.raw$cfs.do_you_lack_energy_binary <- if_else(dat.raw$cfs.do_you_lack_energy_numeric >= 3, 1,0)
 dat.raw$cfs.do_you_need_to_rest_more_binary <- if_else(dat.raw$cfs.do_you_need_to_rest_more_numeric >= 3, 1,0)
-dat.raw$cfs.how_is_your_memory_numeric_binary <- if_else(dat.raw$cfs.how_is_your_memory_numeric >= 3, 1,0) 
+dat.raw$cfs.how_is_your_memory_binary <- if_else(dat.raw$cfs.how_is_your_memory_numeric >= 3, 1,0) 
 dat.raw$cfs.make_slips_speaking_tongue_binary <- if_else(dat.raw$cfs.make_slips_speaking_tongue_numeric >= 3, 1,0)
 dat.raw$cfs.strength_muscles_binary <- if_else(dat.raw$cfs.strength_muscles_numeric >= 3, 1,0)
 ```
@@ -1168,3 +1170,38 @@ dat.raw %>%
   count(covid_probable_case_incl_screening, cfs.sum_score_case) %>%
   mutate(Prop = round(n/sum(n), 2))
 ```
+
+##memory 
+
+```{r, echo = FALSE}
+
+dat.raw[616] <- data.frame(dat.raw[616] %>%
+             map(lfactor, levels = c(0,1), labels = c("same/better", "worse")))
+
+mem.table <- dat.raw %>%
+  filter(!is.na(startDate.coping)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  filter(!is.na(cfs.how_is_your_memory)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, cfs.how_is_your_memory) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(mem.table)
+```
+
+```{r, echo = FALSE}
+
+mem.table2 <- dat.raw %>%
+  filter(!is.na(startDate.coping)) %>%
+  filter(!is.na(covid_probable_case_incl_screening)) %>%
+  filter(!is.na(cfs.how_is_your_memory_binary)) %>%
+  group_by(covid_probable_case_incl_screening) %>%
+  count(covid_probable_case_incl_screening, cfs.how_is_your_memory_binary) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(mem.table2)
+```
+
+```
+
+
