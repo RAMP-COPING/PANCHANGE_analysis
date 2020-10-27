@@ -44,7 +44,7 @@ library(skimr)
 
 ```{r source file path}
 #source raw data directory: data.raw_path
-source("../PANCHANGE_raw_path.R")
+source("/Users/alishpalmos/Documents/GitHub//PANCHANGE_raw_path.R")
 ```
 
 
@@ -83,7 +83,6 @@ dat <- left_join(
   bmi_data,
   by = c("Sample", "ID")
 )
-
 ```
 
 ```{r Skim data}

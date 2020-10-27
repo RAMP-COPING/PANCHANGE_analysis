@@ -228,6 +228,7 @@ dim(cfs.raw)[1]-dim(cfs.raw.id)[1]
 
 ```
 
+
 ```{r rename NBR cohort}
 nbr.cfs.raw.id <- nbr.cfs.raw.id%>%
   mutate(
@@ -239,7 +240,6 @@ nbr.cfs.raw.id <- nbr.cfs.raw.id%>%
   )
 ```
 
-
 ```{r merge datasets}
 # Merge datasets
 cfs.raw.id <- bind_rows(
@@ -247,6 +247,7 @@ cfs.raw.id <- bind_rows(
   glad.edgi.cfs.raw.id
   )
 ```
+
 
 #Select subsample
 Chalder Fatigue Scale was added to Set B on July 28.
@@ -267,6 +268,11 @@ dim(cfs.raw.id_wave6)
 #Differences
 dim(cfs.raw.id)[1]-dim(cfs.raw.id_wave6)[1]
 ```
+
+```{r check complete cases}
+sum(complete.cases(cfs.raw.id_wave6))
+```
+
 
 #Export dataset
 ```{r export data}
