@@ -625,7 +625,7 @@ dat <- dat %>%
     prepandemic_3_months_numeric =
       if_else(
         startDate.prepandemic > date_3months_prior_march_1st & # The GLAD sign up is dated before the cut off (> longer ago)
-        prepandemic_march_1_numeric == 1, #signed up before March 1st 
+        prepandemic_march_1_numeric == 1, #participant did not sign up after pandemic began (March 1st)
         true = 0, # Participant signed up after December 1st 
         false = 1, # Participant signed up before December 1st
         missing = NA_real_
@@ -652,7 +652,7 @@ dat <- dat %>%
     prepandemic_6_months_numeric =
       if_else(
         startDate.prepandemic > date_6months_prior_march_1st & # The GLAD sign up is dated before the cut off (> longer ago)
-        prepandemic_march_1_numeric == 1,
+        prepandemic_march_1_numeric == 1, #participant did not sign up after pandemic began (March 1st)
         true = 0, # Participant signed up after September 1st 
         false = 1, # Participant signed up before September 1st
         missing = NA_real_
@@ -679,7 +679,7 @@ dat <- dat %>%
     prepandemic_9_months_numeric =
       if_else(
         startDate.prepandemic > date_9months_prior_march_1st & # The GLAD sign up is dated before the cut off (> longer ago)
-        prepandemic_march_1_numeric == 1,
+        prepandemic_march_1_numeric == 1, #participant did not sign up after pandemic began (March 1st)
         true = 0, # Participant signed up after June 1st 
         false = 1, # Participant signed up before June 1st
         missing = NA_real_
