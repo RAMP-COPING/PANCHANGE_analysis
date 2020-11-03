@@ -606,3 +606,16 @@ dat %>%
 ```{r Save four cohorts as rds file}
 saveRDS(object = dat, file = paste0(data_path, "/four_cohorts_variables.rds"))
 ```
+
+Creating variables for subset of participants dependent on when they signed up to GLAD (prepan)
+```{r date variables for subset of participants who signed up in 3, 6, 9 months prior to pandemic}
+# Date of 3 months prior to the 1st of March
+date_3months_prior_march_1st <- as.POSIXct("2019-12-01")
+
+# Date of 6 months prior to the 1st of March
+date_6months_prior_march_1st <- as.POSIXct("2019-09-01")
+
+# Date of 9 months prior to the 1st of March
+date_9months_prior_march_1st <- as.POSIXct("2019-06-01")
+```
+
