@@ -3521,7 +3521,7 @@ gad_prepan_model1b_explan_reg_stats
 ### Model 1b: Overlapping disorders, Adjusted
 Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 #### Subset of participants 3 months prior to pandemic
-```{r gad model1b sum_score prepan}
+```{r gad model1b sum_score prepan - sensitivity 3 months}
 # Regression coefficients
 gad_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
                          explan_var = "gad.sum_score_prepan",
@@ -3538,7 +3538,7 @@ gad_prepan_model1b_explan_reg_stats
 ```
 
 #### Subset of participants 6 months prior to pandemic
-```{r gad model1b sum_score prepan}
+```{r gad model1b sum_score prepan - sensitivity 6 months}
 # Regression coefficients
 gad_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
                          explan_var = "gad.sum_score_prepan",
@@ -3555,7 +3555,7 @@ gad_prepan_model1b_explan_reg_stats
 ```
 
 #### Subset of participants 9 months prior to pandemic
-```{r gad model1b sum_score prepan}
+```{r gad model1b sum_score prepan - sensitivity 9 months}
 # Regression coefficients
 gad_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
                          explan_var = "gad.sum_score_prepan",
@@ -4041,6 +4041,60 @@ phq_prepan_model1b_explan_estimates
 phq_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
                          explan_var = "phq.sum_score_prepan",
                          data_set = "dat.prepan")
+kable(phq_prepan_model1b_explan_reg_stats)
+phq_prepan_model1b_explan_reg_stats
+```
+# PHQ prepan: sensitivity
+## Regression: Absolute scores
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
+#### Subset of participants 3 months prior to pandemic
+```{r phq model1b sum_score prepan - sensitivity 3 months}
+# Regression coefficients
+phq_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_3months")
+kable(phq_prepan_model1b_explan_estimates)
+phq_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+phq_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_3months")
+kable(phq_prepan_model1b_explan_reg_stats)
+phq_prepan_model1b_explan_reg_stats
+```
+
+#### Subset of participants 6 months prior to pandemic
+```{r phq model1b sum_score prepan - sensitivity 6 months}
+# Regression coefficients
+phq_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_6months")
+kable(phq_prepan_model1b_explan_estimates)
+phq_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+phq_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_6months")
+kable(phq_prepan_model1b_explan_reg_stats)
+phq_prepan_model1b_explan_reg_stats
+```
+
+#### Subset of participants 9 months prior to pandemic
+```{r phq model1b sum_score prepan - sensitivity 9 months}
+# Regression coefficients
+phq_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_9months")
+kable(phq_prepan_model1b_explan_estimates)
+phq_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+phq_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_9months")
 kable(phq_prepan_model1b_explan_reg_stats)
 phq_prepan_model1b_explan_reg_stats
 ```
