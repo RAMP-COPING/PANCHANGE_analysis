@@ -5042,3 +5042,60 @@ pcl_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "pcl.s
 kable(pcl_prepan_model1b_explan_reg_stats)
 pcl_prepan_model1b_explan_reg_stats
 ```
+
+# PCL prepan: sensitivity
+## Regression: Absolute scores
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
+#### Subset of participants 3 months prior to pandemic
+```{r pcl model1b sum_score prepan - sensitivity 3 months}
+# Regression coefficients
+pcl_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_3months")
+kable(pcl_prepan_model1b_explan_estimates)
+pcl_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+pcl_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_3months")
+kable(pcl_prepan_model1b_explan_reg_stats)
+pcl_prepan_model1b_explan_reg_stats
+```
+
+#### Subset of participants 6 months prior to pandemic
+```{r pcl model1b sum_score prepan - sensitivity 6 months}
+# Regression coefficients
+pcl_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_6months")
+kable(pcl_prepan_model1b_explan_estimates)
+pcl_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+pcl_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_6months")
+kable(pcl_prepan_model1b_explan_reg_stats)
+pcl_prepan_model1b_explan_reg_stats
+```
+
+#### Subset of participants 9 months prior to pandemic
+```{r pcl model1b sum_score prepan - sensitivity 9 months}
+# Regression coefficients
+pcl_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_9months")
+kable(pcl_prepan_model1b_explan_estimates)
+pcl_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+pcl_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_9months")
+kable(pcl_prepan_model1b_explan_reg_stats)
+pcl_prepan_model1b_explan_reg_stats
+```
+
+
