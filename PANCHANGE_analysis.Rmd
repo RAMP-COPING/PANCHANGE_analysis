@@ -2370,7 +2370,7 @@ model1a.estimates <- function(outcome, data_set) {
   # define the independent variables
   independent.variables <- c("Disorder_hierarchical",
                             "Gender_collapsed",
-                            "age_category_collapsed",
+                            "age_category_collapsed_reordered",
                             "Ethnicity_collapsed",
                             "time_diff_coping_lockdown_march_23"
                             )
@@ -2399,14 +2399,14 @@ model1a.estimates <- function(outcome, data_set) {
                "Disorder_hierarchicalBipolar disorders" = "Bipolar disorders",
                "Gender_collapsedFemale" = "Female",
                "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
-               "age_category_collapsed19-25" = "19-25 years",
-               "age_category_collapsed26-35" = "26-35 years",
-               "age_category_collapsed36-45" = "36-45 years",
-               "age_category_collapsed46-55" = "46-55 years",
-               "age_category_collapsed56-65" = "56-65 years",
-               "age_category_collapsed66-70" = "66-70 years",
-               "age_category_collapsed71-75" = "71-75 years",
-               "age_category_collapsed76+" = "76+ years",
+               "age_category_collapsed_reordered19-25" = "19-25 years",
+               "age_category_collapsed_reordered26-35" = "26-35 years",
+               "age_category_collapsed_reordered36-45" = "36-45 years",
+               "age_category_collapsed_reordered46-55" = "46-55 years",
+               "age_category_collapsed_reordered56-65" = "56-65 years",
+               "age_category_collapsed_reordered66-70" = "66-70 years",
+               "age_category_collapsed_reordered71-75" = "71-75 years",
+               "age_category_collapsed_reordered76+" = "76+ years",
                "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
                "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
                "Ethnicity_collapsedAfrican or African British" = "African or African British",
@@ -2523,7 +2523,7 @@ model1b.estimates <- function(outcome, data_set) {
                              "mhd.attention_deficit_hyperactivity_disorder",
                              "mhd.personality_disorder",
                              "Gender_collapsed",
-                             "age_category_collapsed",
+                             "age_category_collapsed_reordered",
                              "Ethnicity_collapsed",
                              "key_worker",
                              "time_diff_coping_lockdown_march_23"
@@ -2563,14 +2563,14 @@ model1b.estimates <- function(outcome, data_set) {
                "mhd.personality_disorderPersonality disorder" = "Personality disorder",
                "Gender_collapsedFemale" = "Female",
                "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
-               "age_category_collapsed19-25" = "19-25 years",
-               "age_category_collapsed26-35" = "26-35 years",
-               "age_category_collapsed36-45" = "36-45 years",
-               "age_category_collapsed46-55" = "46-55 years",
-               "age_category_collapsed56-65" = "56-65 years",
-               "age_category_collapsed66-70" = "66-70 years",
-               "age_category_collapsed71-75" = "71-75 years",
-               "age_category_collapsed76+" = "76+ years",
+               "age_category_collapsed_reordered19-25" = "19-25 years",
+               "age_category_collapsed_reordered26-35" = "26-35 years",
+               "age_category_collapsed_reordered36-45" = "36-45 years",
+               "age_category_collapsed_reordered46-55" = "46-55 years",
+               "age_category_collapsed_reordered56-65" = "56-65 years",
+               "age_category_collapsed_reordered66-70" = "66-70 years",
+               "age_category_collapsed_reordered71-75" = "71-75 years",
+               "age_category_collapsed_reordered76+" = "76+ years",
                "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
                "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
                "Ethnicity_collapsedAfrican or African British" = "African or African British",
@@ -2954,7 +2954,7 @@ model1a.explan.estimates <- function(outcome, explan_var, data_set) {
   independent.variables <- c(explan_var,
                              "Disorder_hierarchical",
                              "Gender_collapsed",
-                             "age_category_collapsed",
+                             "age_category_collapsed_reordered",
                              "Ethnicity_collapsed",
                              "key_worker",
                              "time_diff_coping_lockdown_march_23"
@@ -2984,14 +2984,14 @@ model1a.explan.estimates <- function(outcome, explan_var, data_set) {
                "Disorder_hierarchicalBipolar disorders" = "Bipolar disorders",
                "Gender_collapsedFemale" = "Female",
                "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
-               "age_category_collapsed19-25" = "19-25 years",
-               "age_category_collapsed26-35" = "26-35 years",
-               "age_category_collapsed36-45" = "36-45 years",
-               "age_category_collapsed46-55" = "46-55 years",
-               "age_category_collapsed56-65" = "56-65 years",
-               "age_category_collapsed66-70" = "66-70 years",
-               "age_category_collapsed71-75" = "71-75 years",
-               "age_category_collapsed76+" = "76+ years",
+               "age_category_collapsed_reordered19-25" = "19-25 years",
+               "age_category_collapsed_reordered26-35" = "26-35 years",
+               "age_category_collapsed_reordered36-45" = "36-45 years",
+               "age_category_collapsed_reordered46-55" = "46-55 years",
+               "age_category_collapsed_reordered56-65" = "56-65 years",
+               "age_category_collapsed_reordered66-70" = "66-70 years",
+               "age_category_collapsed_reordered71-75" = "71-75 years",
+               "age_category_collapsed_reordered76+" = "76+ years",
                "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
                "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
                "Ethnicity_collapsedAfrican or African British" = "African or African British",
@@ -3110,7 +3110,7 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
                              "mhd.attention_deficit_hyperactivity_disorder",
                              "mhd.personality_disorder",
                              "Gender_collapsed",
-                             "age_category_collapsed",
+                             "age_category_collapsed_reordered",
                              "Ethnicity_collapsed",
                              "key_worker",
                              "time_diff_coping_lockdown_march_23"
@@ -3150,14 +3150,14 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
                "mhd.personality_disorderPersonality disorder" = "Personality disorder",
                "Gender_collapsedFemale" = "Female",
                "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
-               "age_category_collapsed19-25" = "19-25 years",
-               "age_category_collapsed26-35" = "26-35 years",
-               "age_category_collapsed36-45" = "36-45 years",
-               "age_category_collapsed46-55" = "46-55 years",
-               "age_category_collapsed56-65" = "56-65 years",
-               "age_category_collapsed66-70" = "66-70 years",
-               "age_category_collapsed71-75" = "71-75 years",
-               "age_category_collapsed76+" = "76+ years",
+               "age_category_collapsed_reordered19-25" = "19-25 years",
+               "age_category_collapsed_reordered26-35" = "26-35 years",
+               "age_category_collapsed_reordered36-45" = "36-45 years",
+               "age_category_collapsed_reordered46-55" = "46-55 years",
+               "age_category_collapsed_reordered56-65" = "56-65 years",
+               "age_category_collapsed_reordered66-70" = "66-70 years",
+               "age_category_collapsed_reordered71-75" = "71-75 years",
+               "age_category_collapsed_reordered76+" = "76+ years",
                "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
                "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
                "Ethnicity_collapsedAfrican or African British" = "African or African British",
@@ -3293,7 +3293,7 @@ gad_baseline_model0b_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1a absolute whole sample}
 # Regression coefficients
 gad_baseline_model1a_estimates <- model1a.estimates(outcome = "gad.sum_score_base",
@@ -3309,7 +3309,7 @@ gad_baseline_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1b absolute whole sample}
 # Regression coefficients
 gad_baseline_model1b_estimates <- model1b.estimates(outcome = "gad.sum_score_base",
@@ -3358,7 +3358,7 @@ gad_prepan_model0b_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1a diff_score prepan}
 # Regression coefficients
 gad_prepan_model1a_estimates <- model1a.estimates(outcome = "gad.diff_score_base_prepan",
@@ -3374,7 +3374,7 @@ gad_prepan_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1b diff_score prepan}
 # Regression coefficients
 gad_prepan_model1b_estimates <- model1b.estimates(outcome = "gad.diff_score_base_prepan",
@@ -3425,7 +3425,7 @@ gad_prepan_model0b_explan_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1a sum_score prepan}
 # Regression coefficients
 gad_prepan_model1a_explan_estimates <- model1a.explan.estimates(outcome = "gad.sum_score_base",
@@ -3443,7 +3443,7 @@ gad_prepan_model1a_explan_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1b sum_score prepan}
 # Regression coefficients
 gad_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
@@ -3494,7 +3494,7 @@ gad_retro_model0b_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1a diff_score retro}
 # Regression coefficients
 gad_retro_model1a_estimates <- model1a.estimates(outcome = "gad.diff_score_base_retro",
@@ -3510,7 +3510,7 @@ gad_retro_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1b diff_score retro}
 # Regression coefficients
 gad_retro_model1b_estimates <- model1b.estimates(outcome = "gad.diff_score_base_retro",
@@ -3562,7 +3562,7 @@ gad_retro_model0b_explan_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1a sum_score retro}
 # Regression coefficients
 gad_retro_model1a_explan_estimates <- model1a.explan.estimates(outcome = "gad.sum_score_base",
@@ -3580,7 +3580,7 @@ gad_retro_model1a_explan_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1b sum_score retro}
 # Regression coefficients
 gad_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
@@ -3630,7 +3630,7 @@ gad_retro_model0b_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1a diff_score retro (sensitivity analysis)}
 # Regression coefficients
 gad_retro_model1a_estimates <- model1a.estimates(outcome = "gad.diff_score_base_retro",
@@ -3646,7 +3646,7 @@ gad_retro_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1b diff_score retro (sensitivity analysis)}
 # Regression coefficients
 gad_retro_model1b_estimates <- model1b.estimates(outcome = "gad.diff_score_base_retro",
@@ -3698,7 +3698,7 @@ gad_retro_model0b_explan_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1a sum_score retro (sensitivity analysis)}
 # Regression coefficients
 gad_retro_model1a_explan_estimates <- model1a.explan.estimates(outcome = "gad.sum_score_base",
@@ -3716,7 +3716,7 @@ gad_retro_model1a_explan_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1b sum_score retro (sensitivity analysis)}
 # Regression coefficients
 gad_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
@@ -3765,7 +3765,7 @@ phq_baseline_model0b_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r phq model1a absolute whole sample}
 # Regression coefficients
 phq_baseline_model1a_estimates <- model1a.estimates(outcome = "phq.sum_score_base",
@@ -3781,7 +3781,7 @@ phq_baseline_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r phq model1b absolute whole sample}
 # Regression coefficients
 phq_baseline_model1b_estimates <- model1b.estimates(outcome = "phq.sum_score_base",
@@ -3832,7 +3832,7 @@ phq_prepan_model0b_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r phq model1a diff_score prepan}
 # Regression coefficients
 phq_prepan_model1a_estimates <- model1a.estimates(outcome = "phq.diff_score_base_prepan",
@@ -3848,7 +3848,7 @@ phq_prepan_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r phq model1b diff_score prepan}
 # Regression coefficients
 phq_prepan_model1b_estimates <- model1b.estimates(outcome = "phq.diff_score_base_prepan",
@@ -3899,7 +3899,7 @@ phq_prepan_model0b_explan_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r phq model1a sum_score prepan}
 # Regression coefficients
 phq_prepan_model1a_explan_estimates <- model1a.explan.estimates(outcome = "phq.sum_score_base",
@@ -3917,7 +3917,7 @@ phq_prepan_model1a_explan_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r phq model1b sum_score prepan}
 # Regression coefficients
 phq_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
@@ -3968,7 +3968,7 @@ phq_retro_model0b_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r phq model1a diff_score retro}
 # Regression coefficients
 phq_retro_model1a_estimates <- model1a.estimates(outcome = "phq.diff_score_base_retro",
@@ -3984,7 +3984,7 @@ phq_retro_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r phq model1b diff_score retro}
 # Regression coefficients
 phq_retro_model1b_estimates <- model1b.estimates(outcome = "phq.diff_score_base_retro",
@@ -4035,7 +4035,7 @@ phq_retro_model0b_explan_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r phq model1a sum_score retro}
 # Regression coefficients
 phq_retro_model1a_explan_estimates <- model1a.explan.estimates(outcome = "phq.sum_score_base",
@@ -4053,7 +4053,7 @@ phq_retro_model1a_explan_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r phq model1b sum_score retro}
 # Regression coefficients
 phq_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
@@ -4104,7 +4104,7 @@ phq_retro_model0b_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r phq model1a diff_score retro (sensitivity analysis)}
 # Regression coefficients
 phq_retro_model1a_estimates <- model1a.estimates(outcome = "phq.diff_score_base_retro",
@@ -4120,7 +4120,7 @@ phq_retro_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r phq model1b diff_score retro (sensitivity analysis)}
 # Regression coefficients
 phq_retro_model1b_estimates <- model1b.estimates(outcome = "phq.diff_score_base_retro",
@@ -4171,7 +4171,7 @@ phq_retro_model0b_explan_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r phq model1a sum_score retro (sensitivity analysis)}
 # Regression coefficients
 phq_retro_model1a_explan_estimates <- model1a.explan.estimates(outcome = "phq.sum_score_base",
@@ -4189,7 +4189,7 @@ phq_retro_model1a_explan_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r phq model1b sum_score retro (sensitivity analysis)}
 # Regression coefficients
 phq_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
@@ -4240,7 +4240,7 @@ ocir_baseline_model0b_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir model1a absolute whole sample}
 # Regression coefficients
 ocir_baseline_model1a_estimates <- model1a.estimates(outcome = "ocir.sum_score_base",
@@ -4256,7 +4256,7 @@ ocir_baseline_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir model1b absolute whole sample}
 # Regression coefficients
 ocir_baseline_model1b_estimates <- model1b.estimates(outcome = "ocir.sum_score_base",
@@ -4305,7 +4305,7 @@ ocir_prepan_model0b_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir model1a diff_score prepan}
 # Regression coefficients
 ocir_prepan_model1a_estimates <- model1a.estimates(outcome = "ocir.diff_score_base_prepan",
@@ -4321,7 +4321,7 @@ ocir_prepan_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir model1b diff_score prepan}
 # Regression coefficients
 ocir_prepan_model1b_estimates <- model1b.estimates(outcome = "ocir.diff_score_base_prepan",
@@ -4372,7 +4372,7 @@ ocir_prepan_model0b_explan_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir model1a sum_score prepan}
 # Regression coefficients
 ocir_prepan_model1a_explan_estimates <- model1a.explan.estimates(outcome = "ocir.sum_score_base",
@@ -4390,7 +4390,7 @@ ocir_prepan_model1a_explan_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir model1b sum_score prepan}
 # Regression coefficients
 ocir_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "ocir.sum_score_base",
@@ -4441,7 +4441,7 @@ ocir_retro_model0b_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir model1a diff_score retro}
 # Regression coefficients
 ocir_retro_model1a_estimates <- model1a.estimates(outcome = "ocir.diff_score_base_retro",
@@ -4457,7 +4457,7 @@ ocir_retro_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir model1b diff_score retro}
 # Regression coefficients
 ocir_retro_model1b_estimates <- model1b.estimates(outcome = "ocir.diff_score_base_retro",
@@ -4508,7 +4508,7 @@ ocir_retro_model0b_explan_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir model1a sum_score retro}
 # Regression coefficients
 ocir_retro_model1a_explan_estimates <- model1a.explan.estimates(outcome = "ocir.sum_score_base",
@@ -4526,7 +4526,7 @@ ocir_retro_model1a_explan_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir model1b sum_score retro}
 # Regression coefficients
 ocir_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "ocir.sum_score_base",
@@ -4577,7 +4577,7 @@ ocir_retro_model0b_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir model1a diff_score retro (sensitivity analyses)}
 # Regression coefficients
 ocir_retro_model1a_estimates <- model1a.estimates(outcome = "ocir.diff_score_base_retro",
@@ -4593,7 +4593,7 @@ ocir_retro_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir model1b diff_score retro (sensitivity analyses)}
 # Regression coefficients
 ocir_retro_model1b_estimates <- model1b.estimates(outcome = "ocir.diff_score_base_retro",
@@ -4644,7 +4644,7 @@ ocir_retro_model0b_explan_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir model1a sum_score retro (sensitivity analyses)}
 # Regression coefficients
 ocir_retro_model1a_explan_estimates <- model1a.explan.estimates(outcome = "ocir.sum_score_base",
@@ -4662,7 +4662,7 @@ ocir_retro_model1a_explan_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir model1b sum_score retro (sensitivity analyses)}
 # Regression coefficients
 ocir_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "ocir.sum_score_base",
@@ -4712,7 +4712,7 @@ pcl_baseline_model0b_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r pcl model1a absolute whole sample}
 # Regression coefficients
 pcl_baseline_model1a_estimates <- model1a.estimates(outcome = "pcl.sum_score_base",
@@ -4728,7 +4728,7 @@ pcl_baseline_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r pcl model1b absolute whole sample}
 # Regression coefficients
 pcl_baseline_model1b_estimates <- model1b.estimates(outcome = "pcl.sum_score_base",
@@ -4776,7 +4776,7 @@ pcl_prepan_model0b_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r pcl model1a diff_score prepan}
 # Regression coefficients
 pcl_prepan_model1a_estimates <- model1a.estimates(outcome = "pcl.diff_score_base_prepan",
@@ -4792,7 +4792,7 @@ pcl_prepan_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r pcl model1b diff_score prepan}
 # Regression coefficients
 pcl_prepan_model1b_estimates <- model1b.estimates(outcome = "pcl.diff_score_base_prepan",
@@ -4843,7 +4843,7 @@ pcl_prepan_model0b_explan_reg_stats
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r pcl model1a sum_score prepan}
 # Regression coefficients
 pcl_prepan_model1a_explan_estimates <- model1a.explan.estimates(outcome = "pcl.sum_score_base",
@@ -4861,7 +4861,7 @@ pcl_prepan_model1a_explan_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r pcl model1b sum_score prepan}
 # Regression coefficients
 pcl_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "pcl.sum_score_base",
