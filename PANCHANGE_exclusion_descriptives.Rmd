@@ -70,6 +70,7 @@ library(patchwork)
 library(broom)
 library(tidyverse)
 library(ggpubr)
+library(stringr)
 ```
 
 # Colour palettes
@@ -167,7 +168,7 @@ source("../PANCHANGE_raw_path.R")
 
 ## Read in data
 ```{r read in data}
-dat.raw <- readRDS(file = paste0(data_path, "/four_cohorts_variables.rds"))
+dat.raw <- readRDS(file = paste0(data_path, "four_cohorts_variables.rds"))
 dim(dat.raw)
 colnames(dat.raw)
 ```
@@ -255,7 +256,7 @@ ocir.diff_score_cols
 
 Exclude GLAD/EDGI individuals that didn't take part in COPING
 Exclude individuals with NA for the MHD categories
-Individuals with NAs for age/gender have already been excluded in pre-processing script, but they get excluded here to be save and to double check previous programming.
+Individuals with NAs for age/gender have already been excluded in pre-processing script, but they get excluded here to be safe and to double check previous programming.
 
 ```{r Exclusion criteria for PANCHANGE}
 dat <- dat.raw %>%
@@ -340,6 +341,7 @@ dat %>%
   freq(disorders_total_count)
 ```
 
+
 ```{r psychiatric disorders frequencies}
 #Ppts with least one psychiatric disorder
 dat %>%
@@ -353,6 +355,151 @@ dat %>%
 dat %>% 
   count(depression_and_anxiety_numeric == 1)
 ```
+
+#SB - Impute no change prepandemic scores
+
+I interpreted the presence of an NA in the retrospective score as an indicator of saying "no change" in their baseline scores. Hence, if this was the case, I imputed their baseline score. However, this interpretation could be wrong.
+
+Also, I'm not sure what to do if there is an NA for their baseline sum score (nothing to duplicate). This was the case for ocir for some reason: the retro scores were provided for some by not the corresponding baseline score?
+
+
+```{r Impute for gad measure}
+
+#Visualise the gad summary scores for baseline and retro
+head(dat$gad.sum_score_base, 30)
+head(dat$gad.sum_score_retro, 30)
+
+#Edit the gad sum retro score as follows: if there is a missing value in the retro sum score, give it the baseline sum score, else leave it as it is
+
+impute_dat <- dat %>% 
+  mutate(gad.sum_score_retro = 
+           if_else(is.na(dat$gad.sum_score_retro), dat$gad.sum_score_base, dat$gad.sum_score_retro))
+
+#Check that the Na's have been replaced with duplicated baseline sum scores
+head(impute_dat$gad.sum_score_base, 30)
+head(impute_dat$gad.sum_score_retro, 30)
+
+
+```
+
+
+```{r Impute for phq measure}
+
+#Visualise the phq summary scores for baseline and retro
+head(dat$phq.sum_score_base, 30)
+head(dat$phq.sum_score_retro, 30)
+
+#Edit the phq sum retro score as follows: if there is a missing value in the retro sum score, give it the baseline sum score, else leave it as it is
+
+impute_dat <- dat %>% 
+  mutate(phq.sum_score_retro = 
+           if_else(is.na(dat$phq.sum_score_retro), dat$phq.sum_score_base, dat$phq.sum_score_retro))
+
+#Check that the Na's have been replaced with duplicated baseline sum scores
+head(impute_dat$phq.sum_score_base, 30)
+head(impute_dat$phq.sum_score_retro, 30)
+
+
+```
+
+
+
+```{r Impute for ocir measure}
+
+#Visualise the ocir summary scores for baseline and retro
+head(dat$ocir.sum_score_base, 40)
+head(dat$ocir.sum_score_retro, 40)
+
+#Edit the ocir sum retro score as follows: if there is a missing value in the retro sum score, give it the baseline sum score, else leave it as it is
+
+impute_dat <- dat %>% 
+  mutate(ocir.sum_score_retro = 
+           if_else(is.na(dat$ocir.sum_score_retro), dat$ocir.sum_score_base,                                     dat$ocir.sum_score_retro))
+
+#Check that the Na's have been replaced with duplicated baseline sum scores
+head(impute_dat$ocir.sum_score_base, 40)
+head(impute_dat$ocir.sum_score_retro, 40)
+
+
+```
+
+
+
+```{r Impute for pcl measure}
+
+#Visualise the pcl summary scores for baseline and retro
+head(dat$pcl.sum_score_base, 30)
+head(dat$pcl.sum_score_retro, 30)
+
+#Edit the pcl sum retro score as follows: if there is a missing value in the retro sum score, give it the baseline sum score, else leave it as it is
+
+impute_dat <- dat %>% 
+  mutate(pcl.sum_score_retro = 
+           if_else(is.na(dat$pcl.sum_score_retro), dat$pcl.sum_score_base, dat$pcl.sum_score_retro))
+
+#Check that the Na's have been replaced with duplicated baseline sum scores
+head(impute_dat$pcl.sum_score_base, 30)
+head(impute_dat$pcl.sum_score_retro, 30)
+
+
+```
+
+
+#SB - Baseline survey completion (N per month)
+
+This is a summary of the amount of pt's completing the baseline survey per month
+
+
+```{r N completing coping per month}
+
+#Visualise some dates when participants completed the questionnaire
+head(dat$startDate.coping, 20)
+
+#Divide the data by sign up per month and summarise the amount of pt's completing the survey that month
+
+april_sign_up <- dat[str_detect(dat$startDate.coping, "-04-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(April = n())
+
+may_sign_up <- dat[str_detect(dat$startDate.coping, "-05-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(May = n())
+
+june_sign_up <- dat[str_detect(dat$startDate.coping, "-06-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(June = n())
+
+july_sign_up <- dat[str_detect(dat$startDate.coping, "-07-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(July = n())
+
+august_sign_up <- dat[str_detect(dat$startDate.coping, "-08-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(August = n())
+
+september_sign_up <- dat[str_detect(dat$startDate.coping, "-09-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(September = n())
+
+#Merge results into one tibble
+
+coping_sign_up <- april_sign_up %>% 
+  cbind(may_sign_up, june_sign_up, july_sign_up, august_sign_up, september_sign_up)
+
+#Gather the variables
+coping_sign_up <- coping_sign_up %>% 
+  gather(key = "month", value = "sign_up_number")
+
+#Proportion calculation
+coping_sign_up <- coping_sign_up %>% 
+  mutate(percentage = 
+           round((sign_up_number / sum(sign_up_number) * 100), 2))
+
+coping_sign_up
+
+```
+
+
 
 ## Vector
 ```{r vector with psychiatric disorders}
@@ -421,6 +568,67 @@ corrplot(mhd.corr.matrix,
          insig = "blank" # Nonsignificant correlations have no colour
          )
 ```
+
+
+#SB - Correlation between retropsective impute and prepan
+
+```{r Correlation prep chunk}
+# Select items for correlation matrix
+prepan_retro_items <- c(
+    "gad.sum_score_prepan",
+    "gad.sum_score_retro", 
+    "pcl.sum_score_prepan",
+    "pcl.sum_score_retro",
+    "ocir.sum_score_prepan",
+    "ocir.sum_score_retro",
+    "phq.sum_score_prepan",
+    "phq.sum_score_retro"
+)
+
+#Create a data set with only the COPING samples
+prepan_retro_dat <- dat[str_detect(dat$Sample, "NBR|GLAD|EDGI"), ]
+
+#Check that RAMP has been removed
+prepan_retro_dat %>% 
+  freq(Sample)
+
+# Calculate correlation matrix on specific columns (variables) from your data frame
+prepan_retro.corr.mat <- hetcor(
+  as.data.frame(prepan_retro_dat[,prepan_retro_items]), # Specify the data
+  use = "pairwise.complete.obs" # Use all pairwise observations
+)
+
+# Print the correlation matrix
+print(prepan_retro.corr.mat, digits = max(3, getOption("digits") - 3)) 
+
+# Save the correlations from the correlation matrix in an object
+prepan_retro.corr.matrix <- as.matrix(prepan_retro.corr.mat)
+
+# Save the p values from the correlation matrix in an object
+prepan_retro.p.matrix <- as.matrix(prepan_retro.corr.mat$tests)
+```
+
+
+
+```{r Correlation matrix of prepan base sum scores}
+corrplot(prepan_retro.corr.matrix, 
+         method = "color", # objects to represent the correlations on plot
+         type = "lower", # only use the lower triangle of the matrix
+         diag = FALSE, # do not show the correlations on the diagonal
+         addgrid.col = NA,
+         addCoef.col = "black", # colour for the correlation coefficients in the plot
+         tl.cex = 0.8,
+         tl.col = "black",
+         col=colorRampPalette(c("dodgerblue4","white","firebrick4"))(200), # colours for correlations
+         # Combine with significance
+         p.mat = prepan_retro.p.matrix, # Matrix with p values
+         sig.level = 0.01, # Choose significant level
+         insig = "blank" # Nonsignificant correlations have no colour
+         )
+```
+
+
+
 
 ## Create long data frame
 ```{r gather to long format Disorder_hierarchical}
@@ -1340,6 +1548,7 @@ Gender_collapsed_by_Sample_prop_plot
 ```{r highest_education per Sample prop per total}
 highest_education_per_Sample_prop_total <- dat %>%
   count(highest_education, Sample) %>%
+  drop_na() %>% 
   mutate(Prop = round(n/sum(n), 2))
 
 kable(highest_education_per_Sample_prop_total)
@@ -1350,6 +1559,7 @@ highest_education_per_Sample_prop_total
 highest_education_per_Sample_prop_Sample <- dat %>%
   group_by(Sample) %>%
   count(highest_education, Sample) %>%
+  drop_na() %>% 
   mutate(Prop = round(n/sum(n), 2))
 
 kable(highest_education_per_Sample_prop_Sample)
@@ -1361,6 +1571,7 @@ highest_education_per_Sample_prop_Sample
 highest_education_per_Sample_prop_Sample_cross_table <- dat %>%
   group_by(Sample) %>%
   count(highest_education, Sample) %>%
+  drop_na() %>% 
   mutate(Prop = round(n/sum(n), 2)) %>%
   pivot_wider(names_from = Sample, values_from = c(n, Prop))
 
@@ -1372,6 +1583,7 @@ highest_education_per_Sample_prop_Sample_cross_table
 ```{r highest_education per Sample count cross table}
 highest_education_per_Sample_count_cross_table <- dat %>%
   count(highest_education, Sample) %>%
+  drop_na() %>% 
   spread(key = Sample, value = n) %>%
   mutate(
     EDGI = as.integer(replace_na(EDGI, 0)),
