@@ -2080,9 +2080,45 @@ dat.prepan_sensitivity_3months <- dat %>%
       (data_group_ocir == "Baseline and retrospective data" |
       data_group_ocir == "Prepandemic and baseline data" |
       data_group_ocir == "All prepandemic, baseline and retrospective data")) &
-      prepandemic_march_1_numeric == 1  & # Exclude participants that signed up after the 1. March 
-      (startDate.prepandemic < date_3months_prior_march_1st), # The GLAD sign up is dated after the cut off
+      prepandemic_3_months_numeric == 1 # Only participants who signed up between December 1st 2019 and March 1st 2020
   )
+
+# Participants who signed up in the three months before the pandemic began
+dat.prepan_sensitivity_6months <- dat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "Prepandemic and baseline data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "Prepandemic and baseline data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      prepandemic_6_months_numeric == 1 # Only participants who signed up between September 1st 2019 and March 1st 2020
+  )
+
+# Participants who signed up in the three months before the pandemic began
+dat.prepan_sensitivity_9months <- dat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "Prepandemic and baseline data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "Prepandemic and baseline data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      prepandemic_9_months_numeric == 1 # Only participants who signed up between June 1st 2019 and March 1st 2020
+  )
+
 ```
 
 2. Regression models (Regress covariates out of the change? Which?)
@@ -3480,7 +3516,7 @@ gad_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "gad.s
 kable(gad_prepan_model1b_explan_reg_stats)
 gad_prepan_model1b_explan_reg_stats
 ```
-
+# GAD prepan: sensitivity
 
 # GAD retro
 ## Regression: Change scores
