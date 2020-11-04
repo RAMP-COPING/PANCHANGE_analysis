@@ -421,14 +421,6 @@ key_worker_category_per_Covid_prop_total
 ```
 
 
-
-## Smoking
-
-
-
-## Key worker status
-
-
 ## Ethnicity_collapsed
 ### Pie charts
 ```{r Collapse Ethnicity}
