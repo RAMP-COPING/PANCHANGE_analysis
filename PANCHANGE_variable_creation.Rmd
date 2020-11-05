@@ -312,6 +312,17 @@ dat %>%
   freq(age_category_collapsed)
 ```
 
+```{r reorder age_category_collapsed for largest age group as reference category}
+dat <- dat %>%
+  mutate(age_category_collapsed_reordered = 
+           relevel(age_category_collapsed,
+                   ref = "26-35", #largest group
+                   first = TRUE, #listed first in a list
+                   collapse = "+", #string used for combined factor levels
+                   xlevels= TRUE #all other levels maintained
+                   )
+  )
+```
 
 
 ## Gender
