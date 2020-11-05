@@ -3,12 +3,6 @@ title: "PANNEURO_analysis"
 author: "Christopher Huebel"
 date: "Sys.Date()"
 output:
-  word_document:
-    toc: yes
-    toc_depth: '2'
-  pdf_document:
-    toc: yes
-    toc_depth: '2'
   html_document:
     df_print: paged
     highlight: monochrome
@@ -18,6 +12,12 @@ output:
     toc_depth: 2
     toc_float:
       collapsed: no
+  word_document:
+    toc: yes
+    toc_depth: '2'
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
 html_notebook:
   theme: cerulean
 code_folding: show
