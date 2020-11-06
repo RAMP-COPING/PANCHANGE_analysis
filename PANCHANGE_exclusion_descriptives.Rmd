@@ -56,7 +56,7 @@ Install packages (if they are not available in your version of R)
 #install.packages("polycor")
 #install.packages("corrplot")
 #install.packages("patchwork")
-#instlal.packages("ggpubr")
+#install.packages("ggpubr")
 ```
 
 Load packages
@@ -355,6 +355,30 @@ dat %>%
 dat %>% 
   count(depression_and_anxiety_numeric == 1)
 ```
+
+#HR
+
+```{r Accuray scores for gad: worse/better than pre-pandemic}
+
+dat.raw$gad.pandemic.change.group <- ifelse(dat.raw$gad.pandemic_felt_feelings_numeric <3,1,
+                                           ifelse(dat.raw$gad.pandemic_felt_feelings_numeric > 3,2,0))
+
+dat.raw$gad.pandemic.change.group <- factor(dat.raw$gad.pandemic.change.group,
+                                           levels = c(1,0,2),labels = c("Worse","No change","Better"))
+
+dat.raw <- dat.raw %>%
+    mutate(gad.change.accurate = case_when(dat.raw$gad.pandemic.change.group == "Better" &
+                                             dat.raw$gad.diff_score_base_prepan < 0 ~1,
+                                           dat.raw$gad.pandemic.change.group == "Worse" &
+                                             dat.raw$gad.diff_score_base_prepan > 0 ~ 1,
+                                           dat.raw$gad.pandemic.change.group == "Better" &
+                                             dat.raw$gad.diff_score_base_prepan > 0 ~ 0,
+                                           dat.raw$gad.pandemic.change.group == "Worse" &
+                                             dat.raw$gad.diff_score_base_prepan < 0 ~ 0))
+                                           
+
+```
+
 
 #SB - Impute no change prepandemic scores
 
