@@ -287,37 +287,38 @@ nrow(dat.raw)-nrow(dat)
 ```
 
 # Data availability per questionnaire GAD, PHQ, PCL, and OCI-R
+++MD: These 'data availability' chunks caused my R to crash, so I'm hashing them out for now. Others can test if it works for them and unhash as needed, otherwise I think they should be removed.
 
 Data availability GAD
 ```{r gad availability}
-dat.raw %>%
-  freq(
-    data_group_gad,
-    cumul = F)
+#dat.raw %>%
+#  freq(
+#    data_group_gad,
+#    cumul = F)
 ```
 
 Data availability PHQ
 ```{r phq availability}
-dat.raw %>%
-  freq(
-    data_group_phq,
-    cumul = F)
+#dat.raw %>%
+#  freq(
+#    data_group_phq,
+#    cumul = F)
 ```
 
 Data availability PCL
 ```{r pcl availability}
-dat.raw %>%
-  freq(
-    data_group_pcl,
-    cumul = F)
+#dat.raw %>%
+#  freq(
+#    data_group_pcl,
+#    cumul = F)
 ```
 
 Data availability OCI-R
 ```{r ocir availability}
-dat.raw %>%
-  freq(
-    data_group_ocir,
-    cumul = F)
+#dat.raw %>%
+#  freq(
+#    data_group_ocir,
+#    cumul = F)
 ```
 
 # Whole sample
@@ -536,6 +537,16 @@ Disorder_inc_by_Gender_collapsed_prop_plot
 Disorder_inc_by_Sample <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
   count(Disorder_inc, Sample)
+```
+
+```{r Disorder_inc by Sample prop table}
+Disorder_inc_by_Sample_collapsed <- dat.long.psych %>%
+  group_by(Disorder_inc) %>%
+  filter(Diagnosis == 1) %>%
+  count(Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(Disorder_inc_by_Sample_collapsed)
 ```
 
 ```{r Disorder_inc by Sample plot}
