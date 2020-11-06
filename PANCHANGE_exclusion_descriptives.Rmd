@@ -537,8 +537,6 @@ corrplot(mhd.corr.matrix,
 prepan_retro_items <- c(
     "gad.sum_score_prepan",
     "gad.sum_score_retro", 
-    "ocir.sum_score_prepan",
-    "ocir.sum_score_retro",
     "phq.sum_score_prepan",
     "phq.sum_score_retro"
 )
