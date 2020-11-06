@@ -375,6 +375,21 @@ dat.raw <- dat.raw %>%
                                              dat.raw$gad.diff_score_base_prepan > 0 ~ 0,
                                            dat.raw$gad.pandemic.change.group == "Worse" &
                                              dat.raw$gad.diff_score_base_prepan < 0 ~ 0))
+
+dat.raw <- dat.raw %>%
+    mutate(gad.change.retro.accurate = if_else(dat.raw$gad.pandemic.change.group == "Better" &
+                                             dat.raw$gad.diff_score_retro_prepan == 0 |
+                                             dat.raw$gad.pandemic.change.group == "Worse" &
+                                             dat.raw$gad.diff_score_retro_prepan == 0, 1, 3 ))
+dat.raw <- dat.raw %>%
+  mutate(gad.change.retro.accurate = if_else(dat.raw$gad.pandemic.change.group == "Better" &
+                                             dat.raw$gad.diff_score_retro_prepan >= -3 &
+                                             dat.raw$gad.diff_score_retro_prepan <= 3 &
+                                             dat.raw$gad.change.retro.accurate_temp != 1 |
+                                             dat.raw$gad.pandemic.change.group == "Worse" &
+                                             dat.raw$gad.diff_score_retro_prepan >= -3 &
+                                             dat.raw$gad.diff_score_retro_prepan <= 3 &
+                                             dat.raw$gad.change.retro.accurate_temp != 1,  2, gad.change.retro.accurate))
                                            
 
 ```
@@ -393,7 +408,7 @@ Also, I'm not sure what to do if there is an NA for their baseline sum score (no
 head(dat$gad.sum_score_base, 30)
 head(dat$gad.sum_score_retro, 30)
 
-#Edit the gad sum retro score as follows: if there is a missing value in the retro sum score, give it the baseline sum score, else leave it as it is
+#Edit the gad sum retro score as follows: if there is a missing value in the retro sum s0core, give it the baseline sum score, else leave it as it is
 
 impute_dat <- dat %>% 
   mutate(gad.sum_score_retro = 
