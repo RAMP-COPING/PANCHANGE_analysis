@@ -356,6 +356,7 @@ dat %>%
   count(depression_and_anxiety_numeric == 1)
 ```
 
+
 #HR
 
 ```{r Accuray scores for gad: worse/better than pre-pandemic}
@@ -408,16 +409,23 @@ Also, I'm not sure what to do if there is an NA for their baseline sum score (no
 head(dat$gad.sum_score_base, 30)
 head(dat$gad.sum_score_retro, 30)
 
-#Edit the gad sum retro score as follows: if there is a missing value in the retro sum s0core, give it the baseline sum score, else leave it as it is
+
+#Visualise the gad pandemic feelings variables
+head(dat$gad.pandemic_felt_feelings, 10)
+head(dat$gad.pandemic_felt_feelings_numeric, 10)
+
+
+#Edit the gad sum retro score as follows: if the pt reports no different since pandemic and there is a missing value for their retro score, impute their baseline score, else if there isn't a missing value for their retro score, leave it as it is.
+
 
 impute_dat <- dat %>% 
-  mutate(gad.sum_score_retro = 
-           if_else(is.na(dat$gad.sum_score_retro), dat$gad.sum_score_base, dat$gad.sum_score_retro))
+  mutate(gad.sum_score_retro =
+           case_when(gad.pandemic_felt_feelings == "No different" & is.na(gad.sum_score_retro)                      ~ gad.sum_score_base,
+                     !is.na(gad.sum_score_retro) ~ gad.sum_score_retro))
 
 #Check that the Na's have been replaced with duplicated baseline sum scores
 head(impute_dat$gad.sum_score_base, 30)
 head(impute_dat$gad.sum_score_retro, 30)
-
 
 ```
 
@@ -428,66 +436,26 @@ head(impute_dat$gad.sum_score_retro, 30)
 head(dat$phq.sum_score_base, 30)
 head(dat$phq.sum_score_retro, 30)
 
-#Edit the phq sum retro score as follows: if there is a missing value in the retro sum score, give it the baseline sum score, else leave it as it is
+#Visualise the phq pandemic feelings variables
+head(dat$phq.pandemic_felt_feelings, 10)
+head(dat$phq.pandemic_felt_feelings_numeric, 10)
+
+
+#Edit the phq sum retro score as follows: if the pt reports no different since pandemic and there is a missing value for their retro score, impute their baseline score, else if there isn't a missing value for their retro score, leave it as it is.
 
 impute_dat <- dat %>% 
-  mutate(phq.sum_score_retro = 
-           if_else(is.na(dat$phq.sum_score_retro), dat$phq.sum_score_base, dat$phq.sum_score_retro))
+  mutate(phq.sum_score_retro =
+           case_when(phq.pandemic_felt_feelings == "No different" & is.na(phq.sum_score_retro)                      ~ phq.sum_score_base,
+                     !is.na(phq.sum_score_retro) ~ phq.sum_score_retro))
 
 #Check that the Na's have been replaced with duplicated baseline sum scores
 head(impute_dat$phq.sum_score_base, 30)
 head(impute_dat$phq.sum_score_retro, 30)
 
-
 ```
 
 
-
-```{r Impute for ocir measure}
-
-#Visualise the ocir summary scores for baseline and retro
-head(dat$ocir.sum_score_base, 40)
-head(dat$ocir.sum_score_retro, 40)
-
-#Edit the ocir sum retro score as follows: if there is a missing value in the retro sum score, give it the baseline sum score, else leave it as it is
-
-impute_dat <- dat %>% 
-  mutate(ocir.sum_score_retro = 
-           if_else(is.na(dat$ocir.sum_score_retro), dat$ocir.sum_score_base,                                     dat$ocir.sum_score_retro))
-
-#Check that the Na's have been replaced with duplicated baseline sum scores
-head(impute_dat$ocir.sum_score_base, 40)
-head(impute_dat$ocir.sum_score_retro, 40)
-
-
-```
-
-
-
-```{r Impute for pcl measure}
-
-#Visualise the pcl summary scores for baseline and retro
-head(dat$pcl.sum_score_base, 30)
-head(dat$pcl.sum_score_retro, 30)
-
-#Edit the pcl sum retro score as follows: if there is a missing value in the retro sum score, give it the baseline sum score, else leave it as it is
-
-impute_dat <- dat %>% 
-  mutate(pcl.sum_score_retro = 
-           if_else(is.na(dat$pcl.sum_score_retro), dat$pcl.sum_score_base, dat$pcl.sum_score_retro))
-
-#Check that the Na's have been replaced with duplicated baseline sum scores
-head(impute_dat$pcl.sum_score_base, 30)
-head(impute_dat$pcl.sum_score_retro, 30)
-
-
-```
-
-
-#SB - Baseline survey completion (N per month)
-
-This is a summary of the amount of pt's completing the baseline survey per month
-
+#Baseline survey completion (N per month)
 
 ```{r N completing coping per month}
 
@@ -609,15 +577,13 @@ corrplot(mhd.corr.matrix,
 ```
 
 
-#SB - Correlation between retropsective impute and prepan
+#Correlation between retropsective impute and prepan
 
 ```{r Correlation prep chunk}
 # Select items for correlation matrix
 prepan_retro_items <- c(
     "gad.sum_score_prepan",
     "gad.sum_score_retro", 
-    "pcl.sum_score_prepan",
-    "pcl.sum_score_retro",
     "ocir.sum_score_prepan",
     "ocir.sum_score_retro",
     "phq.sum_score_prepan",
@@ -665,7 +631,6 @@ corrplot(prepan_retro.corr.matrix,
          insig = "blank" # Nonsignificant correlations have no colour
          )
 ```
-
 
 
 
