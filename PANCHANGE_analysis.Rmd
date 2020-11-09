@@ -2060,9 +2060,73 @@ dat.retro_sensitivity <- dat %>%
       prepandemic_march_1_numeric == 1 # Exclude participants that signed up after the 1. March
   )
 
-dim(dat.prepan)
+dim(dat.retro_sensitivity)
+```
+age^2 sensitivity 
+Exclude individuals with NA for continuous Age variable
+```{r}
+dat_age_sensitivity <- dat %>%
+  filter(!is.na(Age))
+dim(dat_age_sensitivity)
 ```
 
+Sensitivity analysis for individuals who signed up to GLAD (prepan) either 3, 6 or 9 months before the pendemic began. 
+```{r subsample for pre-pan sensitivity analysis}
+# Participants who signed up in the three months before the pandemic began
+dat.prepan_sensitivity_3months <- dat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "Prepandemic and baseline data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "Prepandemic and baseline data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      prepandemic_3_months_numeric == 1 # Only participants who signed up between December 1st 2019 and March 1st 2020
+  )
+
+# Participants who signed up in the three months before the pandemic began
+dat.prepan_sensitivity_6months <- dat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "Prepandemic and baseline data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "Prepandemic and baseline data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      prepandemic_6_months_numeric == 1 # Only participants who signed up between September 1st 2019 and March 1st 2020
+  )
+
+# Participants who signed up in the three months before the pandemic began
+dat.prepan_sensitivity_9months <- dat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "Prepandemic and baseline data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "Prepandemic and baseline data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      prepandemic_9_months_numeric == 1 # Only participants who signed up between June 1st 2019 and March 1st 2020
+  )
+
+```
 
 2. Regression models (Regress covariates out of the change? Which?)
     i. Model 0: Disorders
@@ -2087,6 +2151,7 @@ Regress covariates out of the change? Which?
 Model naming conventions:
 0 - unadjusted
 1 - adjusted
+2 - adjusted with age^2
 a - hierarchical disorders
 b - overlapping disorder categories
 
@@ -2670,6 +2735,303 @@ model1b.reg.stats <- function(outcome, data_set) {
   )
 
   return(get(paste0(outcome,"model1b_reg_stats")))
+}
+```
+
+```{r model2a function}
+model2a.estimates <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical",
+                            "Gender_collapsed",
+                            "poly(Age, 2)",
+                            "Ethnicity_collapsed",
+                            "time_diff_coping_lockdown_march_23"
+                            )
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+
+  # run the glm
+  assign(paste0(outcome,".model2a"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+
+  assign(paste0(outcome,"model2a_estimates"),
+         tidy(get(paste0(outcome,".model2a")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "Disorder_hierarchicalAnxiety disorders" = "Anxiety disorders",
+               "Disorder_hierarchicalEating disorders" = "Eating disorders",
+               "Disorder_hierarchicalOCDs" = "OCDs",
+               "Disorder_hierarchicalPTSD" = "PTSD",
+               "Disorder_hierarchicalDepressive disorders" = "Depressive disorders",
+               "Disorder_hierarchicalBipolar disorders" = "Bipolar disorders",
+               "Gender_collapsedFemale" = "Female",
+               "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+               "poly(Age, 2)1" = "Age",
+               "poly(Age, 2)2" = "Age^2", 
+               "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+               "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
+               "Ethnicity_collapsedAfrican or African British" = "African or African British",
+               "Ethnicity_collapsedOther" = "Other ethnicity",
+               "time_diff_coping_lockdown_march_23" = "Time difference: Lockdown to baseline"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+
+  return(get(paste0(outcome,"model2a_estimates")))
+}
+
+model2a.reg.stats <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+
+  # run the glm
+  assign(paste0(outcome,".model2a"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+
+  assign(paste0(outcome,"model2a_reg_stats"),
+         glance(get(paste0(outcome,".model2a"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+
+  return(get(paste0(outcome,"model2a_reg_stats")))
+}
+```
+
+```{r model2b function}
+model2b.estimates <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("depression_and_anxiety",
+                             "eating_disorders",
+                             "obsessive_compulsive_disorders",
+                             "bipolar_and_schizophrenia",
+                             "mhd.posttraumatic_stress_disorder_ptsd",
+                             "autism_spectrum_disorder",
+                             "mhd.attention_deficit_hyperactivity_disorder",
+                             "mhd.personality_disorder",
+                             "Gender_collapsed",
+                             "poly(Age, 2)",
+                             "Ethnicity_collapsed",
+                             "key_worker",
+                             "time_diff_coping_lockdown_march_23"
+                                )
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+
+  # run the glm
+  assign(paste0(outcome,".model2b"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+
+  assign(paste0(outcome,"model2b_estimates"),
+         tidy(get(paste0(outcome,".model2b")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "anxiety_disordersAnxiety disorder" = "Anxiety disorders",
+               "depressive_disordersDepressive disorder" = "Depressive disorders",
+               "depression_and_anxietyDepressive and anxiety disorder" = "Depressive and anxiety disorder",
+               "depression_and_anxietyOnly depressive disorder" = "Only depressive disorder",
+               "depression_and_anxietyOnly anxiety disorder" = "Only anxiety disorder",
+               "eating_disordersEating disorder" = "Eating disorders",
+               "obsessive_compulsive_disordersObsessive compulsive disorder" = "OCDs",
+               "bipolar_and_schizophreniaPsychotic and bipolar disorder" = "Psychotic and bipolar disorder",
+               "bipolar_and_schizophreniaOnly psychotic disorder" = "Only psychotic disorder",
+               "bipolar_and_schizophreniaOnly bipolar disorder" = "Only bipolar disorder",
+               "psychotic_disordersPsychotic disorder" = "Psychotic disorder",
+               "mhd.mania_hypomania_bipolar_or_manicdepressionMania, hypomania, bipolar or manic-depression" = "Bipolar disorder",
+               "mhd.posttraumatic_stress_disorder_ptsdPost-traumatic stress disorder (PTSD)" = "PTSD",
+               "autism_spectrum_disorderAutism spectrum disorder" = "ASD",
+               "mhd.attention_deficit_hyperactivity_disorderAttention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)" = "ADHD",
+               "mhd.personality_disorderPersonality disorder" = "Personality disorder",
+               "Gender_collapsedFemale" = "Female",
+               "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+               "poly(Age, 2)1" = "Age",
+               "poly(Age, 2)2" = "Age^2", 
+               "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+               "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
+               "Ethnicity_collapsedAfrican or African British" = "African or African British",
+               "Ethnicity_collapsedOther" = "Other ethnicity",
+               "key_workerKey worker" = "Key worker",
+               "time_diff_coping_lockdown_march_23" = "Time difference: Lockdown to baseline"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+
+  return(get(paste0(outcome,"model2b_estimates")))
+}
+
+model2b.reg.stats <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+
+  # run the glm
+  assign(paste0(outcome,".model2b"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+
+  assign(paste0(outcome,"model2b_reg_stats"),
+         glance(get(paste0(outcome,".model2b"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+
+  return(get(paste0(outcome,"model2b_reg_stats")))
 }
 ```
 
@@ -3324,6 +3686,34 @@ kable(gad_baseline_model1b_reg_stats)
 gad_baseline_model1b_reg_stats
 ```
 
+### Model 2a: Disorder hierarchical, Adjusted with Age^2 
+```{r}
+# Regression coefficients
+gad_baseline_model2a_estimates <- model2a.estimates(outcome = "gad.sum_score_base",
+                                                 data_set = "dat_age_sensitivity")
+kable(gad_baseline_model2a_estimates)
+gad_baseline_model2a_estimates
+
+# Regression diagnostic statistics
+gad_baseline_model2a_reg_stats <- model2a.reg.stats(outcome = "gad.sum_score_base",
+                                                 data_set = "dat_age_sensitivity")
+kable(gad_baseline_model2a_reg_stats)
+gad_baseline_model2a_reg_stats
+```
+### Model 2b: Disorder hierarchical, Adjusted with Age^2 
+```{r}
+# Regression coefficients
+gad_baseline_model2b_estimates <- model2b.estimates(outcome = "gad.sum_score_base",
+                                                 data_set = "dat_age_sensitivity")
+kable(gad_baseline_model2b_estimates)
+gad_baseline_model2b_estimates
+
+# Regression diagnostic statistics
+gad_baseline_model2b_reg_stats <- model2b.reg.stats(outcome = "gad.sum_score_base",
+                                                 data_set = "dat_age_sensitivity")
+kable(gad_baseline_model2b_reg_stats)
+gad_baseline_model2b_reg_stats
+```
 
 # GAD prepan
 ## Regression: Change scores
@@ -3459,7 +3849,61 @@ gad_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "gad.s
 kable(gad_prepan_model1b_explan_reg_stats)
 gad_prepan_model1b_explan_reg_stats
 ```
+# GAD prepan: sensitivity
+## Regression: Absolute scores
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
+#### Subset of participants 3 months prior to pandemic
+```{r gad model1b sum_score prepan - sensitivity 3 months}
+# Regression coefficients
+gad_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
+                         explan_var = "gad.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_3months")
+kable(gad_prepan_model1b_explan_estimates)
+gad_prepan_model1b_explan_estimates
 
+# Regression diagnostic statistics
+gad_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "gad.sum_score_base",
+                         explan_var = "gad.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_3months")
+kable(gad_prepan_model1b_explan_reg_stats)
+gad_prepan_model1b_explan_reg_stats
+```
+
+#### Subset of participants 6 months prior to pandemic
+```{r gad model1b sum_score prepan - sensitivity 6 months}
+# Regression coefficients
+gad_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
+                         explan_var = "gad.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_6months")
+kable(gad_prepan_model1b_explan_estimates)
+gad_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+gad_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "gad.sum_score_base",
+                         explan_var = "gad.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_6months")
+kable(gad_prepan_model1b_explan_reg_stats)
+gad_prepan_model1b_explan_reg_stats
+```
+
+#### Subset of participants 9 months prior to pandemic
+```{r gad model1b sum_score prepan - sensitivity 9 months}
+# Regression coefficients
+gad_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
+                         explan_var = "gad.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_9months")
+kable(gad_prepan_model1b_explan_estimates)
+gad_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+gad_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "gad.sum_score_base",
+                         explan_var = "gad.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_9months")
+kable(gad_prepan_model1b_explan_reg_stats)
+gad_prepan_model1b_explan_reg_stats
+```
+##KT
 
 # GAD retro
 ## Regression: Change scores
@@ -3930,6 +4374,60 @@ phq_prepan_model1b_explan_estimates
 phq_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
                          explan_var = "phq.sum_score_prepan",
                          data_set = "dat.prepan")
+kable(phq_prepan_model1b_explan_reg_stats)
+phq_prepan_model1b_explan_reg_stats
+```
+# PHQ prepan: sensitivity
+## Regression: Absolute scores
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
+#### Subset of participants 3 months prior to pandemic
+```{r phq model1b sum_score prepan - sensitivity 3 months}
+# Regression coefficients
+phq_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_3months")
+kable(phq_prepan_model1b_explan_estimates)
+phq_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+phq_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_3months")
+kable(phq_prepan_model1b_explan_reg_stats)
+phq_prepan_model1b_explan_reg_stats
+```
+
+#### Subset of participants 6 months prior to pandemic
+```{r phq model1b sum_score prepan - sensitivity 6 months}
+# Regression coefficients
+phq_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_6months")
+kable(phq_prepan_model1b_explan_estimates)
+phq_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+phq_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_6months")
+kable(phq_prepan_model1b_explan_reg_stats)
+phq_prepan_model1b_explan_reg_stats
+```
+
+#### Subset of participants 9 months prior to pandemic
+```{r phq model1b sum_score prepan - sensitivity 9 months}
+# Regression coefficients
+phq_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_9months")
+kable(phq_prepan_model1b_explan_estimates)
+phq_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+phq_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
+                         explan_var = "phq.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_9months")
 kable(phq_prepan_model1b_explan_reg_stats)
 phq_prepan_model1b_explan_reg_stats
 ```
@@ -4878,62 +5376,10 @@ kable(pcl_prepan_model1b_explan_reg_stats)
 pcl_prepan_model1b_explan_reg_stats
 ```
 
-
 # SENSITIVITY based on highest level of education 
 
 # GAD prepan
 ## Regression: Absolute scores
-### Model 0a: Disorder_hierarchical, Unadjusted
-```{r gad education sensitivity model0a sum_score prepan}
-# Regression coefficients
-gad_prepan_model0a_education_estimates <- model0a.explan.estimates(outcome = "gad.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model0a_education_estimates)
-gad_prepan_model0a_education_estimates
-
-# Regression diagnostic statistics
-gad_prepan_model0a_education_reg_stats <- model0a.explan.reg.stats(outcome = "gad.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model0a_education_reg_stats)
-gad_prepan_model0a_education_reg_stats
-```
-
-### Model 0b: Overlapping disorders, Unadjusted
-```{r gad education sensitivity model0b sum_score prepan}
-# Regression coefficients
-gad_prepan_model0b_education_estimates <- model0b.explan.estimates(outcome = "gad.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model0b_education_estimates)
-gad_prepan_model0b_education_estimates
-
-# Regression diagnostic statistics
-gad_prepan_model0b_education_reg_stats <- model0b.explan.reg.stats(outcome = "gad.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model0b_education_reg_stats)
-gad_prepan_model0b_education_reg_stats
-```
-
-### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
-```{r gad education sensitivity model1a sum_score prepan}
-# Regression coefficients
-gad_prepan_model1a_education_estimates <- model1a.explan.estimates(outcome = "gad.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model1a_education_estimates)
-gad_prepan_model1a_education_estimates
-
-# Regression diagnostic statistics
-gad_prepan_model1a_education_reg_stats <- model1a.explan.reg.stats(outcome = "gad.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model1a_education_reg_stats)
-gad_prepan_model1a_education_reg_stats
-```
 
 ### Model 1b: Overlapping disorders, Adjusted
 Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
@@ -4955,57 +5401,7 @@ gad_prepan_model1b_education_reg_stats
 
 # PHQ prepan
 ## Regression: Absolute scores
-### Model 0a: Disorder_hierarchical, Unadjusted
-```{r phq education sensitivity model0a sum_score prepan}
-# Regression coefficients
-phq_prepan_model0a_education_estimates <- model0a.explan.estimates(outcome = "phq.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model0a_education_estimates)
-phq_prepan_model0a_education_estimates
 
-# Regression diagnostic statistics
-phq_prepan_model0a_education_reg_stats <- model0a.explan.reg.stats(outcome = "phq.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model0a_education_reg_stats)
-phq_prepan_model0a_education_reg_stats
-```
-
-### Model 0b: Overlapping disorders, Unadjusted
-```{r phq education sensitivity model0b sum_score prepan}
-# Regression coefficients
-phq_prepan_model0b_education_estimates <- model0b.explan.estimates(outcome = "phq.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model0b_education_estimates)
-phq_prepan_model0b_education_estimates
-
-# Regression diagnostic statistics
-phq_prepan_model0b_education_reg_stats <- model0b.explan.reg.stats(outcome = "phq.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model0b_education_reg_stats)
-phq_prepan_model0b_education_reg_stats
-```
-
-### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
-```{r phq education sensitivity model1a sum_score prepan}
-# Regression coefficients
-phq_prepan_model1a_education_estimates <- model1a.explan.estimates(outcome = "phq.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model1a_education_estimates)
-phq_prepan_model1a_education_estimates
-
-# Regression diagnostic statistics
-phq_prepan_model1a_education_reg_stats <- model1a.explan.reg.stats(outcome = "phq.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model1a_education_reg_stats)
-phq_prepan_model1a_education_reg_stats
-```
 
 ### Model 1b: Overlapping disorders, Adjusted
 Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
@@ -5027,57 +5423,6 @@ phq_prepan_model1b_education_reg_stats
 
 # OCIR prepan 
 ## Regression: Absolute scores
-### Model 0a: Disorder_hierarchical, Unadjusted
-```{r ocir education sensitivity model0a sum_score prepan}
-# Regression coefficients
-ocir_prepan_model0a_education_estimates <- model0a.explan.estimates(outcome = "ocir.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model0a_education_estimates)
-ocir_prepan_model0a_education_estimates
-
-# Regression diagnostic statistics
-ocir_prepan_model0a_education_reg_stats <- model0a.explan.reg.stats(outcome = "ocir.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model0a_education_reg_stats)
-ocir_prepan_model0a_education_reg_stats
-```
-
-### Model 0b: Overlapping disorders, Unadjusted
-```{r ocir education sensitivity model0b sum_score prepan}
-# Regression coefficients
-ocir_prepan_model0b_education_estimates <- model0b.explan.estimates(outcome = "ocir.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model0b_education_estimates)
-ocir_prepan_model0b_education_estimates
-
-# Regression diagnostic statistics
-ocir_prepan_model0b_education_reg_stats <- model0b.explan.reg.stats(outcome = "ocir.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model0b_education_reg_stats)
-ocir_prepan_model0b_education_reg_stats
-```
-
-### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
-```{r ocir education sensitivity model1a sum_score prepan}
-# Regression coefficients
-ocir_prepan_model1a_education_estimates <- model1a.explan.estimates(outcome = "ocir.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model1a_education_estimates)
-ocir_prepan_model1a_education_estimates
-
-# Regression diagnostic statistics
-ocir_prepan_model1a_education_reg_stats <- model1a.explan.reg.stats(outcome = "ocir.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model1a_education_reg_stats)
-ocir_prepan_model1a_education_reg_stats
-```
 
 ### Model 1b: Overlapping disorders, Adjusted
 Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
@@ -5099,57 +5444,6 @@ ocir_prepan_model1b_education_reg_stats
 
 #PCL prepan 
 ## Regression: Absolute scores
-### Model 0a: Disorder_hierarchical, Unadjusted
-```{r pcl education sensitivty model0a sum_score prepan}
-# Regression coefficients
-pcl_prepan_model0a_education_estimates <- model0a.explan.estimates(outcome = "pcl.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model0a_education_estimates)
-pcl_prepan_model0a_education_estimates
-
-# Regression diagnostic statistics
-pcl_prepan_model0a_education_reg_stats <- model0a.explan.reg.stats(outcome = "pcl.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model0a_education_reg_stats)
-pcl_prepan_model0a_education_reg_stats
-```
-
-### Model 0b: Overlapping disorders, Unadjusted
-```{r pcl education sensitivty model0b sum_score prepan}
-# Regression coefficients
-pcl_prepan_model0b_education_estimates <- model0b.explan.estimates(outcome = "pcl.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model0b_education_estimates)
-pcl_prepan_model0b_education_estimates
-
-# Regression diagnostic statistics
-pcl_prepan_model0b_education_reg_stats <- model0b.explan.reg.stats(outcome = "pcl.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model0b_education_reg_stats)
-pcl_prepan_model0b_education_reg_stats
-```
-
-### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
-```{r pcl education sensitivty model1a sum_score prepan}
-# Regression coefficients
-pcl_prepan_model1a_education_estimates <- model1a.explan.estimates(outcome = "pcl.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model1a_education_estimates)
-pcl_prepan_model1a_education_estimates
-
-# Regression diagnostic statistics
-pcl_prepan_model1a_education_reg_stats <- model1a.explan.reg.stats(outcome = "pcl.sum_score_base",
-                         explan_var = "highest_education_numeric",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model1a_education_reg_stats)
-pcl_prepan_model1a_education_reg_stats
-```
 
 ### Model 1b: Overlapping disorders, Adjusted
 Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
@@ -5173,57 +5467,6 @@ pcl_prepan_model1b_education_reg_stats
 
 # GAD prepan
 ## Regression: Absolute scores
-### Model 0a: Disorder_hierarchical, Unadjusted
-```{r gad employment sensitivity model0a sum_score prepan}
-# Regression coefficients
-gad_prepan_model0a_employment_estimates <- model0a.explan.estimates(outcome = "gad.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model0a_employment_estimates)
-gad_prepan_model0a_employment_estimates
-
-# Regression diagnostic statistics
-gad_prepan_model0a_employment_reg_stats <- model0a.explan.reg.stats(outcome = "gad.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model0a_employment_reg_stats)
-gad_prepan_model0a_employment_reg_stats
-```
-
-### Model 0b: Overlapping disorders, Unadjusted
-```{r gad employment sensitivity model0b sum_score prepan}
-# Regression coefficients
-gad_prepan_model0b_employment_estimates <- model0b.explan.estimates(outcome = "gad.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model0b_employment_estimates)
-gad_prepan_model0b_employment_estimates
-
-# Regression diagnostic statistics
-gad_prepan_model0b_employment_reg_stats <- model0b.explan.reg.stats(outcome = "gad.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model0b_employment_reg_stats)
-gad_prepan_model0b_employment_reg_stats
-```
-
-### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
-```{r gad employment sensitivity model1a sum_score prepan}
-# Regression coefficients
-gad_prepan_model1a_employment_estimates <- model1a.explan.estimates(outcome = "gad.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model1a_employment_estimates)
-gad_prepan_model1a_employment_estimates
-
-# Regression diagnostic statistics
-gad_prepan_model1a_employment_reg_stats <- model1a.explan.reg.stats(outcome = "gad.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model1a_employment_reg_stats)
-gad_prepan_model1a_employment_reg_stats
-```
 
 ### Model 1b: Overlapping disorders, Adjusted
 Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
@@ -5245,57 +5488,6 @@ gad_prepan_model1b_employment_reg_stats
 
 # PHQ prepan
 ## Regression: Absolute scores
-### Model 0a: Disorder_hierarchical, Unadjusted
-```{r phq employment sensitivity model0a sum_score prepan}
-# Regression coefficients
-phq_prepan_model0a_employment_estimates <- model0a.explan.estimates(outcome = "phq.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model0a_employment_estimates)
-phq_prepan_model0a_employment_estimates
-
-# Regression diagnostic statistics
-phq_prepan_model0a_employment_reg_stats <- model0a.explan.reg.stats(outcome = "phq.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model0a_employment_reg_stats)
-phq_prepan_model0a_employment_reg_stats
-```
-
-### Model 0b: Overlapping disorders, Unadjusted
-```{r phq employment sensitivity model0b sum_score prepan}
-# Regression coefficients
-phq_prepan_model0b_employment_estimates <- model0b.explan.estimates(outcome = "phq.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model0b_employment_estimates)
-phq_prepan_model0b_employment_estimates
-
-# Regression diagnostic statistics
-phq_prepan_model0b_employment_reg_stats <- model0b.explan.reg.stats(outcome = "phq.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model0b_employment_reg_stats)
-phq_prepan_model0b_employment_reg_stats
-```
-
-### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
-```{r phq employment sensitivity model1a sum_score prepan}
-# Regression coefficients
-phq_prepan_model1a_employment_estimates <- model1a.explan.estimates(outcome = "phq.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model1a_employment_estimates)
-phq_prepan_model1a_employment_estimates
-
-# Regression diagnostic statistics
-phq_prepan_model1a_employment_reg_stats <- model1a.explan.reg.stats(outcome = "phq.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model1a_employment_reg_stats)
-phq_prepan_model1a_employment_reg_stats
-```
 
 ### Model 1b: Overlapping disorders, Adjusted
 Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
@@ -5317,58 +5509,6 @@ phq_prepan_model1b_employment_reg_stats
 
 # OCIR prepan 
 ## Regression: Absolute scores
-### Model 0a: Disorder_hierarchical, Unadjusted
-```{r ocir employment sensitivity model0a sum_score prepan}
-# Regression coefficients
-ocir_prepan_model0a_employment_estimates <- model0a.explan.estimates(outcome = "ocir.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model0a_employment_estimates)
-ocir_prepan_model0a_employment_estimates
-
-# Regression diagnostic statistics
-ocir_prepan_model0a_employment_reg_stats <- model0a.explan.reg.stats(outcome = "ocir.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model0a_employment_reg_stats)
-ocir_prepan_model0a_employment_reg_stats
-```
-
-### Model 0b: Overlapping disorders, Unadjusted
-```{r ocir employment sensitivity model0b sum_score prepan}
-# Regression coefficients
-ocir_prepan_model0b_employment_estimates <- model0b.explan.estimates(outcome = "ocir.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model0b_employment_estimates)
-ocir_prepan_model0b_employment_estimates
-
-# Regression diagnostic statistics
-ocir_prepan_model0b_employment_reg_stats <- model0b.explan.reg.stats(outcome = "ocir.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model0b_employment_reg_stats)
-ocir_prepan_model0b_employment_reg_stats
-```
-
-### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
-```{r ocir employment sensitivity model1a sum_score prepan}
-# Regression coefficients
-ocir_prepan_model1a_employment_estimates <- model1a.explan.estimates(outcome = "ocir.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model1a_employment_estimates)
-ocir_prepan_model1a_employment_estimates
-
-# Regression diagnostic statistics
-ocir_prepan_model1a_employment_reg_stats <- model1a.explan.reg.stats(outcome = "ocir.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model1a_employment_reg_stats)
-ocir_prepan_model1a_employment_reg_stats
-```
-
 ### Model 1b: Overlapping disorders, Adjusted
 Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
 ```{r ocir employment sensitivity model1b sum_score prepan}
@@ -5389,57 +5529,6 @@ ocir_prepan_model1b_employment_reg_stats
 
 #PCL prepan 
 ## Regression: Absolute scores
-### Model 0a: Disorder_hierarchical, Unadjusted
-```{r pcl employment sensitivty model0a sum_score prepan}
-# Regression coefficients
-pcl_prepan_model0a_employment_estimates <- model0a.explan.estimates(outcome = "pcl.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model0a_employment_estimates)
-pcl_prepan_model0a_employment_estimates
-
-# Regression diagnostic statistics
-pcl_prepan_model0a_employment_reg_stats <- model0a.explan.reg.stats(outcome = "pcl.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model0a_employment_reg_stats)
-pcl_prepan_model0a_employment_reg_stats
-```
-
-### Model 0b: Overlapping disorders, Unadjusted
-```{r pcl employment sensitivty model0b sum_score prepan}
-# Regression coefficients
-pcl_prepan_model0b_employment_estimates <- model0b.explan.estimates(outcome = "pcl.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model0b_employment_estimates)
-pcl_prepan_model0b_employment_estimates
-
-# Regression diagnostic statistics
-pcl_prepan_model0b_employment_reg_stats <- model0b.explan.reg.stats(outcome = "pcl.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model0b_employment_reg_stats)
-pcl_prepan_model0b_employment_reg_stats
-```
-
-### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
-```{r pcl employment sensitivty model1a sum_score prepan}
-# Regression coefficients
-pcl_prepan_model1a_employment_estimates <- model1a.explan.estimates(outcome = "pcl.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model1a_employment_estimates)
-pcl_prepan_model1a_employment_estimates
-
-# Regression diagnostic statistics
-pcl_prepan_model1a_employment_reg_stats <- model1a.explan.reg.stats(outcome = "pcl.sum_score_base",
-                         explan_var = "employment.unemployed_numeric",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model1a_employment_reg_stats)
-pcl_prepan_model1a_employment_reg_stats
-```
 
 ### Model 1b: Overlapping disorders, Adjusted
 Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
@@ -5484,58 +5573,6 @@ dat.prepan$employment_change <- as.factor(dat.prepan$employment_change)
 
 # GAD prepan
 ## Regression: Absolute scores
-### Model 0a: Disorder_hierarchical, Unadjusted
-```{r gad employment change sensitivity model0a sum_score prepan}
-# Regression coefficients
-gad_prepan_model0a_employmentchange_estimates <- model0a.explan.estimates(outcome = "gad.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model0a_employmentchange_estimates)
-gad_prepan_model0a_employmentchange_estimates
-
-# Regression diagnostic statistics
-gad_prepan_model0a_employmentchange_reg_stats <- model0a.explan.reg.stats(outcome = "gad.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model0a_employmentchange_reg_stats)
-gad_prepan_model0a_employmentchange_reg_stats
-```
-
-### Model 0b: Overlapping disorders, Unadjusted
-```{r gad employment change sensitivity model0b sum_score prepan}
-# Regression coefficients
-gad_prepan_model0b_employmentchange_estimates <- model0b.explan.estimates(outcome = "gad.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model0b_employmentchange_estimates)
-gad_prepan_model0b_employmentchange_estimates
-
-# Regression diagnostic statistics
-gad_prepan_model0b_employmentchange_reg_stats <- model0b.explan.reg.stats(outcome = "gad.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model0b_employmentchange_reg_stats)
-gad_prepan_model0b_employmentchange_reg_stats
-```
-
-### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
-```{r gad employment change sensitivity model1a sum_score prepan}
-# Regression coefficients
-gad_prepan_model1a_employmentchange_estimates <- model1a.explan.estimates(outcome = "gad.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model1a_employmentchange_estimates)
-gad_prepan_model1a_employmentchange_estimates
-
-# Regression diagnostic statistics
-gad_prepan_model1a_employmentchange_reg_stats <- model1a.explan.reg.stats(outcome = "gad.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model1a_employmentchange_reg_stats)
-gad_prepan_model1a_employmentchange_reg_stats
-```
-
 ### Model 1b: Overlapping disorders, Adjusted
 Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
 ```{r gad employment change sensitivity model1b sum_score prepan}
@@ -5556,57 +5593,6 @@ gad_prepan_model1b_employmentchange_reg_stats
 
 # PHQ prepan
 ## Regression: Absolute scores
-### Model 0a: Disorder_hierarchical, Unadjusted
-```{r phq employment change sensitivity model0a sum_score prepan}
-# Regression coefficients
-phq_prepan_model0a_employmentchange_estimates <- model0a.explan.estimates(outcome = "phq.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model0a_employmentchange_estimates)
-phq_prepan_model0a_employmentchange_estimates
-
-# Regression diagnostic statistics
-phq_prepan_model0a_employmentchange_reg_stats <- model0a.explan.reg.stats(outcome = "phq.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model0a_employmentchange_reg_stats)
-phq_prepan_model0a_employmentchange_reg_stats
-```
-
-### Model 0b: Overlapping disorders, Unadjusted
-```{r phq employment change sensitivity model0b sum_score prepan}
-# Regression coefficients
-phq_prepan_model0b_employmentchange_estimates <- model0b.explan.estimates(outcome = "phq.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model0b_employmentchange_estimates)
-phq_prepan_model0b_employmentchange_estimates
-
-# Regression diagnostic statistics
-phq_prepan_model0b_employmentchange_reg_stats <- model0b.explan.reg.stats(outcome = "phq.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model0b_employmentchange_reg_stats)
-phq_prepan_model0b_employmentchange_reg_stats
-```
-
-### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
-```{r phq employment change sensitivity model1a sum_score prepan}
-# Regression coefficients
-phq_prepan_model1a_employmentchange_estimates <- model1a.explan.estimates(outcome = "phq.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model1a_employmentchange_estimates)
-phq_prepan_model1a_employmentchange_estimates
-
-# Regression diagnostic statistics
-phq_prepan_model1a_employmentchange_reg_stats <- model1a.explan.reg.stats(outcome = "phq.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model1a_employmentchange_reg_stats)
-phq_prepan_model1a_employmentchange_reg_stats
-```
 
 ### Model 1b: Overlapping disorders, Adjusted
 Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
@@ -5628,57 +5614,6 @@ phq_prepan_model1b_employmentchange_reg_stats
 
 # OCIR prepan 
 ## Regression: Absolute scores
-### Model 0a: Disorder_hierarchical, Unadjusted
-```{r ocir employment change sensitivity model0a sum_score prepan}
-# Regression coefficients
-ocir_prepan_model0a_employmentchange_estimates <- model0a.explan.estimates(outcome = "ocir.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model0a_employmentchange_estimates)
-ocir_prepan_model0a_employmentchange_estimates
-
-# Regression diagnostic statistics
-ocir_prepan_model0a_employmentchange_reg_stats <- model0a.explan.reg.stats(outcome = "ocir.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model0a_employmentchange_reg_stats)
-ocir_prepan_model0a_employmentchange_reg_stats
-```
-
-### Model 0b: Overlapping disorders, Unadjusted
-```{r ocir employment change sensitivity model0b sum_score prepan}
-# Regression coefficients
-ocir_prepan_model0b_employmentchange_estimates <- model0b.explan.estimates(outcome = "ocir.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model0b_employmentchange_estimates)
-ocir_prepan_model0b_employmentchange_estimates
-
-# Regression diagnostic statistics
-ocir_prepan_model0b_employmentchange_reg_stats <- model0b.explan.reg.stats(outcome = "ocir.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model0b_employmentchange_reg_stats)
-ocir_prepan_model0b_employmentchange_reg_stats
-```
-
-### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
-```{r ocir employment change sensitivity model1a sum_score prepan}
-# Regression coefficients
-ocir_prepan_model1a_employmentchange_estimates <- model1a.explan.estimates(outcome = "ocir.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model1a_employmentchange_estimates)
-ocir_prepan_model1a_employmentchannge_estimates
-
-# Regression diagnostic statistics
-ocir_prepan_model1a_employmentchange_reg_stats <- model1a.explan.reg.stats(outcome = "ocir.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model1a_employmentchange_reg_stats)
-ocir_prepan_model1a_employmentchange_reg_stats
-```
 
 ### Model 1b: Overlapping disorders, Adjusted
 Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
@@ -5700,58 +5635,6 @@ ocir_prepan_model1b_employmentchange_reg_stats
 
 #PCL prepan 
 ## Regression: Absolute scores
-### Model 0a: Disorder_hierarchical, Unadjusted
-```{r pcl employment change sensitivty model0a sum_score prepan}
-# Regression coefficients
-pcl_prepan_model0a_employmentchange_estimates <- model0a.explan.estimates(outcome = "pcl.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model0a_employmentchange_estimates)
-pcl_prepan_model0a_employmentchange_estimates
-
-# Regression diagnostic statistics
-pcl_prepan_model0a_employmentchange_reg_stats <- model0a.explan.reg.stats(outcome = "pcl.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model0a_employmentchange_reg_stats)
-pcl_prepan_model0a_employmentchange_reg_stats
-```
-
-### Model 0b: Overlapping disorders, Unadjusted
-```{r pcl employment change sensitivty model0b sum_score prepan}
-# Regression coefficients
-pcl_prepan_model0b_employmentchange_estimates <- model0b.explan.estimates(outcome = "pcl.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model0b_employmentchange_estimates)
-pcl_prepan_model0b_employmentchange_estimates
-
-# Regression diagnostic statistics
-pcl_prepan_model0b_employmentchange_reg_stats <- model0b.explan.reg.stats(outcome = "pcl.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model0b_employmentchange_reg_stats)
-pcl_prepan_model0b_employmentchange_reg_stats
-```
-
-### Model 1a: Disorder hierarchical, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
-```{r pcl employment change sensitivty model1a sum_score prepan}
-# Regression coefficients
-pcl_prepan_model1a_employmentchange_estimates <- model1a.explan.estimates(outcome = "pcl.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model1a_employmentchange_estimates)
-pcl_prepan_model1a_employmentchange_estimates
-
-# Regression diagnostic statistics
-pcl_prepan_model1a_employmentchange_reg_stats <- model1a.explan.reg.stats(outcome = "pcl.sum_score_base",
-                         explan_var = "employment_change",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model1a_employmentchange_reg_stats)
-pcl_prepan_model1a_employmentchange_reg_stats
-```
-
 ### Model 1b: Overlapping disorders, Adjusted
 Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Time registration and baseline
 ```{r pcl employment change sensitivty model1b sum_score prepan}
@@ -5769,3 +5652,60 @@ pcl_prepan_model1b_employmentchange_reg_stats <- model1b.explan.reg.stats(outcom
 kable(pcl_prepan_model1b_employmentchange_reg_stats)
 pcl_prepan_model1b_employmentchange_reg_stats
 ```
+
+# Sensitivity based on GLAD sign up
+#PCL prepan: sensitivity
+## Regression: Absolute scores
+### Model 1b: Overlapping disorders, Adjusted
+Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
+#### Subset of participants 3 months prior to pandemic
+```{r pcl model1b sum_score prepan - sensitivity 3 months}
+# Regression coefficients
+pcl_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_3months")
+kable(pcl_prepan_model1b_explan_estimates)
+pcl_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+pcl_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_3months")
+kable(pcl_prepan_model1b_explan_reg_stats)
+pcl_prepan_model1b_explan_reg_stats
+```
+
+#### Subset of participants 6 months prior to pandemic
+```{r pcl model1b sum_score prepan - sensitivity 6 months}
+# Regression coefficients
+pcl_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_6months")
+kable(pcl_prepan_model1b_explan_estimates)
+pcl_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+pcl_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_6months")
+kable(pcl_prepan_model1b_explan_reg_stats)
+pcl_prepan_model1b_explan_reg_stats
+```
+
+#### Subset of participants 9 months prior to pandemic
+```{r pcl model1b sum_score prepan - sensitivity 9 months}
+# Regression coefficients
+pcl_prepan_model1b_explan_estimates <- model1b.explan.estimates(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_9months")
+kable(pcl_prepan_model1b_explan_estimates)
+pcl_prepan_model1b_explan_estimates
+
+# Regression diagnostic statistics
+pcl_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "pcl.sum_score_base",
+                         explan_var = "pcl.sum_score_prepan",
+                         data_set = "dat.prepan_sensitivity_9months")
+kable(pcl_prepan_model1b_explan_reg_stats)
+pcl_prepan_model1b_explan_reg_stats
+```
+
