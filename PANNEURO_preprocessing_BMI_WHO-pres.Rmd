@@ -168,6 +168,15 @@ nbr.bmi.raw <- nbr.bmi.raw %>%
          weight.1 = demographics.provide_current_weight_pregnant.1, 
          weight.2 = demographics.provide_current_weight_pregnant.2)
 
+nbr.bmi.raw$Sample <- c("NBR")
+
+nbr.bmi.raw$height.2[ nbr.bmi.raw$height.2>300 ] <- NA
+nbr.bmi.raw$height.2[ nbr.bmi.raw$height.2<20 ] <- NA
+nbr.bmi.raw$height.1[ nbr.bmi.raw$height.1>15 ] <- NA
+nbr.bmi.raw$height.1[ nbr.bmi.raw$height.1<0.1 ] <- NA
+nbr.bmi.raw$height[ nbr.bmi.raw$height>15 ] <- NA
+nbr.bmi.raw$height[ nbr.bmi.raw$height<0.1 ] <- NA
+
 # GLAD cohort
 glad.bmi.raw <- glad.bmi.raw %>%
     drop_na(externalDataReference) %>% # Drop NAs
@@ -184,6 +193,13 @@ glad.bmi.raw <- glad.bmi.raw %>%
          weight.1 = demographics.current_weight_pregnant_weight.1, 
          weight.2 = demographics.current_weight_pregnant_weight.2
          )
+
+glad.bmi.raw$height[ glad.bmi.raw$height>300 ] <- NA
+glad.bmi.raw$height[ glad.bmi.raw$height<20 ] <- NA
+glad.bmi.raw$height.1[ glad.bmi.raw$height.1>15 ] <- NA
+glad.bmi.raw$height.1[ glad.bmi.raw$height.1<0.1 ] <- NA
+glad.bmi.raw$height.2[ glad.bmi.raw$height.2>15 ] <- NA
+glad.bmi.raw$height.2[ glad.bmi.raw$height.2<0.1 ] <- NA
 
 # EDGI 
 
@@ -202,6 +218,13 @@ edgi.bmi.raw <- edgi.bmi.raw %>%
          weight.1 = demographics.pregnant_current_weight_provide.1, 
          weight.2 = demographics.pregnant_current_weight_provide.2
          ) 
+
+edgi.bmi.raw$height.2[ edgi.bmi.raw$height.2>300 ] <- NA
+edgi.bmi.raw$height.2[ edgi.bmi.raw$height.2<20 ] <- NA
+edgi.bmi.raw$height.1[ edgi.bmi.raw$height.1>15 ] <- NA
+edgi.bmi.raw$height.1[ edgi.bmi.raw$height.1<0.1 ] <- NA
+edgi.bmi.raw$height[ edgi.bmi.raw$height>15 ] <- NA
+edgi.bmi.raw$height[ edgi.bmi.raw$height<0.1 ] <- NA
 
  colnames(edgi.bmi.raw) <- c("Sample", "ID", "inch", "cm", "ft", "stn", "pnd", "kg")
  colnames(nbr.bmi.raw) <- c("Sample", "ID", "inch", "cm", "ft", "stn", "pnd", "kg")
@@ -246,12 +269,11 @@ edgi.bmi.raw$bmi <- edgi.bmi.raw$kg_all / (edgi.bmi.raw$cm_whole^2)
 
 nbr.bmi.raw$cm_whole <- nbr.bmi.raw$cm_all/100
 nbr.bmi.raw$bmi <- nbr.bmi.raw$kg_all / (nbr.bmi.raw$cm_whole^2)
-nbr.bmi.raw$bmi_new <- round(nbr.bmi.raw$bmi, digits = 2)
-nbr.bmi.raw$bmi <- nbr.bmi.raw$bmi_new
 
 
 glad.bmi.raw$cm_whole <- glad.bmi.raw$cm_all/100
 glad.bmi.raw$bmi <- glad.bmi.raw$kg_all / (glad.bmi.raw$cm_whole^2)
+
 
 # then let's get this into the main COPING data frame and delete this one and also tidy up 
 

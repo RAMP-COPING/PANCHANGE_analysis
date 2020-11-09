@@ -47,10 +47,11 @@ date = Sys.Date()
 
 # Specify cohort
 ```{r Specify cohort}
-GLAD = FALSE
-EDGI = FALSE
+GLAD = TRUE
+EDGI = TRUE
 NBR = FALSE
-RAMP = TRUE
+RAMP = FALSE
+GLAD_and_EDGI = TRUE
 ```
 
 
@@ -156,7 +157,7 @@ Note: All COPING surveys are separate surveys
 
 ```{r source file path}
 #source raw data directory: data.raw_path
-source("../PANCHANGE_raw_path.R")
+source("/Users/alishpalmos/Documents/GitHub//PANCHANGE_raw_path.R")
 ```
 
 # Demographics
@@ -313,6 +314,30 @@ summarytools::dfSummary(
   labels.col = F)
 }
 ```
+
+## GLAD and EDGI
+### Create data frame 
+```{r GLAD and EDGI combined}
+glad.and.edgi.dem.raw.id <- rbind(glad.dem.raw.id, edgi.dem.raw.id)
+```
+
+```{r glad and edgi copy dem}
+if(GLAD_and_EDGI == TRUE){
+  dem.raw.id <- glad.and.edgi.dem.raw.id
+}
+```
+
+### Get summary of combined GLAD and EDI
+```{r glad and edgi demographics summary}
+if(GLAD_and_EDGI == TRUE) {
+summarytools::dfSummary(
+  dem.raw.id,
+  graph.col = F,
+  valid.col = F,
+  labels.col = F)
+}
+```
+
 
 ## NBR
 ### Read in data
@@ -724,7 +749,34 @@ dem.raw.id <- dem.raw.id %>%
 }
 ```
 
+```{r ethnicity recoding for GLAD and EDGI combined}
+if(GLAD_and_EDGI == TRUE) {
 
+dem.raw.id <- dem.raw.id %>%
+  mutate(
+    Ethnicity = 
+      recode_factor(Ethnicity_unc,
+        "White, white European or Caucasian" = "White",
+        "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+        "Asian or Asian British (including Chinese)" = "Asian or Asian British",
+        "Black or Black British" = "Black or Black British",
+        "Arab" = "Arab",
+        "Other ethnic group (please specify)" = "Other ethnic group"
+      )
+  ) %>%
+  mutate(
+    Ethnicity_numeric = 
+      recode(Ethnicity,
+        "White" = 1,
+        "Mixed or multiple ethnic origins" = 2,
+        "Asian or Asian British" = 3,
+        "Black or Black British" = 4,
+        "Arab" = 5,
+        "Other ethnic group" = 6
+      )
+  )
+}
+```
 
 # Clean Age variable
 Age outlier
