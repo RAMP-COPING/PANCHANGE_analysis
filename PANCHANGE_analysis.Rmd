@@ -2060,7 +2060,14 @@ dat.retro_sensitivity <- dat %>%
       prepandemic_march_1_numeric == 1 # Exclude participants that signed up after the 1. March
   )
 
-dim(dat.prepan)
+dim(dat.retro_sensitivity)
+```
+age^2 sensitivity 
+Exclude individuals with NA for continuous Age variable
+```{r}
+dat_age_sensitivity <- dat %>%
+  filter(!is.na(Age))
+dim(dat_age_sensitivity)
 ```
 
 
@@ -2087,6 +2094,7 @@ Regress covariates out of the change? Which?
 Model naming conventions:
 0 - unadjusted
 1 - adjusted
+2 - adjusted with age^2
 a - hierarchical disorders
 b - overlapping disorder categories
 
@@ -2670,6 +2678,303 @@ model1b.reg.stats <- function(outcome, data_set) {
   )
 
   return(get(paste0(outcome,"model1b_reg_stats")))
+}
+```
+
+```{r model2a function}
+model2a.estimates <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical",
+                            "Gender_collapsed",
+                            "poly(Age, 2)",
+                            "Ethnicity_collapsed",
+                            "time_diff_coping_lockdown_march_23"
+                            )
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+
+  # run the glm
+  assign(paste0(outcome,".model2a"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+
+  assign(paste0(outcome,"model2a_estimates"),
+         tidy(get(paste0(outcome,".model2a")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "Disorder_hierarchicalAnxiety disorders" = "Anxiety disorders",
+               "Disorder_hierarchicalEating disorders" = "Eating disorders",
+               "Disorder_hierarchicalOCDs" = "OCDs",
+               "Disorder_hierarchicalPTSD" = "PTSD",
+               "Disorder_hierarchicalDepressive disorders" = "Depressive disorders",
+               "Disorder_hierarchicalBipolar disorders" = "Bipolar disorders",
+               "Gender_collapsedFemale" = "Female",
+               "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+               "poly(Age, 2)1" = "Age",
+               "poly(Age, 2)2" = "Age^2", 
+               "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+               "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
+               "Ethnicity_collapsedAfrican or African British" = "African or African British",
+               "Ethnicity_collapsedOther" = "Other ethnicity",
+               "time_diff_coping_lockdown_march_23" = "Time difference: Lockdown to baseline"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+
+  return(get(paste0(outcome,"model2a_estimates")))
+}
+
+model2a.reg.stats <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+
+  # run the glm
+  assign(paste0(outcome,".model2a"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+
+  assign(paste0(outcome,"model2a_reg_stats"),
+         glance(get(paste0(outcome,".model2a"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+
+  return(get(paste0(outcome,"model2a_reg_stats")))
+}
+```
+
+```{r model2b function}
+model2b.estimates <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("depression_and_anxiety",
+                             "eating_disorders",
+                             "obsessive_compulsive_disorders",
+                             "bipolar_and_schizophrenia",
+                             "mhd.posttraumatic_stress_disorder_ptsd",
+                             "autism_spectrum_disorder",
+                             "mhd.attention_deficit_hyperactivity_disorder",
+                             "mhd.personality_disorder",
+                             "Gender_collapsed",
+                             "poly(Age, 2)",
+                             "Ethnicity_collapsed",
+                             "key_worker",
+                             "time_diff_coping_lockdown_march_23"
+                                )
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+
+  # run the glm
+  assign(paste0(outcome,".model2b"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+
+  assign(paste0(outcome,"model2b_estimates"),
+         tidy(get(paste0(outcome,".model2b")), conf.int = TRUE) %>%
+           mutate(
+             "Indepent variable" = recode_factor(
+               term,
+               "(Intercept)" = "Intercept",
+               "anxiety_disordersAnxiety disorder" = "Anxiety disorders",
+               "depressive_disordersDepressive disorder" = "Depressive disorders",
+               "depression_and_anxietyDepressive and anxiety disorder" = "Depressive and anxiety disorder",
+               "depression_and_anxietyOnly depressive disorder" = "Only depressive disorder",
+               "depression_and_anxietyOnly anxiety disorder" = "Only anxiety disorder",
+               "eating_disordersEating disorder" = "Eating disorders",
+               "obsessive_compulsive_disordersObsessive compulsive disorder" = "OCDs",
+               "bipolar_and_schizophreniaPsychotic and bipolar disorder" = "Psychotic and bipolar disorder",
+               "bipolar_and_schizophreniaOnly psychotic disorder" = "Only psychotic disorder",
+               "bipolar_and_schizophreniaOnly bipolar disorder" = "Only bipolar disorder",
+               "psychotic_disordersPsychotic disorder" = "Psychotic disorder",
+               "mhd.mania_hypomania_bipolar_or_manicdepressionMania, hypomania, bipolar or manic-depression" = "Bipolar disorder",
+               "mhd.posttraumatic_stress_disorder_ptsdPost-traumatic stress disorder (PTSD)" = "PTSD",
+               "autism_spectrum_disorderAutism spectrum disorder" = "ASD",
+               "mhd.attention_deficit_hyperactivity_disorderAttention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)" = "ADHD",
+               "mhd.personality_disorderPersonality disorder" = "Personality disorder",
+               "Gender_collapsedFemale" = "Female",
+               "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+               "poly(Age, 2)1" = "Age",
+               "poly(Age, 2)2" = "Age^2", 
+               "Ethnicity_collapsedMixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+               "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
+               "Ethnicity_collapsedAfrican or African British" = "African or African British",
+               "Ethnicity_collapsedOther" = "Other ethnicity",
+               "key_workerKey worker" = "Key worker",
+               "time_diff_coping_lockdown_march_23" = "Time difference: Lockdown to baseline"
+             ),
+             "Estimate" = format(
+               round(estimate,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI low" = format(
+               round(conf.low,
+                     digits = 2),
+               nsmall = 2),
+             "95% CI up" = format(
+               round(conf.high,
+                     digits = 2),
+               nsmall = 2),
+             "SE" = format(
+               round(std.error,
+                     digits = 2),
+               nsmall = 2),
+             "z score" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "Indepent variable",
+             "Estimate",
+             "95% CI low",
+             "95% CI up",
+             "SE",
+             #    "z score",
+             "p value"
+           )
+  )
+
+  return(get(paste0(outcome,"model2b_estimates")))
+}
+
+model2b.reg.stats <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("Disorder_hierarchical")
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+
+  # run the glm
+  assign(paste0(outcome,".model2b"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+
+  assign(paste0(outcome,"model2b_reg_stats"),
+         glance(get(paste0(outcome,".model2b"))) %>%
+           mutate(
+             "n" = format(
+               round(nobs,
+                     digits = 0),
+               nsmall = 0),
+             "R2" = format(
+               round(r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "adjust. R2" = format(
+               round(adj.r.squared,
+                     digits = 2),
+               nsmall = 2),
+             "F" = format(
+               round(statistic,
+                     digits = 2),
+               nsmall = 2),
+             "p value" = case_when(
+               p.value < 0.001 ~ formatC(p.value, format = "e", digits = 2),
+               p.value >= 0.001 & p.value < 0.01 ~ formatC(p.value, format = "f", digits = 3),
+               p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
+             )
+           ) %>%
+           select(
+             "n",
+             "R2",
+             "adjust. R2",
+             "F",
+             "p value",
+             "df"
+           )
+  )
+
+  return(get(paste0(outcome,"model2b_reg_stats")))
 }
 ```
 
@@ -3324,6 +3629,34 @@ kable(gad_baseline_model1b_reg_stats)
 gad_baseline_model1b_reg_stats
 ```
 
+### Model 2a: Disorder hierarchical, Adjusted with Age^2 
+```{r}
+# Regression coefficients
+gad_baseline_model2a_estimates <- model2a.estimates(outcome = "gad.sum_score_base",
+                                                 data_set = "dat_age_sensitivity")
+kable(gad_baseline_model2a_estimates)
+gad_baseline_model2a_estimates
+
+# Regression diagnostic statistics
+gad_baseline_model2a_reg_stats <- model2a.reg.stats(outcome = "gad.sum_score_base",
+                                                 data_set = "dat_age_sensitivity")
+kable(gad_baseline_model2a_reg_stats)
+gad_baseline_model2a_reg_stats
+```
+### Model 2b: Disorder hierarchical, Adjusted with Age^2 
+```{r}
+# Regression coefficients
+gad_baseline_model2b_estimates <- model2b.estimates(outcome = "gad.sum_score_base",
+                                                 data_set = "dat_age_sensitivity")
+kable(gad_baseline_model2b_estimates)
+gad_baseline_model2b_estimates
+
+# Regression diagnostic statistics
+gad_baseline_model2b_reg_stats <- model2b.reg.stats(outcome = "gad.sum_score_base",
+                                                 data_set = "dat_age_sensitivity")
+kable(gad_baseline_model2b_reg_stats)
+gad_baseline_model2b_reg_stats
+```
 
 # GAD prepan
 ## Regression: Change scores
