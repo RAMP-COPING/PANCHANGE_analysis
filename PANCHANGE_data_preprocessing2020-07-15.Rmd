@@ -47,11 +47,11 @@ date = Sys.Date()
 
 # Specify cohort
 ```{r Specify cohort}
-GLAD = TRUE
-EDGI = TRUE
-NBR = FALSE
+GLAD = FALSE
+EDGI = FALSE
+NBR = TRUE
 RAMP = FALSE
-GLAD_and_EDGI = TRUE
+GLAD_and_EDGI = FALSE
 ```
 
 
@@ -157,7 +157,7 @@ Note: All COPING surveys are separate surveys
 
 ```{r source file path}
 #source raw data directory: data.raw_path
-source("/Users/alishpalmos/Documents/GitHub//PANCHANGE_raw_path.R")
+source("..//PANCHANGE_raw_path.R")
 ```
 
 # Demographics
@@ -442,6 +442,9 @@ if(NBR == TRUE){
   colnames(nbr.cohort.raw)
   }
 ```
+
+
+
 
 
 ```{r nbr cohort cleaning}
