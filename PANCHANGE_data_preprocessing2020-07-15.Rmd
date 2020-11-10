@@ -48,9 +48,9 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = TRUE
+EDGI = FALSE
 NBR = FALSE
-RAMP = FALSE
+RAMP = TRUE
 GLAD_and_EDGI = FALSE
 ```
 
