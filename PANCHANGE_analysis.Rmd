@@ -1,7 +1,7 @@
 ---
 title: "PANCHANGE_analysis"
 author: "Katherine N Thompson, Christopher Hüebel, Molly R Davies, Kirstin L Purves"
-date: Sys.Date()
+date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:
   html_document:
     df_print: paged
@@ -205,6 +205,9 @@ geom_split_violin <- function(mapping = NULL, data = NULL, stat = "ydensity", po
 ```{r source file path}
 #source data directory: data_path
 source("../PANCHANGE_raw_path.R")
+
+print(data_path)
+
 ```
 
 
@@ -3629,16 +3632,16 @@ model1b.explan.reg.stats <- function(outcome, explan_var, data_set) {
 #SB Hashing out this chunk of code as it is not included in our final analysis and is currently breaking the code.
 ```{r gad model0a absolute whole sample}
 # Regression coefficients
-#gad_baseline_model0a_estimates <- model0a.estimates(outcome = "gad.sum_score_base",
- #                                                data_set = "dat")
+gad_baseline_model0a_estimates <- model0a.estimates(outcome = "gad.sum_score_base",
+                                                 data_set = "dat")
 #kable(gad_baseline_model0a_estimates)
-#gad_baseline_model0a_estimates
+gad_baseline_model0a_estimates
 
 # Regression diagnostic statistics
-#gad_baseline_model0a_reg_stats <- model0a.reg.stats(outcome = "gad.sum_score_base",
-  #                                               data_set = "dat")
+gad_baseline_model0a_reg_stats <- model0a.reg.stats(outcome = "gad.sum_score_base",
+                                                 data_set = "dat")
 #kable(gad_baseline_model0a_reg_stats)
-#gad_baseline_model0a_reg_stats
+gad_baseline_model0a_reg_stats
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
