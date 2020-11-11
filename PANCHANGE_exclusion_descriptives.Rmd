@@ -686,10 +686,10 @@ whole_retro_prepan_gad_scatter <- whole_retro_prepan_scatter %>%
            gad.pandemic_felt_feelings == "Much better")
 
 whole_retro_prepan_phq_scatter <- whole_retro_prepan_scatter %>% 
-  filter(gad.pandemic_felt_feelings == "Much worse" |
-           gad.pandemic_felt_feelings == "A little worse" |
-           gad.pandemic_felt_feelings == "A little better" |
-           gad.pandemic_felt_feelings == "Much better")
+  filter(phq.pandemic_felt_feelings == "Much worse" |
+           phq.pandemic_felt_feelings == "A little worse" |
+           phq.pandemic_felt_feelings == "A little better" |
+           phq.pandemic_felt_feelings == "Much better")
 
 
 ```
@@ -699,21 +699,21 @@ whole_retro_prepan_phq_scatter <- whole_retro_prepan_scatter %>%
 
 #Visualise as scatterplots
 
-whole_retro_prepan_gad_scatter %>% ggplot(aes(x = gad.sum_score_retro, y = gad.sum_score_retro)) +
-  geom_point(colour = "blue") +
-  stat_smooth(method = "lm") +
-  geom_jitter(w = 0.4, h = 0.4) +
+whole_retro_prepan_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retro)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") +
    labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor whole sample",
                       sep=" "),
         subtitle = paste("n", dim(whole_retro_prepan_gad_scatter)[1]))
 
-whole_retro_prepan_gad_scatter %>% ggplot(aes(x = phq.sum_score_retro, y = phq.sum_score_retro)) +
-  geom_point(colour = "blue") +
-  stat_smooth(method = "lm") +
-  geom_jitter(w = 0.4, h = 0.4) +
+whole_retro_prepan_phq_scatter %>% ggplot(aes(x = phq.sum_score_retro, y = phq.sum_score_prepan)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") +
    labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor whole sample",
                       sep=" "),
-        subtitle = paste("n", dim(whole_retro_prepan_gad_scatter)[1]))
+        subtitle = paste("n", dim(whole_retro_prepan_phq_scatter)[1]))
 
 ```
 
