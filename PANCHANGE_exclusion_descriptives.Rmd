@@ -398,11 +398,6 @@ dat.raw <- dat.raw %>%
 
 #SB - Impute no change prepandemic scores
 
-I interpreted the presence of an NA in the retrospective score as an indicator of saying "no change" in their baseline scores. Hence, if this was the case, I imputed their baseline score. However, this interpretation could be wrong.
-
-Also, I'm not sure what to do if there is an NA for their baseline sum score (nothing to duplicate). This was the case for ocir for some reason: the retro scores were provided for some by not the corresponding baseline score?
-
-
 ```{r Impute for gad measure}
 
 #Visualise the gad summary scores for baseline and retro
@@ -577,7 +572,8 @@ corrplot(mhd.corr.matrix,
 ```
 
 
-#Correlation between retropsective impute and prepan
+#Correlation between whole sample retro impute and prepan
+##Create function to use for all of the corplots
 
 ```{r function to create upper and lower CI matrices}
 
@@ -601,7 +597,7 @@ return(list(p.mat, lowCI.mat, uppCI.mat))
 ```
 
 
-```{r Correlation prep chunk}
+```{r Whole sample Correlation prep chunk}
 # Select items for correlation matrix
 prepan_retro_items <- c(
     "gad.sum_score_prepan",
@@ -651,7 +647,7 @@ ys[lower.tri(ys,diag=TRUE)] <- 0
 
 
 
-```{r Correlation matrix of prepan base sum scores}
+```{r Whole sample correlation matrix of prepan retro sum scores}
 corrplot(prepan_retro.corr.matrix, 
          method = "color", # objects to represent the correlations on plot
          type = "lower", # only use the lower triangle of the matrix
@@ -671,11 +667,103 @@ text(xs, ys, conf, pos=1, cex=0.8)
 
 ```
 
-#Scatterplots for self-report pandemic change
+```{r Whole sample scatterplot for gad prepan base}
 
-```{r Scatterplots for gad self-reported change individually}
+#Remove those saying "no different" since pandemic
 
-#Filter by self-reported change since pandemic started
+whole_retro_prepan_scatter <- dat %>% 
+  filter(gad.pandemic_felt_feelings == "Much worse" |
+           gad.pandemic_felt_feelings == "A little worse" |
+           gad.pandemic_felt_feelings == "A little better" |
+           gad.pandemic_felt_feelings == "Much better")
+
+
+whole_retro_prepan_scatter %>% ggplot(aes(x = gad.sum_score_retro, y = gad.sum_score_retro)) +
+  geom_point(colour = "blue") +
+  stat_smooth(method = "lm") +
+  geom_jitter(w = 0.4, h = 0.4)
+
+```
+
+#Correlation little/much worse prepan retro gad
+
+```{r Whole sample Correlation prep chunk}
+
+# Check the items are the same from the whole chunk
+prepan_retro_items
+
+#Create a data set with only the GLAD and EDGI
+prepan_retro_dat_worse <- dat[str_detect(dat$Sample, "GLAD|EDGI"), ]
+
+#Filter the data to only include those with self-reported little/much worse gad since pandemic
+
+prepan_retro_dat_worse <- prepan_retro_dat_worse %>% 
+  filter(gad.pandemic_felt_feelings == "A little worse" |
+           gad.pandemic_felt_feelings == "Much worse")
+
+
+#Check that RAMP and NBR has been removed
+prepan_retro_dat_worse %>% 
+  freq(Sample)
+
+# Calculate correlation matrix on specific columns (variables) from your data frame
+prepan_retro.corr.mat_worse <- hetcor(
+  as.data.frame(prepan_retro_dat_worse[,prepan_retro_items]), # Specify the data
+  use = "pairwise.complete.obs" # Use all pairwise observations
+)
+
+# Print the correlation matrix
+print(prepan_retro.corr.mat_worse, digits = max(3, getOption("digits") - 3)) 
+
+# Save the correlations from the correlation matrix in an object
+prepan_retro.corr.matrix_worse <- as.matrix(prepan_retro.corr.mat_worse)
+
+# Save the p values from the correlation matrix in an object
+prepan_retro.p.matrix_worse <- as.matrix(prepan_retro.corr.mat_worse$tests)
+
+res1 <- cor.ci(prepan_retro.corr.matrix_worse)
+lowci <- cor.plot.upperLowerCi(res1)
+lowci[upper.tri(lowci)] = t(lowci)[upper.tri(lowci)]
+
+upci <- cor.plot.upperLowerCi(res1)
+upci[lower.tri(upci)] = t(upci)[lower.tri(lowci)]
+
+conf <- paste0("[", format(lowci, digits=2), " - ", format(upci, digits=2), "]")
+
+xs <- row(lowci)
+ys <- (ncol(lowci)+1) - col(lowci)
+
+xs[lower.tri(xs,diag=TRUE)] <- 0
+ys[lower.tri(ys,diag=TRUE)] <- 0
+
+```
+
+
+```{r Little/much worse correlation matrix of prepan retro sum scores}
+corrplot(prepan_retro.corr.matrix_worse, 
+         method = "color", # objects to represent the correlations on plot
+         type = "lower", # only use the lower triangle of the matrix
+         diag = FALSE, # do not show the correlations on the diagonal
+         addgrid.col = NA,
+         addCoef.col = "black", # colour for the correlation coefficients in the plot
+         tl.cex = 0.8,
+         tl.col = "black",
+         col=colorRampPalette(c("dodgerblue4","white","firebrick4"))(200), # colours for correlations
+         # Combine with significance
+         p.mat = prepan_retro.p.matrix, # Matrix with p values
+         sig.level = 0.01, # Choose significant level
+         insig = "blank" # Nonsignificant correlations have no colour
+         )
+
+text(xs, ys, conf, pos=1, cex=0.8)
+
+```
+
+
+
+```{r Little/much worse scatterplots for gad}
+
+#Filter by little/much worse self-reported change since pandemic started in gad
 
 much_worse_gad <- dat %>% 
   filter(gad.pandemic_felt_feelings == "Much worse")
@@ -683,11 +771,9 @@ much_worse_gad <- dat %>%
 little_worse_gad <- dat %>% 
   filter(gad.pandemic_felt_feelings == "A little worse")
 
-little_better_gad <- dat %>% 
-  filter(gad.pandemic_felt_feelings == "A little better")
-
-much_better_gad <- dat %>% 
-  filter(gad.pandemic_felt_feelings == "Much better")
+much_worse_little_worse_gad <- dat %>% 
+  filter(gad.pandemic_felt_feelings == "Much worse" | 
+           gad.pandemic_felt_feelings == "A little worse")
 
 #Visualise each as a scatterplot
 
@@ -695,7 +781,7 @@ much_worse_gad %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retro)
   geom_point(colour = "blue") +
   stat_smooth(method = "lm") +
   geom_jitter(w = 0.4, h = 0.4) +
-   labs(title = paste("Relationship between prepandemc and retrospective GAD scores\nfor participants reporting much worse",
+   labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting much worse",
                       sep=" "),
         subtitle = paste("n", dim(much_worse_gad)[1]))
 
@@ -703,15 +789,42 @@ little_worse_gad %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retr
   geom_point(colour = "blue") +
   stat_smooth(method = "lm") +
   geom_jitter(w = 0.4, h = 0.4) +
-   labs(title = paste("Relationship between prepandemc and retrospective GAD scores\nfor participants reporting a little worse",
+   labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting a little worse",
                       sep=" "),
         subtitle = paste("n", dim(little_worse_gad)[1]))
+
+much_worse_little_worse_gad %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retro)) +  geom_point(colour = "blue") +
+  stat_smooth(method = "lm") +
+  geom_jitter(w = 0.4, h = 0.4) +
+   labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting much worse and a little worse",
+                      sep=" "),
+        subtitle = paste("n", dim(much_worse_little_worse_gad)[1]))
+
+
+```
+
+
+```{r Little/much better scatterplots for gad}
+
+#Filter by participants reporting little/much better in gad since pandemic started (separetely and grouped) 
+
+little_better_gad <- dat %>% 
+  filter(gad.pandemic_felt_feelings == "A little better")
+
+much_better_gad <- dat %>% 
+  filter(gad.pandemic_felt_feelings == "Much better")
+
+much_better_little_better_gad <- dat %>% 
+  filter(gad.pandemic_felt_feelings == "Much better" | 
+           gad.pandemic_felt_feelings == "A little better")
+
+#Visualise them as scatterplots
 
 little_better_gad %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retro)) +
   geom_point(colour = "blue") +
   stat_smooth(method = "lm") +
   geom_jitter(w = 0.4, h = 0.4) +
-   labs(title = paste("Relationship between prepandemc and retrospective GAD scores\nfor participants reporting a little better",
+   labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting a little better",
                       sep=" "),
         subtitle = paste("n", dim(little_better_gad)[1]))
 
@@ -719,43 +832,17 @@ much_better_gad %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retro
   geom_point(colour = "blue") +
   stat_smooth(method = "lm") +
   geom_jitter(w = 0.4, h = 0.4) +
-   labs(title = paste("Relationship between prepandemc and retrospective GAD scores\nfor participants reporting a little worse",
+   labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting a little worse",
                       sep=" "),
         subtitle = paste("n", dim(much_better_gad)[1]))
-
-```
-
-
-```{r Scatterplots for gad worse and better grouped}
-
-#Group pt reporting much worse and a little worse, and group pt reporting much better and a little better
-
-much_worse_little_worse_gad <- dat %>% 
-  filter(gad.pandemic_felt_feelings == "Much worse" | 
-           gad.pandemic_felt_feelings == "A little worse")
-
-much_better_little_better_gad <- dat %>% 
-  filter(gad.pandemic_felt_feelings == "Much better" | 
-           gad.pandemic_felt_feelings == "A little better")
-
-
-#Visualise the gad sum scores as scatterplots
-
-much_worse_little_worse_gad %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retro)) +  geom_point(colour = "blue") +
-  stat_smooth(method = "lm") +
-  geom_jitter(w = 0.4, h = 0.4) +
-   labs(title = paste("Relationship between prepandemc and retrospective GAD scores\nfor participants reporting much worse and a little worse",
-                      sep=" "),
-        subtitle = paste("n", dim(much_worse_little_worse_gad)[1]))
 
 much_better_little_better_gad %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retro)) +
   geom_point(colour = "blue") +
   stat_smooth(method = "lm") + 
   geom_jitter(w = 0.4, h = 0.4) +
-   labs(title = paste("Relationship between prepandemc and retrospective GAD scores\nfor participants reporting much better and a little better",
+   labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting much better and a little better",
                       sep=" "),
         subtitle = paste("n", dim(much_better_little_better_gad)[1]))
-
 
 ```
 
