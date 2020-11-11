@@ -596,6 +596,7 @@ return(list(p.mat, lowCI.mat, uppCI.mat))
 
 ```
 
+###Whole sample prepan retro correlation
 
 ```{r Whole sample Correlation prep chunk}
 # Select items for correlation matrix
@@ -711,7 +712,7 @@ whole_retro_prepan_gad_scatter %>% ggplot(aes(x = phq.sum_score_retro, y = phq.s
 
 ```
 
-#Correlation little/much worse prepan retro gad
+###Little/much worse prepan retro correlation
 
 ```{r Little/much worse correlation prep chunk}
 
@@ -787,7 +788,7 @@ text(xs, ys, conf, pos=1, cex=0.8)
 
 
 
-```{r Little/much worse scatterplots for gad}
+```{r Little/much worse prepan retro scatterplot prep}
 
 #Create a data set with only the GLAD and EDGI participants
 little_much_worse_retro_prepan <- dat[str_detect(dat$Sample, "GLAD|EDGI"), ]
@@ -796,17 +797,31 @@ little_much_worse_retro_prepan <- dat[str_detect(dat$Sample, "GLAD|EDGI"), ]
 little_much_worse_retro_prepan %>% 
   freq(Sample)
 
-#Filter by little/much worse self-reported change since pandemic started in gad
+#Filter by little/much worse self-reported change since pandemic started in gad and phq
 
-much_worse_gad_scatter <- dat %>% 
+much_worse_gad_scatter <- little_much_worse_retro_prepan %>% 
   filter(gad.pandemic_felt_feelings == "Much worse")
 
-little_worse_gad_scatter <- dat %>% 
+little_worse_gad_scatter <- little_much_worse_retro_prepan %>% 
   filter(gad.pandemic_felt_feelings == "A little worse")
 
-much_little_worse_gad_scatter <- dat %>% 
+much_little_worse_gad_scatter <- little_much_worse_retro_prepan %>% 
   filter(gad.pandemic_felt_feelings == "Much worse" | 
            gad.pandemic_felt_feelings == "A little worse")
+
+much_worse_phq_scatter <- little_much_worse_retro_prepan %>% 
+  filter(phq.pandemic_felt_feelings == "Much worse")
+
+little_worse_phq_scatter <- little_much_worse_retro_prepan %>% 
+  filter(phq.pandemic_felt_feelings == "A little worse")
+
+much_little_worse_phq_scatter <- little_much_worse_retro_prepan %>% 
+  filter(phq.pandemic_felt_feelings == "Much worse" | 
+           phq.pandemic_felt_feelings == "A little worse")
+
+```
+
+```{r Little/much worse prepan retro scatterplots}
 
 #Visualise each as a scatterplot
 
@@ -833,11 +848,35 @@ much_little_worse_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.s
                       sep=" "),
         subtitle = paste("n", dim(much_little_worse_gad_scatter)[1]))
 
+much_worse_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.sum_score_retro)) +
+  geom_point(colour = "blue") +
+  stat_smooth(method = "lm") +
+  geom_jitter(w = 0.4, h = 0.4) +
+   labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting much worse",
+                      sep=" "),
+        subtitle = paste("n", dim(much_worse_phq_scatter)[1]))
+
+little_worse_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.sum_score_retro)) +
+  geom_point(colour = "blue") +
+  stat_smooth(method = "lm") +
+  geom_jitter(w = 0.4, h = 0.4) +
+   labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting a little worse",
+                      sep=" "),
+        subtitle = paste("n", dim(little_worse_phq_scatter)[1]))
+
+much_little_worse_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.sum_score_retro)) +
+  geom_point(colour = "blue") +
+  stat_smooth(method = "lm") +
+  geom_jitter(w = 0.4, h = 0.4) +
+   labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting much worse and a little worse",
+                      sep=" "),
+        subtitle = paste("n", dim(much_little_worse_phq_scatter)[1]))
+
 
 ```
 
 
-#Little/much better prepan retro correlation
+###Little/much better prepan retro correlation
 
 ```{r Little/much better correlation prep chunk}
 
