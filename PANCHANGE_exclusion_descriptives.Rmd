@@ -703,6 +703,7 @@ whole_retro_prepan_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.
   geom_point(colour = "grey") +
   geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
   geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
    labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor whole sample",
                       sep=" "),
         subtitle = paste("n", dim(whole_retro_prepan_gad_scatter)[1]))
@@ -711,6 +712,7 @@ whole_retro_prepan_phq_scatter %>% ggplot(aes(x = phq.sum_score_retro, y = phq.s
   geom_point(colour = "grey") +
   geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
   geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
    labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor whole sample",
                       sep=" "),
         subtitle = paste("n", dim(whole_retro_prepan_phq_scatter)[1]))
@@ -835,6 +837,7 @@ much_worse_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_scor
   geom_point(colour = "grey") +
   geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
   geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
    labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting much worse",
                       sep=" "),
         subtitle = paste("n", dim(much_worse_gad_scatter)[1]))
@@ -843,6 +846,7 @@ little_worse_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_sc
   geom_point(colour = "grey") +
   geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
   geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
    labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting a little worse",
                       sep=" "),
         subtitle = paste("n", dim(little_worse_gad_scatter)[1]))
@@ -851,6 +855,7 @@ much_little_worse_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.s
   geom_point(colour = "grey") +
   geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
   geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
    labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting much worse and a little worse",
                       sep=" "),
         subtitle = paste("n", dim(much_little_worse_gad_scatter)[1]))
@@ -859,6 +864,7 @@ much_worse_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.sum_scor
   geom_point(colour = "grey") +
   geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
   geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
    labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting much worse",
                       sep=" "),
         subtitle = paste("n", dim(much_worse_phq_scatter)[1]))
@@ -867,6 +873,7 @@ little_worse_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.sum_sc
   geom_point(colour = "grey") +
   geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
   geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
    labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting a little worse",
                       sep=" "),
         subtitle = paste("n", dim(little_worse_phq_scatter)[1]))
@@ -875,6 +882,7 @@ much_little_worse_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.s
   geom_point(colour = "grey") +
   geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
   geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
    labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting much worse and a little worse",
                       sep=" "),
         subtitle = paste("n", dim(much_little_worse_phq_scatter)[1]))
@@ -1000,6 +1008,7 @@ little_better_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_s
   geom_point(colour = "grey") +
   geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
   geom_smooth(method = "lm", colour = "blue", fill = "red") +
+  theme_minimal() +
    labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting a little better",
                       sep=" "),
         subtitle = paste("n", dim(little_better_gad_scatter)[1]))
@@ -1008,6 +1017,7 @@ much_better_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_sco
   geom_point(colour = "grey") +
   geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
   geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
    labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting much better",
                       sep=" "),
         subtitle = paste("n", dim(much_better_gad_scatter)[1]))
@@ -1016,6 +1026,7 @@ much_little_better_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.
   geom_point(colour = "grey") +
   geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
   geom_smooth(method = "lm", colour = "navy", fill = "red") + 
+  theme_minimal() +
    labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting much better and a little better",
                       sep=" "),
         subtitle = paste("n", dim(much_little_better_gad_scatter)[1]))
@@ -1024,6 +1035,7 @@ little_better_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.sum_s
   geom_point(colour = "grey") +
   geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
   geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
    labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting a little better",
                       sep=" "),
         subtitle = paste("n", dim(little_better_phq_scatter)[1]))
@@ -1032,6 +1044,7 @@ much_better_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.sum_sco
   geom_point(colour = "grey") +
   geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
   geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
    labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting much better",
                       sep=" "),
         subtitle = paste("n", dim(much_better_phq_scatter)[1]))
@@ -1040,6 +1053,7 @@ much_little_better_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.
   geom_point(colour = "grey") +
   geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
   geom_smooth(method = "lm", colour = "navy", fill = "red") + 
+  theme_minimal() +
    labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting much better and a little better",
                       sep=" "),
         subtitle = paste("n", dim(much_little_better_phq_scatter)[1]))
