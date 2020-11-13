@@ -381,16 +381,17 @@ dat.raw <- dat.raw %>%
     mutate(gad.change.retro.accurate = if_else(dat.raw$gad.pandemic.change.group == "Better" &
                                              dat.raw$gad.diff_score_retro_prepan == 0 |
                                              dat.raw$gad.pandemic.change.group == "Worse" &
-                                             dat.raw$gad.diff_score_retro_prepan == 0, 1, 3 ))
+                                             dat.raw$gad.diff_score_retro_prepan == 0, "Accurate", "Inaccurate" ))
 dat.raw <- dat.raw %>%
   mutate(gad.change.retro.accurate = if_else(dat.raw$gad.pandemic.change.group == "Better" &
                                              dat.raw$gad.diff_score_retro_prepan >= -3 &
                                              dat.raw$gad.diff_score_retro_prepan <= 3 &
-                                             dat.raw$gad.change.retro.accurate != 1 |
+                                             dat.raw$gad.change.retro.accurate != "Accurate" |
                                              dat.raw$gad.pandemic.change.group == "Worse" &
                                              dat.raw$gad.diff_score_retro_prepan >= -3 &
                                              dat.raw$gad.diff_score_retro_prepan <= 3 &
-                                             dat.raw$gad.change.retro.accurate != 1,  2, gad.change.retro.accurate))
+                                             dat.raw$gad.change.retro.accurate != "Accurate",
+                                             "Accurate +- 3", gad.change.retro.accurate))
                                            
 
 ```
