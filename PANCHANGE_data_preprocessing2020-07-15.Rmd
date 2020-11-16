@@ -47,11 +47,11 @@ date = Sys.Date()
 
 # Specify cohort
 ```{r Specify cohort}
-GLAD = TRUE
-EDGI = TRUE
+GLAD = FALSE
+EDGI = FALSE
 NBR = FALSE
-RAMP = FALSE
-GLAD_and_EDGI = TRUE
+RAMP = TRUE
+GLAD_and_EDGI = FALSE
 ```
 
 
@@ -157,7 +157,7 @@ Note: All COPING surveys are separate surveys
 
 ```{r source file path}
 #source raw data directory: data.raw_path
-source("/Users/alishpalmos/Documents/GitHub//PANCHANGE_raw_path.R")
+source("../PANCHANGE_raw_path.R")
 ```
 
 # Demographics
@@ -318,6 +318,7 @@ summarytools::dfSummary(
 ## GLAD and EDGI
 ### Create data frame 
 ```{r GLAD and EDGI combined}
+if(GLAD_and_EDGI == TRUE)
 glad.and.edgi.dem.raw.id <- rbind(glad.dem.raw.id, edgi.dem.raw.id)
 ```
 
@@ -976,8 +977,23 @@ glad.employment.raw.id <- glad.employment.raw %>%
          employment.became_unemployed, #key worker routing variable
          employment.furloughed_or_paid_leave_government_funded, #key worker routing variable
          employment.furloughed_or_paid_leave_company_funded, #key worker routing variable
-         employment.paid_leave_furloughed #key worker routing variable
-         ) %>%
+         employment.paid_leave_furloughed, #key worker routing variable
+         employment.fulltime_employed,
+         employment.parttime_employed,
+         employment.selfemployed,
+         employment.contract_or_freelance_work,
+         employment.small_business_owner, 
+         employment.receiving_state_income,
+         employment.my_employment_status_has_not_changed, 
+         employment.reduction_in_hours, 
+         employment.reduction_in_salary,
+         employment.benefits_increased,
+         employment.benefits_decreased,
+         employment.became_employed,
+         employment.became_unemployed,
+         employment.increased_hours,
+         employment.increased_salary,
+                  ) %>%
   add_numeric(., exclude = exclude_cols_employment) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
@@ -1055,8 +1071,23 @@ edgi.employment.raw.id <- edgi.employment.raw %>%
          employment.became_unemployed, #key worker routing variable
          employment.furloughed_or_paid_leave_government_funded, #key worker routing variable
          employment.furloughed_or_paid_leave_company_funded, #key worker routing variable
-         employment.paid_leave_furloughed #key worker routing variable
-         ) %>%
+         employment.paid_leave_furloughed, #key worker routing variable
+         employment.fulltime_employed,
+         employment.parttime_employed,
+         employment.selfemployed,
+         employment.contract_or_freelance_work,
+         employment.small_business_owner, 
+         employment.receiving_state_income,
+         employment.my_employment_status_has_not_changed, 
+         employment.reduction_in_hours, 
+         employment.reduction_in_salary,
+         employment.benefits_increased,
+         employment.benefits_decreased,
+         employment.became_employed,
+         employment.became_unemployed,
+         employment.increased_hours,
+         employment.increased_salary
+                  ) %>%
   add_numeric(., exclude = exclude_cols_employment_edgi) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
@@ -1129,7 +1160,22 @@ nbr.employment.raw.id <- nbr.employment.raw %>%
          employment.became_unemployed, #key worker routing variable
          employment.furloughed_or_paid_leave_government_funded, #key worker routing variable
          employment.furloughed_or_paid_leave_company_funded, #key worker routing variable
-         employment.paid_leave_furloughed #key worker routing variable
+         employment.paid_leave_furloughed, #key worker routing variable
+         employment.fulltime_employed,
+         employment.parttime_employed,
+         employment.selfemployed,
+         employment.contract_or_freelance_work,
+         employment.small_business_owner, 
+         employment.receiving_state_income,
+         employment.my_employment_status_has_not_changed, 
+         employment.reduction_in_hours, 
+         employment.reduction_in_salary,
+         employment.benefits_increased,
+         employment.benefits_decreased,
+         employment.became_employed,
+         employment.became_unemployed,
+         employment.increased_hours,
+         employment.increased_salary
          ) %>%
   add_numeric(., exclude = exclude_cols_employment) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -1199,8 +1245,23 @@ ramp.employment.raw.id <- ramp.employment.raw %>%
          employment.became_unemployed, #key worker routing variable
          employment.furloughed_or_paid_leave_government_funded, #key worker routing variable
          employment.furloughed_or_paid_leave_company_funded, #key worker routing variable
-         employment.paid_leave_furloughed #key worker routing variable
-         ) %>%
+         employment.paid_leave_furloughed, #key worker routing variable
+         employment.fulltime_employed,
+         employment.parttime_employed,
+         employment.selfemployed,
+         employment.contract_or_freelance_work,
+         employment.small_business_owner, 
+         employment.receiving_state_income,
+         employment.my_employment_status_has_not_changed, 
+         employment.reduction_in_hours, 
+         employment.reduction_in_salary,
+         employment.benefits_increased,
+         employment.benefits_decreased,
+         employment.became_employed,
+         employment.became_unemployed,
+         employment.increased_hours,
+         employment.increased_salary
+                  ) %>%
   add_numeric(., exclude = exclude_cols_employment) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
@@ -1333,6 +1394,247 @@ employment.raw.id %>%
 }
 ```
 
+## Employment prior to pandemic (baseline, GLAD, EDGI, NBR)
+Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
+```{r Employment prior to pandemic baseline}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE) {
+#create numeric version of the highest education variable
+employment.raw.id <- employment.raw.id %>%
+  mutate(
+    employment_prior_covid_numeric =
+      case_when(
+        employment.fulltime_employed_numeric == "1" ~ 1,
+        employment.parttime_employed_numeric == "1" ~ 1,
+        employment.unemployed_numeric == "1" ~ 2,
+        employment.zerohours_contract_numeric == "1" ~ 1,
+        employment.selfemployed_numeric == "1" ~ 1,
+        employment.contract_or_freelance_work_numeric == "1" ~ 1,
+        employment.small_business_owner_numeric == "1" ~ 1,
+        employment.retired_numeric  ==  "1" ~ 4,
+        employment.student_gcse_or_a_level_numeric == "1" ~ 3,
+        employment.student_university_numeric == "1" ~ 3
+      )
+    )
+
+#recode the numeric version into a factor
+employment.raw.id <- employment.raw.id %>%
+  mutate(
+    employment_prior_covid =
+      recode_factor(
+        employment_prior_covid_numeric,
+        `1` = "Employed",
+        `2` = "Unemployed",
+        `3` = "Student",
+        `4` = "Retired")
+    )
+
+employment.raw.id %>%
+  freq(employment_prior_covid)
+}
+```
+
+Check Employment prior to pandemic coding
+```{r Employment prior to pandemic check}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE) {
+employment.raw.id %>%
+  select(employment_prior_covid,
+         employment_prior_covid_numeric,
+        employment.fulltime_employed_numeric, 
+        employment.parttime_employed_numeric, 
+        employment.unemployed_numeric, 
+        employment.zerohours_contract_numeric, 
+        employment.selfemployed_numeric,
+        employment.contract_or_freelance_work_numeric,
+        employment.small_business_owner_numeric,
+        employment.retired_numeric,
+        employment.student_gcse_or_a_level_numeric,
+        employment.student_university_numeric
+  )
+}
+```
+
+## Employment prior to pandemic (baseline, RAMP)
+```{r highest level of education for ramp}
+if(RAMP == TRUE) {
+#create numeric version of the highest education variable
+employment.raw.id <- employment.raw.id %>%
+  mutate(
+    employment_prior_covid_numeric =
+      case_when(
+        employment.fulltime_employed_numeric == "1" ~ 1,
+        employment.parttime_employed_numeric == "1" ~ 1,
+        employment.unemployed_numeric == "1" ~ 2,
+        employment.zerohours_contract_numeric == "1" ~ 1,
+        employment.selfemployed_numeric == "1" ~ 1,
+        employment.contract_or_freelance_work_numeric == "1" ~ 1,
+        employment.small_business_owner_numeric == "1" ~ 1,
+        employment.retired_numeric  ==  "1" ~ 4,
+        employment.student_gcse_or_a_level_numeric == "1" ~ 3,
+        employment.student_university_numeric == "1" ~ 3
+      )
+    )
+
+#recode the numeric version into a factor
+employment.raw.id <- employment.raw.id %>%
+  mutate(
+    employment_prior_covid =
+      recode_factor(
+        employment_prior_covid_numeric,
+        `1` = "Employed",
+        `2` = "Unemployed",
+        `3` = "Student",
+        `4` = "Retired")
+    )
+
+employment.raw.id %>%
+  freq(employment_prior_covid)
+}
+```
+
+Check Employment prior to pandemic coding for RAMP
+```{r Employment prior to pandemic check for RAMP}
+if(RAMP == TRUE) {
+employment.raw.id %>%
+  select(employment_prior_covid,
+         employment_prior_covid_numeric,
+        employment.fulltime_employed_numeric, 
+        employment.parttime_employed_numeric, 
+        employment.unemployed_numeric, 
+        employment.zerohours_contract_numeric, 
+        employment.selfemployed_numeric,
+        employment.contract_or_freelance_work_numeric,
+        employment.small_business_owner_numeric,
+        employment.retired_numeric,
+        employment.student_gcse_or_a_level_numeric,
+        employment.student_university_numeric
+  )
+}
+```
+
+## Employment change (baseline, GLAD, EDGI, NBR)
+Proceed along qualifications fields. If field is not blank, take that as highest qual. If field is blank, check next field. If all fields are blank, NA
+```{r Employment change baseline}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE) {
+#create numeric version of the highest education variable
+employment.raw.id <- employment.raw.id %>%
+  mutate(
+    employment_change_numeric =
+      case_when(
+        employment.reduction_in_hours_numeric == "1" ~ 1,
+        employment.reduction_in_salary_numeric == "1" ~ 1,
+        employment.became_unemployed_numeric == "1" ~ 1,
+        employment.benefits_decreased_numeric == "1" ~ 1,
+        employment.increased_hours_numeric == "1" ~ 2,
+        employment.increased_salary_numeric == "1" ~ 3,
+        employment.became_employed_numeric == "1" ~ 3,
+        employment.benefits_increased_numeric  ==  "1" ~ 2,
+        employment.furloughed_or_paid_leave_government_funded_numeric == "1" ~ 3,
+        employment.furloughed_or_paid_leave_company_funded_numeric == "1" ~ 3,
+        employment.paid_leave_furloughed_numeric == "1" ~ 3,
+        employment.my_employment_status_has_not_changed_numeric == "1" ~ 4
+      )
+    )
+
+#recode the numeric version into a factor
+employment.raw.id <- employment.raw.id %>%
+  mutate(
+    employment_change =
+      recode_factor(
+        employment_change_numeric,
+        `1` = "Decreased employment",
+        `2` = "Increased employment",
+        `3` = "Furloughed",
+        `4` = "Employment not changed")
+    )
+
+employment.raw.id %>%
+  freq(employment_change)
+}
+```
+
+Check Employment change coding
+```{r Employment change check}
+if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE) {
+employment.raw.id %>%
+  select(employment_change,
+         employment_change_numeric,
+        employment.reduction_in_hours_numeric,
+        employment.reduction_in_salary_numeric,
+        employment.became_unemployed_numeric,
+        employment.benefits_decreased_numeric,
+        employment.increased_hours_numeric, 
+        employment.increased_salary_numeric, 
+        employment.became_employed_numeric,
+        employment.benefits_increased_numeric, 
+        employment.furloughed_or_paid_leave_government_funded_numeric,
+        employment.furloughed_or_paid_leave_company_funded_numeric, 
+        employment.paid_leave_furloughed_numeric, 
+        employment.my_employment_status_has_not_changed_numeric
+  )
+}
+```
+
+## Employment change (baseline, RAMP)
+```{r employment change for ramp}
+if(RAMP == TRUE) {
+#create numeric version of the highest education variable
+employment.raw.id <- employment.raw.id %>%
+  mutate(
+    employment_change_numeric =
+      case_when(
+        employment.reduction_in_hours_numeric == "1" ~ 1,
+        employment.reduction_in_salary_numeric == "1" ~ 1,
+        employment.became_unemployed_numeric == "1" ~ 1,
+        employment.benefits_decreased_numeric == "1" ~ 1,
+        employment.increased_hours_numeric == "1" ~ 2,
+        employment.increased_salary_numeric == "1" ~ 3,
+        employment.became_employed_numeric == "1" ~ 3,
+        employment.benefits_increased_numeric  ==  "1" ~ 2,
+        employment.furloughed_or_paid_leave_government_funded_numeric == "1" ~ 3,
+        employment.furloughed_or_paid_leave_company_funded_numeric== "1" ~ 3,
+        employment.paid_leave_furloughed_numeric == "1" ~ 3,
+        employment.my_employment_status_has_not_changed_numeric == "1" ~ 4
+      )
+    )
+
+#recode the numeric version into a factor
+employment.raw.id <- employment.raw.id %>%
+  mutate(
+    employment_change =
+      recode_factor(
+        employment_change_numeric,
+        `1` = "Decreased employment",
+        `2` = "Increased employment",
+        `3` = "Furloughed",
+        `4` = "Employment not changed")
+    )
+
+employment.raw.id %>%
+  freq(employment_change)
+}
+```
+
+Check Employment changen coding for RAMP
+```{r Employment change check for RAMP}
+if(RAMP == TRUE) {
+employment.raw.id %>%
+  select(employment_change,
+         employment_change_numeric,
+        employment.reduction_in_hours_numeric,
+        employment.reduction_in_salary_numeric,
+        employment.became_unemployed_numeric,
+        employment.benefits_decreased_numeric,
+        employment.increased_hours_numeric, 
+        employment.increased_salary_numeric, 
+        employment.became_employed_numeric,
+        employment.benefits_increased_numeric, 
+        employment.furloughed_or_paid_leave_government_funded_numeric,
+        employment.furloughed_or_paid_leave_company_funded_numeric, 
+        employment.paid_leave_furloughed_numeric, 
+        employment.my_employment_status_has_not_changed_numeric
+  )
+}
+```
 
 ## Key worker status
 ```{r Key worker}
