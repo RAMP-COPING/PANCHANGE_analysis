@@ -1,7 +1,7 @@
 ---
 title: "PANCHANGE_descriptives"
 author: "Katie Thompson, Topher Huebel, Molly Davies, Kirstin Purves"
-date: Sys.Date()
+date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:  
   html_document:
     df_print: paged
