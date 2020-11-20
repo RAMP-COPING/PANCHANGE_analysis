@@ -670,7 +670,7 @@ dat.long.gad.sum %>%
   coord_flip()
 ```
 
-```{r gad.sum violin plot Sample, fig.height=3.5, fig.width=2.5}
+```{r gad.sum violin plot Sample, fig.height=14, fig.width=8}
 dat.long.gad.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point, 
             "Prepandemic" = "prepan",
@@ -731,9 +731,10 @@ dat.long.gad.sum %>%
              nrow = 4
              ) +
   coord_flip()
+
 ```
 
-```{r gad.sum violin plot Disorder_hierarchical}
+```{r gad.sum violin plot Disorder_hierarchical, fig.height=10, fig.width=15}
 dat.long.gad.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point, 
             "Prepandemic" = "prepan",
@@ -1158,7 +1159,7 @@ dat.long.phq.sum %>%
   coord_flip()
 ```
 
-```{r phq.sum violin plot Sample, fig.height=3.5, fig.width=2.5}
+```{r phq.sum violin plot Sample, fig.height=14, fig.width=8}
 dat.long.phq.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point, 
                                          "Prepandemic" = "prepan",
@@ -1221,7 +1222,7 @@ dat.long.phq.sum %>%
   coord_flip()
 ```
 
-```{r phq.sum violin plot Disorder_hierarchical}
+```{r phq.sum violin plot Disorder_hierarchical, fig.height=10, fig.width=15}
 dat.long.phq.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point, 
                                          "Prepandemic" = "prepan",
@@ -1643,7 +1644,7 @@ dat.long.ocir.sum %>%
   coord_flip()
 ```
 
-```{r ocir.sum violin plot Sample, fig.height=3.5, fig.width=2.5}
+```{r ocir.sum violin plot Sample, fig.height=14, fig.width=8}
 dat.long.ocir.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point, 
                                          "Prepandemic" = "prepan",
@@ -1706,7 +1707,7 @@ dat.long.ocir.sum %>%
   coord_flip()
 ```
 
-```{r ocir.sum violin plot Disorder_hierarchical}
+```{r ocir.sum violin plot Disorder_hierarchical, fig.height=10, fig.width=15}
 dat.long.ocir.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point, 
                                          "Prepandemic" = "prepan",
