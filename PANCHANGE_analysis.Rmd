@@ -670,7 +670,7 @@ dat.long.gad.sum %>%
   coord_flip()
 ```
 
-```{r gad.sum violin plot Sample, fig.height=3.5, fig.width=2.5}
+```{r gad.sum violin plot Sample, fig.height=14, fig.width=8, dpi=300}
 dat.long.gad.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point, 
             "Prepandemic" = "prepan",
@@ -731,9 +731,10 @@ dat.long.gad.sum %>%
              nrow = 4
              ) +
   coord_flip()
+
 ```
 
-```{r gad.sum violin plot Disorder_hierarchical}
+```{r gad.sum violin plot Disorder_hierarchical, fig.height=18, fig.width=20}
 dat.long.gad.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point, 
             "Prepandemic" = "prepan",
@@ -1158,7 +1159,7 @@ dat.long.phq.sum %>%
   coord_flip()
 ```
 
-```{r phq.sum violin plot Sample, fig.height=3.5, fig.width=2.5}
+```{r phq.sum violin plot Sample, fig.height=14, fig.width=8}
 dat.long.phq.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point, 
                                          "Prepandemic" = "prepan",
@@ -1221,7 +1222,7 @@ dat.long.phq.sum %>%
   coord_flip()
 ```
 
-```{r phq.sum violin plot Disorder_hierarchical}
+```{r phq.sum violin plot Disorder_hierarchical, fig.height=18, fig.width=20}
 dat.long.phq.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point, 
                                          "Prepandemic" = "prepan",
@@ -1643,7 +1644,7 @@ dat.long.ocir.sum %>%
   coord_flip()
 ```
 
-```{r ocir.sum violin plot Sample, fig.height=3.5, fig.width=2.5}
+```{r ocir.sum violin plot Sample, fig.height=14, fig.width=8}
 dat.long.ocir.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point, 
                                          "Prepandemic" = "prepan",
@@ -1706,7 +1707,7 @@ dat.long.ocir.sum %>%
   coord_flip()
 ```
 
-```{r ocir.sum violin plot Disorder_hierarchical}
+```{r ocir.sum violin plot Disorder_hierarchical, fig.height=18, fig.width=20}
 dat.long.ocir.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point, 
                                          "Prepandemic" = "prepan",
@@ -2586,6 +2587,42 @@ model1a.reg.stats <- function(outcome, data_set) {
 
 
 ```{r model1b function}
+
+# function to return standardised beta for plotting in a dataframe
+
+model1b.lm <- function(outcome, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("depression_and_anxiety",
+                             "eating_disorders",
+                             "obsessive_compulsive_disorders",
+                             "bipolar_and_schizophrenia",
+                             "mhd.posttraumatic_stress_disorder_ptsd",
+                             "autism_spectrum_disorder",
+                             "mhd.attention_deficit_hyperactivity_disorder",
+                             "mhd.personality_disorder",
+                             "Gender_collapsed",
+                             "age_category_collapsed_reordered",
+                             "Ethnicity_collapsed",
+                             "key_worker",
+                             "time_diff_coping_lockdown_march_23"
+                                )
+  # create the formula
+  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
+  glm.formula
+
+  # run the glm
+  assign(paste0(outcome,".model1b.lm"),
+         lm( formula = glm.formula,
+             data = get(data_set)
+         )
+  )
+
+  return(get(paste0(outcome,".model1b.lm")))
+}
+
+
 model1b.estimates <- function(outcome, data_set) {
   # define the variable name of the dependent variable
   dependent.variable <- outcome
@@ -2748,6 +2785,7 @@ model1b.reg.stats <- function(outcome, data_set) {
   return(get(paste0(outcome,"model1b_reg_stats")))
 }
 ```
+
 
 ```{r model2a function}
 model2a.estimates <- function(outcome, data_set) {
@@ -3999,6 +4037,16 @@ gad_baseline_model1b_reg_stats <- model1b.reg.stats(outcome = "gad.sum_score_bas
                                                  data_set = "dat")
 kable(gad_baseline_model1b_reg_stats)
 gad_baseline_model1b_reg_stats
+
+
+# get lm object to standardise beta
+
+gad_prepan_model1b_lm <- model1b.lm(outcome = "gad.diff_score_base_prepan",
+                                           data_set = "dat.prepan")
+
+
+
+
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with Age^2 
@@ -4079,7 +4127,7 @@ gad_prepan_model1a_reg_stats
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
-Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
+Model 1b + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_collapsed + Time registration and baseline
 ```{r gad model1b diff_score prepan}
 # Regression coefficients
 gad_prepan_model1b_estimates <- model1b.estimates(outcome = "gad.diff_score_base_prepan",
@@ -4090,8 +4138,10 @@ gad_prepan_model1b_estimates
 # Regression diagnostic statistics
 gad_prepan_model1b_reg_stats <- model1b.reg.stats(outcome = "gad.diff_score_base_prepan",
                   data_set = "dat.prepan")
+
 kable(gad_prepan_model1b_reg_stats)
-gad_prepan_model1b_reg_stats
+
+
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with Age^2 
