@@ -1,7 +1,7 @@
 ---
 title: "PANCHANGE_data_preprocessing"
 author: "Katie Thompson, Topher Huebel, Molly Davies, Kirstin Purves"
-date: Sys.Date()
+date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:  
   html_document:
     df_print: paged
@@ -50,8 +50,8 @@ date = Sys.Date()
 GLAD = FALSE
 EDGI = FALSE
 NBR = FALSE
-RAMP = TRUE
-GLAD_and_EDGI = FALSE
+RAMP = FALSE
+GLAD_and_EDGI = TRUE
 ```
 
 
