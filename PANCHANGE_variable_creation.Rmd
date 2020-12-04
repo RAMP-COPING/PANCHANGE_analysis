@@ -1,7 +1,7 @@
 ---
 title: "PANCHANGE_variable_creation"
 author: "Katie Thompson, Topher Huebel, Molly Davies, Kirstin Purves"
-date: Sys.Date()
+date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:  
   html_document:
     df_print: paged
@@ -312,6 +312,17 @@ dat %>%
   freq(age_category_collapsed)
 ```
 
+```{r reorder age_category_collapsed for largest age group as reference category}
+dat <- dat %>%
+  mutate(age_category_collapsed_reordered = 
+           relevel(age_category_collapsed,
+                   ref = "26-35", #largest group
+                   first = TRUE, #listed first in a list
+                   collapse = "+", #string used for combined factor levels
+                   xlevels= TRUE #all other levels maintained
+                   )
+  )
+```
 
 
 ## Gender
@@ -592,6 +603,102 @@ dat %>%
   freq(ocir.change_binary)
 ```
 
+Creating date variables for subset of participants dependent on when they signed up to GLAD (prepan)
+```{r date variables for subset of participants who signed up in 3, 6, 9 months prior to pandemic}
+# Date of 3 months prior to the 1st of March
+date_3months_prior_march_1st <- as.POSIXct("2019-12-01")
+
+# Date of 6 months prior to the 1st of March
+date_6months_prior_march_1st <- as.POSIXct("2019-09-01")
+
+# Date of 9 months prior to the 1st of March
+date_9months_prior_march_1st <- as.POSIXct("2019-06-01")
+```
+
+```{r subset of participants who signed up in 3 months prior to pandemic}
+dat <- dat %>%
+  mutate(
+    prepandemic_3_months_numeric =
+      if_else(
+        startDate.prepandemic > date_3months_prior_march_1st & # The GLAD sign up is dated before the cut off (> longer ago)
+        prepandemic_march_1_numeric == 1, #participant sign up before pandemic began (March 1st)
+        true = 1, # Participant signed up after December 1st 
+        false = 0, # Participant signed up before December 1st
+        missing = NA_real_
+      )
+  )
+
+dat <- dat %>%
+  mutate(
+    prepandemic_3_months =
+      recode_factor(
+        prepandemic_3_months_numeric,
+        "0" = "Sign up before 01 December",
+        "1" = "Sign up after 01 December"
+      )
+  )
+
+dat %>%
+  freq(prepandemic_3_months)
+```
+
+```{r subset of participants who signed up in 6 months prior to pandemic}
+dat <- dat %>%
+  mutate(
+    prepandemic_6_months_numeric =
+      if_else(
+        startDate.prepandemic > date_6months_prior_march_1st & # The GLAD sign up is dated before the cut off (> longer ago)
+        prepandemic_march_1_numeric == 1, #participant did not sign up after pandemic began (March 1st)
+        true = 1, # Participant signed up after September 1st 
+        false = 0, # Participant signed up before September 1st
+        missing = NA_real_
+      )
+  )
+
+dat <- dat %>%
+  mutate(
+    prepandemic_6_months =
+      recode_factor(
+        prepandemic_6_months_numeric,
+        "1" = "Sign up after 01 September",
+        "0" = "Sign up before 01 September"
+      )
+  )
+
+dat %>%
+  freq(prepandemic_6_months)
+```
+
+```{r subset of participants who signed up in 9 months prior to pandemic}
+dat <- dat %>%
+  mutate(
+    prepandemic_9_months_numeric =
+      if_else(
+        startDate.prepandemic > date_9months_prior_march_1st & # The GLAD sign up is dated before the cut off (> longer ago)
+        prepandemic_march_1_numeric == 1, #participant did not sign up after pandemic began (March 1st)
+        true = 1, # Participant signed up after June 1st 
+        false = 0, # Participant signed up before June 1st
+        missing = NA_real_
+      )
+  )
+
+dat <- dat %>%
+  mutate(
+    prepandemic_9_months =
+      recode_factor(
+        prepandemic_9_months_numeric,
+        "1" = "Sign up after 01 June",
+        "0" = "Sign up before 01 June"
+      )
+  )
+
+dat %>%
+  freq(prepandemic_9_months)
+```
+
+##Export data
 ```{r Save four cohorts as rds file}
 saveRDS(object = dat, file = paste0(data_path, "/four_cohorts_variables.rds"))
 ```
+
+

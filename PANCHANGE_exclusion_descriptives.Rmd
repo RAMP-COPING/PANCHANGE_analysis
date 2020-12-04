@@ -1,7 +1,7 @@
 ---
 title: "PANCHANGE_descriptives"
 author: "Katie Thompson, Topher Huebel, Molly Davies, Kirstin Purves"
-date: Sys.Date()
+date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:  
   html_document:
     df_print: paged
@@ -56,7 +56,7 @@ Install packages (if they are not available in your version of R)
 #install.packages("polycor")
 #install.packages("corrplot")
 #install.packages("patchwork")
-#instlal.packages("ggpubr")
+#install.packages("ggpubr")
 ```
 
 Load packages
@@ -70,6 +70,7 @@ library(patchwork)
 library(broom)
 library(tidyverse)
 library(ggpubr)
+library(stringr)
 ```
 
 # Colour palettes
@@ -167,7 +168,7 @@ source("../PANCHANGE_raw_path.R")
 
 ## Read in data
 ```{r read in data}
-dat.raw <- readRDS(file = paste0(data_path, "/four_cohorts_variables.rds"))
+dat.raw <- readRDS(file = paste0(data_path, "four_cohorts_variables.rds"))
 dim(dat.raw)
 colnames(dat.raw)
 ```
@@ -255,7 +256,7 @@ ocir.diff_score_cols
 
 Exclude GLAD/EDGI individuals that didn't take part in COPING
 Exclude individuals with NA for the MHD categories
-Individuals with NAs for age/gender have already been excluded in pre-processing script, but they get excluded here to be save and to double check previous programming.
+Individuals with NAs for age/gender have already been excluded in pre-processing script, but they get excluded here to be safe and to double check previous programming.
 
 ```{r Exclusion criteria for PANCHANGE}
 dat <- dat.raw %>%
@@ -287,37 +288,38 @@ nrow(dat.raw)-nrow(dat)
 ```
 
 # Data availability per questionnaire GAD, PHQ, PCL, and OCI-R
+++MD: These 'data availability' chunks caused my R to crash, so I'm hashing them out for now. Others can test if it works for them and unhash as needed, otherwise I think they should be removed.
 
 Data availability GAD
 ```{r gad availability}
-dat.raw %>%
-  freq(
-    data_group_gad,
-    cumul = F)
+#dat.raw %>%
+#  freq(
+#    data_group_gad,
+#    cumul = F)
 ```
 
 Data availability PHQ
 ```{r phq availability}
-dat.raw %>%
-  freq(
-    data_group_phq,
-    cumul = F)
+#dat.raw %>%
+#  freq(
+#    data_group_phq,
+#    cumul = F)
 ```
 
 Data availability PCL
 ```{r pcl availability}
-dat.raw %>%
-  freq(
-    data_group_pcl,
-    cumul = F)
+#dat.raw %>%
+#  freq(
+#    data_group_pcl,
+#    cumul = F)
 ```
 
 Data availability OCI-R
 ```{r ocir availability}
-dat.raw %>%
-  freq(
-    data_group_ocir,
-    cumul = F)
+#dat.raw %>%
+#  freq(
+#    data_group_ocir,
+#    cumul = F)
 ```
 
 # Whole sample
@@ -340,6 +342,7 @@ dat %>%
   freq(disorders_total_count)
 ```
 
+
 ```{r psychiatric disorders frequencies}
 #Ppts with least one psychiatric disorder
 dat %>%
@@ -353,6 +356,154 @@ dat %>%
 dat %>% 
   count(depression_and_anxiety_numeric == 1)
 ```
+
+
+#HR
+
+```{r Accuray scores for gad: worse/better than pre-pandemic}
+
+dat.raw$gad.pandemic.change.group <- ifelse(dat.raw$gad.pandemic_felt_feelings_numeric <3,1,
+                                           ifelse(dat.raw$gad.pandemic_felt_feelings_numeric > 3,2,0))
+
+dat.raw$gad.pandemic.change.group <- factor(dat.raw$gad.pandemic.change.group,
+                                           levels = c(1,0,2),labels = c("Worse","No change","Better"))
+
+dat.raw <- dat.raw %>%
+    mutate(gad.change.accurate = case_when(dat.raw$gad.pandemic.change.group == "Better" &
+                                             dat.raw$gad.diff_score_base_prepan < 0 ~1,
+                                           dat.raw$gad.pandemic.change.group == "Worse" &
+                                             dat.raw$gad.diff_score_base_prepan > 0 ~ 1,
+                                           dat.raw$gad.pandemic.change.group == "Better" &
+                                             dat.raw$gad.diff_score_base_prepan > 0 ~ 0,
+                                           dat.raw$gad.pandemic.change.group == "Worse" &
+                                             dat.raw$gad.diff_score_base_prepan < 0 ~ 0))
+
+dat.raw <- dat.raw %>%
+    mutate(gad.change.retro.accurate = if_else(dat.raw$gad.pandemic.change.group == "Better" &
+                                             dat.raw$gad.diff_score_retro_prepan == 0 |
+                                             dat.raw$gad.pandemic.change.group == "Worse" &
+                                             dat.raw$gad.diff_score_retro_prepan == 0, "Accurate", "Inaccurate" ))
+dat.raw <- dat.raw %>%
+  mutate(gad.change.retro.accurate = if_else(dat.raw$gad.pandemic.change.group == "Better" &
+                                             dat.raw$gad.diff_score_retro_prepan >= -3 &
+                                             dat.raw$gad.diff_score_retro_prepan <= 3 &
+                                             dat.raw$gad.change.retro.accurate != "Accurate" |
+                                             dat.raw$gad.pandemic.change.group == "Worse" &
+                                             dat.raw$gad.diff_score_retro_prepan >= -3 &
+                                             dat.raw$gad.diff_score_retro_prepan <= 3 &
+                                             dat.raw$gad.change.retro.accurate != "Accurate",
+                                             "Accurate +- 3", gad.change.retro.accurate))
+                                           
+
+```
+
+
+#SB - Impute no change prepandemic scores
+
+```{r Impute for gad measure}
+
+#Visualise the gad summary scores for baseline and retro
+head(dat$gad.sum_score_base, 30)
+head(dat$gad.sum_score_retro, 30)
+
+
+#Visualise the gad pandemic feelings variables
+head(dat$gad.pandemic_felt_feelings, 10)
+head(dat$gad.pandemic_felt_feelings_numeric, 10)
+
+
+#Edit the gad sum retro score as follows: if the pt reports no different since pandemic and there is a missing value for their retro score, impute their baseline score, else if there isn't a missing value for their retro score, leave it as it is.
+
+
+impute_dat <- dat %>% 
+  mutate(gad.sum_score_retro =
+           case_when(gad.pandemic_felt_feelings == "No different" & is.na(gad.sum_score_retro)                      ~ gad.sum_score_base,
+                     !is.na(gad.sum_score_retro) ~ gad.sum_score_retro))
+
+#Check that the Na's have been replaced with duplicated baseline sum scores
+head(impute_dat$gad.sum_score_base, 30)
+head(impute_dat$gad.sum_score_retro, 30)
+
+```
+
+
+```{r Impute for phq measure}
+
+#Visualise the phq summary scores for baseline and retro
+head(dat$phq.sum_score_base, 30)
+head(dat$phq.sum_score_retro, 30)
+
+#Visualise the phq pandemic feelings variables
+head(dat$phq.pandemic_felt_feelings, 10)
+head(dat$phq.pandemic_felt_feelings_numeric, 10)
+
+
+#Edit the phq sum retro score as follows: if the pt reports no different since pandemic and there is a missing value for their retro score, impute their baseline score, else if there isn't a missing value for their retro score, leave it as it is.
+
+impute_dat <- dat %>% 
+  mutate(phq.sum_score_retro =
+           case_when(phq.pandemic_felt_feelings == "No different" & is.na(phq.sum_score_retro)                      ~ phq.sum_score_base,
+                     !is.na(phq.sum_score_retro) ~ phq.sum_score_retro))
+
+#Check that the Na's have been replaced with duplicated baseline sum scores
+head(impute_dat$phq.sum_score_base, 30)
+head(impute_dat$phq.sum_score_retro, 30)
+
+```
+
+
+#Baseline survey completion (N per month)
+
+```{r N completing coping per month}
+
+#Visualise some dates when participants completed the questionnaire
+head(dat$startDate.coping, 20)
+
+#Divide the data by sign up per month and summarise the amount of pt's completing the survey that month
+
+april_sign_up <- dat[str_detect(dat$startDate.coping, "-04-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(April = n())
+
+may_sign_up <- dat[str_detect(dat$startDate.coping, "-05-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(May = n())
+
+june_sign_up <- dat[str_detect(dat$startDate.coping, "-06-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(June = n())
+
+july_sign_up <- dat[str_detect(dat$startDate.coping, "-07-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(July = n())
+
+august_sign_up <- dat[str_detect(dat$startDate.coping, "-08-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(August = n())
+
+september_sign_up <- dat[str_detect(dat$startDate.coping, "-09-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(September = n())
+
+#Merge results into one tibble
+
+coping_sign_up <- april_sign_up %>% 
+  cbind(may_sign_up, june_sign_up, july_sign_up, august_sign_up, september_sign_up)
+
+#Gather the variables
+coping_sign_up <- coping_sign_up %>% 
+  gather(key = "month", value = "sign_up_number")
+
+#Proportion calculation
+coping_sign_up <- coping_sign_up %>% 
+  mutate(percentage = 
+           round((sign_up_number / sum(sign_up_number) * 100), 2))
+
+coping_sign_up
+
+```
+
+
 
 ## Vector
 ```{r vector with psychiatric disorders}
@@ -421,6 +572,497 @@ corrplot(mhd.corr.matrix,
          insig = "blank" # Nonsignificant correlations have no colour
          )
 ```
+
+
+#Correlations of retro impute and prepan
+##Create function to use for all of the corplots
+
+```{r function to create upper and lower CI matrices}
+
+cor.mtest <- function(mat, conf.level = 0.95){
+mat <- as.matrix(mat)
+n <- ncol(mat)
+p.mat <- lowCI.mat <- uppCI.mat <- matrix(NA, n, n)
+diag(p.mat) <- 0
+diag(lowCI.mat) <- diag(uppCI.mat) <- 1
+for(i in 1:(n-1)){
+for(j in (i+1):n){
+tmp <- cor.test(mat[,i], mat[,j], conf.level = conf.level)
+p.mat[i,j] <- p.mat[j,i] <- tmp$p.value
+lowCI.mat[i,j] <- lowCI.mat[j,i] <- tmp$conf.int[1]
+uppCI.mat[i,j] <- uppCI.mat[j,i] <- tmp$conf.int[2]
+}
+}
+return(list(p.mat, lowCI.mat, uppCI.mat))
+}
+
+```
+
+###Whole sample prepan retro correlation
+
+```{r Whole sample Correlation prep chunk}
+# Select items for correlation matrix
+prepan_retro_items <- c(
+    "gad.sum_score_prepan",
+    "gad.sum_score_retro", 
+    "phq.sum_score_prepan",
+    "phq.sum_score_retro"
+)
+
+#Create a data set with only the GLAD and EDGI
+prepan_retro_dat <- dat[str_detect(dat$Sample, "GLAD|EDGI"), ]
+
+#Check that RAMP and NBR has been removed
+prepan_retro_dat %>% 
+  freq(Sample)
+
+# Calculate correlation matrix on specific columns (variables) from your data frame
+prepan_retro.corr.mat <- hetcor(
+  as.data.frame(prepan_retro_dat[,prepan_retro_items]), # Specify the data
+  use = "pairwise.complete.obs" # Use all pairwise observations
+)
+
+# Print the correlation matrix
+print(prepan_retro.corr.mat, digits = max(3, getOption("digits") - 3)) 
+
+# Save the correlations from the correlation matrix in an object
+prepan_retro.corr.matrix <- as.matrix(prepan_retro.corr.mat)
+
+# Save the p values from the correlation matrix in an object
+prepan_retro.p.matrix <- as.matrix(prepan_retro.corr.mat$tests)
+
+res1 <- cor.ci(prepan_retro.corr.matrix)
+lowci <- cor.plot.upperLowerCi(res1)
+lowci[upper.tri(lowci)] = t(lowci)[upper.tri(lowci)]
+
+upci <- cor.plot.upperLowerCi(res1)
+upci[lower.tri(upci)] = t(upci)[lower.tri(lowci)]
+
+conf <- paste0("[", format(lowci, digits=2), " - ", format(upci, digits=2), "]")
+
+xs <- row(lowci)
+ys <- (ncol(lowci)+1) - col(lowci)
+
+xs[lower.tri(xs,diag=TRUE)] <- 0
+ys[lower.tri(ys,diag=TRUE)] <- 0
+
+```
+
+
+
+```{r Whole sample correlation matrix of prepan retro sum scores}
+corrplot(prepan_retro.corr.matrix, 
+         method = "color", # objects to represent the correlations on plot
+         type = "lower", # only use the lower triangle of the matrix
+         diag = FALSE, # do not show the correlations on the diagonal
+         addgrid.col = NA,
+         addCoef.col = "black", # colour for the correlation coefficients in the plot
+         tl.cex = 0.8,
+         tl.col = "black",
+         col=colorRampPalette(c("dodgerblue4","white","firebrick4"))(200), # colours for correlations
+         # Combine with significance
+         p.mat = prepan_retro.p.matrix, # Matrix with p values
+         sig.level = 0.01, # Choose significant level
+         insig = "blank" # Nonsignificant correlations have no colour
+         )
+
+text(xs, ys, conf, pos=1, cex=0.8)
+
+```
+
+```{r Whole sample prepan retro scatterplots prep}
+
+#Create a data set with only the GLAD and EDGI participants
+whole_retro_prepan_scatter <- dat[str_detect(dat$Sample, "GLAD|EDGI"), ]
+
+#Check that RAMP and NBR has been removed
+whole_retro_prepan_scatter %>% 
+  freq(Sample)
+
+#Remove those saying "no different" since pandemic
+
+whole_retro_prepan_gad_scatter <- whole_retro_prepan_scatter %>% 
+  filter(gad.pandemic_felt_feelings == "Much worse" |
+           gad.pandemic_felt_feelings == "A little worse" |
+           gad.pandemic_felt_feelings == "A little better" |
+           gad.pandemic_felt_feelings == "Much better")
+
+whole_retro_prepan_phq_scatter <- whole_retro_prepan_scatter %>% 
+  filter(phq.pandemic_felt_feelings == "Much worse" |
+           phq.pandemic_felt_feelings == "A little worse" |
+           phq.pandemic_felt_feelings == "A little better" |
+           phq.pandemic_felt_feelings == "Much better")
+
+
+```
+
+
+```{r Whole sample prepan retro scatterplots}
+
+#Visualise as scatterplots
+
+whole_retro_prepan_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retro)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
+   labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor whole sample",
+                      sep=" "),
+        subtitle = paste("n", dim(whole_retro_prepan_gad_scatter)[1]))
+
+whole_retro_prepan_phq_scatter %>% ggplot(aes(x = phq.sum_score_retro, y = phq.sum_score_prepan)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
+   labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor whole sample",
+                      sep=" "),
+        subtitle = paste("n", dim(whole_retro_prepan_phq_scatter)[1]))
+
+```
+
+
+###Little/much worse prepan retro correlation
+
+```{r Little/much worse correlation prep chunk}
+
+# Check the items are the same from the whole chunk
+prepan_retro_items
+
+#Create a data set with only the GLAD and EDGI
+prepan_retro_dat_worse <- dat[str_detect(dat$Sample, "GLAD|EDGI"), ]
+
+#Filter the data to only include those with self-reported little/much worse gad since pandemic
+
+prepan_retro_dat_worse <- prepan_retro_dat_worse %>% 
+  filter(gad.pandemic_felt_feelings == "A little worse" |
+           gad.pandemic_felt_feelings == "Much worse")
+
+
+#Check that RAMP and NBR has been removed
+prepan_retro_dat_worse %>% 
+  freq(Sample)
+
+# Calculate correlation matrix on specific columns (variables) from your data frame
+prepan_retro.corr.mat_worse <- hetcor(
+  as.data.frame(prepan_retro_dat_worse[,prepan_retro_items]), # Specify the data
+  use = "pairwise.complete.obs" # Use all pairwise observations
+)
+
+# Print the correlation matrix
+print(prepan_retro.corr.mat_worse, digits = max(3, getOption("digits") - 3)) 
+
+# Save the correlations from the correlation matrix in an object
+prepan_retro.corr.matrix_worse <- as.matrix(prepan_retro.corr.mat_worse)
+
+# Save the p values from the correlation matrix in an object
+prepan_retro.p.matrix_worse <- as.matrix(prepan_retro.corr.mat_worse$tests)
+
+res1 <- cor.ci(prepan_retro.corr.matrix_worse)
+lowci <- cor.plot.upperLowerCi(res1)
+lowci[upper.tri(lowci)] = t(lowci)[upper.tri(lowci)]
+
+upci <- cor.plot.upperLowerCi(res1)
+upci[lower.tri(upci)] = t(upci)[lower.tri(lowci)]
+
+conf <- paste0("[", format(lowci, digits=2), " - ", format(upci, digits=2), "]")
+
+xs <- row(lowci)
+ys <- (ncol(lowci)+1) - col(lowci)
+
+xs[lower.tri(xs,diag=TRUE)] <- 0
+ys[lower.tri(ys,diag=TRUE)] <- 0
+
+```
+
+
+```{r Little/much worse correlation matrix of prepan retro sum scores}
+corrplot(prepan_retro.corr.matrix_worse, 
+         method = "color", # objects to represent the correlations on plot
+         type = "lower", # only use the lower triangle of the matrix
+         diag = FALSE, # do not show the correlations on the diagonal
+         addgrid.col = NA,
+         addCoef.col = "black", # colour for the correlation coefficients in the plot
+         tl.cex = 0.8,
+         tl.col = "black",
+         col=colorRampPalette(c("dodgerblue4","white","firebrick4"))(200), # colours for correlations
+         # Combine with significance
+         p.mat = prepan_retro.p.matrix, # Matrix with p values
+         sig.level = 0.01, # Choose significant level
+         insig = "blank" # Nonsignificant correlations have no colour
+         )
+
+text(xs, ys, conf, pos=1, cex=0.8)
+
+```
+
+
+
+```{r Little/much worse prepan retro scatterplot prep}
+
+#Create a data set with only the GLAD and EDGI participants
+little_much_worse_retro_prepan <- dat[str_detect(dat$Sample, "GLAD|EDGI"), ]
+
+#Check that RAMP and NBR has been removed
+little_much_worse_retro_prepan %>% 
+  freq(Sample)
+
+#Filter by little/much worse self-reported change since pandemic started in gad and phq
+
+much_worse_gad_scatter <- little_much_worse_retro_prepan %>% 
+  filter(gad.pandemic_felt_feelings == "Much worse")
+
+little_worse_gad_scatter <- little_much_worse_retro_prepan %>% 
+  filter(gad.pandemic_felt_feelings == "A little worse")
+
+much_little_worse_gad_scatter <- little_much_worse_retro_prepan %>% 
+  filter(gad.pandemic_felt_feelings == "Much worse" | 
+           gad.pandemic_felt_feelings == "A little worse")
+
+much_worse_phq_scatter <- little_much_worse_retro_prepan %>% 
+  filter(phq.pandemic_felt_feelings == "Much worse")
+
+little_worse_phq_scatter <- little_much_worse_retro_prepan %>% 
+  filter(phq.pandemic_felt_feelings == "A little worse")
+
+much_little_worse_phq_scatter <- little_much_worse_retro_prepan %>% 
+  filter(phq.pandemic_felt_feelings == "Much worse" | 
+           phq.pandemic_felt_feelings == "A little worse")
+
+```
+
+```{r Little/much worse prepan retro scatterplots}
+
+#Visualise each as a scatterplot
+
+much_worse_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retro)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
+   labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting much worse",
+                      sep=" "),
+        subtitle = paste("n", dim(much_worse_gad_scatter)[1]))
+
+little_worse_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retro)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
+   labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting a little worse",
+                      sep=" "),
+        subtitle = paste("n", dim(little_worse_gad_scatter)[1]))
+
+much_little_worse_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retro)) +  
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
+   labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting much worse and a little worse",
+                      sep=" "),
+        subtitle = paste("n", dim(much_little_worse_gad_scatter)[1]))
+
+much_worse_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.sum_score_retro)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
+   labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting much worse",
+                      sep=" "),
+        subtitle = paste("n", dim(much_worse_phq_scatter)[1]))
+
+little_worse_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.sum_score_retro)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
+   labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting a little worse",
+                      sep=" "),
+        subtitle = paste("n", dim(little_worse_phq_scatter)[1]))
+
+much_little_worse_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.sum_score_retro)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
+   labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting much worse and a little worse",
+                      sep=" "),
+        subtitle = paste("n", dim(much_little_worse_phq_scatter)[1]))
+
+
+```
+
+
+###Little/much better prepan retro correlation
+
+```{r Little/much better correlation prep chunk}
+
+# Check the items are the same from the whole chunk
+prepan_retro_items
+
+#Create a data set with only the GLAD and EDGI
+prepan_retro_dat_better <- dat[str_detect(dat$Sample, "GLAD|EDGI"), ]
+
+#Filter the data to only include those with self-reported little/much worse gad since pandemic
+
+prepan_retro_dat_better <- prepan_retro_dat_better %>% 
+  filter(gad.pandemic_felt_feelings == "A little better" |
+           gad.pandemic_felt_feelings == "Much better")
+
+
+#Check that RAMP and NBR has been removed
+prepan_retro_dat_better %>% 
+  freq(Sample)
+
+# Calculate correlation matrix on specific columns (variables) from your data frame
+prepan_retro.corr.mat_better <- hetcor(
+  as.data.frame(prepan_retro_dat_better[,prepan_retro_items]), # Specify the data
+  use = "pairwise.complete.obs" # Use all pairwise observations
+)
+
+# Print the correlation matrix
+print(prepan_retro.corr.mat_better, digits = max(3, getOption("digits") - 3)) 
+
+# Save the correlations from the correlation matrix in an object
+prepan_retro.corr.matrix_better <- as.matrix(prepan_retro.corr.mat_better)
+
+# Save the p values from the correlation matrix in an object
+prepan_retro.p.matrix_better <- as.matrix(prepan_retro.corr.mat_better$tests)
+
+res1 <- cor.ci(prepan_retro.corr.matrix_better)
+lowci <- cor.plot.upperLowerCi(res1)
+lowci[upper.tri(lowci)] = t(lowci)[upper.tri(lowci)]
+
+upci <- cor.plot.upperLowerCi(res1)
+upci[lower.tri(upci)] = t(upci)[lower.tri(lowci)]
+
+conf <- paste0("[", format(lowci, digits=2), " - ", format(upci, digits=2), "]")
+
+xs <- row(lowci)
+ys <- (ncol(lowci)+1) - col(lowci)
+
+xs[lower.tri(xs,diag=TRUE)] <- 0
+ys[lower.tri(ys,diag=TRUE)] <- 0
+
+```
+
+
+```{r Little/much better correlation matrix of prepan retro sum scores}
+corrplot(prepan_retro.corr.matrix_better, 
+         method = "color", # objects to represent the correlations on plot
+         type = "lower", # only use the lower triangle of the matrix
+         diag = FALSE, # do not show the correlations on the diagonal
+         addgrid.col = NA,
+         addCoef.col = "black", # colour for the correlation coefficients in the plot
+         tl.cex = 0.8,
+         tl.col = "black",
+         col=colorRampPalette(c("dodgerblue4","white","firebrick4"))(200), # colours for correlations
+         # Combine with significance
+         p.mat = prepan_retro.p.matrix, # Matrix with p values
+         sig.level = 0.01, # Choose significant level
+         insig = "blank" # Nonsignificant correlations have no colour
+         )
+
+text(xs, ys, conf, pos=1, cex=0.8)
+
+```
+
+
+```{r Little/much better prepan retro scatterplots prep}
+
+#Create a data set with only the GLAD and EDGI participants
+little_much_better_retro_prepan <- dat[str_detect(dat$Sample, "GLAD|EDGI"), ]
+
+#Check that RAMP and NBR has been removed
+little_much_better_retro_prepan %>% 
+  freq(Sample)
+
+#Filter by participants reporting little/much better in gad and phq since pandemic started (separetely and grouped) 
+
+little_better_gad_scatter <- little_much_better_retro_prepan %>% 
+  filter(gad.pandemic_felt_feelings == "A little better")
+
+much_better_gad_scatter <- little_much_better_retro_prepan %>% 
+  filter(gad.pandemic_felt_feelings == "Much better")
+
+much_little_better_gad_scatter <- little_much_better_retro_prepan %>% 
+  filter(gad.pandemic_felt_feelings == "Much better" | 
+           gad.pandemic_felt_feelings == "A little better")
+
+little_better_phq_scatter <- little_much_better_retro_prepan %>% 
+  filter(phq.pandemic_felt_feelings == "A little better")
+
+much_better_phq_scatter <- little_much_better_retro_prepan %>% 
+  filter(phq.pandemic_felt_feelings == "Much better")
+
+much_little_better_phq_scatter <- little_much_better_retro_prepan %>% 
+  filter(phq.pandemic_felt_feelings == "Much better" | 
+           phq.pandemic_felt_feelings == "A little better")
+
+```
+
+
+```{r Little/much better prepan retro scatterplots}
+
+#Visualise them as scatterplots
+
+little_better_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retro)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "blue", fill = "red") +
+  theme_minimal() +
+   labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting a little better",
+                      sep=" "),
+        subtitle = paste("n", dim(little_better_gad_scatter)[1]))
+
+much_better_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retro)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
+   labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting much better",
+                      sep=" "),
+        subtitle = paste("n", dim(much_better_gad_scatter)[1]))
+
+much_little_better_gad_scatter %>% ggplot(aes(x = gad.sum_score_prepan, y = gad.sum_score_retro)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") + 
+  theme_minimal() +
+   labs(title = paste("Relationship between prepandemic and retrospective GAD scores\nfor participants reporting much better and a little better",
+                      sep=" "),
+        subtitle = paste("n", dim(much_little_better_gad_scatter)[1]))
+
+little_better_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.sum_score_retro)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
+   labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting a little better",
+                      sep=" "),
+        subtitle = paste("n", dim(little_better_phq_scatter)[1]))
+
+much_better_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.sum_score_retro)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") +
+  theme_minimal() +
+   labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting much better",
+                      sep=" "),
+        subtitle = paste("n", dim(much_better_phq_scatter)[1]))
+
+much_little_better_phq_scatter %>% ggplot(aes(x = phq.sum_score_prepan, y = phq.sum_score_retro)) +
+  geom_point(colour = "grey") +
+  geom_jitter(w = 0.4, h = 0.4, colour = "grey") +
+  geom_smooth(method = "lm", colour = "navy", fill = "red") + 
+  theme_minimal() +
+   labs(title = paste("Relationship between prepandemic and retrospective PHQ scores\nfor participants reporting much better and a little better",
+                      sep=" "),
+        subtitle = paste("n", dim(much_little_better_phq_scatter)[1]))
+
+```
+
+
 
 ## Create long data frame
 ```{r gather to long format Disorder_hierarchical}
@@ -536,6 +1178,16 @@ Disorder_inc_by_Gender_collapsed_prop_plot
 Disorder_inc_by_Sample <- dat.long.psych %>%
   filter(Diagnosis == 1) %>%
   count(Disorder_inc, Sample)
+```
+
+```{r Disorder_inc by Sample prop table}
+Disorder_inc_by_Sample_collapsed <- dat.long.psych %>%
+  group_by(Disorder_inc) %>%
+  filter(Diagnosis == 1) %>%
+  count(Sample) %>%
+  mutate(Prop = round(n/sum(n), 2))
+
+kable(Disorder_inc_by_Sample_collapsed)
 ```
 
 ```{r Disorder_inc by Sample plot}
@@ -1340,6 +1992,7 @@ Gender_collapsed_by_Sample_prop_plot
 ```{r highest_education per Sample prop per total}
 highest_education_per_Sample_prop_total <- dat %>%
   count(highest_education, Sample) %>%
+  drop_na() %>% 
   mutate(Prop = round(n/sum(n), 2))
 
 kable(highest_education_per_Sample_prop_total)
@@ -1350,6 +2003,7 @@ highest_education_per_Sample_prop_total
 highest_education_per_Sample_prop_Sample <- dat %>%
   group_by(Sample) %>%
   count(highest_education, Sample) %>%
+  drop_na() %>% 
   mutate(Prop = round(n/sum(n), 2))
 
 kable(highest_education_per_Sample_prop_Sample)
@@ -1361,6 +2015,7 @@ highest_education_per_Sample_prop_Sample
 highest_education_per_Sample_prop_Sample_cross_table <- dat %>%
   group_by(Sample) %>%
   count(highest_education, Sample) %>%
+  drop_na() %>% 
   mutate(Prop = round(n/sum(n), 2)) %>%
   pivot_wider(names_from = Sample, values_from = c(n, Prop))
 
@@ -1372,6 +2027,7 @@ highest_education_per_Sample_prop_Sample_cross_table
 ```{r highest_education per Sample count cross table}
 highest_education_per_Sample_count_cross_table <- dat %>%
   count(highest_education, Sample) %>%
+  drop_na() %>% 
   spread(key = Sample, value = n) %>%
   mutate(
     EDGI = as.integer(replace_na(EDGI, 0)),

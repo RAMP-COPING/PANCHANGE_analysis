@@ -1,0 +1,127 @@
+---
+title: "Retro and prepan comparisons"
+author: "Steven Bright and Henry Rogers"
+date: "30/10/2020"
+output: html_document
+---
+
+#Set up
+
+```{r clean environment}
+
+remove(list = ls())
+
+```
+
+
+```{r Save a date object}
+
+date <- Sys.Date()
+
+
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#Set WD
+
+```{r Set WD}
+
+#Steven's working environment
+setwd("c:\\Users\\Student\\Documents\\Git\\PANCHANGE_analysis")
+getwd()
+
+#Henry's working environment
+
+
+
+```
+
+
+#Load packages
+
+```{r Load packages}
+
+library(tidyverse)
+library(lfactors)
+library(data.table)
+
+```
+
+
+#Set file paths and data names
+
+```{r Source data and file paths}
+#Sourcing data paths for raw data (data_path) and clean data (data_path_clean)
+#Sourcing data files for 1) saliva_kits 2) coping_glad 3) demographic datasets
+
+source(file = "../Coping_data_path.R")
+
+#May need a different path for PC computers
+#source(file = "..\\flare_data_path.R")
+
+```
+
+
+#Prepare data for merge
+
+```{r Read in data}
+
+data_glad <- read_csv(paste0(data_path, coping_glad))
+data_nbr <- read_csv(paste0(data_path, coping_nbr))
+data_edgi <- read_csv(paste0(data_path, coping_edgi))
+
+```
+
+
+```{r Drop first 2 rows}
+
+coping_glad_cohort <- data_glad[3:dim(data_glad)[1],]
+coping_edgi_cohort <- data_edgi[3:dim(data_edgi)[1],]
+coping_nbr_cohort <- data_nbr[3:dim(data_nbr)[1],]
+
+```
+
+
+Perform the left join
+
+
+```{r left join}
+
+
+coping_data <- left_join(coping_nbr_cohort, 
+                         coping_glad_cohort,
+                         by = "ExternalReference")
+
+coping_data <- left_join(coping_data, 
+                         coping_edgi_cohort,
+                         by = "ExternalReference")
+
+#MD addition to visualise:
+head(coping_data)
+
+
+```
+
+
+#Task overview
+
+1) No change retrospective scores: "impute" to be the same as their pandemic baseline
+
+2) Check correlation between these and the pre-pandemic scores in COPING
+
+3) ACCURACY SCORES: Another question: what proportion of the time are people right about
+
+worse / better / no change (compared to pre-pandemic)
+
+Two categories: (1) is it accurate (i.e. if they say better are they at all better) and (2) is it more than 3 points different
+
+
+#Task 1: Impute no change scores
+
+
+

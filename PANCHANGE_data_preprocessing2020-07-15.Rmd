@@ -1,8 +1,8 @@
 ---
 title: "PANCHANGE_data_preprocessing"
 author: "Katie Thompson, Topher Huebel, Molly Davies, Kirstin Purves"
-date: Sys.Date()
-output:  
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output:
   html_document:
     df_print: paged
     toc: yes
@@ -92,7 +92,7 @@ COPINGpalette4 <- c("#78D9C5",
 COPINGpalette5 <- c("#78D9C5",
                     "#F5BE5E",
                     "#EEB6E9",
-                    "#DBDB73", 
+                    "#DBDB73",
                     "#FFED98")
 
 COPINGpalette6 <- c("#78D9C5",
@@ -105,9 +105,9 @@ COPINGpalette6 <- c("#78D9C5",
 COPINGpalette7 <- c("#78D9C5",
                     "#F5BE5E",
                     "#EEB6E9",
-                    "#DBDB73", 
+                    "#DBDB73",
                     "#FFED98",
-                    "#BFD2EB", 
+                    "#BFD2EB",
                     "#808080")
 
 COPINGpaletteGRAD <- c("#F5BE5E",
@@ -126,8 +126,8 @@ RAMPworseGRADpalette <- c("#78D9C5",
                           "#FFEED1",
                           "#F5BE5E",
                           "#FFB1B5")
-GLADpalette = c("#efc00b", 
-                "#b7dee8")  
+GLADpalette = c("#efc00b",
+                "#b7dee8")
 ```
 
 Choose in this chunk which palette to use
@@ -137,7 +137,7 @@ palette = COPINGpalette2
 ```
 
 #Add_numeric function
-Function used to convert character variables into numeric variables. 
+Function used to convert character variables into numeric variables.
 ```{r add_numeric function}
 add_numeric <- function(dat, exclude = NULL) {
   dat_fct <- sjlabelled::as_label(dat)
@@ -153,7 +153,7 @@ add_numeric <- function(dat, exclude = NULL) {
 Note: GLAD only receives current measures and RAMP questionnaire
 Note: All COPING surveys are separate surveys
 
-# Source data file paths 
+# Source data file paths
 
 ```{r source file path}
 #source raw data directory: data.raw_path
@@ -256,7 +256,7 @@ if(EDGI == TRUE){
                         "startDate.prepandemic",
                         "Age_uncleaned",
                         "EduYrs")
-  
+
   edgi.dem.raw.id <- edgi.dem.raw %>%
     drop_na(externalDataReference) %>% # Drop NAs
     distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -289,7 +289,7 @@ if(EDGI == TRUE){
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-  
+
   # Inspect dimensions
   dim(edgi.dem.raw.id)
   # Inspect colnames
@@ -316,10 +316,11 @@ summarytools::dfSummary(
 ```
 
 ## GLAD and EDGI
-### Create data frame 
+### Create data frame
 ```{r GLAD and EDGI combined}
-if(GLAD_and_EDGI == TRUE)
+if(GLAD_and_EDGI == TRUE){
 glad.and.edgi.dem.raw.id <- rbind(glad.dem.raw.id, edgi.dem.raw.id)
+}
 ```
 
 ```{r glad and edgi copy dem}
@@ -357,7 +358,7 @@ if(NBR == TRUE){
                         "Sample",
                         "Age_uncleaned",
                         "EduYrs")
-  
+
   nbr.dem.raw.id <- nbr.dem.raw %>%
     drop_na(subjectid) %>% # Drop NAs
     distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -388,7 +389,7 @@ if(NBR == TRUE){
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-  
+
   # Inspect dimensions
   dim(nbr.dem.raw.id)
   # Inspect colnames
@@ -402,7 +403,7 @@ if(NBR == TRUE){
 if(NBR == TRUE) {
 #add 1900 to birthyear
 nbr.dem.raw.id$Birthyear_numeric <- nbr.dem.raw.id$Birthyear_unc_numeric + 1900
-  
+
 #create dob as date format
 nbr.dem.raw.id$Birthdate <- as.Date(paste(nbr.dem.raw.id$Birthyear_numeric,
                                   nbr.dem.raw.id$Birthmonth_numeric,
@@ -443,6 +444,9 @@ if(NBR == TRUE){
   colnames(nbr.cohort.raw)
   }
 ```
+
+
+
 
 
 ```{r nbr cohort cleaning}
@@ -539,7 +543,7 @@ nbr.cohort.raw.id$Ethnicity_unc <- recode_factor(nbr.cohort.raw.id$Ethnicity.unc
                                              "P" = "Black or Black British",
                                              "R" = "Asian or Asian British (including Chinese)",
                                              "S" = "Asian or Asian British (including Chinese)",
-                                             "W" = "White, white European or Caucasian", 
+                                             "W" = "White, white European or Caucasian",
                                              "Z" = NULL,
                                              "99" = NULL)
 }
@@ -585,7 +589,7 @@ if(RAMP == TRUE){
 if(RAMP == TRUE){
   exclude_cols_dem <- c("ID",
                         "Sample")
-  
+
   ramp.dem.raw.id <- ramp.dem.raw %>%
     drop_na(`Login ID`) %>% # Drop NAs
     distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -618,7 +622,7 @@ if(RAMP == TRUE){
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-  
+
   # Inspect dimensions
   dim(ramp.dem.raw.id)
   # Inspect colnames
@@ -638,13 +642,13 @@ if(RAMP == TRUE){
 ## Demographics variable creation
 
 # Gender categories synchronised
-RAMP has the correct Gender categories so does not need editing. 
+RAMP has the correct Gender categories so does not need editing.
 ```{r gender recoding for GLAD}
 if(GLAD == TRUE | NBR == TRUE) {
 
 dem.raw.id <- dem.raw.id %>%
   mutate(
-    Gender = 
+    Gender =
       recode_factor(Gender_unc,
         "Male" = "Male",
         "Female" = "Female",
@@ -663,7 +667,7 @@ if(EDGI == TRUE) {
 
 dem.raw.id <- dem.raw.id %>%
   mutate(
-    Gender = 
+    Gender =
       recode_factor(Gender_unc,
         "Male" = "Male",
         "Female" = "Female",
@@ -684,7 +688,7 @@ if(EDGI == TRUE) {
 
 dem.raw.id <- dem.raw.id %>%
   mutate(
-    Ethnicity = 
+    Ethnicity =
       recode_factor(Ethnicity_unc,
         "White" = "White",
         "Mixed" = "Mixed or multiple ethnic origins",
@@ -705,7 +709,7 @@ if(GLAD == TRUE | RAMP == TRUE) {
 
 dem.raw.id <- dem.raw.id %>%
   mutate(
-    Ethnicity = 
+    Ethnicity =
       recode_factor(Ethnicity_unc,
         "White, white European or Caucasian" = "White",
         "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
@@ -726,7 +730,7 @@ if(NBR == TRUE) {
 
 dem.raw.id <- dem.raw.id %>%
   mutate(
-    Ethnicity = 
+    Ethnicity =
       recode_factor(Ethnicity_unc,
         "White, white European or Caucasian" = "White",
         "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
@@ -737,7 +741,7 @@ dem.raw.id <- dem.raw.id %>%
       )
   ) %>%
   mutate(
-    Ethnicity_numeric = 
+    Ethnicity_numeric =
       recode(Ethnicity,
         "White" = 1,
         "Mixed or multiple ethnic origins" = 2,
@@ -755,7 +759,7 @@ if(GLAD_and_EDGI == TRUE) {
 
 dem.raw.id <- dem.raw.id %>%
   mutate(
-    Ethnicity = 
+    Ethnicity =
       recode_factor(Ethnicity_unc,
         "White, white European or Caucasian" = "White",
         "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
@@ -766,7 +770,7 @@ dem.raw.id <- dem.raw.id %>%
       )
   ) %>%
   mutate(
-    Ethnicity_numeric = 
+    Ethnicity_numeric =
       recode(Ethnicity,
         "White" = 1,
         "Mixed or multiple ethnic origins" = 2,
@@ -783,7 +787,7 @@ dem.raw.id <- dem.raw.id %>%
 Age outlier
 ```{r age outlier}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE ) {
-# Define age limits 
+# Define age limits
 age_upper_limit = 117 # The oldest person in the world is 117 years
 age_lower_limit = 16
 
@@ -798,10 +802,10 @@ length(
 # remove age outliers
 dem.raw.id <- dem.raw.id %>%
   mutate(
-    Age = 
+    Age =
       if_else(
-        Age_uncleaned > age_upper_limit | 
-        Age_uncleaned < age_lower_limit, 
+        Age_uncleaned > age_upper_limit |
+        Age_uncleaned < age_lower_limit,
         true = NA_real_,
         false = Age_uncleaned,
         missing = NA_real_
@@ -817,7 +821,7 @@ dem.raw.id %>%
 }
 ```
 
-## Categorise age into groups 
+## Categorise age into groups
 In RAMP, age is indicated categorically: 16-18, 19-25, 26-35, 36-45, 46-55, 56-65, 66-70, 71-75, 76-80, 81-85, 86-90, 91-100, 100+
 Age categories in GLAD, EDGI and NBR have been created to reflect this
 ```{r Age groups}
@@ -849,7 +853,7 @@ dem.raw.id <- dem.raw.id %>%
     mutate(
       age_category =
         recode_factor(
-          age_category_numeric, 
+          age_category_numeric,
           "1" = "16-18",
           "2" = "19-25",
           "3" = "26-35",
@@ -982,10 +986,10 @@ glad.employment.raw.id <- glad.employment.raw %>%
          employment.parttime_employed,
          employment.selfemployed,
          employment.contract_or_freelance_work,
-         employment.small_business_owner, 
+         employment.small_business_owner,
          employment.receiving_state_income,
-         employment.my_employment_status_has_not_changed, 
-         employment.reduction_in_hours, 
+         employment.my_employment_status_has_not_changed,
+         employment.reduction_in_hours,
          employment.reduction_in_salary,
          employment.benefits_increased,
          employment.benefits_decreased,
@@ -1076,10 +1080,10 @@ edgi.employment.raw.id <- edgi.employment.raw %>%
          employment.parttime_employed,
          employment.selfemployed,
          employment.contract_or_freelance_work,
-         employment.small_business_owner, 
+         employment.small_business_owner,
          employment.receiving_state_income,
-         employment.my_employment_status_has_not_changed, 
-         employment.reduction_in_hours, 
+         employment.my_employment_status_has_not_changed,
+         employment.reduction_in_hours,
          employment.reduction_in_salary,
          employment.benefits_increased,
          employment.benefits_decreased,
@@ -1165,10 +1169,10 @@ nbr.employment.raw.id <- nbr.employment.raw %>%
          employment.parttime_employed,
          employment.selfemployed,
          employment.contract_or_freelance_work,
-         employment.small_business_owner, 
+         employment.small_business_owner,
          employment.receiving_state_income,
-         employment.my_employment_status_has_not_changed, 
-         employment.reduction_in_hours, 
+         employment.my_employment_status_has_not_changed,
+         employment.reduction_in_hours,
          employment.reduction_in_salary,
          employment.benefits_increased,
          employment.benefits_decreased,
@@ -1250,10 +1254,10 @@ ramp.employment.raw.id <- ramp.employment.raw %>%
          employment.parttime_employed,
          employment.selfemployed,
          employment.contract_or_freelance_work,
-         employment.small_business_owner, 
+         employment.small_business_owner,
          employment.receiving_state_income,
-         employment.my_employment_status_has_not_changed, 
-         employment.reduction_in_hours, 
+         employment.my_employment_status_has_not_changed,
+         employment.reduction_in_hours,
          employment.reduction_in_salary,
          employment.benefits_increased,
          employment.benefits_decreased,
@@ -1439,10 +1443,10 @@ if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE) {
 employment.raw.id %>%
   select(employment_prior_covid,
          employment_prior_covid_numeric,
-        employment.fulltime_employed_numeric, 
-        employment.parttime_employed_numeric, 
-        employment.unemployed_numeric, 
-        employment.zerohours_contract_numeric, 
+        employment.fulltime_employed_numeric,
+        employment.parttime_employed_numeric,
+        employment.unemployed_numeric,
+        employment.zerohours_contract_numeric,
         employment.selfemployed_numeric,
         employment.contract_or_freelance_work_numeric,
         employment.small_business_owner_numeric,
@@ -1497,10 +1501,10 @@ if(RAMP == TRUE) {
 employment.raw.id %>%
   select(employment_prior_covid,
          employment_prior_covid_numeric,
-        employment.fulltime_employed_numeric, 
-        employment.parttime_employed_numeric, 
-        employment.unemployed_numeric, 
-        employment.zerohours_contract_numeric, 
+        employment.fulltime_employed_numeric,
+        employment.parttime_employed_numeric,
+        employment.unemployed_numeric,
+        employment.zerohours_contract_numeric,
         employment.selfemployed_numeric,
         employment.contract_or_freelance_work_numeric,
         employment.small_business_owner_numeric,
@@ -1562,13 +1566,13 @@ employment.raw.id %>%
         employment.reduction_in_salary_numeric,
         employment.became_unemployed_numeric,
         employment.benefits_decreased_numeric,
-        employment.increased_hours_numeric, 
-        employment.increased_salary_numeric, 
+        employment.increased_hours_numeric,
+        employment.increased_salary_numeric,
         employment.became_employed_numeric,
-        employment.benefits_increased_numeric, 
+        employment.benefits_increased_numeric,
         employment.furloughed_or_paid_leave_government_funded_numeric,
-        employment.furloughed_or_paid_leave_company_funded_numeric, 
-        employment.paid_leave_furloughed_numeric, 
+        employment.furloughed_or_paid_leave_company_funded_numeric,
+        employment.paid_leave_furloughed_numeric,
         employment.my_employment_status_has_not_changed_numeric
   )
 }
@@ -1624,13 +1628,13 @@ employment.raw.id %>%
         employment.reduction_in_salary_numeric,
         employment.became_unemployed_numeric,
         employment.benefits_decreased_numeric,
-        employment.increased_hours_numeric, 
-        employment.increased_salary_numeric, 
+        employment.increased_hours_numeric,
+        employment.increased_salary_numeric,
         employment.became_employed_numeric,
-        employment.benefits_increased_numeric, 
+        employment.benefits_increased_numeric,
         employment.furloughed_or_paid_leave_government_funded_numeric,
-        employment.furloughed_or_paid_leave_company_funded_numeric, 
-        employment.paid_leave_furloughed_numeric, 
+        employment.furloughed_or_paid_leave_company_funded_numeric,
+        employment.paid_leave_furloughed_numeric,
         employment.my_employment_status_has_not_changed_numeric
   )
 }
@@ -1648,7 +1652,7 @@ employment.raw.id <- employment.raw.id %>%
         employment.government_work_key_workers_numeric > 0 ~ 1,
         employment.unemployed_numeric == "1" ~ 0,
         employment.stayathome_parent_or_carer_numeric == "1" ~ 0,
-        employment.retired_numeric == "1" ~ 0, 
+        employment.retired_numeric == "1" ~ 0,
         employment.became_unemployed_numeric == "0" ~ 0,
         employment.student_gcse_or_a_level_numeric == "1" ~ 0,
         employment.student_university_numeric == "1" ~ 0,
@@ -1747,7 +1751,7 @@ colnames(edgi.mhd.raw)
 if(EDGI == TRUE) {
   exclude_cols <- c("Sample",
                   "ID")
-  
+
 edgi.mhd.raw.id <- edgi.mhd.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -1804,7 +1808,7 @@ if(EDGI == TRUE){
                         "startDate.prepandemic",
                         "Age_uncleaned",
                         "EduYrs")
-  
+
   edgi.mhd2.raw.id <- edgi.mhd2.raw %>%
     drop_na(externalDataReference) %>% # Drop NAs
     distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -1827,7 +1831,7 @@ if(EDGI == TRUE){
     mhd.body_dysmorphic_disorder_bdd = demographics.body_dysmorphic_disorder_bdd,
     mhd.mania_hypomania_bipolar_or_manicdepression = demographics.mania_hypomania_bipolar_or_manicdepression,
     mhd.schizophrenia = demographics.schizophrenia,
-    mhd.type_psychosis_psychotic_illness = demographics.psychosis_type_psychotic_illness, # word type psychosis changed order compared to GLAD 
+    mhd.type_psychosis_psychotic_illness = demographics.psychosis_type_psychotic_illness, # word type psychosis changed order compared to GLAD
     mhd.personality_disorder_diagnosed = demographics.diagnosed_personality_disorder, # named differently in EDGI
     mhd.posttraumatic_stress_disorder_ptsd = demographics.posttraumatic_stress_disorder_ptsd,
     mhd.autism_aspergers_or_autistic_spectrum_disorder = demographics.autism_spectrum_disorder_asd, # different name in EDGI
@@ -1856,7 +1860,7 @@ if(EDGI == TRUE){
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-  
+
   # Inspect dimensions
   dim(edgi.mhd2.raw.id)
   # Inspect colnames
@@ -1896,7 +1900,7 @@ colnames(nbr.mhd.raw)
 if(NBR == TRUE) {
 exclude_cols <- c("Sample",
                   "ID")
-  
+
 nbr.mhd.raw.id <- nbr.mhd.raw %>%
   drop_na(subjectid) %>% # Drop NAs
   distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -1923,7 +1927,7 @@ nbr.mhd.raw.id <- nbr.mhd.raw %>%
   ) %>%
   add_column(
     mhd.schizoaffective_disorder = NA #NBR doesn't ask about schizoaffective disorder. This means the column das not exist in the data set
-  ) %>% 
+  ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
   mutate_if(is.numeric, ~na_if(., -99)) %>%
@@ -1966,7 +1970,7 @@ colnames(ramp.mhd.raw)
 if(RAMP == TRUE) {
 exclude_cols <- c("Sample",
                   "ID")
-  
+
 ramp.mhd.raw.id <- ramp.mhd.raw %>%
   drop_na(`Login ID`) %>% # Drop NAs
   distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -1988,7 +1992,7 @@ ramp.mhd.raw.id <- ramp.mhd.raw %>%
     mhd.panic_disorder = NA.30.panic_disorder,
     mhd.panic_attacks = NA.30.panic_attacks,
     mhd.posttraumatic_stress_disorder_ptsd = NA.30.posttraumatic_stress_disorder_ptsd,
-    mhd.obsessivecompulsive_disorder_ocd = NA.30.obsessivecompulsive_disorder_ocd, 
+    mhd.obsessivecompulsive_disorder_ocd = NA.30.obsessivecompulsive_disorder_ocd,
     mhd.body_dysmorphic_disorder_bdd = NA.30.body_dysmorphic_disorder_bdd,
     mhd.skin_picking_obsessive_compulsive = NA.30.skin_picking_obsessive_compulsive,
     mhd.anorexia_nervosa = NA.30.anorexia_nervosa,
@@ -2040,26 +2044,26 @@ if(RAMP == TRUE) {
 
 ## Grouping mental health disorders
 *#Disorder groupings - from COPING/RAMP analysis minutes*
-1. Depressive disorder group: major depression, antenatal/postnatal depression, premenstrual depression. The logic for this has been double checked for males - KT/MD. 
-2. Anxiety group: generalised anxiety, social anxiety, specific phobia, agoraphobia, panic_disorder, panic_attacks. 
+1. Depressive disorder group: major depression, antenatal/postnatal depression, premenstrual depression. The logic for this has been double checked for males - KT/MD.
+2. Anxiety group: generalised anxiety, social anxiety, specific phobia, agoraphobia, panic_disorder, panic_attacks.
 3. Agoraphobia and panic_disorder group: panic_disorder, agoraphobia, panic_attacks.
 4. Eating disorders group: anorexianervosa, atypical anorexia nervosa, bulimia nervosa, overeating or bingeeating.
-5. Obsessive complusive disorders: obsessive compulaive disorder, obsessive compulsive related disorders. 
-6. Psychotic disorders: schizophrenia, schizoaffective disorder, general psychosis or psychotic illness. 
+5. Obsessive complusive disorders: obsessive compulaive disorder, obsessive compulsive related disorders.
+6. Psychotic disorders: schizophrenia, schizoaffective disorder, general psychosis or psychotic illness.
 7. Personality disorders: cluster A, cluster B, cluster C
-8. Control group: no diagnosed disorders. 
+8. Control group: no diagnosed disorders.
 
 *Disorders of interest*
 MDD and other depressive disorders
 Anxiety, nerves or generalised anxiety disorder
-Social anxiety 
-Specific phobia 
+Social anxiety
+Specific phobia
 Agoraphobia/panic disorder/panic attacks
 OCD (& OCD-related disorders e.g., skin picking?)
-PTSD 
-Bipolar 
-Eating disorders (Anorexia, BE-type EDs) 
-Personality disorder: Clusters A, B, and C 
+PTSD
+Bipolar
+Eating disorders (Anorexia, BE-type EDs)
+Personality disorder: Clusters A, B, and C
 No-diagnosis group
 
 *Analysis plan of Disorders: KY and KP analysis plan*
@@ -2075,7 +2079,7 @@ mhd.raw.id <- mhd.raw.id %>%
     depressive_disorders_numeric =
       case_when(
         (mhd.depression_numeric == "0" &
-        (mhd.pregnancy_depression_numeric == "0" | is.na(mhd.pregnancy_depression_numeric)) & 
+        (mhd.pregnancy_depression_numeric == "0" | is.na(mhd.pregnancy_depression_numeric)) &
         (mhd.premenstrual_dysphoric_disorder_pmdd_numeric == "0" | is.na(mhd.premenstrual_dysphoric_disorder_pmdd_numeric))) ~ 0,
         mhd.depression_numeric == "1" ~ 1,
         mhd.pregnancy_depression_numeric == "1" ~ 1,
@@ -2291,10 +2295,10 @@ mhd.raw.id <- mhd.raw.id %>%
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
                 mhd.prefer_not_to_answer_eating_disorder_unc_numeric == "0" ~ 0,
                 mhd.prefer_not_to_answer_eating_disorder_unc_numeric == "1" ~ 1),
-    mhd.other_eating_disorder_numeric = 
+    mhd.other_eating_disorder_numeric =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ 0,
                 mhd.other_eating_disorder_unc_numeric == "0" ~ 0,
-                mhd.other_eating_disorder_unc_numeric == "1" ~ 1),        
+                mhd.other_eating_disorder_unc_numeric == "1" ~ 1),
     mhd.anorexia_nervosa =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not Anorexia nervosa",
                 mhd.anorexia_nervosa_unc_numeric == "0" ~ "Not Anorexia nervosa",
@@ -2323,7 +2327,7 @@ mhd.raw.id <- mhd.raw.id %>%
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not Prefer not to answer",
                 mhd.prefer_not_to_answer_eating_disorder_unc == "0" ~ "Not Prefer not to answer",
                 mhd.prefer_not_to_answer_eating_disorder_unc == "1" ~ "Prefer not to answer"),
-    mhd.other_eating_disorder = 
+    mhd.other_eating_disorder =
       case_when(mhd.suspected_eating_disorder_diagnosed_numeric == "0" ~ "Not Other eating disorder:",
                 mhd.other_eating_disorder_unc_numeric == "0" ~ "Not Other eating disorder:",
                 mhd.other_eating_disorder_unc_numeric == "1" ~ "Other eating disorder:")
@@ -2616,9 +2620,9 @@ mhd.raw.id %>%
 ```
 
 ### Psychotic disorders
-"mhd.schizophrenia_numeric"                                 
-"mhd.schizoaffective_disorder_numeric"                      
-"mhd.type_psychosis_psychotic_illness_numeric" 
+"mhd.schizophrenia_numeric"
+"mhd.schizoaffective_disorder_numeric"
+"mhd.type_psychosis_psychotic_illness_numeric"
 ```{r mhd psychotic_disorders}
 if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
@@ -2719,7 +2723,7 @@ if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE){
           mhd.autism_aspergers_or_autistic_spectrum_disorder_numeric == 1 ~ 1
         )
     )
-  
+
   mhd.raw.id <- mhd.raw.id %>%
     mutate(
       autism_spectrum_disorder =
@@ -2729,7 +2733,7 @@ if(GLAD == TRUE | EDGI == TRUE | NBR == TRUE | RAMP == TRUE){
           `1` = "Autism spectrum disorder"
         )
     )
-  
+
   mhd.raw.id %>%
     freq(autism_spectrum_disorder)
 }
@@ -2750,7 +2754,7 @@ mhd.raw.id %>%
 
 
 ### Personality disorders
-++KT: For all cluster coding chunks - have added other clusters as == 0, so that they are not coerced into NAs. 
+++KT: For all cluster coding chunks - have added other clusters as == 0, so that they are not coerced into NAs.
 Cluster A
 1. Paranoid                         28 ( 1.0%)
 2. Schizoid                         15 ( 0.5%)
@@ -2910,7 +2914,7 @@ mhd.raw.id %>%
 ```
 
 ### Controls
-These individuals have no self report diagnosis of any kind that we measure. 
+These individuals have no self report diagnosis of any kind that we measure.
 ```{r mhd control GLAD RAMP}
 if(GLAD == TRUE | RAMP == TRUE) {
 mhd.raw.id <- mhd.raw.id %>%
@@ -2932,8 +2936,8 @@ mhd.raw.id <- mhd.raw.id %>%
       mhd.dont_know_numeric == "0" & # added 31. August 2020
       mhd.dont_know.1_numeric == "0" & # added 31. August 2020
       mhd.other_please_tell_us_more_numeric == "0",
-    true = 1, 
-    false = 0, 
+    true = 1,
+    false = 0,
     NA_real_)
   )
 
@@ -2978,7 +2982,7 @@ mhd.raw.id <- mhd.raw.id %>%
       mhd.prefer_not_to_answer_eating_disorder_numeric == "0" &
       mhd.other_eating_disorder_numeric == "0",
     true = 1,
-    false = 0, 
+    false = 0,
     NA_real_)
   )
 
@@ -3106,7 +3110,7 @@ mhd.raw.id %>%
 ```{r cormorbidity_total_count}
 mhd.raw.id <- mhd.raw.id %>%
   mutate(
-    comorbidity_total_count_numeric = 
+    comorbidity_total_count_numeric =
       case_when(
         disorders_total_count == 1 ~ 0,
         disorders_total_count > 1 ~ disorders_total_count - 1
@@ -3404,8 +3408,8 @@ Max should be 21.
 *Note that scores with missingness will be changed to NA later in the script
 ```{r gad sum score prepan raw}
 if(GLAD ==TRUE | EDGI == TRUE){
-# Create vector with scoring key: If the item is reversed coded use -1. 
-# There needs to be the correct number of values for each item in the questionnaire. 
+# Create vector with scoring key: If the item is reversed coded use -1.
+# There needs to be the correct number of values for each item in the questionnaire.
 gad.items_key_prepan <- c(1,1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
@@ -3422,10 +3426,10 @@ gad.items_prepan <- c(
 # Calculate total score
 gad.scored_items_prepan <- scoreItems(keys = gad.items_key_prepan,
                                         items = prepan.gad.raw.id[gad.items_prepan],
-                                        totals = TRUE, 
-                                        missing = TRUE, 
-                                        impute = 'none', 
-                                        min = 0, 
+                                        totals = TRUE,
+                                        missing = TRUE,
+                                        impute = 'none',
+                                        min = 0,
                                         max = 3)
 # Add in column to tibble
 prepan.gad.raw.id$gad.sum_score_prepan_raw <- gad.scored_items_prepan$scores
@@ -3446,7 +3450,7 @@ if(GLAD ==TRUE | EDGI == TRUE){
 prepan.gad.raw.id <- prepan.gad.raw.id %>%
   mutate(
     na_per_person_gad_prepan =         # variable for NA per person
-      rowSums(                       
+      rowSums(
         is.na(.[gad.items_prepan])
       )
   )
@@ -3591,7 +3595,7 @@ if(EDGI == TRUE) {
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-  
+
   # Inspect dimensions
   dim(edgi.pcl.raw.id)
   # Inspect colnames
@@ -3614,8 +3618,8 @@ Calculate sum score for PCL-6
 *Note that scores with missingness will be changed to NA later in the script
 ```{r pcl sum score prepan}
 if(GLAD == TRUE | EDGI == TRUE){
-# Create vector with scoring key: If the item is reversed coded use -1. 
-# There needs to be the correct number of values for each item in the questionnaire. 
+# Create vector with scoring key: If the item is reversed coded use -1.
+# There needs to be the correct number of values for each item in the questionnaire.
 pcl.items_key_prepan <- c(1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
@@ -3631,10 +3635,10 @@ pcl.items_prepan <- c(
 # Calculate total score
 pcl.scored_items_prepan <- scoreItems(keys = pcl.items_key_prepan,
                                         items = prepan.pcl.raw.id[pcl.items_prepan],
-                                        totals = TRUE, 
-                                        missing = TRUE, 
-                                        impute = 'none', 
-                                        min = 1, 
+                                        totals = TRUE,
+                                        missing = TRUE,
+                                        impute = 'none',
+                                        min = 1,
                                         max = 5)
 # Add in column to tibble
 prepan.pcl.raw.id$pcl.sum_score_prepan_raw <- pcl.scored_items_prepan$scores
@@ -3655,7 +3659,7 @@ if(GLAD == TRUE | EDGI == TRUE){
 prepan.pcl.raw.id <- prepan.pcl.raw.id %>%
   mutate(
     na_per_person_pcl_prepan =         # variable for NA per person
-      rowSums(                       
+      rowSums(
         is.na(.[pcl.items_prepan])
       )
   )
@@ -3799,7 +3803,7 @@ if(EDGI == TRUE){
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-  
+
   # Inspect dimensions
   dim(edgi.phq.raw.id)
   # Inspect colnames
@@ -3820,8 +3824,8 @@ Calculate sum score for PHQ-9
 *Note that scores with missingness will be changed to NA later in the script
 ```{r phq sum score prepan}
 if(GLAD == TRUE | EDGI == TRUE) {
-# Create vector with scoring key: If the item is reversed coded use -1. 
-# There needs to be the correct number of values for each item in the questionnaire. 
+# Create vector with scoring key: If the item is reversed coded use -1.
+# There needs to be the correct number of values for each item in the questionnaire.
 phq.items_key_prepan <- c(1,1,1,1,1,1,1,1,1)
 
 # Create vector with items that are included in sum score
@@ -3840,10 +3844,10 @@ phq.items_prepan <- c(
 # Calculate sum score
 phq.scored_items_prepan <- scoreItems(keys = phq.items_key_prepan,
                                         items = prepan.phq.raw.id[phq.items_prepan],
-                                        totals = TRUE, 
-                                        missing = TRUE, 
-                                        impute = 'none', 
-                                        min = 0, 
+                                        totals = TRUE,
+                                        missing = TRUE,
+                                        impute = 'none',
+                                        min = 0,
                                         max = 3)
 # Add in column to tibble
 prepan.phq.raw.id$phq.sum_score_prepan_raw <- phq.scored_items_prepan$scores
@@ -3864,7 +3868,7 @@ if(GLAD == TRUE | EDGI == TRUE) {
 prepan.phq.raw.id <- prepan.phq.raw.id %>%
   mutate(
     na_per_person_phq_prepan =         # variable for NA per person
-      rowSums(                       
+      rowSums(
         is.na(.[phq.items_prepan])
       )
   )
@@ -3880,10 +3884,10 @@ prepan.phq.raw.id %>%
 if(GLAD == TRUE | EDGI == TRUE) {
 prepan.phq.raw.id <- prepan.phq.raw.id %>%
   mutate(
-    phq.missing_only_suicide_item_prepan = 
+    phq.missing_only_suicide_item_prepan =
       if_else(
-        condition = na_per_person_phq_prepan == 1 & 
-          is.na(phq.dead_hurting_thoughts_prepan_numeric), 
+        condition = na_per_person_phq_prepan == 1 &
+          is.na(phq.dead_hurting_thoughts_prepan_numeric),
         true = 1,
         false = 0,
         missing = NA_real_
@@ -4074,7 +4078,7 @@ if(EDGI == TRUE){
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-  
+
   # Inspect dimensions
   dim(edgi.ocir.raw.id)
   # Inspect colnames
@@ -4095,8 +4099,8 @@ Calculate sum score for OCI-R
 *Note that scores with missingness will be changed to NA later in the script
 ```{r ocir sum score prepan}
 if(GLAD == TRUE | EDGI == TRUE) {
-# Create vector with scoring key: If the item is reversed coded use -1. 
-# There needs to be the correct number of values for each item in the questionnaire. 
+# Create vector with scoring key: If the item is reversed coded use -1.
+# There needs to be the correct number of values for each item in the questionnaire.
 ocir.items_key_prepan <- c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
 
 # Create vector with items that are included in sum score
@@ -4124,10 +4128,10 @@ ocir.items_prepan = c(
 # Calculate sum score
 ocir.scored_items_prepan <- scoreItems(keys = ocir.items_key_prepan,
                                         items = prepan.ocir.raw.id[ocir.items_prepan],
-                                        totals = TRUE, 
-                                        missing = TRUE, 
-                                        impute = 'none', 
-                                        min = 0, 
+                                        totals = TRUE,
+                                        missing = TRUE,
+                                        impute = 'none',
+                                        min = 0,
                                         max = 4)
 
 # Add in column to tibble
@@ -4147,7 +4151,7 @@ if(GLAD == TRUE | EDGI == TRUE) {
 prepan.ocir.raw.id <- prepan.ocir.raw.id %>%
   mutate(
     na_per_person_ocir_prepan =         # variable for NA per person
-      rowSums(                       
+      rowSums(
         is.na(.[ocir.items_prepan])
       )
   )
@@ -4229,7 +4233,7 @@ coping.glad.gad.raw.id <- coping.glad.gad.raw %>%
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
   mutate(ID = as.numeric(ID)
-         ) %>% 
+         ) %>%
   select(
     Sample, # Sample
     ID, # ID
@@ -4307,13 +4311,13 @@ if(EDGI == TRUE) {
     "ID",
     "startDate.coping"
   )
-  
+
   coping.edgi.gad.raw.id <- coping.edgi.gad.raw %>%
     drop_na(externalDataReference) %>% # Drop NAs
     distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
     separate(externalDataReference, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
     mutate(ID = as.numeric(ID)
-    ) %>% 
+    ) %>%
     select(
       Sample, # Sample
       ID, # ID
@@ -4347,7 +4351,7 @@ if(EDGI == TRUE) {
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-  
+
   # Inspect dimensions
   dim(coping.edgi.gad.raw.id)
   # Inspect colnames
@@ -4391,13 +4395,13 @@ if(NBR == TRUE) {
     "ID",
     "startDate.coping"
   )
-  
+
   coping.nbr.gad.raw.id <- coping.nbr.gad.raw %>%
   drop_na(subjectid) %>% # Drop NAs
   distinct(subjectid, .keep_all = TRUE) %>% # Remove duplicates based on ID
   separate(subjectid, into = c("Sample", "ID.intm"), sep = 6) %>% # Split ID in Sample and Number
   separate(ID.intm, into = "ID", sep = 7) %>%
-  mutate(ID = as.numeric(ID)) %>% 
+  mutate(ID = as.numeric(ID)) %>%
     select(
       Sample, # Sample
       ID, # ID
@@ -4431,7 +4435,7 @@ if(NBR == TRUE) {
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-  
+
   # Inspect dimensions
   dim(coping.nbr.gad.raw.id)
   # Inspect colnames
@@ -4475,13 +4479,13 @@ if(RAMP == TRUE) {
     "ID",
     "startDate.coping"
   )
-  
+
   ramp.gad.raw.id <- ramp.gad.raw %>%
     drop_na(`Login ID`) %>% # Drop NAs
     distinct(`Login ID`, .keep_all = TRUE) %>% # Remove duplicates based on ID
     separate(`Login ID`, into = c("Sample", "ID"), sep = 4) %>% # Split ID in Sample and Number
     mutate(ID = as.numeric(ID)
-    ) %>% 
+    ) %>%
     select(
       Sample, # Sample
       ID, # ID
@@ -4515,7 +4519,7 @@ if(RAMP == TRUE) {
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Don't know")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to answer")) %>%
     mutate_if(is.factor, ~forcats::fct_drop(., only = "Prefer not to say"))
-  
+
   # Inspect dimensions
   dim(ramp.gad.raw.id)
   # Inspect colnames
@@ -4534,8 +4538,8 @@ if(RAMP == TRUE) {
 ## Sum scores
 Calculate sum score for GAD-7 retrospective
 ```{r coping gad sum score retro}
-# Create vector with scoring key: If the item is reversed coded use -1. 
-# There needs to be the correct number of values for each item in the questionnaire. 
+# Create vector with scoring key: If the item is reversed coded use -1.
+# There needs to be the correct number of values for each item in the questionnaire.
 gad.items_key_retro <- c(1,1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
@@ -4552,10 +4556,10 @@ gad.items_retro <- c(
 # Calculate total score
 gad.scored_items_retro <- scoreItems(keys = gad.items_key_retro,
                                         items = coping.gad.raw.id[gad.items_retro],
-                                        totals = TRUE, 
-                                        missing = TRUE, 
-                                        impute = 'none', 
-                                        min = 0, 
+                                        totals = TRUE,
+                                        missing = TRUE,
+                                        impute = 'none',
+                                        min = 0,
                                         max = 3)
 # Add in column to tibble
 coping.gad.raw.id$gad.sum_score_retro_raw <- gad.scored_items_retro$scores
@@ -4569,8 +4573,8 @@ coping.gad.raw.id %>%
 
 Calculate sum score for GAD-7 baseline
 ```{r coping gad sum score base}
-# Create vector with scoring key: If the item is reversed coded use -1. 
-# There needs to be the correct number of values for each item in the questionnaire. 
+# Create vector with scoring key: If the item is reversed coded use -1.
+# There needs to be the correct number of values for each item in the questionnaire.
 gad.items_key_base <- c(1,1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
@@ -4587,10 +4591,10 @@ gad.items_base <- c(
 # Calculate total score
 gad.scored_items_base <- scoreItems(keys = gad.items_key_base,
                                         items = coping.gad.raw.id[gad.items_base],
-                                        totals = TRUE, 
-                                        missing = TRUE, 
-                                        impute = 'none', 
-                                        min = 0, 
+                                        totals = TRUE,
+                                        missing = TRUE,
+                                        impute = 'none',
+                                        min = 0,
                                         max = 3)
 # Add in column to tibble
 coping.gad.raw.id$gad.sum_score_base_raw <- gad.scored_items_base$scores
@@ -4609,7 +4613,7 @@ baseline
 coping.gad.raw.id <- coping.gad.raw.id %>%
   mutate(
     na_per_person_gad_base =         # variable for NA per person
-      rowSums(                       
+      rowSums(
         is.na(.[gad.items_base])
       )
   )
@@ -4979,7 +4983,7 @@ if(RAMP == TRUE) {
 Recode RAMP PCL retro scores
 ```{r recode ramp pcl retro scores}
 if(RAMP == TRUE) {
-  
+
 pcl_retro_numeric_recode_vars <- c(
     "pcl.stressful_experience_repeated_images_retro_unc_numeric",
     "pcl.stressful_experience_upset_reminded_retro_unc_numeric",
@@ -4988,7 +4992,7 @@ pcl_retro_numeric_recode_vars <- c(
     "pcl.feeling_irritable_or_having_angry_outbursts_retro_unc_numeric",
     "pcl.difficulty_concentrating_retro_unc_numeric"
 )
-  
+
 #recode and rename numeric retro items
 coping.pcl.raw.id <- coping.pcl.raw.id %>%
   mutate_at(vars(all_of(pcl_retro_numeric_recode_vars)),
@@ -4997,9 +5001,9 @@ coping.pcl.raw.id <- coping.pcl.raw.id %>%
            `2` = 0, # 2 = No = 0
            `3` = NA_real_ # NA = 3 = NA
                    )) %>%
-  rename_at(vars(ends_with("_retro_unc_numeric")), 
-            funs(str_replace(., 
-                             "_retro_unc_numeric", 
+  rename_at(vars(ends_with("_retro_unc_numeric")),
+            funs(str_replace(.,
+                             "_retro_unc_numeric",
                              "_retro_numeric")
                  )
             )
@@ -5013,16 +5017,16 @@ pcl_retro_recode_vars <- c(
     "pcl.difficulty_concentrating_retro_numeric"
 )
 
-#create factor versions 
+#create factor versions
 coping.pcl.raw.id <- coping.pcl.raw.id %>%
   mutate_at(vars(
     all_of(pcl_retro_recode_vars)),
-    list("factor" = 
+    list("factor" =
             ~ recode_factor(.,
            "1" = "Yes", # 1 = Yes = 1
            "0" = "No" # 2 = No = 0
                    ))) %>%
-  rename_at(vars(ends_with( "retro_numeric_factor")), 
+  rename_at(vars(ends_with( "retro_numeric_factor")),
             list(~gsub(
               pattern = "_retro_numeric_factor",
               replacement = "_retro",
@@ -5040,8 +5044,8 @@ colnames(coping.pcl.raw.id)
 ## Sum scores
 Calculate sum score for PCL-6 retro
 ```{r coping pcl sum score retro}
-# Create vector with scoring key: If the item is reversed coded use -1. 
-# There needs to be the correct number of values for each item in the questionnaire. 
+# Create vector with scoring key: If the item is reversed coded use -1.
+# There needs to be the correct number of values for each item in the questionnaire.
 pcl.items_key_retro <- c(1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
@@ -5057,10 +5061,10 @@ pcl.items_retro <- c(
 # Calculate total score
 pcl.scored_items_retro <- scoreItems(keys = pcl.items_key_retro,
                                      items = coping.pcl.raw.id[pcl.items_retro],
-                                     totals = TRUE, 
-                                     missing = TRUE, 
-                                     impute = 'none', 
-                                     min = 0, 
+                                     totals = TRUE,
+                                     missing = TRUE,
+                                     impute = 'none',
+                                     min = 0,
                                      max = 1)
 # Add in column to tibble
 coping.pcl.raw.id$pcl.sum_score_retro_raw <- pcl.scored_items_retro$scores
@@ -5074,10 +5078,10 @@ coping.pcl.raw.id %>%
 
 
 Calculate sum score for PCL-6 base
-The sum scores here will not be accurate if we are using complete cases. Only use sum scores here for complete cases, otherwise the minimum will be 0 where it should be 6. 
+The sum scores here will not be accurate if we are using complete cases. Only use sum scores here for complete cases, otherwise the minimum will be 0 where it should be 6.
 ```{r coping pcl sum score base}
-# Create vector with scoring key: If the item is reversed coded use -1. 
-# There needs to be the correct number of values for each item in the questionnaire. 
+# Create vector with scoring key: If the item is reversed coded use -1.
+# There needs to be the correct number of values for each item in the questionnaire.
 pcl.items_key_base <- c(1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
@@ -5093,10 +5097,10 @@ pcl.items_base <- c(
 # Calculate total score
 pcl.scored_items_base <- scoreItems(keys = pcl.items_key_base,
                                     items = coping.pcl.raw.id[pcl.items_base],
-                                    totals = TRUE, 
-                                    missing = TRUE, 
-                                    impute = "none", 
-                                    min = 1, 
+                                    totals = TRUE,
+                                    missing = TRUE,
+                                    impute = "none",
+                                    min = 1,
                                     max = 5)
 # Add in column to tibble
 coping.pcl.raw.id$pcl.sum_score_base_raw <- pcl.scored_items_base$scores
@@ -5119,7 +5123,7 @@ baseline
 coping.pcl.raw.id <- coping.pcl.raw.id %>%
   mutate(
     na_per_person_pcl_base =         # variable for NA per person
-      rowSums(                       
+      rowSums(
         is.na(.[pcl.items_base])
       )
   )
@@ -5217,7 +5221,7 @@ summarytools::dfSummary(
 ```
 
 
-Will need to double check these namings once we have the new cleaned data -- KT. 
+Will need to double check these namings once we have the new cleaned data -- KT.
 ```{r coping glad phq cleaning}
 if(GLAD == TRUE) {
 coping.glad.phq.raw.id <- coping.glad.phq.raw %>%
@@ -5380,7 +5384,7 @@ summarytools::dfSummary(
 ```
 
 
-Will need to double check these namings once we have the new cleaned data -- KT. 
+Will need to double check these namings once we have the new cleaned data -- KT.
 ```{r coping nbr phq cleaning}
 if(NBR == TRUE) {
 coping.nbr.phq.raw.id <- coping.nbr.phq.raw %>%
@@ -5462,7 +5466,7 @@ summarytools::dfSummary(
 ```
 
 
-Will need to double check these namings once we have the new cleaned data -- KT. 
+Will need to double check these namings once we have the new cleaned data -- KT.
 ```{r coping ramp phq cleaning}
 if(RAMP == TRUE) {
 ramp.phq.raw.id <- ramp.phq.raw %>%
@@ -5482,8 +5486,8 @@ ramp.phq.raw.id <- ramp.phq.raw %>%
     phq.feeling_tired_or_having_little_energy_retro = phq.feeling_tired_or_having_little_energy.1,
     phq.poor_appetite_or_overeating_retro = phq.poor_appetite_or_overeating.1,
     phq.feeling_bad_failure_family_retro = phq.failure_family_feeling_bad.1,
-    phq.trouble_concentrating_reading_newspaper_retro = phq.trouble_concentrating_newspaper_reading.1, 
-    phq.moving_fidgety_noticed_opposite_retro = phq.moving_fidgety_opposite_slowly.1, 
+    phq.trouble_concentrating_reading_newspaper_retro = phq.trouble_concentrating_newspaper_reading.1,
+    phq.moving_fidgety_noticed_opposite_retro = phq.moving_fidgety_opposite_slowly.1,
     phq.dead_hurting_thoughts_retro = phq.dead_hurting_thoughts.1,
     phq.little_interest_or_pleasure_in_doing_things_base = phq.little_interest_or_pleasure_in_doing_things,
     phq.feeling_down_depressed_or_hopeless_base = phq.feeling_down_depressed_or_hopeless,
@@ -5527,8 +5531,8 @@ if(RAMP == TRUE) {
 
 Calculate sum score for PHQ-9 retro
 ```{r coping phq sum score retro}
-# Create vector with scoring key: If the item is reversed coded use -1. 
-# There needs to be the correct number of values for each item in the questionnaire. 
+# Create vector with scoring key: If the item is reversed coded use -1.
+# There needs to be the correct number of values for each item in the questionnaire.
 phq.items_key_retro <- c(1,1,1,1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
@@ -5547,10 +5551,10 @@ phq.items_retro <- c(
 # Calculate total score
 phq.scored_items_retro <- scoreItems(keys = phq.items_key_retro,
                                      items = coping.phq.raw.id[phq.items_retro],
-                                     totals = TRUE, 
-                                     missing = TRUE, 
-                                     impute = 'none', 
-                                     min = 0, 
+                                     totals = TRUE,
+                                     missing = TRUE,
+                                     impute = 'none',
+                                     min = 0,
                                      max = 3)
 # Add in column to tibble
 coping.phq.raw.id$phq.sum_score_retro_raw <- phq.scored_items_retro$scores
@@ -5564,8 +5568,8 @@ coping.phq.raw.id %>%
 
 Calculate sum score for PHQ-9 base
 ```{r coping phq sum score base}
-# Create vector with scoring key: If the item is reversed coded use -1. 
-# There needs to be the correct number of values for each item in the questionnaire. 
+# Create vector with scoring key: If the item is reversed coded use -1.
+# There needs to be the correct number of values for each item in the questionnaire.
 phq.items_key_base <- c(1,1,1,1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
@@ -5584,10 +5588,10 @@ phq.items_base <- c(
 # Calculate total score
 phq.scored_items_base <- scoreItems(keys = phq.items_key_base,
                                     items = coping.phq.raw.id[phq.items_base],
-                                    totals = TRUE, 
-                                    missing = TRUE, 
-                                    impute = 'none', 
-                                    min = 0, 
+                                    totals = TRUE,
+                                    missing = TRUE,
+                                    impute = 'none',
+                                    min = 0,
                                     max = 3)
 # Add in column to tibble
 coping.phq.raw.id$phq.sum_score_base_raw <- phq.scored_items_base$scores
@@ -5620,10 +5624,10 @@ coping.phq.raw.id %>%
 ```{r coping phq retro missingness 8 items}
 coping.phq.raw.id <- coping.phq.raw.id %>%
   mutate(
-    phq.missing_only_suicide_item_retro = 
+    phq.missing_only_suicide_item_retro =
       if_else(
-        condition = na_per_person_phq_retro == 1 & 
-          is.na(phq.dead_hurting_thoughts_retro_numeric), 
+        condition = na_per_person_phq_retro == 1 &
+          is.na(phq.dead_hurting_thoughts_retro_numeric),
         true = 1,
         false = 0,
         missing = NA_real_
@@ -5641,7 +5645,7 @@ baseline
 coping.phq.raw.id <- coping.phq.raw.id %>%
   mutate(
     na_per_person_phq_base =         # variable for NA per person
-      rowSums(                       
+      rowSums(
         is.na(.[phq.items_base])
       )
   )
@@ -5651,14 +5655,14 @@ coping.phq.raw.id %>%
 ```
 
 
-We need to identify those who have all items APART from the suicide ideation item - to still include these individuals. 
+We need to identify those who have all items APART from the suicide ideation item - to still include these individuals.
 ```{r coping phq base missingness 8 items}
 coping.phq.raw.id <- coping.phq.raw.id %>%
   mutate(
-    phq.missing_only_suicide_item_base = 
+    phq.missing_only_suicide_item_base =
       if_else(
-        condition = na_per_person_phq_base == 1 & 
-          is.na(phq.dead_hurting_thoughts_base_numeric), 
+        condition = na_per_person_phq_base == 1 &
+          is.na(phq.dead_hurting_thoughts_base_numeric),
         true = 1,
         false = 0,
         missing = NA_real_
@@ -5782,9 +5786,9 @@ summarytools::dfSummary(
 *Note that the COPING GLAD OCI-R ID numbers are stored under recipientFirstName (rather than ExternalDataReference)
 ```{r coping glad ocir cleaning}
 if(GLAD == TRUE) {
-  
-  
-  
+
+
+
 coping.glad.ocir.raw.id <- coping.glad.ocir.raw %>%
   drop_na(recipientFirstName) %>% # Drop NAs
   distinct(recipientFirstName, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -6005,15 +6009,15 @@ coping.nbr.ocir.raw.id <- coping.nbr.ocir.raw %>%
     ocir.light_switches_water_taps_retro = ocir.water_taps_light_switches, ## Different from GLAD
     ocir.arranged_things_retro = ocir.arranged_things,
     ocir.good_feel_bad_numbers_retro = ocir.bad_numbers_good_feel,
-    ocir.hands_longer_wash_retro = ocir.longer_hands_wash, 
+    ocir.hands_longer_wash_retro = ocir.longer_hands_wash,
     ocir.saved_things_retro = ocir.saved_things,
-    ocir.frequently_difficulty_rid_nasty_retro = ocir.frequently_rid_difficulty_nasty, 
+    ocir.frequently_difficulty_rid_nasty_retro = ocir.frequently_rid_difficulty_nasty,
     ocir.i_check_things_more_often_than_necessary_retro = ocir.i_check_things_more_often_than_necessary.,
     ocir.arranged_properly_objects_upset_retro = ocir.arranged_properly_objects_upset,
     ocir.feel_compelled_count_things_retro = ocir.feel_compelled_count_things,
-    ocir.strangers_touch_touched_difficult_retro = ocir.strangers_touch_touched_object, 
-    ocir.control_difficult_find_thoughts_retro = ocir.control_difficult_thoughts_find, ## Different from GLAD 
-    ocir.i_collect_things_i_dont_need_retro = ocir.i_collect_things_i_dont_need., 
+    ocir.strangers_touch_touched_difficult_retro = ocir.strangers_touch_touched_object,
+    ocir.control_difficult_find_thoughts_retro = ocir.control_difficult_thoughts_find, ## Different from GLAD
+    ocir.i_collect_things_i_dont_need_retro = ocir.i_collect_things_i_dont_need.,
     ocir.i_repeatedly_check_doors_windows_drawers_etc_base = ocir.i_repeatedly_check_doors_windows_drawers_etc..1,
     ocir.arranged_things_change_upset_base = ocir.arranged_things_change_upset.1,
     ocir.repeat_feel_numbers_base = ocir.repeat_numbers_feel.1, ## Different from GLAD
@@ -6022,14 +6026,14 @@ coping.nbr.ocir.raw.id <- coping.nbr.ocir.raw %>%
     ocir.afraid_avoid_throwing_things_base = ocir.afraid_avoid_throwing_things.1,
     ocir.light_switches_water_taps_base = ocir.water_taps_light_switches.1, ## Different from GLAD
     ocir.arranged_things_base = ocir.arranged_things.1,
-    ocir.good_feel_bad_numbers_base = ocir.bad_numbers_good_feel.1, 
-    ocir.hands_longer_wash_base = ocir.longer_hands_wash.1, 
+    ocir.good_feel_bad_numbers_base = ocir.bad_numbers_good_feel.1,
+    ocir.hands_longer_wash_base = ocir.longer_hands_wash.1,
     ocir.saved_things_base = ocir.saved_things.1,
-    ocir.frequently_difficulty_rid_nasty_base = ocir.frequently_rid_difficulty_nasty.1, 
+    ocir.frequently_difficulty_rid_nasty_base = ocir.frequently_rid_difficulty_nasty.1,
     ocir.i_check_things_more_often_than_necessary_base = ocir.i_check_things_more_often_than_necessary..1,
     ocir.arranged_properly_objects_upset_base = ocir.arranged_properly_objects_upset.1,
     ocir.feel_compelled_count_things_base = ocir.feel_compelled_count_things.1,
-    ocir.strangers_touch_touched_difficult_base = ocir.strangers_touch_touched_object.1, 
+    ocir.strangers_touch_touched_difficult_base = ocir.strangers_touch_touched_object.1,
     ocir.control_difficult_find_thoughts_base = ocir.control_difficult_thoughts_find.1,
     ocir.i_collect_things_i_dont_need_base = ocir.i_collect_things_i_dont_need..1
   ) %>%
@@ -6102,32 +6106,32 @@ ramp.ocir.raw.id <- ramp.ocir.raw %>%
     ocir.i_collect_things_i_dont_need_retro = ocir.i_collect_things_i_dont_need..1,
     ocir.i_repeatedly_check_doors_windows_drawers_etc_retro = ocir.i_repeatedly_check_doors_windows_drawers_etc..1,
     ocir.arranged_things_change_upset_retro = ocir.arranged_things_change_upset.1,
-    ocir.repeat_feel_numbers_retro = ocir.numbers_repeat_feel.1, 
-    ocir.clean_simply_wash_feel_retro = ocir.feel_contaminated_clean_simply.1, 
+    ocir.repeat_feel_numbers_retro = ocir.numbers_repeat_feel.1,
+    ocir.clean_simply_wash_feel_retro = ocir.feel_contaminated_clean_simply.1,
     ocir.mind_upset_unpleasant_thoughts_retro = ocir.unpleasant_thoughts_mind_upset.1,
     ocir.afraid_avoid_throwing_things_retro = ocir.afraid_avoid_throwing_things.1,
     ocir.light_switches_water_taps_retro = ocir.repeatedly_check_gas_water.1,
     ocir.arranged_things_retro = ocir.arranged_things.1,
-    ocir.good_feel_bad_numbers_retro = ocir.bad_numbers_good_feel.1, 
-    ocir.hands_longer_wash_retro = ocir.longer_hands_wash.1, 
-    ocir.frequently_difficulty_rid_nasty_retro = ocir.difficulty_rid_frequently_nasty.1, 
+    ocir.good_feel_bad_numbers_retro = ocir.bad_numbers_good_feel.1,
+    ocir.hands_longer_wash_retro = ocir.longer_hands_wash.1,
+    ocir.frequently_difficulty_rid_nasty_retro = ocir.difficulty_rid_frequently_nasty.1,
     ocir.saved_things_base = ocir.saved_things,
     ocir.i_check_things_more_often_than_necessary_base = ocir.i_check_things_more_often_than_necessary.,
     ocir.arranged_properly_objects_upset_base = ocir.arranged_properly_objects_upset,
     ocir.feel_compelled_count_things_base = ocir.feel_compelled_count_things,
-    ocir.strangers_touch_touched_difficult_base = ocir.touch_touched_strangers_object, 
-    ocir.control_difficult_find_thoughts_base = ocir.find_control_difficult_thoughts, 
+    ocir.strangers_touch_touched_difficult_base = ocir.touch_touched_strangers_object,
+    ocir.control_difficult_find_thoughts_base = ocir.find_control_difficult_thoughts,
     ocir.i_collect_things_i_dont_need_base = ocir.i_collect_things_i_dont_need.,
     ocir.i_repeatedly_check_doors_windows_drawers_etc_base = ocir.i_repeatedly_check_doors_windows_drawers_etc.,
     ocir.arranged_things_change_upset_base = ocir.arranged_things_change_upset,
-    ocir.repeat_feel_numbers_base = ocir.numbers_repeat_feel, 
-    ocir.clean_simply_wash_feel_base = ocir.feel_contaminated_clean_simply, 
+    ocir.repeat_feel_numbers_base = ocir.numbers_repeat_feel,
+    ocir.clean_simply_wash_feel_base = ocir.feel_contaminated_clean_simply,
     ocir.mind_upset_unpleasant_thoughts_base = ocir.unpleasant_thoughts_mind_upset,
     ocir.afraid_avoid_throwing_things_base = ocir.afraid_avoid_throwing_things,
     ocir.light_switches_water_taps_base = ocir.repeatedly_check_gas_water,
     ocir.arranged_things_base = ocir.arranged_things,
-    ocir.good_feel_bad_numbers_base = ocir.bad_numbers_good_feel, 
-    ocir.hands_longer_wash_base = ocir.longer_hands_wash, 
+    ocir.good_feel_bad_numbers_base = ocir.bad_numbers_good_feel,
+    ocir.hands_longer_wash_base = ocir.longer_hands_wash,
     ocir.frequently_difficulty_rid_nasty_base = ocir.difficulty_rid_frequently_nasty
   ) %>%
   add_numeric(., exclude = exclude_cols) %>%
@@ -6163,8 +6167,8 @@ if(RAMP == TRUE) {
 
 Calculate sum score for OCI-R retro
 ```{r coping ocir sum score retro}
-# Create vector with scoring key: If the item is reversed coded use -1. 
-# There needs to be the correct number of values for each item in the questionnaire. 
+# Create vector with scoring key: If the item is reversed coded use -1.
+# There needs to be the correct number of values for each item in the questionnaire.
 ocir.items_key_retro <- c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
@@ -6192,10 +6196,10 @@ ocir.items_retro = c(
 # Calculate total score
 ocir.scored_items_retro <- scoreItems(keys = ocir.items_key_retro,
                                      items = coping.ocir.raw.id[ocir.items_retro],
-                                     totals = TRUE, 
-                                     missing = TRUE, 
-                                     impute = 'none', 
-                                     min = 0, 
+                                     totals = TRUE,
+                                     missing = TRUE,
+                                     impute = 'none',
+                                     min = 0,
                                      max = 4)
 # Add in column to tibble
 coping.ocir.raw.id$ocir.sum_score_retro_raw <- ocir.scored_items_retro$scores
@@ -6209,8 +6213,8 @@ coping.ocir.raw.id %>%
 
 Calculate sum score for OCI-R base
 ```{r coping ocir sum score base}
-# Create vector with scoring key: If the item is reversed coded use -1. 
-# There needs to be the correct number of values for each item in the questionnaire. 
+# Create vector with scoring key: If the item is reversed coded use -1.
+# There needs to be the correct number of values for each item in the questionnaire.
 ocir.items_key_base <- c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
 
 # Create vector with items that are included in total score
@@ -6238,10 +6242,10 @@ ocir.items_base = c(
 # Calculate total score
 ocir.scored_items_base <- scoreItems(keys = ocir.items_key_base,
                                     items = coping.ocir.raw.id[ocir.items_base],
-                                    totals = TRUE, 
-                                    missing = TRUE, 
-                                    impute = 'none', 
-                                    min = 0, 
+                                    totals = TRUE,
+                                    missing = TRUE,
+                                    impute = 'none',
+                                    min = 0,
                                     max = 4)
 # Add in column to tibble
 coping.ocir.raw.id$ocir.sum_score_base_raw <- ocir.scored_items_base$scores
@@ -6276,7 +6280,7 @@ baseline
 coping.ocir.raw.id <- coping.ocir.raw.id %>%
   mutate(
     na_per_person_ocir_base =         # variable for NA per person
-      rowSums(                       
+      rowSums(
         is.na(.[ocir.items_base])
       )
   )
@@ -6352,7 +6356,7 @@ colnames(glad.als.raw)
 Select variables
 ```{r glad als cleaning}
 if(GLAD == TRUE){
-  
+
 glad.als.raw.id <- glad.als.raw %>%
   drop_na(externalDataReference) %>% # Drop NAs
   distinct(externalDataReference, .keep_all = TRUE) %>% # Remove duplicates based on ID
@@ -6617,7 +6621,7 @@ glad.ess.raw.id <- glad.ess.raw %>%
          ess.sleep_terrors,
          ess.sleepwalking,
          ess.other,
-         ess.none   
+         ess.none
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -6686,7 +6690,7 @@ edgi.ess.raw.id <- edgi.ess.raw %>%
          ess.sleep_terrors,
          ess.sleepwalking,
          ess.other,
-         ess.none  
+         ess.none
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -6756,7 +6760,7 @@ nbr.ess.raw.id <- nbr.ess.raw %>%
          ess.sleep_terrors,
          ess.sleepwalking,
          ess.other,
-         ess.none  
+         ess.none
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -6825,7 +6829,7 @@ ramp.ess.raw.id <- ramp.ess.raw %>%
 #         ess.sleep_terrors,
 #         ess.sleepwalking,
 #         ess.other,
-#         ess.none  
+#         ess.none
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
     add_column(
@@ -6961,7 +6965,7 @@ edgi.midas.raw.id <- edgi.midas.raw %>%
          midas.days_past_month_work_school_half_productivity = midas.past_month_days.1,
          midas.days_past_month_miss_housework = midas.past_month_days.2,
          midas.days_past_month_housework_half_productivity = midas.past_month_days.3,
-         midas.days_past_month_miss_social_activities = midas.past_month_days.4  
+         midas.days_past_month_miss_social_activities = midas.past_month_days.4
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -7032,7 +7036,7 @@ nbr.midas.raw.id <- nbr.midas.raw %>%
          midas.days_past_month_work_school_half_productivity = midas.past_month_days.1,
          midas.days_past_month_miss_housework = midas.past_month_days.2,
          midas.days_past_month_housework_half_productivity = midas.past_month_days.3,
-         midas.days_past_month_miss_social_activities = midas.past_month_days.4 
+         midas.days_past_month_miss_social_activities = midas.past_month_days.4
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -7262,7 +7266,7 @@ nbr.nmss.raw.id <- nbr.nmss.raw %>%
          Sample, # Sample
          ID, # ID
          nmss.ability_taste_food_smell,
-         nmss.severe_taste_smell_loss 
+         nmss.severe_taste_smell_loss
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -7315,7 +7319,7 @@ ramp.nmss.raw.id <- ramp.nmss.raw %>%
          Sample, # Sample
          ID, # ID
          nmss.ability_taste_food_smell,
-         nmss.severe_taste_smell_loss = nmss.severe_taste_loss_smell 
+         nmss.severe_taste_smell_loss = nmss.severe_taste_loss_smell
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -7374,7 +7378,7 @@ glad.nmsw.raw.id <- glad.nmsw.raw %>%
          nmsw.sex_difficult_finding,
          nmsw.weak_standing_feeling_light,
          nmsw.acting_moving_sleep_talking,
-         nmsw.double_vision     
+         nmsw.double_vision
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -7489,7 +7493,7 @@ nbr.nmsw.raw.id <- nbr.nmsw.raw %>%
          nmsw.sex_difficult_finding,
          nmsw.weak_standing_feeling_light,
          nmsw.acting_moving_sleep_talking,
-         nmsw.double_vision 
+         nmsw.double_vision
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -7546,7 +7550,7 @@ ramp.nmsw.raw.id <- ramp.nmsw.raw %>%
          nmsw.sex_difficult_finding = nmsw.sex_finding_difficult, # different glad
          nmsw.weak_standing_feeling_light = nmsw.weak_standing_dizzy_feeling, # different glad
          nmsw.acting_moving_sleep_talking,
-         nmsw.double_vision 
+         nmsw.double_vision
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -7602,7 +7606,7 @@ glad.tinnitus.raw.id <- glad.tinnitus.raw %>%
          ID, # ID
          tinnitus.ears_noises_minutes_head,
          tinnitus.ears_noises_minutes_head_frequency = tinnitus.ears_noises_minutes_head.1,
-         tinnitus.noises_worry_worst_upset    
+         tinnitus.noises_worry_worst_upset
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -7656,7 +7660,7 @@ edgi.tinnitus.raw.id <- edgi.tinnitus.raw %>%
          ID, # ID
          tinnitus.ears_noises_minutes_head,
          tinnitus.ears_noises_minutes_head_frequency = tinnitus.ears_noises_minutes_head.1,
-         tinnitus.noises_worry_worst_upset 
+         tinnitus.noises_worry_worst_upset
          ) %>%
   add_numeric(., exclude = exclude_cols) %>%
   mutate_if(is.numeric, ~na_if(., -88)) %>% # Recode missing values to NAs in numeric variables
@@ -7815,8 +7819,8 @@ tinnitus.raw.id <- ramp.tinnitus.raw.id
 if(EDGI == TRUE){
   dim(employment.raw.id)
   dim(coping.ocir.raw.id)
-  
-  
+
+
 edgi.employment.coping.ocir <- left_join(
     x = employment.raw.id,
     y = coping.ocir.raw.id,
@@ -7824,7 +7828,7 @@ edgi.employment.coping.ocir <- left_join(
       "COPING_ID",
       "Sample")
 )
-    
+
     dim(edgi.employment.coping.ocir)
 }
 ```
@@ -7913,7 +7917,7 @@ skimr::skim(dat.raw)
 
 Check duplicates again to be saved
 +++KLP: RAMP: More than one column: Age, Sex, Login ID; if they match on all 3 then we treat them as a duplicate; otherwise we are going to rename the Login ID
-+++KT: No duplicates identified by ID in GLAD. 
++++KT: No duplicates identified by ID in GLAD.
 +++MD: Duplicates have been removed in cleaning script for NBR. No duplicates at this stage.
 ```{r Check duplicates}
 dat.raw$ID.dup <- duplicated(dat.raw$ID)
@@ -7998,7 +8002,7 @@ dat.no.sex.no.gender.no.age.no.ibd <- dat.no.sex.no.gender.no.age
 
 
 ##Create tidy data on which the exclusion criteria have been applied
-Complete sex, gender, age and missingness information applied. 
+Complete sex, gender, age and missingness information applied.
 ```{r Tidy data}
 dat <- dat.no.sex.no.gender.no.age.no.ibd
 
@@ -8035,9 +8039,9 @@ dat %>%
 
 
 
-# Definition of prepandemic and baseline 
-Exlcude people who have joined GLAD/EDGI after the pandemic began, sensitivity analyses done on the cut off's we have chosen. 
-Potentially GLAD/EDGI particiapnts between January to April. EDGI launched on February 24th. 
+# Definition of prepandemic and baseline
+Exlcude people who have joined GLAD/EDGI after the pandemic began, sensitivity analyses done on the cut off's we have chosen.
+Potentially GLAD/EDGI particiapnts between January to April. EDGI launched on February 24th.
 
 Prepandemic GLAD/EDGI = Prepandemic (GLAD/EDGI sign-up questionnaire)
 
@@ -8164,7 +8168,7 @@ dat %>%
     stats = "common"
     )
 
-# using date as 1st of March  
+# using date as 1st of March
 dat <- dat %>%
   mutate(
     time_diff_coping_awareness_march_1 =
@@ -8182,7 +8186,7 @@ dat %>%
     stats = "common"
     )
 
-# using date as 31st January 
+# using date as 31st January
 
 dat <- dat %>%
   mutate(
@@ -8224,7 +8228,7 @@ dat %>%
     stats = "common"
     )
 
-# using date as 1st of March  
+# using date as 1st of March
 dat <- dat %>%
   mutate(
     time_diff_signup_awareness_march_1 =
@@ -8242,7 +8246,7 @@ dat %>%
     stats = "common"
     )
 
-# using date as 31st January 
+# using date as 31st January
 
 dat <- dat %>%
   mutate(
@@ -8392,7 +8396,7 @@ dat <- dat %>%
   mutate(
     phq.diff_score_retro_prepan =
       as.numeric(
-        phq.sum_score_retro - phq.sum_score_prepan  # retrospective sum score MINUS prepandemic sum score 
+        phq.sum_score_retro - phq.sum_score_prepan  # retrospective sum score MINUS prepandemic sum score
       )
   )
 
@@ -8403,19 +8407,19 @@ dat <- dat %>%
   mutate(
     phq.diff_score_base_prepan =
       as.numeric(
-        phq.sum_score_base - phq.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
+        phq.sum_score_base - phq.sum_score_prepan  # baseline sum score MINUS prepandemic sum score
       )
   )
 
 summary(dat$phq.diff_score_base_prepan)
-} 
+}
 
 # Difference score for retrospective and baseline phq sum scores
 dat <- dat %>%
   mutate(
     phq.diff_score_base_retro =
       as.numeric(
-        phq.sum_score_base - phq.sum_score_retro  # baseline sum score MINUS retrospective sum score 
+        phq.sum_score_base - phq.sum_score_retro  # baseline sum score MINUS retrospective sum score
       )
   )
 
@@ -8431,7 +8435,7 @@ dat <- dat %>%
   mutate(
     gad.diff_score_retro_prepan =
       as.numeric(
-        gad.sum_score_retro - gad.sum_score_prepan  # retrospective sum score MINUS prepandemic sum score 
+        gad.sum_score_retro - gad.sum_score_prepan  # retrospective sum score MINUS prepandemic sum score
       )
   )
 
@@ -8442,7 +8446,7 @@ dat <- dat %>%
   mutate(
     gad.diff_score_base_prepan =
       as.numeric(
-        gad.sum_score_base - gad.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
+        gad.sum_score_base - gad.sum_score_prepan  # baseline sum score MINUS prepandemic sum score
       )
   )
 
@@ -8454,7 +8458,7 @@ dat <- dat %>%
   mutate(
     gad.diff_score_base_retro =
       as.numeric(
-        gad.sum_score_base - gad.sum_score_retro  # baseline sum score MINUS retrospective sum score 
+        gad.sum_score_base - gad.sum_score_retro  # baseline sum score MINUS retrospective sum score
       )
   )
 
@@ -8463,7 +8467,7 @@ summary(dat$gad.diff_score_base_retro)
 ```
 
 PCL difference scores
-NOTE: Only computed baseline and prepandemic differences as the retro account here isn't actually retrospective, but whether the reported baseline scores are due to the pandemic. 
+NOTE: Only computed baseline and prepandemic differences as the retro account here isn't actually retrospective, but whether the reported baseline scores are due to the pandemic.
 ```{r pcl difference scores}
 if(GLAD == TRUE | EDGI == TRUE){
 # Difference score for prepandemic and baseline pcl sum scores
@@ -8471,7 +8475,7 @@ dat <- dat %>%
   mutate(
     pcl.diff_score_base_prepan =
       as.numeric(
-        pcl.sum_score_base - pcl.sum_score_prepan  # baseline sum score MINUS prepandemic sum score 
+        pcl.sum_score_base - pcl.sum_score_prepan  # baseline sum score MINUS prepandemic sum score
       )
   )
 
@@ -8498,7 +8502,7 @@ dat <- dat %>%
   mutate(
     ocir.diff_score_retro_prepan =
       as.numeric(
-        ocir.sum_score_retro - ocir.sum_score_prepan  # retrospective sum score MINUS prepandemic sum score 
+        ocir.sum_score_retro - ocir.sum_score_prepan  # retrospective sum score MINUS prepandemic sum score
       )
   )
 
@@ -8509,7 +8513,7 @@ dat <- dat %>%
   mutate(
     ocir.diff_score_base_prepan =
       as.numeric(
-        ocir.sum_score_base - ocir.sum_score_prepan   # prepandemic sum score MINUS baseline sum score 
+        ocir.sum_score_base - ocir.sum_score_prepan   # prepandemic sum score MINUS baseline sum score
       )
   )
 
@@ -8520,7 +8524,7 @@ dat <- dat %>%
   mutate(
     ocir.diff_score_base_retro =
       as.numeric(
-        ocir.sum_score_base - ocir.sum_score_retro  # baseline sum score MINUS retrospective sum score 
+        ocir.sum_score_base - ocir.sum_score_retro  # baseline sum score MINUS retrospective sum score
       )
   )
 
@@ -8547,7 +8551,7 @@ dat <- dat %>%
 
 dat <- dat %>%
   mutate(
-    data_group_phq = 
+    data_group_phq =
       recode_factor(
         data_group_phq_numeric,
         "0" = "Only prepandemic data",
@@ -8581,7 +8585,7 @@ dat <- dat %>%
 
 dat <- dat %>%
   mutate(
-    data_group_phq = 
+    data_group_phq =
       recode_factor(
         data_group_phq_numeric,
         "0" = "Only prepandemic data",
@@ -8616,7 +8620,7 @@ dat <- dat %>%
 
 dat <- dat %>%
   mutate(
-    data_group_gad = 
+    data_group_gad =
       recode_factor(
         data_group_gad_numeric,
         "0" = "Only prepandemic data",
@@ -8649,7 +8653,7 @@ dat <- dat %>%
 
 dat <- dat %>%
   mutate(
-    data_group_gad = 
+    data_group_gad =
       recode_factor(
         data_group_gad_numeric,
         "0" = "Only prepandemic data",
@@ -8684,7 +8688,7 @@ dat <- dat %>%
 
 dat <- dat %>%
   mutate(
-    data_group_pcl = 
+    data_group_pcl =
       recode_factor(
         data_group_pcl_numeric,
         "0" = "Only prepandemic data",
@@ -8717,7 +8721,7 @@ dat <- dat %>%
 
 dat <- dat %>%
   mutate(
-    data_group_pcl = 
+    data_group_pcl =
       recode_factor(
         data_group_pcl_numeric,
         "0" = "Only prepandemic data",
@@ -8754,7 +8758,7 @@ dat <- dat %>%
 
 dat <- dat %>%
   mutate(
-    data_group_ocir = 
+    data_group_ocir =
       recode_factor(
         data_group_ocir_numeric,
         "0" = "Only prepandemic data",
@@ -8787,7 +8791,7 @@ dat <- dat %>%
 
 dat <- dat %>%
   mutate(
-    data_group_ocir = 
+    data_group_ocir =
       recode_factor(
         data_group_ocir_numeric,
         "0" = "Only prepandemic data",
@@ -9053,7 +9057,7 @@ respiratory.raw.id <- ramp.respiratory.raw.id
 respiratory.raw.id %>%
   ggplot(
     mapping = aes(
-      y = respiratory.persistent_cough_numeric 
+      y = respiratory.persistent_cough_numeric
     )
   ) +
   geom_bar() +
@@ -9065,7 +9069,7 @@ respiratory.raw.id %>%
 respiratory.raw.id %>%
   ggplot(
     mapping = aes(
-        y = respiratory.feeling_tiredfatigued_numeric 
+        y = respiratory.feeling_tiredfatigued_numeric
     )
   ) +
   geom_bar() +
@@ -9087,7 +9091,7 @@ respiratory.raw.id %>%
 
 ```
 
-#Choosing cut-offs for the likert scale symptoms of "no symptoms", "mild symptoms", "moderate symptoms" and "severe symptoms" for the fatigue, persistent cough and skipped meals variables. 
+#Choosing cut-offs for the likert scale symptoms of "no symptoms", "mild symptoms", "moderate symptoms" and "severe symptoms" for the fatigue, persistent cough and skipped meals variables.
 Coding:
 0 = No symptoms
 1 = Mild symptoms
@@ -9102,24 +9106,24 @@ Skipped meals: "Moderate symptoms" as cut off
 #persistent cough
 percentage_pcough <- ((0.5673*6452) + (0.4556*9186) + (0.3017*2434931))/(6452+9186+2434931)
 percentage_pcough    # 0.3029762% of Menni et al(2020) have fatigue
-pcough_cutoff <- quantile(x = respiratory.raw.id$respiratory.persistent_cough_numeric, 
-         na.rm = TRUE, 
+pcough_cutoff <- quantile(x = respiratory.raw.id$respiratory.persistent_cough_numeric,
+         na.rm = TRUE,
          probs = 1-percentage_pcough) # this gives 0.3029762% of the sample reporting fatigue when using the "mild symptoms" persistent cough response
 pcough_cutoff
 
 #fatigue
-percentage_fatigue <- ((0.298*6452) + (0.1556*9186) + (0.0871*2434931))/(6452+9186+2434931) 
+percentage_fatigue <- ((0.298*6452) + (0.1556*9186) + (0.0871*2434931))/(6452+9186+2434931)
 percentage_fatigue   # 0.08791204% of Menni et al(2020) have fatigue
-fatigue_cutoff <- quantile(x = respiratory.raw.id$respiratory.feeling_tiredfatigued_numeric, 
-         na.rm = TRUE, 
+fatigue_cutoff <- quantile(x = respiratory.raw.id$respiratory.feeling_tiredfatigued_numeric,
+         na.rm = TRUE,
          probs = 1-percentage_fatigue) #this gives 8% of the sample reporting fatigue when using the "severe symptoms" fatigue response
 fatigue_cutoff
 
-#skipped meals 
-percentage_skipped_meals <- ((0.4203*6452) + (0.2493*9186) + (0.1912*2434931))/(6452+9186+2434931) 
+#skipped meals
+percentage_skipped_meals <- ((0.4203*6452) + (0.2493*9186) + (0.1912*2434931))/(6452+9186+2434931)
 percentage_skipped_meals    # 0.192021% of Menni et al(2020) have fatigue
-skipped_meals_cutoff <- quantile(x = respiratory.raw.id$respiratory.skipping_meals_because_you_felt_unwell_numeric, 
-         na.rm = TRUE, 
+skipped_meals_cutoff <- quantile(x = respiratory.raw.id$respiratory.skipping_meals_because_you_felt_unwell_numeric,
+         na.rm = TRUE,
          probs = 1-percentage_skipped_meals) # this gives 0.192021% of the sample reporting fatigue when using the "moderate symptoms" persistent cough response
 skipped_meals_cutoff
 ```
@@ -9131,7 +9135,7 @@ respiratory.raw.id <- respiratory.raw.id %>%
   mutate(
     respiratory.anosmia_binary =
       if_else(
-        respiratory.was_your_sense_of_smell_impaired_numeric == 1 | respiratory.was_your_sense_of_taste_impaired_numeric == 1, 
+        respiratory.was_your_sense_of_smell_impaired_numeric == 1 | respiratory.was_your_sense_of_taste_impaired_numeric == 1,
         1,
         0
       )
@@ -9196,8 +9200,8 @@ dat.coping <- left_join(
 Algorithm from Menni et al. to identify probable COVID-19
 Variables required:
 - Sex: 	0 Female, 1 Male
-- Other binary variables: 0 No, 1 Yes       
-- "respiratory.anosmia_binary": loss of smell or taste  
+- Other binary variables: 0 No, 1 Yes
+- "respiratory.anosmia_binary": loss of smell or taste
 - "respiratory.pcough_binary":	Persistent cough
 - "respiratory.fatigue_binary": Severe fatigue
 - "respiratory.skipped_meals_binary": Skipped meals
@@ -9218,7 +9222,7 @@ dat.coping <- dat.coping %>%
 }
 ```
 
-Sex is no available in the RAMP dataset, therefore a proxy sex variable is created whereby Gender = Male and Transgender = No. 
+Sex is no available in the RAMP dataset, therefore a proxy sex variable is created whereby Gender = Male and Transgender = No.
 ```{r create numeric sex variable with male eq 1 for ramp}
 if(RAMP == TRUE){
 dat.coping <- dat.coping %>%
@@ -9235,7 +9239,7 @@ dat.coping <- dat.coping %>%
 }
 ```
 
-Age is not available in RAMP, only categorical age. We will assign each individual the middle value of each age category. 
+Age is not available in RAMP, only categorical age. We will assign each individual the middle value of each age category.
 ```{r create age - proxy variable for ramp}
 if(RAMP == TRUE){
 dat.coping <- dat.coping %>%
@@ -9290,33 +9294,33 @@ dat.coping %>%
 # linear model of COVID symptoms
 dat.coping <- dat.coping %>%
 		  mutate(
-		    covid_probability = 
-		      (-1.32) - 
-		      (0.01*Age_respiratory) + 
-		      (0.44*Sex_respiratory) + 
-		      (1.75*respiratory.anosmia_binary) + 
-		      (0.31*respiratory.pcough_binary) +  
-		      (0.49*respiratory.fatigue_binary) +  
-		      (0.39*respiratory.skipped_meals_binary) 
+		    covid_probability =
+		      (-1.32) -
+		      (0.01*Age_respiratory) +
+		      (0.44*Sex_respiratory) +
+		      (1.75*respiratory.anosmia_binary) +
+		      (0.31*respiratory.pcough_binary) +
+		      (0.49*respiratory.fatigue_binary) +
+		      (0.39*respiratory.skipped_meals_binary)
 		         )
 
-# Calculate the odds ratios 
+# Calculate the odds ratios
 dat.coping <- dat.coping %>%
   mutate(
-    covid_odds_ratio = 
+    covid_odds_ratio =
       (exp(covid_probability) / (1 + exp(covid_probability)))
   )
 
-# generate binary cut off variable for risk of COVID 
+# generate binary cut off variable for risk of COVID
 dat.coping <- dat.coping %>%
 		  mutate(
-		    covid_odds_ratio_50_numeric = 
+		    covid_odds_ratio_50_numeric =
 		      case_when(
-		        covid_odds_ratio >= 0 & covid_odds_ratio < 0.5 ~ "0", #cut off at 0.5 
+		        covid_odds_ratio >= 0 & covid_odds_ratio < 0.5 ~ "0", #cut off at 0.5
 		        covid_odds_ratio >= 0.5 & covid_odds_ratio <= 1 ~ "1"
 		      )
 		  )
-		      
+
 #create factor with labels
 dat.coping <- dat.coping %>%
   mutate(
@@ -9328,7 +9332,7 @@ dat.coping <- dat.coping %>%
       )
   )
 
-#frequency table for covid variables 
+#frequency table for covid variables
 covid_variables <- c("covid_odds_ratio",
                       "covid_probability"
                     )
@@ -9338,8 +9342,8 @@ descr(x = dat.coping[,covid_variables],
       transpose = TRUE)
 
 ## looking at cases over 0.5
-freq(dat.coping$covid_odds_ratio_50, 
-     cumul = FALSE) 
+freq(dat.coping$covid_odds_ratio_50,
+     cumul = FALSE)
 
 ```
 
@@ -9367,8 +9371,8 @@ dat.coping <- dat.coping %>%
   )
 
 dat.coping %>%
-  freq(covid_probable_case_incl_screening, 
-     cumul = FALSE) 
+  freq(covid_probable_case_incl_screening,
+     cumul = FALSE)
 ```
 
 ```{r dat.coping summary}
@@ -9380,14 +9384,14 @@ summarytools::dfSummary(
 ```
 
 
-# Rename NBR Sample ID 
+# Rename NBR Sample ID
 ```{r rename NBR sample ID}
 if(NBR == TRUE){
 dat.coping <- dat.coping %>%
   mutate(
-    Sample = 
+    Sample =
     recode(
-      Sample, 
+      Sample,
       "SP0068" = "NBR"
     )
   )
@@ -9414,9 +9418,3 @@ saveRDS(object = dat.coping, file = paste0(data_path, "/ramp.rds"))
 }
 
 ```
-
-
-
-
-
-
