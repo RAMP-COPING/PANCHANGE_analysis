@@ -51,16 +51,16 @@ source("../PANCHANGE_raw_path.R")
 
 # Import data
 ```{r export data}
-glad <- read_rds(path = paste0(data_path, "/glad.rds"))
+glad <- read_rds(paste0(data_path, "glad.rds"))
 dim(glad)
 
-edgi <- read_rds(path = paste0(data_path, "/edgi.rds"))
+edgi <- read_rds(paste0(data_path, "edgi.rds"))
 dim(edgi)
 
-nbr <- read_rds(path = paste0(data_path, "/nbr.rds"))
+nbr <- read_rds(paste0(data_path, "nbr.rds"))
 dim(nbr)
 
-ramp <- read_rds(path = paste0(data_path, "/ramp.rds"))
+ramp <- read_rds(paste0(data_path, "ramp.rds"))
 dim(ramp)
 ```
 
