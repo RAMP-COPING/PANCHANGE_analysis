@@ -8138,3 +8138,7 @@ pcl_prepan_model1b_education_reg_stats <- model1b.explan.reg.stats(outcome = "pc
 kable(pcl_prepan_model1b_education_reg_stats)
 pcl_prepan_model1b_education_reg_stats
 ```
+
+# Forest Plos
+
+
