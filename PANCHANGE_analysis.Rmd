@@ -70,6 +70,11 @@ library(patchwork)
 library(broom)
 library(tidyverse)
 library(ggpubr)
+
+if(!require(sjPlot)){
+    install.packages("sjPlot")
+    library(sjPlot)
+}
 ```
 
 # R functions
@@ -205,8 +210,6 @@ geom_split_violin <- function(mapping = NULL, data = NULL, stat = "ydensity", po
 ```{r source file path}
 #source data directory: data_path
 source("../PANCHANGE_raw_path.R")
-
-print(data_path)
 
 ```
 
@@ -2799,9 +2802,9 @@ model1a.reg.stats <- function(outcome, data_set) {
 
 ```{r model1b function}
 
-# function to return standardised beta for plotting in a dataframe
+# function to return lm formula for plotting
 
-model1b.lm <- function(outcome, data_set) {
+model1b.lm.form <- function(outcome, data_set) {
   # define the variable name of the dependent variable
   dependent.variable <- outcome
   # define the independent variables
@@ -2818,19 +2821,16 @@ model1b.lm <- function(outcome, data_set) {
                              "Ethnicity_collapsed",
                              "key_worker",
                              "time_diff_coping_lockdown_march_23"
-                                )
-  # create the formula
-  glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
-  glm.formula
-
-  # run the glm
-  assign(paste0(outcome,".model1b.lm"),
-         lm( formula = glm.formula,
-             data = get(data_set)
-         )
   )
-
-  return(get(paste0(outcome,".model1b.lm")))
+  # create the formula
+  glm.formula <- paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ ")
+  
+  # assign it globally with the right variable name.
+  assign(paste0(outcome,".glmformula"),
+         glm.formula,
+         envir = .GlobalEnv
+  )
+  
 }
 
 
@@ -4250,7 +4250,7 @@ kable(gad_baseline_model1b_reg_stats)
 gad_baseline_model1b_reg_stats
 
 
-# get lm object to standardise beta
+# get lm object to do forest plots
 
 gad_prepan_model1b_lm <- model1b.lm(outcome = "gad.diff_score_base_prepan",
                                            data_set = "dat.prepan")
@@ -8140,5 +8140,14 @@ pcl_prepan_model1b_education_reg_stats
 ```
 
 # Forest Plos
+
+Using standardised betas (2 stdev)
+```{r gad standardised forest plot}
+plot_models(gad_prepan_model1b_lm, std.est = "std2")
+
+```
+
+
+
 
 
