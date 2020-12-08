@@ -734,6 +734,76 @@ dat.long.gad.sum %>%
 
 ```
 
+```{r gad.sum violin plot Sample GLAD EDGI combined, fig.height=14, fig.width=8, dpi=300}
+dat.long.gad.sum %>%
+  mutate(Time_point_renamed = fct_recode(Time_point,
+            "Prepandemic" = "prepan",
+            "Retrospective" = "retro",
+            "Baseline" = "base")
+         ) %>%
+         mutate(Time_point_reordered = fct_relevel(Time_point_renamed,
+            "Baseline",
+            "Retrospective",
+            "Prepandemic")
+         ) %>%
+   mutate(Sample_combined = case_when(
+     Sample == "GLAD" ~ "GLAD and EDGI",
+     Sample == "EDGI" ~ "GLAD and EDGI",
+     Sample == "NBR" ~ "NBR",
+     Sample == "RAMP" ~ "RAMP",)
+         ) %>%
+  ggplot(mapping = aes(
+    x = Time_point_reordered,
+    y = gad.sum_score,
+    fill = Time_point_reordered)) +
+  geom_hline(yintercept = 5, linetype = "dashed", color = "gray") +
+  geom_hline(yintercept = 10, linetype = "dashed", color = "gray") +
+  geom_hline(yintercept = 15, linetype = "dashed", color = "gray") +
+  geom_flat_violin(
+    position = position_nudge(x = .2, y = 0),
+    trim = FALSE,
+    alpha = 0.5
+    ) +
+  geom_point(
+    aes(
+      y = gad.sum_score,
+      color = Time_point_reordered),
+    position = position_jitter(width = .15),
+    size = .5,
+    alpha = 0.8) +
+#  geom_boxplot(
+#    width = .1,
+#    guides = FALSE,
+#    outlier.shape = NA,
+#    alpha = 0.5) +
+ stat_summary(fun.y = mean,
+              fun.ymin = function(x) mean(x) - sd(x),
+              fun.ymax = function(x) mean(x) + sd(x),
+              geom = "pointrange"
+              ) +
+  labs(
+    y = "GAD7 scores",
+    fill = "Time point") +
+  theme_personal +
+  theme(
+    axis.text.y = element_blank()
+  ) +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    breaks = c("Prepandemic", "Retrospective", "Baseline")) +
+  scale_alpha(guide = 'none') +
+  scale_size(guide = 'none') +
+  scale_color_manual(
+    values = COPINGpalette3,
+    breaks = c("Prepandemic", "Retrospective", "Baseline"),
+    guide = "none") +
+  facet_wrap(facets = vars(Sample_combined),
+             nrow = 4
+             ) +
+  coord_flip()
+
+```
+
 ```{r gad.sum violin plot Disorder_hierarchical, fig.height=18, fig.width=20}
 dat.long.gad.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point,
@@ -1222,6 +1292,77 @@ dat.long.phq.sum %>%
   coord_flip()
 ```
 
+
+```{r phq.sum violin plot Sample GLAD EDGI combined, fig.height=14, fig.width=8}
+dat.long.phq.sum %>%
+  mutate(Time_point_renamed = fct_recode(Time_point,
+                                         "Prepandemic" = "prepan",
+                                         "Retrospective" = "retro",
+                                         "Baseline" = "base")
+  ) %>%
+  mutate(Time_point_reordered = fct_relevel(Time_point_renamed,
+                                            "Baseline",
+                                            "Retrospective",
+                                            "Prepandemic")
+  ) %>%
+   mutate(Sample_combined = case_when(
+     Sample == "GLAD" ~ "GLAD and EDGI",
+     Sample == "EDGI" ~ "GLAD and EDGI",
+     Sample == "NBR" ~ "NBR",
+     Sample == "RAMP" ~ "RAMP",)
+         ) %>%
+  ggplot(mapping = aes(
+    x = Time_point_reordered,
+    y = phq.sum_score,
+    fill = Time_point_reordered)) +
+  geom_hline(yintercept = 8, linetype = "dashed", color = "gray") +
+  geom_hline(yintercept = 11, linetype = "dashed", color = "gray") +
+#  geom_hline(yintercept = 15, linetype = "dashed", color = "gray") +
+  geom_flat_violin(
+    position = position_nudge(x = .2, y = 0),
+    trim = FALSE,
+    alpha = 0.5
+  ) +
+  geom_point(
+    aes(
+      y = phq.sum_score,
+      color = Time_point_reordered),
+    position = position_jitter(width = .15),
+    size = .5,
+    alpha = 0.8) +
+  #  geom_boxplot(
+  #    width = .1,
+  #    guides = FALSE,
+  #    outlier.shape = NA,
+  #    alpha = 0.5) +
+  stat_summary(fun.y = mean,
+               fun.ymin = function(x) mean(x) - sd(x),
+               fun.ymax = function(x) mean(x) + sd(x),
+               geom = "pointrange"
+  ) +
+  labs(
+    y = "PHQ9 scores",
+    fill = "Time point") +
+  theme_personal +
+  theme(
+    axis.text.y = element_blank()
+  ) +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    breaks = c("Prepandemic", "Retrospective", "Baseline")) +
+  scale_alpha(guide = 'none') +
+  scale_size(guide = 'none') +
+  scale_color_manual(
+    values = COPINGpalette3,
+    breaks = c("Prepandemic", "Retrospective", "Baseline"),
+    guide = "none") +
+  facet_wrap(facets = vars(Sample_combined),
+             nrow = 4
+  ) +
+  coord_flip()
+```
+
+
 ```{r phq.sum violin plot Disorder_hierarchical, fig.height=18, fig.width=20}
 dat.long.phq.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point,
@@ -1702,6 +1843,75 @@ dat.long.ocir.sum %>%
     breaks = c("Prepandemic", "Retrospective", "Baseline"),
     guide = "none") +
   facet_wrap(facets = vars(Sample),
+             nrow = 4
+  ) +
+  coord_flip()
+```
+
+```{r ocir.sum violin plot Sample GLAD EDGI combined, fig.height=14, fig.width=8}
+dat.long.ocir.sum %>%
+  mutate(Time_point_renamed = fct_recode(Time_point,
+                                         "Prepandemic" = "prepan",
+                                         "Retrospective" = "retro",
+                                         "Baseline" = "base")
+  ) %>%
+  mutate(Time_point_reordered = fct_relevel(Time_point_renamed,
+                                            "Baseline",
+                                            "Retrospective",
+                                            "Prepandemic")
+  ) %>%
+   mutate(Sample_combined = case_when(
+     Sample == "GLAD" ~ "GLAD and EDGI",
+     Sample == "EDGI" ~ "GLAD and EDGI",
+     Sample == "NBR" ~ "NBR",
+     Sample == "RAMP" ~ "RAMP",)
+         ) %>%
+  ggplot(mapping = aes(
+    x = Time_point_reordered,
+    y = ocir.sum_score,
+    fill = Time_point_reordered)) +
+  geom_hline(yintercept = 21, linetype = "dashed", color = "gray") +
+#  geom_hline(yintercept = 10, linetype = "dashed", color = "gray") +
+#  geom_hline(yintercept = 15, linetype = "dashed", color = "gray") +
+  geom_flat_violin(
+    position = position_nudge(x = .2, y = 0),
+    trim = FALSE,
+    alpha = 0.5
+  ) +
+  geom_point(
+    aes(
+      y = ocir.sum_score,
+      color = Time_point_reordered),
+    position = position_jitter(width = .15),
+    size = .5,
+    alpha = 0.8) +
+  #  geom_boxplot(
+  #    width = .1,
+  #    guides = FALSE,
+  #    outlier.shape = NA,
+  #    alpha = 0.5) +
+  stat_summary(fun.y = mean,
+               fun.ymin = function(x) mean(x) - sd(x),
+               fun.ymax = function(x) mean(x) + sd(x),
+               geom = "pointrange"
+  ) +
+  labs(
+    y = "OCI-R scores",
+    fill = "Time point") +
+  theme_personal +
+  theme(
+    axis.text.y = element_blank()
+  ) +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    breaks = c("Prepandemic", "Retrospective", "Baseline")) +
+  scale_alpha(guide = 'none') +
+  scale_size(guide = 'none') +
+  scale_color_manual(
+    values = COPINGpalette3,
+    breaks = c("Prepandemic", "Retrospective", "Baseline"),
+    guide = "none") +
+  facet_wrap(facets = vars(Sample_combined),
              nrow = 4
   ) +
   coord_flip()
@@ -7928,3 +8138,7 @@ pcl_prepan_model1b_education_reg_stats <- model1b.explan.reg.stats(outcome = "pc
 kable(pcl_prepan_model1b_education_reg_stats)
 pcl_prepan_model1b_education_reg_stats
 ```
+
+# Forest Plos
+
+
