@@ -8139,15 +8139,235 @@ kable(pcl_prepan_model1b_education_reg_stats)
 pcl_prepan_model1b_education_reg_stats
 ```
 
-# Forest Plos
+# Forest Plots
 
-Using standardised betas (2 stdev)
-```{r gad standardised forest plot}
-plot_models(gad_prepan_model1b_lm, std.est = "std2")
+## run regression models to get normal output
+
+###Function to create formula
+
+```{r function create formula for lin models}
+
+# function for formula
+model1b.lm.form <- function(outcome,explan_var, data_set) {
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c(explan_var,
+                             "depression_and_anxiety",
+                             "eating_disorders",
+                             "obsessive_compulsive_disorders",
+                             "bipolar_and_schizophrenia",
+                             "mhd.posttraumatic_stress_disorder_ptsd",
+                             "autism_spectrum_disorder",
+                             "mhd.attention_deficit_hyperactivity_disorder",
+                             "mhd.personality_disorder",
+                             "Gender_collapsed",
+                             "age_category_collapsed_reordered",
+                             "Ethnicity_collapsed",
+                             "key_worker",
+                             "time_diff_coping_lockdown_march_23"
+  )
+  # create the formula
+  glm.formula <- paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ ")
+  
+  # assign it globally with the right variable name.
+  assign(paste0(outcome,explan_var,".glmformula"),
+         glm.formula,
+         envir = .GlobalEnv
+  )
+  
+}
+
+```
+
+###Standardise linear variables
+
+
+```{r standardise linear variables}
+lin_preds <- c("time_diff_coping_lockdown_march_23",
+               "gad.sum_score_prepan",
+               "phq.sum_score_prepan",
+               "pcl.sum_score_prepan",
+               "gad.sum_score_retro",
+               "phq.sum_score_retro",
+               "pcl.sum_score_retro"
+               )
+
+dat.prepan[(names(dat.prepan) %in% lin_preds)] <- apply(dat.prepan[(names(dat.prepan) %in% lin_preds)],2,scale)
+dat.retro[(names(dat.retro) %in% lin_preds)] <- apply(dat.retro[(names(dat.retro) %in% lin_preds)],2,scale)
+
+```
+
+## Run models
+
+```{r create formulas for forest models}
+
+model1b.lm.form("gad.sum_score_base", "gad.sum_score_prepan", dat.prepan)
+model1b.lm.form("gad.sum_score_base", "gad.sum_score_retro", dat.retro)
+
+model1b.lm.form("phq.sum_score_base", "phq.sum_score_prepan", dat.prepan)
+model1b.lm.form("phq.sum_score_base", "phq.sum_score_retro", dat.retro)
+
+model1b.lm.form("pcl.sum_score_base", "pcl.sum_score_prepan", dat.prepan)
+model1b.lm.form("pcl.sum_score_base", "pcl.sum_score_retro", dat.retro)
+
+
+
+```
+
+```{r run models for all forest plot items}
+
+gad.prepan.lm <-  lm(formula = gad.sum_score_base.gad.sum_score_prepan.glmformula,
+                            dat.prepan)
+gad.retro.lm <- lm(formula = gad.sum_score_base.gad.sum_score_retro.glmformula,
+                            dat.retro)
+
+phq.prepan.lm <-  lm(formula = phq.sum_score_base.phq.sum_score_prepan.glmformula,
+                            dat.prepan)
+phq.retro.lm <- lm(formula = phq.sum_score_base.phq.sum_score_retro.glmformula,
+                            dat.retro)
+
+pcl.prepan.lm <-  lm(formula = pcl.sum_score_base.pcl.sum_score_prepan.glmformula,
+                            dat.prepan)
+pcl.retro.lm <- lm(formula = pcl.sum_score_base.pcl.sum_score_retro.glmformula,
+                            dat.retro)
+  
+```
+
+###Subset retrospective data by samples
+
+```{r subset data for forests into samples}
+
+dat.retro.glad <- dat.retro %>%
+  filter(Sample == "GLAD" | 
+           Sample == "EDGI")
+
+dat.retro.nbr <- dat.retro %>%
+  filter(Sample == "NBR")
+
+dat.retro.ramp <- dat.retro %>%
+  filter(Sample == "RAMP")
 
 ```
 
 
+```{r run models for rero by sample forest plots}
 
+
+gad.retro.lm.glad <- lm(formula = gad.sum_score_base.gad.sum_score_retro.glmformula,
+                            dat.retro.glad)
+gad.retro.lm.nbr <- lm(formula = gad.sum_score_base.gad.sum_score_retro.glmformula,
+                            dat.retro.nbr)
+gad.retro.lm.ramp <- lm(formula = gad.sum_score_base.gad.sum_score_retro.glmformula,
+                            dat.retro.ramp)
+
+
+phq.retro.lm.glad <- lm(formula = phq.sum_score_base.phq.sum_score_retro.glmformula,
+                            dat.retro.glad)
+phq.retro.lm.nbr <- lm(formula = phq.sum_score_base.phq.sum_score_retro.glmformula,
+                            dat.retro.nbr)
+phq.retro.lm.ramp <- lm(formula = phq.sum_score_base.phq.sum_score_retro.glmformula,
+                            dat.retro.ramp)
+
+pcl.retro.lm.glad <- lm(formula = pcl.sum_score_base.pcl.sum_score_retro.glmformula,
+                            dat.retro.glad)
+pcl.retro.lm.nbr <- lm(formula = pcl.sum_score_base.pcl.sum_score_retro.glmformula,
+                            dat.retro.nbr)
+pcl.retro.lm.ramp <- lm(formula = pcl.sum_score_base.pcl.sum_score_retro.glmformula,
+                            dat.retro.ramp)
+  
+```
+
+
+## Function to create dataframes ready for forest plots from lm models. 
+```{r function to create data for lm forest plots}
+
+# function to create dataframe from model output
+
+lmoutput_format <- function(lmobject,explan_var,dfname){
+  
+  ## Row labels
+  independent.variables <- c("intercept",
+                             explan_var,
+                             "comorbid depression and anxiety compared to control",
+                             "depressive disorder compared to control",
+                             "anxiety disorder compared to control",
+                             "eating disorders compared to control",
+                             "obsessive compulsive disorders compared to control",
+                             "comorbid psychotic and bipolar disorder compared to control",
+                             "psychotic disorder compared to control",
+                             "bipolar disorder compared to control",
+                             "mhd.posttraumatic_stress_disorder_ptsd compared to control",
+                             "autism_spectrum_disorder compared to control",
+                             "mhd.attention_deficit_hyperactivity_disorder compared to control",
+                             "mhd.personality_disorder compared to control",
+                             "Female compared to male",
+                             "Non-binary/Self-defined compared to male",
+                             "16-18 compared to 26-35",
+                             "19-25 compared to 26-35",
+                             "36-45 compared to 26-35",
+                             "46-55 compared to 26-35",
+                             "56-65 compared to 26-35",
+                             "66-70 compared to 26-35",
+                             "71-75 compared to 26-35",
+                             "76+ compared to 26-35",
+                             "Mixed or multiple ethnicities compared to White",
+                             "Asian compared to White",
+                             "Black compared to White",
+                             "Other compared to White",
+                             "key_worker compared to non-keyworker",
+                             "time_diff_coping_lockdown_march_23")
+  ## categories to facet on  
+  categories <- c("Intercept",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Gender",
+                  "Gender",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Other",
+                  "Other")
+  
+  # create data frame
+  df <- as.data.frame(coef(summary(lmobject)),row.names=F)
+  
+  # add row labels
+  df$RowLabels <- independent.variables
+  
+  # Add category labels
+  
+  df$Categories <- categories
+  
+  # calculate upper and lower confidence intervals
+  df <- df %>%
+    mutate(LowerBound = Estimate - (1.96*`Std. Error`),
+           UpperBound = Estimate + (1.96*`Std. Error`))
+  
+  assign(dfname, df, envir = .GlobalEnv)
+  
+}
+
+```
 
 
