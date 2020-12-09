@@ -31,7 +31,7 @@ knitr::opts_chunk$set(echo = FALSE,
                       prompt=FALSE,
                       cache=FALSE)
 
-opt_chunk$set(fig.path="./figures")
+knitr::opts_chunk$set(fig.path="figures/")
 
 
 options(bitmapType = 'quartz') # to render fonts better
@@ -8560,13 +8560,13 @@ lm.forest(plot.dat.disorder.retro,"Predictors of pandemic symptoms controlling f
 ```
 
 ### disorder (no PCL)
-```{r forest plot by disorder prepan, fig.height=14, fig.width=8}
+```{r forest plot by disorder prepan no pcl, fig.height=14, fig.width=8}
 
 lm.forest(plot.dat.disorder.prepan.gadphq,"Predictors of pandemic symptoms controlling for prepandemic symptoms")
 
 ```
 
-```{r forest plot by disorder retro, fig.height=14, fig.width=8}
+```{r forest plot by disorder retro no pcl, fig.height=14, fig.width=8}
 
 lm.forest(plot.dat.disorder.retro.gadphq,"Predictors of pandemic symptoms controlling for retrospective symptoms")
 
