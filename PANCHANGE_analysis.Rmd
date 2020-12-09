@@ -31,6 +31,8 @@ knitr::opts_chunk$set(echo = FALSE,
                       prompt=FALSE,
                       cache=FALSE)
 
+opt_chunk$set(fig.path="./figures")
+
 
 options(bitmapType = 'quartz') # to render fonts better
 ```
@@ -78,6 +80,7 @@ if(!require(sjPlot)){
 ```
 
 # R functions
+
 ## Half-violin plot
 ```{r Half-violin plot}
 source("https://raw.githubusercontent.com/datavizpyr/data/master/half_flat_violinplot.R")
@@ -4250,13 +4253,6 @@ kable(gad_baseline_model1b_reg_stats)
 gad_baseline_model1b_reg_stats
 
 
-# get lm object to do forest plots
-
-gad_prepan_model1b_lm <- model1b.lm(outcome = "gad.diff_score_base_prepan",
-                                           data_set = "dat.prepan")
-
-
-
 
 ```
 
@@ -8147,8 +8143,9 @@ pcl_prepan_model1b_education_reg_stats
 
 ```{r function create formula for lin models}
 
-# function for formula
-model1b.lm.form <- function(outcome,explan_var, data_set) {
+
+model1b.lm.form <- function(outcome, explan_var, data_set) {
+  
   # define the variable name of the dependent variable
   dependent.variable <- outcome
   # define the independent variables
@@ -8171,11 +8168,11 @@ model1b.lm.form <- function(outcome,explan_var, data_set) {
   glm.formula <- paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ ")
   
   # assign it globally with the right variable name.
-  assign(paste0(outcome,explan_var,".glmformula"),
+  assign(paste0(outcome,".", explan_var, ".glmformula"),
          glm.formula,
          envir = .GlobalEnv
+         
   )
-  
 }
 
 ```
@@ -8210,8 +8207,6 @@ model1b.lm.form("phq.sum_score_base", "phq.sum_score_retro", dat.retro)
 
 model1b.lm.form("pcl.sum_score_base", "pcl.sum_score_prepan", dat.prepan)
 model1b.lm.form("pcl.sum_score_base", "pcl.sum_score_retro", dat.retro)
-
-
 
 ```
 
@@ -8250,6 +8245,13 @@ dat.retro.ramp <- dat.retro %>%
 
 ```
 
+### add a single "other ethnicity individual" as a jitter for NBR so this category remains included wihout adding explanation.
+```{r add jitter "other" for NBR other ethnicity so this cat is available for plotting}
+
+dat.retro.nbr$Ethnicity_collapsed[801] <- "Other"  #this person was an NA
+dat.retro.nbr$Ethnicity_collapsed[998] <- "Other"  #this person was an NA
+
+```
 
 ```{r run models for rero by sample forest plots}
 
@@ -8349,7 +8351,7 @@ lmoutput_format <- function(lmobject,explan_var, group, dfname){
                   "Other",
                   "Other")
   
-  ## Disoprder dimension  
+  ## Disorder dimension  
   groups <- c(group,
                   group,
                   group,
@@ -8405,7 +8407,7 @@ lmoutput_format <- function(lmobject,explan_var, group, dfname){
     
   
   # assign dataframe to global environment
-  assign(dfname, df, envir = .GlobalEnv)
+  assign(dfname, df, envir = knitr::knit_global())
   
 }
 
@@ -8462,6 +8464,7 @@ lm.forest <- function(data,title){
 ## Create data frames and plots using functions and models generated above.
 
 ```{r generate datasets for all plots}
+
 # prepandemic and retrospective, grouped by disorder measure
 lmoutput_format(gad.prepan.lm,"gad.sum_score_prepan","GAD-7", "gad.prepan.lm.for.plot")
 lmoutput_format(gad.retro.lm,"gad.sum_score_retro","GAD-7", "gad.retro.lm.for.plot")
@@ -8471,6 +8474,16 @@ lmoutput_format(phq.retro.lm,"phq.sum_score_retro","PHQ-9", "phq.retro.lm.for.pl
 
 lmoutput_format(pcl.prepan.lm,"pcl.sum_score_prepan","PCL", "pcl.prepan.lm.for.plot")
 lmoutput_format(pcl.retro.lm,"pcl.sum_score_retro","PCL", "pcl.retro.lm.for.plot")
+
+# prepandemic and retrospective, grouped by time point
+lmoutput_format(gad.prepan.lm,"gad.sum_score_prepan","Prepandemic", "gad.prepan.lm.for.plot.timegroup")
+lmoutput_format(gad.retro.lm,"gad.sum_score_retro","Retrospective", "gad.retro.lm.for.plot.timegroup")
+
+lmoutput_format(phq.prepan.lm,"phq.sum_score_prepan","Prepandemic", "phq.prepan.lm.for.plot.timegroup")
+lmoutput_format(phq.retro.lm,"phq.sum_score_retro","Retrospective", "phq.retro.lm.for.plot.timegroup")
+
+lmoutput_format(pcl.prepan.lm,"pcl.sum_score_prepan","Prepandemic", "pcl.prepan.lm.for.plot.timegroup")
+lmoutput_format(pcl.retro.lm,"pcl.sum_score_retro","Retrospective", "pcl.retro.lm.for.plot.timegroup")
 
 # Retrospective, grouped by sample
 lmoutput_format(gad.retro.lm.glad,"gad.sum_score_retro","GLAD and EDGI", "gad.retro.lm.for.plot.GLAD")
@@ -8485,6 +8498,7 @@ lmoutput_format(pcl.retro.lm.glad,"pcl.sum_score_retro","GLAD and EDGI", "pcl.re
 lmoutput_format(pcl.retro.lm.nbr,"pcl.sum_score_retro","NBR", "pcl.retro.lm.for.plot.NBR")
 lmoutput_format(pcl.retro.lm.ramp,"pcl.sum_score_retro","RAMP", "pcl.retro.lm.for.plot.RAMP")
 
+
 ```
 
 ```{r merge datasets for different combinations}
@@ -8496,6 +8510,14 @@ plot.dat.disorder.prepan <- rbind(gad.prepan.lm.for.plot,
 plot.dat.disorder.retro <- rbind(gad.retro.lm.for.plot,
                                   phq.retro.lm.for.plot,
                                   pcl.retro.lm.for.plot)
+
+# Disorder groups: No PCL
+
+plot.dat.disorder.prepan.gadphq <- rbind(gad.prepan.lm.for.plot,
+                                  phq.prepan.lm.for.plot)
+
+plot.dat.disorder.retro.gadphq <- rbind(gad.retro.lm.for.plot,
+                                 phq.retro.lm.for.plot)
 
 # time of rating groups
 plot.dat.time.gad <- rbind(gad.prepan.lm.for.plot.timegroup,
@@ -8536,17 +8558,33 @@ lm.forest(plot.dat.disorder.prepan,"Predictors of pandemic symptoms controlling 
 lm.forest(plot.dat.disorder.retro,"Predictors of pandemic symptoms controlling for retrospective symptoms")
 
 ```
+
+### disorder (no PCL)
+```{r forest plot by disorder prepan, fig.height=14, fig.width=8}
+
+lm.forest(plot.dat.disorder.prepan.gadphq,"Predictors of pandemic symptoms controlling for prepandemic symptoms")
+
+```
+
+```{r forest plot by disorder retro, fig.height=14, fig.width=8}
+
+lm.forest(plot.dat.disorder.retro.gadphq,"Predictors of pandemic symptoms controlling for retrospective symptoms")
+
+```
+
 ### time point 
 ```{r forest plot by time point gad, fig.height=14, fig.width=8}
 
 lm.forest(plot.dat.time.gad,"Predictors of anxiety during pandemic controlling for retrospective or prepandemic symptoms")
 
 ```
+
 ```{r forest plot by time point phq, fig.height=14, fig.width=8}
 
 lm.forest(plot.dat.time.phq,"Predictors of depression during pandemic controlling for retrospective or prepandemic symptoms")
 
 ```
+
 ```{r forest plot by time point pcl, fig.height=14, fig.width=8}
 
 lm.forest(plot.dat.time.phq,"Predictors of PTSD during pandemic controlling for retrospective or prepandemic symptoms")
@@ -8559,11 +8597,13 @@ lm.forest(plot.dat.time.phq,"Predictors of PTSD during pandemic controlling for 
 lm.forest(plot.dat.sample.gad ,"Predictors of anxiety controlling for retrospective symptoms across samples")
 
 ```
+
 ```{r forest plot by sample retro only phq, fig.height=14, fig.width=8}
 
 lm.forest(plot.dat.sample.phq ,"Predictors of depression controlling for retrospective symptoms across samples")
 
 ```
+
 ```{r forest plot by sample retro only pcl, fig.height=14, fig.width=8}
 
 lm.forest(plot.dat.sample.pcl ,"Predictors of PTSD controlling for retrospective symptoms across samples")
