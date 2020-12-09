@@ -8416,7 +8416,7 @@ lmoutput_format <- function(lmobject,explan_var, group, dfname){
 
 ```{r function for creating forest plots}
 
-lm.forest <- function(data,title)
+lm.forest <- function(data,title){
     
   p = ggplot(data=data,
              aes(x =RowLabels,y = Estimate,
@@ -8459,3 +8459,66 @@ lm.forest <- function(data,title)
 
 ```
 
+## Create data frames and plots using functions and models generated above.
+
+```{r generate datasets for all plots}
+# prepandemic and retrospective, grouped by disorder measure
+lmoutput_format(gad.prepan.lm,"gad.sum_score_prepan","GAD-7", "gad.prepan.lm.for.plot")
+lmoutput_format(gad.retro.lm,"gad.sum_score_retro","GAD-7", "gad.retro.lm.for.plot")
+
+lmoutput_format(phq.prepan.lm,"phq.sum_score_prepan","PHQ-9", "phq.prepan.lm.for.plot")
+lmoutput_format(phq.retro.lm,"phq.sum_score_retro","PHQ-9", "phq.retro.lm.for.plot")
+
+lmoutput_format(pcl.prepan.lm,"pcl.sum_score_prepan","PCL", "pcl.prepan.lm.for.plot")
+lmoutput_format(pcl.retro.lm,"pcl.sum_score_retro","PCL", "pcl.retro.lm.for.plot")
+
+# Retrospective, grouped by sample
+lmoutput_format(gad.retro.lm.glad,"gad.sum_score_retro","GLAD and EDGI", "gad.retro.lm.for.plot.GLAD")
+lmoutput_format(gad.retro.lm.nbr,"gad.sum_score_retro","NBR", "gad.retro.lm.for.plot.NBR")
+lmoutput_format(gad.retro.lm.ramp,"gad.sum_score_retro","RAMP", "gad.retro.lm.for.plot.RAMP")
+
+lmoutput_format(phq.retro.lm.glad,"phq.sum_score_retro","GLAD and EDGI", "phq.retro.lm.for.plot.GLAD")
+lmoutput_format(phq.retro.lm.nbr,"phq.sum_score_retro","NBR", "phq.retro.lm.for.plot.NBR")
+lmoutput_format(phq.retro.lm.ramp,"phq.sum_score_retro","RAMP", "phq.retro.lm.for.plot.RAMP")
+
+lmoutput_format(pcl.retro.lm.glad,"pcl.sum_score_retro","GLAD and EDGI", "pcl.retro.lm.for.plot.GLAD")
+lmoutput_format(pcl.retro.lm.nbr,"pcl.sum_score_retro","NBR", "pcl.retro.lm.for.plot.NBR")
+lmoutput_format(pcl.retro.lm.ramp,"pcl.sum_score_retro","RAMP", "pcl.retro.lm.for.plot.RAMP")
+
+```
+
+```{r merge datasets for different combinations}
+# Disorder groups
+plot.dat.disorder.prepan <- rbind(gad.prepan.lm.for.plot,
+                                  phq.prepan.lm.for.plot,
+                                  pcl.prepan.lm.for.plot)
+
+plot.dat.disorder.retro <- rbind(gad.retro.lm.for.plot,
+                                  phq.retro.lm.for.plot,
+                                  pcl.retro.lm.for.plot)
+
+# time of rating groups
+plot.dat.time.gad <- rbind(gad.prepan.lm.for.plot.timegroup,
+                           gad.retro.lm.for.plot.timegroup)
+
+plot.dat.time.phq <- rbind(phq.prepan.lm.for.plot.timegroup,
+                           phq.retro.lm.for.plot.timegroup)
+
+plot.dat.time.pcl <- rbind(pcl.prepan.lm.for.plot.timegroup,
+                           pcl.retro.lm.for.plot.timegroup)
+
+# by sample (for retrospective)
+
+plot.dat.sample.gad <- rbind(gad.retro.lm.for.plot.GLAD,
+                             gad.retro.lm.for.plot.NBR,
+                             gad.retro.lm.for.plot.RAMP)
+
+plot.dat.sample.phq <- rbind(phq.retro.lm.for.plot.GLAD,
+                             phq.retro.lm.for.plot.NBR,
+                             phq.retro.lm.for.plot.RAMP)
+
+plot.dat.sample.pcl <- rbind(pcl.retro.lm.for.plot.GLAD,
+                             pcl.retro.lm.for.plot.NBR,
+                             pcl.retro.lm.for.plot.RAMP)
+
+```
