@@ -42,6 +42,15 @@ Load packages
 
 # R functions
 
+
+```
+Warning in file(filename, "r", encoding = encoding): cannot open file 'lm_forest.R': No such file or directory
+```
+
+```
+Error in file(filename, "r", encoding = encoding): cannot open the connection
+```
+
 ## Half-violin plot
 
 
@@ -77,326 +86,646 @@ Set up ggplot theme for the plots
 ```
 
 ```
-  [1] "Sample"                                                           "ID"                                                              
-  [3] "startDate.prepandemic"                                            "Age_uncleaned"                                                   
-  [5] "Gender_unc"                                                       "Sex"                                                             
-  [7] "EduYrs"                                                           "demographics.college_or_university_degree"                       
-  [9] "demographics.a_levelsas_levels_or_equivalent"                     "demographics.o_levelsgcses_or_equivalent"                        
- [11] "demographics.cses_or_equivalent"                                  "demographics.nvq_or_hnd_or_hnc_or_equivalent"                    
- [13] "Ethnicity_unc"                                                    "Gender_numeric"                                                  
- [15] "Sex_numeric"                                                      "demographics.college_or_university_degree_numeric"               
- [17] "demographics.a_levelsas_levels_or_equivalent_numeric"             "demographics.o_levelsgcses_or_equivalent_numeric"                
- [19] "demographics.cses_or_equivalent_numeric"                          "demographics.nvq_or_hnd_or_hnc_or_equivalent_numeric"            
- [21] "Ethnicity_numeric"                                                "Gender"                                                          
- [23] "Ethnicity"                                                        "Age"                                                             
- [25] "age_category_numeric"                                             "age_category"                                                    
- [27] "highest_education_prepan_numeric"                                 "highest_education_prepan"                                        
- [29] "employment.phd"                                                   "employment.masters_degree_or_equivalent"                         
- [31] "employment.postgraduate_degree_or_equivalent"                     "employment.bachelors_degree_or_equivalent"                       
- [33] "employment.a_levelsas_levels_or_equivalent"                       "employment.o_levelsgcses_or_equivalent"                          
- [35] "employment.cses_or_equivalent"                                    "employment.nvq_or_hnd_or_hnc_or_equivalent"                      
- [37] "employment.government_work_key_workers"                           "employment.unemployed"                                           
- [39] "employment.zerohours_contract"                                    "employment.stayathome_parent_or_carer"                           
- [41] "employment.retired"                                               "employment.student_gcse_or_a_level"                              
- [43] "employment.student_university"                                    "employment.became_unemployed"                                    
- [45] "employment.furloughed_or_paid_leave_government_funded"            "employment.furloughed_or_paid_leave_company_funded"              
- [47] "employment.paid_leave_furloughed"                                 "employment.fulltime_employed"                                    
- [49] "employment.parttime_employed"                                     "employment.selfemployed"                                         
- [51] "employment.contract_or_freelance_work"                            "employment.small_business_owner"                                 
- [53] "employment.receiving_state_income"                                "employment.my_employment_status_has_not_changed"                 
- [55] "employment.reduction_in_hours"                                    "employment.reduction_in_salary"                                  
- [57] "employment.benefits_increased"                                    "employment.benefits_decreased"                                   
- [59] "employment.became_employed"                                       "employment.increased_hours"                                      
- [61] "employment.increased_salary"                                      "employment.phd_numeric"                                          
- [63] "employment.masters_degree_or_equivalent_numeric"                  "employment.postgraduate_degree_or_equivalent_numeric"            
- [65] "employment.bachelors_degree_or_equivalent_numeric"                "employment.a_levelsas_levels_or_equivalent_numeric"              
- [67] "employment.o_levelsgcses_or_equivalent_numeric"                   "employment.cses_or_equivalent_numeric"                           
- [69] "employment.nvq_or_hnd_or_hnc_or_equivalent_numeric"               "employment.government_work_key_workers_numeric"                  
- [71] "employment.unemployed_numeric"                                    "employment.zerohours_contract_numeric"                           
- [73] "employment.stayathome_parent_or_carer_numeric"                    "employment.retired_numeric"                                      
- [75] "employment.student_gcse_or_a_level_numeric"                       "employment.student_university_numeric"                           
- [77] "employment.became_unemployed_numeric"                             "employment.furloughed_or_paid_leave_government_funded_numeric"   
- [79] "employment.furloughed_or_paid_leave_company_funded_numeric"       "employment.paid_leave_furloughed_numeric"                        
- [81] "employment.fulltime_employed_numeric"                             "employment.parttime_employed_numeric"                            
- [83] "employment.selfemployed_numeric"                                  "employment.contract_or_freelance_work_numeric"                   
- [85] "employment.small_business_owner_numeric"                          "employment.receiving_state_income_numeric"                       
- [87] "employment.my_employment_status_has_not_changed_numeric"          "employment.reduction_in_hours_numeric"                           
- [89] "employment.reduction_in_salary_numeric"                           "employment.benefits_increased_numeric"                           
- [91] "employment.benefits_decreased_numeric"                            "employment.became_employed_numeric"                              
- [93] "employment.increased_hours_numeric"                               "employment.increased_salary_numeric"                             
- [95] "highest_education_numeric"                                        "highest_education"                                               
- [97] "employment_prior_covid_numeric"                                   "employment_prior_covid"                                          
- [99] "employment_change_numeric"                                        "employment_change"                                               
-[101] "key_worker_numeric"                                               "key_worker"                                                      
-[103] "anxiety_disorders_numeric"                                        "anxiety_disorders"                                               
-[105] "mhd.specific_phobia_e.g._phobia_of_flying_numeric"                "mhd.specific_phobia_e.g._phobia_of_flying"                       
-[107] "mhd.social_anxiety_or_social_phobia_numeric"                      "mhd.social_anxiety_or_social_phobia"                             
-[109] "agoraphobia_panic_disorder_numeric"                               "agoraphobia_panic_disorder"                                      
-[111] "depressive_disorders_numeric"                                     "depressive_disorders"                                            
-[113] "eating_disorders_numeric"                                         "eating_disorders"                                                
-[115] "obsessive_compulsive_disorders_numeric"                           "obsessive_compulsive_disorders"                                  
-[117] "psychotic_disorders_numeric"                                      "psychotic_disorders"                                             
-[119] "mhd.mania_hypomania_bipolar_or_manicdepression_numeric"           "mhd.mania_hypomania_bipolar_or_manicdepression"                  
-[121] "mhd.posttraumatic_stress_disorder_ptsd_numeric"                   "mhd.posttraumatic_stress_disorder_ptsd"                          
-[123] "autism_spectrum_disorder_numeric"                                 "autism_spectrum_disorder"                                        
-[125] "mhd.attention_deficit_hyperactivity_disorder_numeric"             "mhd.attention_deficit_hyperactivity_disorder"                    
-[127] "mhd.personality_disorder_numeric"                                 "mhd.personality_disorder"                                        
-[129] "personality_cluster_a_numeric"                                    "personality_cluster_a"                                           
-[131] "personality_cluster_b_numeric"                                    "personality_cluster_b"                                           
-[133] "personality_cluster_c_numeric"                                    "personality_cluster_c"                                           
-[135] "depression_and_anxiety_numeric"                                   "depression_and_anxiety"                                          
-[137] "restricting_vs_binge_eating_eating_disorders_numeric"             "restricting_vs_binge_eating_eating_disorders"                    
-[139] "bipolar_and_schizophrenia_numeric"                                "bipolar_and_schizophrenia"                                       
-[141] "control_numeric"                                                  "control"                                                         
-[143] "disorders_total_count"                                            "comorbidity_total_count_numeric"                                 
-[145] "comorbidity_total_count_factor_numeric"                           "comorbidity_total_count_factor"                                  
-[147] "mhd.none_of_the_above"                                            "mhd.none_of_the_above.1"                                         
-[149] "gad.feeling_nervous_anxious_or_on_edge_prepan"                    "gad.control_worrying_stop_prepan"                                
-[151] "gad.worrying_too_much_about_different_things_prepan"              "gad.trouble_relaxing_prepan"                                     
-[153] "gad.sit_restless_hard_prepan"                                     "gad.becoming_easily_annoyed_or_irritable_prepan"                 
-[155] "gad.awful_feeling_afraid_happen_prepan"                           "gad.feeling_nervous_anxious_or_on_edge_prepan_numeric"           
-[157] "gad.control_worrying_stop_prepan_numeric"                         "gad.worrying_too_much_about_different_things_prepan_numeric"     
-[159] "gad.trouble_relaxing_prepan_numeric"                              "gad.sit_restless_hard_prepan_numeric"                            
-[161] "gad.becoming_easily_annoyed_or_irritable_prepan_numeric"          "gad.awful_feeling_afraid_happen_prepan_numeric"                  
-[163] "gad.sum_score_prepan_raw"                                         "na_per_person_gad_prepan"                                        
-[165] "gad.sum_score_prepan"                                             "pcl.stressful_experience_repeated_images_prepan"                 
-[167] "pcl.stressful_experience_upset_reminded_prepan"                   "pcl.stressful_situation_avoiding_activities_prepan"              
-[169] "pcl.cut_people_feeling_distant_prepan"                            "pcl.feeling_irritable_or_having_angry_outbursts_prepan"          
-[171] "pcl.difficulty_concentrating_prepan"                              "pcl.stressful_experience_repeated_images_prepan_numeric"         
-[173] "pcl.stressful_experience_upset_reminded_prepan_numeric"           "pcl.stressful_situation_avoiding_activities_prepan_numeric"      
-[175] "pcl.cut_people_feeling_distant_prepan_numeric"                    "pcl.feeling_irritable_or_having_angry_outbursts_prepan_numeric"  
-[177] "pcl.difficulty_concentrating_prepan_numeric"                      "pcl.sum_score_prepan_raw"                                        
-[179] "na_per_person_pcl_prepan"                                         "pcl.sum_score_prepan"                                            
-[181] "phq.little_interest_or_pleasure_in_doing_things_prepan"           "phq.feeling_down_depressed_or_hopeless_prepan"                   
-[183] "phq.staying_asleep_sleeping_trouble_prepan"                       "phq.feeling_tired_or_having_little_energy_prepan"                
-[185] "phq.poor_appetite_or_overeating_prepan"                           "phq.feeling_bad_failure_family_prepan"                           
-[187] "phq.trouble_concentrating_reading_newspaper_prepan"               "phq.moving_fidgety_noticed_opposite_prepan"                      
-[189] "phq.dead_hurting_thoughts_prepan"                                 "phq.little_interest_or_pleasure_in_doing_things_prepan_numeric"  
-[191] "phq.feeling_down_depressed_or_hopeless_prepan_numeric"            "phq.staying_asleep_sleeping_trouble_prepan_numeric"              
-[193] "phq.feeling_tired_or_having_little_energy_prepan_numeric"         "phq.poor_appetite_or_overeating_prepan_numeric"                  
-[195] "phq.feeling_bad_failure_family_prepan_numeric"                    "phq.trouble_concentrating_reading_newspaper_prepan_numeric"      
-[197] "phq.moving_fidgety_noticed_opposite_prepan_numeric"               "phq.dead_hurting_thoughts_prepan_numeric"                        
-[199] "phq.sum_score_prepan_raw"                                         "na_per_person_phq_prepan"                                        
-[201] "phq.missing_only_suicide_item_prepan"                             "phq.sum_score_prepan"                                            
-[203] "phq.sum_score_8items_prepan"                                      "ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan"        
-[205] "ocir.arranged_things_change_upset_prepan"                         "ocir.repeat_feel_numbers_prepan"                                 
-[207] "ocir.clean_simply_wash_feel_prepan"                               "ocir.mind_upset_unpleasant_thoughts_prepan"                      
-[209] "ocir.afraid_avoid_throwing_things_prepan"                         "ocir.light_switches_water_taps_prepan"                           
-[211] "ocir.arranged_things_prepan"                                      "ocir.good_feel_bad_numbers_prepan"                               
-[213] "ocir.hands_longer_wash_prepan"                                    "ocir.saved_things_prepan"                                        
-[215] "ocir.frequently_difficulty_rid_nasty_prepan"                      "ocir.i_check_things_more_often_than_necessary_prepan"            
-[217] "ocir.arranged_properly_objects_upset_prepan"                      "ocir.feel_compelled_count_things_prepan"                         
-[219] "ocir.strangers_touch_touched_difficult_prepan"                    "ocir.control_difficult_find_thoughts_prepan"                     
-[221] "ocir.i_collect_things_i_dont_need_prepan"                         "ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan_numeric"
-[223] "ocir.arranged_things_change_upset_prepan_numeric"                 "ocir.repeat_feel_numbers_prepan_numeric"                         
-[225] "ocir.clean_simply_wash_feel_prepan_numeric"                       "ocir.mind_upset_unpleasant_thoughts_prepan_numeric"              
-[227] "ocir.afraid_avoid_throwing_things_prepan_numeric"                 "ocir.light_switches_water_taps_prepan_numeric"                   
-[229] "ocir.arranged_things_prepan_numeric"                              "ocir.good_feel_bad_numbers_prepan_numeric"                       
-[231] "ocir.hands_longer_wash_prepan_numeric"                            "ocir.saved_things_prepan_numeric"                                
-[233] "ocir.frequently_difficulty_rid_nasty_prepan_numeric"              "ocir.i_check_things_more_often_than_necessary_prepan_numeric"    
-[235] "ocir.arranged_properly_objects_upset_prepan_numeric"              "ocir.feel_compelled_count_things_prepan_numeric"                 
-[237] "ocir.strangers_touch_touched_difficult_prepan_numeric"            "ocir.control_difficult_find_thoughts_prepan_numeric"             
-[239] "ocir.i_collect_things_i_dont_need_prepan_numeric"                 "ocir.sum_score_prepan_raw"                                       
-[241] "na_per_person_ocir_prepan"                                        "ocir.sum_score_prepan"                                           
-[243] "startDate.coping"                                                 "gad.problems_made_difficult_care"                                
-[245] "gad.pandemic_felt_feelings"                                       "gad.feeling_nervous_anxious_or_on_edge_retro"                    
-[247] "gad.control_worrying_stop_retro"                                  "gad.worrying_too_much_about_different_things_retro"              
-[249] "gad.trouble_relaxing_retro"                                       "gad.sit_restless_hard_retro"                                     
-[251] "gad.becoming_easily_annoyed_or_irritable_retro"                   "gad.awful_feeling_afraid_happen_retro"                           
-[253] "gad.feeling_nervous_anxious_or_on_edge_base"                      "gad.control_worrying_stop_base"                                  
-[255] "gad.worrying_too_much_about_different_things_base"                "gad.trouble_relaxing_base"                                       
-[257] "gad.sit_restless_hard_base"                                       "gad.becoming_easily_annoyed_or_irritable_base"                   
-[259] "gad.awful_feeling_afraid_happen_base"                             "gad.problems_made_difficult_care_numeric"                        
-[261] "gad.pandemic_felt_feelings_numeric"                               "gad.feeling_nervous_anxious_or_on_edge_retro_numeric"            
-[263] "gad.control_worrying_stop_retro_numeric"                          "gad.worrying_too_much_about_different_things_retro_numeric"      
-[265] "gad.trouble_relaxing_retro_numeric"                               "gad.sit_restless_hard_retro_numeric"                             
-[267] "gad.becoming_easily_annoyed_or_irritable_retro_numeric"           "gad.awful_feeling_afraid_happen_retro_numeric"                   
-[269] "gad.feeling_nervous_anxious_or_on_edge_base_numeric"              "gad.control_worrying_stop_base_numeric"                          
-[271] "gad.worrying_too_much_about_different_things_base_numeric"        "gad.trouble_relaxing_base_numeric"                               
-[273] "gad.sit_restless_hard_base_numeric"                               "gad.becoming_easily_annoyed_or_irritable_base_numeric"           
-[275] "gad.awful_feeling_afraid_happen_base_numeric"                     "gad.sum_score_retro_raw"                                         
-[277] "gad.sum_score_base_raw"                                           "na_per_person_gad_base"                                          
-[279] "na_per_person_gad_retro"                                          "gad.sum_score_base"                                              
-[281] "gad.sum_score_retro"                                              "pcl.stressful_experience_repeated_images_base"                   
-[283] "pcl.stressful_experience_upset_reminded_base"                     "pcl.stressful_situation_avoiding_activities_base"                
-[285] "pcl.cut_people_feeling_distant_base"                              "pcl.feeling_irritable_or_having_angry_outbursts_base"            
-[287] "pcl.difficulty_concentrating_base"                                "pcl.stressful_experience_repeated_images_retro"                  
-[289] "pcl.stressful_experience_upset_reminded_retro"                    "pcl.stressful_situation_avoiding_activities_retro"               
-[291] "pcl.cut_people_feeling_distant_retro"                             "pcl.feeling_irritable_or_having_angry_outbursts_retro"           
-[293] "pcl.difficulty_concentrating_retro"                               "pcl.stressful_experience_repeated_images_base_numeric"           
-[295] "pcl.stressful_experience_upset_reminded_base_numeric"             "pcl.stressful_situation_avoiding_activities_base_numeric"        
-[297] "pcl.cut_people_feeling_distant_base_numeric"                      "pcl.feeling_irritable_or_having_angry_outbursts_base_numeric"    
-[299] "pcl.difficulty_concentrating_base_numeric"                        "pcl.stressful_experience_repeated_images_retro_numeric"          
-[301] "pcl.stressful_experience_upset_reminded_retro_numeric"            "pcl.stressful_situation_avoiding_activities_retro_numeric"       
-[303] "pcl.cut_people_feeling_distant_retro_numeric"                     "pcl.feeling_irritable_or_having_angry_outbursts_retro_numeric"   
-[305] "pcl.difficulty_concentrating_retro_numeric"                       "pcl.sum_score_retro_raw"                                         
-[307] "pcl.sum_score_base_raw"                                           "na_per_person_pcl_base"                                          
-[309] "na_per_person_pcl_retro"                                          "pcl.sum_score_base"                                              
-[311] "pcl.sum_score_retro"                                              "phq.problems_made_difficult_care"                                
-[313] "phq.pandemic_felt_feelings"                                       "phq.little_interest_or_pleasure_in_doing_things_retro"           
-[315] "phq.feeling_down_depressed_or_hopeless_retro"                     "phq.staying_asleep_sleeping_trouble_retro"                       
-[317] "phq.feeling_tired_or_having_little_energy_retro"                  "phq.poor_appetite_or_overeating_retro"                           
-[319] "phq.feeling_bad_failure_family_retro"                             "phq.trouble_concentrating_reading_newspaper_retro"               
-[321] "phq.moving_fidgety_noticed_opposite_retro"                        "phq.dead_hurting_thoughts_retro"                                 
-[323] "phq.little_interest_or_pleasure_in_doing_things_base"             "phq.feeling_down_depressed_or_hopeless_base"                     
-[325] "phq.staying_asleep_sleeping_trouble_base"                         "phq.feeling_tired_or_having_little_energy_base"                  
-[327] "phq.poor_appetite_or_overeating_base"                             "phq.feeling_bad_failure_family_base"                             
-[329] "phq.trouble_concentrating_reading_newspaper_base"                 "phq.moving_fidgety_noticed_opposite_base"                        
-[331] "phq.dead_hurting_thoughts_base"                                   "phq.problems_made_difficult_care_numeric"                        
-[333] "phq.pandemic_felt_feelings_numeric"                               "phq.little_interest_or_pleasure_in_doing_things_retro_numeric"   
-[335] "phq.feeling_down_depressed_or_hopeless_retro_numeric"             "phq.staying_asleep_sleeping_trouble_retro_numeric"               
-[337] "phq.feeling_tired_or_having_little_energy_retro_numeric"          "phq.poor_appetite_or_overeating_retro_numeric"                   
-[339] "phq.feeling_bad_failure_family_retro_numeric"                     "phq.trouble_concentrating_reading_newspaper_retro_numeric"       
-[341] "phq.moving_fidgety_noticed_opposite_retro_numeric"                "phq.dead_hurting_thoughts_retro_numeric"                         
-[343] "phq.little_interest_or_pleasure_in_doing_things_base_numeric"     "phq.feeling_down_depressed_or_hopeless_base_numeric"             
-[345] "phq.staying_asleep_sleeping_trouble_base_numeric"                 "phq.feeling_tired_or_having_little_energy_base_numeric"          
-[347] "phq.poor_appetite_or_overeating_base_numeric"                     "phq.feeling_bad_failure_family_base_numeric"                     
-[349] "phq.trouble_concentrating_reading_newspaper_base_numeric"         "phq.moving_fidgety_noticed_opposite_base_numeric"                
-[351] "phq.dead_hurting_thoughts_base_numeric"                           "phq.sum_score_retro_raw"                                         
-[353] "phq.sum_score_base_raw"                                           "na_per_person_phq_retro"                                         
-[355] "phq.missing_only_suicide_item_retro"                              "na_per_person_phq_base"                                          
-[357] "phq.missing_only_suicide_item_base"                               "phq.sum_score_base"                                              
-[359] "phq.sum_score_8items_base"                                        "phq.sum_score_retro"                                             
-[361] "phq.sum_score_8items_retro"                                       "ocir.felt_pandemic_feelings"                                     
-[363] "ocir.i_repeatedly_check_doors_windows_drawers_etc_retro"          "ocir.arranged_things_change_upset_retro"                         
-[365] "ocir.repeat_feel_numbers_retro"                                   "ocir.clean_simply_wash_feel_retro"                               
-[367] "ocir.mind_upset_unpleasant_thoughts_retro"                        "ocir.afraid_avoid_throwing_things_retro"                         
-[369] "ocir.light_switches_water_taps_retro"                             "ocir.arranged_things_retro"                                      
-[371] "ocir.good_feel_bad_numbers_retro"                                 "ocir.hands_longer_wash_retro"                                    
-[373] "ocir.saved_things_retro"                                          "ocir.frequently_difficulty_rid_nasty_retro"                      
-[375] "ocir.i_check_things_more_often_than_necessary_retro"              "ocir.arranged_properly_objects_upset_retro"                      
-[377] "ocir.feel_compelled_count_things_retro"                           "ocir.strangers_touch_touched_difficult_retro"                    
-[379] "ocir.control_difficult_find_thoughts_retro"                       "ocir.i_collect_things_i_dont_need_retro"                         
-[381] "ocir.i_repeatedly_check_doors_windows_drawers_etc_base"           "ocir.arranged_things_change_upset_base"                          
-[383] "ocir.repeat_feel_numbers_base"                                    "ocir.clean_simply_wash_feel_base"                                
-[385] "ocir.mind_upset_unpleasant_thoughts_base"                         "ocir.afraid_avoid_throwing_things_base"                          
-[387] "ocir.light_switches_water_taps_base"                              "ocir.arranged_things_base"                                       
-[389] "ocir.good_feel_bad_numbers_base"                                  "ocir.hands_longer_wash_base"                                     
-[391] "ocir.saved_things_base"                                           "ocir.frequently_difficulty_rid_nasty_base"                       
-[393] "ocir.i_check_things_more_often_than_necessary_base"               "ocir.arranged_properly_objects_upset_base"                       
-[395] "ocir.feel_compelled_count_things_base"                            "ocir.strangers_touch_touched_difficult_base"                     
-[397] "ocir.control_difficult_find_thoughts_base"                        "ocir.i_collect_things_i_dont_need_base"                          
-[399] "ocir.felt_pandemic_feelings_numeric"                              "ocir.i_repeatedly_check_doors_windows_drawers_etc_retro_numeric" 
-[401] "ocir.arranged_things_change_upset_retro_numeric"                  "ocir.repeat_feel_numbers_retro_numeric"                          
-[403] "ocir.clean_simply_wash_feel_retro_numeric"                        "ocir.mind_upset_unpleasant_thoughts_retro_numeric"               
-[405] "ocir.afraid_avoid_throwing_things_retro_numeric"                  "ocir.light_switches_water_taps_retro_numeric"                    
-[407] "ocir.arranged_things_retro_numeric"                               "ocir.good_feel_bad_numbers_retro_numeric"                        
-[409] "ocir.hands_longer_wash_retro_numeric"                             "ocir.saved_things_retro_numeric"                                 
-[411] "ocir.frequently_difficulty_rid_nasty_retro_numeric"               "ocir.i_check_things_more_often_than_necessary_retro_numeric"     
-[413] "ocir.arranged_properly_objects_upset_retro_numeric"               "ocir.feel_compelled_count_things_retro_numeric"                  
-[415] "ocir.strangers_touch_touched_difficult_retro_numeric"             "ocir.control_difficult_find_thoughts_retro_numeric"              
-[417] "ocir.i_collect_things_i_dont_need_retro_numeric"                  "ocir.i_repeatedly_check_doors_windows_drawers_etc_base_numeric"  
-[419] "ocir.arranged_things_change_upset_base_numeric"                   "ocir.repeat_feel_numbers_base_numeric"                           
-[421] "ocir.clean_simply_wash_feel_base_numeric"                         "ocir.mind_upset_unpleasant_thoughts_base_numeric"                
-[423] "ocir.afraid_avoid_throwing_things_base_numeric"                   "ocir.light_switches_water_taps_base_numeric"                     
-[425] "ocir.arranged_things_base_numeric"                                "ocir.good_feel_bad_numbers_base_numeric"                         
-[427] "ocir.hands_longer_wash_base_numeric"                              "ocir.saved_things_base_numeric"                                  
-[429] "ocir.frequently_difficulty_rid_nasty_base_numeric"                "ocir.i_check_things_more_often_than_necessary_base_numeric"      
-[431] "ocir.arranged_properly_objects_upset_base_numeric"                "ocir.feel_compelled_count_things_base_numeric"                   
-[433] "ocir.strangers_touch_touched_difficult_base_numeric"              "ocir.control_difficult_find_thoughts_base_numeric"               
-[435] "ocir.i_collect_things_i_dont_need_base_numeric"                   "ocir.sum_score_retro_raw"                                        
-[437] "ocir.sum_score_base_raw"                                          "na_per_person_ocir_retro"                                        
-[439] "na_per_person_ocir_base"                                          "ocir.sum_score_base"                                             
-[441] "ocir.sum_score_retro"                                             "alsfrs.limb_weakness_noticed_past"                               
-[443] "alsfrs.normal"                                                    "alsfrs.slow_or_sloppy_all_words_are_legible"                     
-[445] "alsfrs.not_all_words_are_legible"                                 "alsfrs.able_to_grip_pen"                                         
-[447] "alsfrs.unable_to_grip_pen"                                        "alsfrs.have_you_noticed_any_difficulty_walking"                  
-[449] "alsfrs.do_you_have_any_difficulty_climbing_stairs"                "alsfrs.limb_weakness_noticed_past_numeric"                       
-[451] "alsfrs.normal_numeric"                                            "alsfrs.slow_or_sloppy_all_words_are_legible_numeric"             
-[453] "alsfrs.not_all_words_are_legible_numeric"                         "alsfrs.able_to_grip_pen_numeric"                                 
-[455] "alsfrs.unable_to_grip_pen_numeric"                                "alsfrs.have_you_noticed_any_difficulty_walking_numeric"          
-[457] "alsfrs.do_you_have_any_difficulty_climbing_stairs_numeric"        "ess.felt_excessively_sleepy_past"                                
-[459] "ess.sitting_and_reading"                                          "ess.watching_tv"                                                 
-[461] "ess.sitting_inactive_in_a_public_place"                           "ess.break_passenger_car_hour"                                    
-[463] "ess.afternoon_rest_circumstances_lying"                           "ess.sitting_and_talking_to_someone"                              
-[465] "ess.sitting_quietly_after_a_lunch_without_alcohol"                "ess.car_minutes_stopped_traffic"                                 
-[467] "ess.insomnia"                                                     "ess.narcolepsy"                                                  
-[469] "ess.rem_sleep_behaviour_disorder"                                 "ess.restless_legs_syndrome"                                      
-[471] "ess.sleep_apnea"                                                  "ess.sleep_terrors"                                               
-[473] "ess.sleepwalking"                                                 "ess.other"                                                       
-[475] "ess.none"                                                         "ess.felt_excessively_sleepy_past_numeric"                        
-[477] "ess.sitting_and_reading_numeric"                                  "ess.watching_tv_numeric"                                         
-[479] "ess.sitting_inactive_in_a_public_place_numeric"                   "ess.break_passenger_car_hour_numeric"                            
-[481] "ess.afternoon_rest_circumstances_lying_numeric"                   "ess.sitting_and_talking_to_someone_numeric"                      
-[483] "ess.sitting_quietly_after_a_lunch_without_alcohol_numeric"        "ess.car_minutes_stopped_traffic_numeric"                         
-[485] "ess.insomnia_numeric"                                             "ess.narcolepsy_numeric"                                          
-[487] "ess.rem_sleep_behaviour_disorder_numeric"                         "ess.restless_legs_syndrome_numeric"                              
-[489] "ess.sleep_apnea_numeric"                                          "ess.sleep_terrors_numeric"                                       
-[491] "ess.sleepwalking_numeric"                                         "ess.other_numeric"                                               
-[493] "ess.none_numeric"                                                 "midas.headaches_suffered_past_month"                             
-[495] "midas.days_past_month_miss_work_school"                           "midas.days_past_month_work_school_half_productivity"             
-[497] "midas.days_past_month_miss_housework"                             "midas.days_past_month_housework_half_productivity"               
-[499] "midas.days_past_month_miss_social_activities"                     "midas.headaches_suffered_past_month_numeric"                     
-[501] "midas.days_past_month_miss_work_school_numeric"                   "midas.days_past_month_work_school_half_productivity_numeric"     
-[503] "midas.days_past_month_miss_housework_numeric"                     "midas.days_past_month_housework_half_productivity_numeric"       
-[505] "midas.days_past_month_miss_social_activities_numeric"             "nmss.ability_taste_food_smell"                                   
-[507] "nmss.severe_taste_smell_loss"                                     "nmss.ability_taste_food_smell_numeric"                           
-[509] "nmss.severe_taste_smell_loss_numeric"                             "nmsw.drink_problems_choking_difficulty"                          
-[511] "nmsw.regularly_night_pass_urine"                                  "nmsw.sex_difficult_finding"                                      
-[513] "nmsw.weak_standing_feeling_light"                                 "nmsw.acting_moving_sleep_talking"                                
-[515] "nmsw.double_vision"                                               "nmsw.drink_problems_choking_difficulty_numeric"                  
-[517] "nmsw.regularly_night_pass_urine_numeric"                          "nmsw.sex_difficult_finding_numeric"                              
-[519] "nmsw.weak_standing_feeling_light_numeric"                         "nmsw.acting_moving_sleep_talking_numeric"                        
-[521] "nmsw.double_vision_numeric"                                       "tinnitus.ears_noises_minutes_head"                               
-[523] "tinnitus.ears_noises_minutes_head_frequency"                      "tinnitus.noises_worry_worst_upset"                               
-[525] "tinnitus.ears_noises_minutes_head_numeric"                        "tinnitus.ears_noises_minutes_head_frequency_numeric"             
-[527] "tinnitus.noises_worry_worst_upset_numeric"                        "ID.dup"                                                          
-[529] "prepandemic_january_31_numeric"                                   "prepandemic_january_31"                                          
-[531] "prepandemic_march_1_numeric"                                      "prepandemic_march_1"                                             
-[533] "prepandemic_march_23_numeric"                                     "prepandemic_march_23"                                            
-[535] "time_diff_coping_lockdown_march_23"                               "time_diff_coping_awareness_march_1"                              
-[537] "time_diff_coping_first_case_uk_jan_31"                            "time_diff_signup_lockdown_march_23"                              
-[539] "time_diff_signup_awareness_march_1"                               "time_diff_signup_first_case_uk_jan_31"                           
-[541] "time_diff_sign_up_coping"                                         "phq.diff_score_retro_prepan"                                     
-[543] "phq.diff_score_base_prepan"                                       "phq.diff_score_base_retro"                                       
-[545] "gad.diff_score_retro_prepan"                                      "gad.diff_score_base_prepan"                                      
-[547] "gad.diff_score_base_retro"                                        "pcl.diff_score_base_prepan"                                      
-[549] "ocir.diff_score_retro_prepan"                                     "ocir.diff_score_base_prepan"                                     
-[551] "ocir.diff_score_base_retro"                                       "data_group_phq_numeric"                                          
-[553] "data_group_phq"                                                   "data_group_gad_numeric"                                          
-[555] "data_group_gad"                                                   "data_group_pcl_numeric"                                          
-[557] "data_group_pcl"                                                   "data_group_ocir_numeric"                                         
-[559] "data_group_ocir"                                                  "respiratory.breath_diarrhoea_fatigue_fever"                      
-[561] "respiratory.worst_ill_feel"                                       "respiratory.persistent_cough"                                    
-[563] "respiratory.skipping_meals_because_you_felt_unwell"               "respiratory.was_your_sense_of_smell_impaired"                    
-[565] "respiratory.was_your_sense_of_taste_impaired"                     "respiratory.feeling_tiredfatigued"                               
-[567] "respiratory.throat_swab_coronavirus_nose"                         "respiratory.throat_swab_test_nose"                               
-[569] "respiratory.coronavirus_antibody_test"                            "respiratory.results_antibody_test"                               
-[571] "respiratory.breath_diarrhoea_fatigue_fever_numeric"               "respiratory.worst_ill_feel_numeric"                              
-[573] "respiratory.persistent_cough_numeric"                             "respiratory.skipping_meals_because_you_felt_unwell_numeric"      
-[575] "respiratory.was_your_sense_of_smell_impaired_numeric"             "respiratory.was_your_sense_of_taste_impaired_numeric"            
-[577] "respiratory.feeling_tiredfatigued_numeric"                        "respiratory.throat_swab_coronavirus_nose_numeric"                
-[579] "respiratory.throat_swab_test_nose_numeric"                        "respiratory.coronavirus_antibody_test_numeric"                   
-[581] "respiratory.results_antibody_test_numeric"                        "respiratory.anosmia_binary"                                      
-[583] "respiratory.pcough_binary"                                        "respiratory.fatigue_binary"                                      
-[585] "respiratory.skipped_meals_binary"                                 "Sex_respiratory"                                                 
-[587] "Age_respiratory"                                                  "covid_symptoms"                                                  
-[589] "covid_probability"                                                "covid_odds_ratio"                                                
-[591] "covid_odds_ratio_50_numeric"                                      "covid_odds_ratio_50"                                             
-[593] "covid_probable_case_incl_screening_numeric"                       "covid_probable_case_incl_screening"                              
-[595] "COPING_ID"                                                        "Birthyear_unc"                                                   
-[597] "Birthmonth"                                                       "Birthday"                                                        
-[599] "Birthyear_unc_numeric"                                            "Birthmonth_numeric"                                              
-[601] "Birthday_numeric"                                                 "Birthyear_numeric"                                               
-[603] "Birthdate"                                                        "Cohort"                                                          
-[605] "Ethnicity.unc"                                                    "Cohort_numeric"                                                  
-[607] "Ethnicity.unc_numeric"                                            "Ethnicity_full"                                                  
-[609] "Transgender_uncleaned"                                            "Transgender_uncleaned_numeric"                                   
-[611] "employment.what_is_your_highest_level_of_education"               "employment.what_is_your_highest_level_of_education_numeric"      
-[613] "respiratory.coronavirus_week_antibody_test"                       "respiratory.coronavirus_week_antibody_test_numeric"              
-[615] "covid_test_positive_double_numeric"                               "covid_test_positive_double"                                      
-[617] "gad.covid_test_positive_numeric"                                  "covid_test_positive"                                             
-[619] "age_category_collapsed_numeric"                                   "age_category_collapsed"                                          
-[621] "age_category_collapsed_reordered"                                 "Gender_collapsed_numeric"                                        
-[623] "Gender_collapsed"                                                 "Ethnicity_collapsed_numeric"                                     
-[625] "Ethnicity_collapsed"                                              "Disorder_hierarchical_psychosis_numeric"                         
-[627] "Disorder_hierarchical_psychosis"                                  "Disorder_hierarchical_numeric"                                   
-[629] "Disorder_hierarchical"                                            "gad.change_binary_numeric"                                       
-[631] "gad.change_binary"                                                "phq.change_binary_numeric"                                       
-[633] "phq.change_binary"                                                "ocir.change_binary_numeric"                                      
-[635] "ocir.change_binary"                                               "prepandemic_3_months_numeric"                                    
-[637] "prepandemic_3_months"                                             "prepandemic_6_months_numeric"                                    
-[639] "prepandemic_6_months"                                             "prepandemic_9_months_numeric"                                    
+  [1] "Sample"                                                          
+  [2] "ID"                                                              
+  [3] "startDate.prepandemic"                                           
+  [4] "Age_uncleaned"                                                   
+  [5] "Gender_unc"                                                      
+  [6] "Sex"                                                             
+  [7] "EduYrs"                                                          
+  [8] "demographics.college_or_university_degree"                       
+  [9] "demographics.a_levelsas_levels_or_equivalent"                    
+ [10] "demographics.o_levelsgcses_or_equivalent"                        
+ [11] "demographics.cses_or_equivalent"                                 
+ [12] "demographics.nvq_or_hnd_or_hnc_or_equivalent"                    
+ [13] "Ethnicity_unc"                                                   
+ [14] "Gender_numeric"                                                  
+ [15] "Sex_numeric"                                                     
+ [16] "demographics.college_or_university_degree_numeric"               
+ [17] "demographics.a_levelsas_levels_or_equivalent_numeric"            
+ [18] "demographics.o_levelsgcses_or_equivalent_numeric"                
+ [19] "demographics.cses_or_equivalent_numeric"                         
+ [20] "demographics.nvq_or_hnd_or_hnc_or_equivalent_numeric"            
+ [21] "Ethnicity_numeric"                                               
+ [22] "Gender"                                                          
+ [23] "Ethnicity"                                                       
+ [24] "Age"                                                             
+ [25] "age_category_numeric"                                            
+ [26] "age_category"                                                    
+ [27] "highest_education_prepan_numeric"                                
+ [28] "highest_education_prepan"                                        
+ [29] "employment.phd"                                                  
+ [30] "employment.masters_degree_or_equivalent"                         
+ [31] "employment.postgraduate_degree_or_equivalent"                    
+ [32] "employment.bachelors_degree_or_equivalent"                       
+ [33] "employment.a_levelsas_levels_or_equivalent"                      
+ [34] "employment.o_levelsgcses_or_equivalent"                          
+ [35] "employment.cses_or_equivalent"                                   
+ [36] "employment.nvq_or_hnd_or_hnc_or_equivalent"                      
+ [37] "employment.government_work_key_workers"                          
+ [38] "employment.unemployed"                                           
+ [39] "employment.zerohours_contract"                                   
+ [40] "employment.stayathome_parent_or_carer"                           
+ [41] "employment.retired"                                              
+ [42] "employment.student_gcse_or_a_level"                              
+ [43] "employment.student_university"                                   
+ [44] "employment.became_unemployed"                                    
+ [45] "employment.furloughed_or_paid_leave_government_funded"           
+ [46] "employment.furloughed_or_paid_leave_company_funded"              
+ [47] "employment.paid_leave_furloughed"                                
+ [48] "employment.fulltime_employed"                                    
+ [49] "employment.parttime_employed"                                    
+ [50] "employment.selfemployed"                                         
+ [51] "employment.contract_or_freelance_work"                           
+ [52] "employment.small_business_owner"                                 
+ [53] "employment.receiving_state_income"                               
+ [54] "employment.my_employment_status_has_not_changed"                 
+ [55] "employment.reduction_in_hours"                                   
+ [56] "employment.reduction_in_salary"                                  
+ [57] "employment.benefits_increased"                                   
+ [58] "employment.benefits_decreased"                                   
+ [59] "employment.became_employed"                                      
+ [60] "employment.increased_hours"                                      
+ [61] "employment.increased_salary"                                     
+ [62] "employment.phd_numeric"                                          
+ [63] "employment.masters_degree_or_equivalent_numeric"                 
+ [64] "employment.postgraduate_degree_or_equivalent_numeric"            
+ [65] "employment.bachelors_degree_or_equivalent_numeric"               
+ [66] "employment.a_levelsas_levels_or_equivalent_numeric"              
+ [67] "employment.o_levelsgcses_or_equivalent_numeric"                  
+ [68] "employment.cses_or_equivalent_numeric"                           
+ [69] "employment.nvq_or_hnd_or_hnc_or_equivalent_numeric"              
+ [70] "employment.government_work_key_workers_numeric"                  
+ [71] "employment.unemployed_numeric"                                   
+ [72] "employment.zerohours_contract_numeric"                           
+ [73] "employment.stayathome_parent_or_carer_numeric"                   
+ [74] "employment.retired_numeric"                                      
+ [75] "employment.student_gcse_or_a_level_numeric"                      
+ [76] "employment.student_university_numeric"                           
+ [77] "employment.became_unemployed_numeric"                            
+ [78] "employment.furloughed_or_paid_leave_government_funded_numeric"   
+ [79] "employment.furloughed_or_paid_leave_company_funded_numeric"      
+ [80] "employment.paid_leave_furloughed_numeric"                        
+ [81] "employment.fulltime_employed_numeric"                            
+ [82] "employment.parttime_employed_numeric"                            
+ [83] "employment.selfemployed_numeric"                                 
+ [84] "employment.contract_or_freelance_work_numeric"                   
+ [85] "employment.small_business_owner_numeric"                         
+ [86] "employment.receiving_state_income_numeric"                       
+ [87] "employment.my_employment_status_has_not_changed_numeric"         
+ [88] "employment.reduction_in_hours_numeric"                           
+ [89] "employment.reduction_in_salary_numeric"                          
+ [90] "employment.benefits_increased_numeric"                           
+ [91] "employment.benefits_decreased_numeric"                           
+ [92] "employment.became_employed_numeric"                              
+ [93] "employment.increased_hours_numeric"                              
+ [94] "employment.increased_salary_numeric"                             
+ [95] "highest_education_numeric"                                       
+ [96] "highest_education"                                               
+ [97] "employment_prior_covid_numeric"                                  
+ [98] "employment_prior_covid"                                          
+ [99] "employment_change_numeric"                                       
+[100] "employment_change"                                               
+[101] "key_worker_numeric"                                              
+[102] "key_worker"                                                      
+[103] "anxiety_disorders_numeric"                                       
+[104] "anxiety_disorders"                                               
+[105] "mhd.specific_phobia_e.g._phobia_of_flying_numeric"               
+[106] "mhd.specific_phobia_e.g._phobia_of_flying"                       
+[107] "mhd.social_anxiety_or_social_phobia_numeric"                     
+[108] "mhd.social_anxiety_or_social_phobia"                             
+[109] "agoraphobia_panic_disorder_numeric"                              
+[110] "agoraphobia_panic_disorder"                                      
+[111] "depressive_disorders_numeric"                                    
+[112] "depressive_disorders"                                            
+[113] "eating_disorders_numeric"                                        
+[114] "eating_disorders"                                                
+[115] "obsessive_compulsive_disorders_numeric"                          
+[116] "obsessive_compulsive_disorders"                                  
+[117] "psychotic_disorders_numeric"                                     
+[118] "psychotic_disorders"                                             
+[119] "mhd.mania_hypomania_bipolar_or_manicdepression_numeric"          
+[120] "mhd.mania_hypomania_bipolar_or_manicdepression"                  
+[121] "mhd.posttraumatic_stress_disorder_ptsd_numeric"                  
+[122] "mhd.posttraumatic_stress_disorder_ptsd"                          
+[123] "autism_spectrum_disorder_numeric"                                
+[124] "autism_spectrum_disorder"                                        
+[125] "mhd.attention_deficit_hyperactivity_disorder_numeric"            
+[126] "mhd.attention_deficit_hyperactivity_disorder"                    
+[127] "mhd.personality_disorder_numeric"                                
+[128] "mhd.personality_disorder"                                        
+[129] "personality_cluster_a_numeric"                                   
+[130] "personality_cluster_a"                                           
+[131] "personality_cluster_b_numeric"                                   
+[132] "personality_cluster_b"                                           
+[133] "personality_cluster_c_numeric"                                   
+[134] "personality_cluster_c"                                           
+[135] "depression_and_anxiety_numeric"                                  
+[136] "depression_and_anxiety"                                          
+[137] "restricting_vs_binge_eating_eating_disorders_numeric"            
+[138] "restricting_vs_binge_eating_eating_disorders"                    
+[139] "bipolar_and_schizophrenia_numeric"                               
+[140] "bipolar_and_schizophrenia"                                       
+[141] "control_numeric"                                                 
+[142] "control"                                                         
+[143] "disorders_total_count"                                           
+[144] "comorbidity_total_count_numeric"                                 
+[145] "comorbidity_total_count_factor_numeric"                          
+[146] "comorbidity_total_count_factor"                                  
+[147] "mhd.none_of_the_above"                                           
+[148] "mhd.none_of_the_above.1"                                         
+[149] "gad.feeling_nervous_anxious_or_on_edge_prepan"                   
+[150] "gad.control_worrying_stop_prepan"                                
+[151] "gad.worrying_too_much_about_different_things_prepan"             
+[152] "gad.trouble_relaxing_prepan"                                     
+[153] "gad.sit_restless_hard_prepan"                                    
+[154] "gad.becoming_easily_annoyed_or_irritable_prepan"                 
+[155] "gad.awful_feeling_afraid_happen_prepan"                          
+[156] "gad.feeling_nervous_anxious_or_on_edge_prepan_numeric"           
+[157] "gad.control_worrying_stop_prepan_numeric"                        
+[158] "gad.worrying_too_much_about_different_things_prepan_numeric"     
+[159] "gad.trouble_relaxing_prepan_numeric"                             
+[160] "gad.sit_restless_hard_prepan_numeric"                            
+[161] "gad.becoming_easily_annoyed_or_irritable_prepan_numeric"         
+[162] "gad.awful_feeling_afraid_happen_prepan_numeric"                  
+[163] "gad.sum_score_prepan_raw"                                        
+[164] "na_per_person_gad_prepan"                                        
+[165] "gad.sum_score_prepan"                                            
+[166] "pcl.stressful_experience_repeated_images_prepan"                 
+[167] "pcl.stressful_experience_upset_reminded_prepan"                  
+[168] "pcl.stressful_situation_avoiding_activities_prepan"              
+[169] "pcl.cut_people_feeling_distant_prepan"                           
+[170] "pcl.feeling_irritable_or_having_angry_outbursts_prepan"          
+[171] "pcl.difficulty_concentrating_prepan"                             
+[172] "pcl.stressful_experience_repeated_images_prepan_numeric"         
+[173] "pcl.stressful_experience_upset_reminded_prepan_numeric"          
+[174] "pcl.stressful_situation_avoiding_activities_prepan_numeric"      
+[175] "pcl.cut_people_feeling_distant_prepan_numeric"                   
+[176] "pcl.feeling_irritable_or_having_angry_outbursts_prepan_numeric"  
+[177] "pcl.difficulty_concentrating_prepan_numeric"                     
+[178] "pcl.sum_score_prepan_raw"                                        
+[179] "na_per_person_pcl_prepan"                                        
+[180] "pcl.sum_score_prepan"                                            
+[181] "phq.little_interest_or_pleasure_in_doing_things_prepan"          
+[182] "phq.feeling_down_depressed_or_hopeless_prepan"                   
+[183] "phq.staying_asleep_sleeping_trouble_prepan"                      
+[184] "phq.feeling_tired_or_having_little_energy_prepan"                
+[185] "phq.poor_appetite_or_overeating_prepan"                          
+[186] "phq.feeling_bad_failure_family_prepan"                           
+[187] "phq.trouble_concentrating_reading_newspaper_prepan"              
+[188] "phq.moving_fidgety_noticed_opposite_prepan"                      
+[189] "phq.dead_hurting_thoughts_prepan"                                
+[190] "phq.little_interest_or_pleasure_in_doing_things_prepan_numeric"  
+[191] "phq.feeling_down_depressed_or_hopeless_prepan_numeric"           
+[192] "phq.staying_asleep_sleeping_trouble_prepan_numeric"              
+[193] "phq.feeling_tired_or_having_little_energy_prepan_numeric"        
+[194] "phq.poor_appetite_or_overeating_prepan_numeric"                  
+[195] "phq.feeling_bad_failure_family_prepan_numeric"                   
+[196] "phq.trouble_concentrating_reading_newspaper_prepan_numeric"      
+[197] "phq.moving_fidgety_noticed_opposite_prepan_numeric"              
+[198] "phq.dead_hurting_thoughts_prepan_numeric"                        
+[199] "phq.sum_score_prepan_raw"                                        
+[200] "na_per_person_phq_prepan"                                        
+[201] "phq.missing_only_suicide_item_prepan"                            
+[202] "phq.sum_score_prepan"                                            
+[203] "phq.sum_score_8items_prepan"                                     
+[204] "ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan"        
+[205] "ocir.arranged_things_change_upset_prepan"                        
+[206] "ocir.repeat_feel_numbers_prepan"                                 
+[207] "ocir.clean_simply_wash_feel_prepan"                              
+[208] "ocir.mind_upset_unpleasant_thoughts_prepan"                      
+[209] "ocir.afraid_avoid_throwing_things_prepan"                        
+[210] "ocir.light_switches_water_taps_prepan"                           
+[211] "ocir.arranged_things_prepan"                                     
+[212] "ocir.good_feel_bad_numbers_prepan"                               
+[213] "ocir.hands_longer_wash_prepan"                                   
+[214] "ocir.saved_things_prepan"                                        
+[215] "ocir.frequently_difficulty_rid_nasty_prepan"                     
+[216] "ocir.i_check_things_more_often_than_necessary_prepan"            
+[217] "ocir.arranged_properly_objects_upset_prepan"                     
+[218] "ocir.feel_compelled_count_things_prepan"                         
+[219] "ocir.strangers_touch_touched_difficult_prepan"                   
+[220] "ocir.control_difficult_find_thoughts_prepan"                     
+[221] "ocir.i_collect_things_i_dont_need_prepan"                        
+[222] "ocir.i_repeatedly_check_doors_windows_drawers_etc_prepan_numeric"
+[223] "ocir.arranged_things_change_upset_prepan_numeric"                
+[224] "ocir.repeat_feel_numbers_prepan_numeric"                         
+[225] "ocir.clean_simply_wash_feel_prepan_numeric"                      
+[226] "ocir.mind_upset_unpleasant_thoughts_prepan_numeric"              
+[227] "ocir.afraid_avoid_throwing_things_prepan_numeric"                
+[228] "ocir.light_switches_water_taps_prepan_numeric"                   
+[229] "ocir.arranged_things_prepan_numeric"                             
+[230] "ocir.good_feel_bad_numbers_prepan_numeric"                       
+[231] "ocir.hands_longer_wash_prepan_numeric"                           
+[232] "ocir.saved_things_prepan_numeric"                                
+[233] "ocir.frequently_difficulty_rid_nasty_prepan_numeric"             
+[234] "ocir.i_check_things_more_often_than_necessary_prepan_numeric"    
+[235] "ocir.arranged_properly_objects_upset_prepan_numeric"             
+[236] "ocir.feel_compelled_count_things_prepan_numeric"                 
+[237] "ocir.strangers_touch_touched_difficult_prepan_numeric"           
+[238] "ocir.control_difficult_find_thoughts_prepan_numeric"             
+[239] "ocir.i_collect_things_i_dont_need_prepan_numeric"                
+[240] "ocir.sum_score_prepan_raw"                                       
+[241] "na_per_person_ocir_prepan"                                       
+[242] "ocir.sum_score_prepan"                                           
+[243] "startDate.coping"                                                
+[244] "gad.problems_made_difficult_care"                                
+[245] "gad.pandemic_felt_feelings"                                      
+[246] "gad.feeling_nervous_anxious_or_on_edge_retro"                    
+[247] "gad.control_worrying_stop_retro"                                 
+[248] "gad.worrying_too_much_about_different_things_retro"              
+[249] "gad.trouble_relaxing_retro"                                      
+[250] "gad.sit_restless_hard_retro"                                     
+[251] "gad.becoming_easily_annoyed_or_irritable_retro"                  
+[252] "gad.awful_feeling_afraid_happen_retro"                           
+[253] "gad.feeling_nervous_anxious_or_on_edge_base"                     
+[254] "gad.control_worrying_stop_base"                                  
+[255] "gad.worrying_too_much_about_different_things_base"               
+[256] "gad.trouble_relaxing_base"                                       
+[257] "gad.sit_restless_hard_base"                                      
+[258] "gad.becoming_easily_annoyed_or_irritable_base"                   
+[259] "gad.awful_feeling_afraid_happen_base"                            
+[260] "gad.problems_made_difficult_care_numeric"                        
+[261] "gad.pandemic_felt_feelings_numeric"                              
+[262] "gad.feeling_nervous_anxious_or_on_edge_retro_numeric"            
+[263] "gad.control_worrying_stop_retro_numeric"                         
+[264] "gad.worrying_too_much_about_different_things_retro_numeric"      
+[265] "gad.trouble_relaxing_retro_numeric"                              
+[266] "gad.sit_restless_hard_retro_numeric"                             
+[267] "gad.becoming_easily_annoyed_or_irritable_retro_numeric"          
+[268] "gad.awful_feeling_afraid_happen_retro_numeric"                   
+[269] "gad.feeling_nervous_anxious_or_on_edge_base_numeric"             
+[270] "gad.control_worrying_stop_base_numeric"                          
+[271] "gad.worrying_too_much_about_different_things_base_numeric"       
+[272] "gad.trouble_relaxing_base_numeric"                               
+[273] "gad.sit_restless_hard_base_numeric"                              
+[274] "gad.becoming_easily_annoyed_or_irritable_base_numeric"           
+[275] "gad.awful_feeling_afraid_happen_base_numeric"                    
+[276] "gad.sum_score_retro_raw"                                         
+[277] "gad.sum_score_base_raw"                                          
+[278] "na_per_person_gad_base"                                          
+[279] "na_per_person_gad_retro"                                         
+[280] "gad.sum_score_base"                                              
+[281] "gad.sum_score_retro"                                             
+[282] "pcl.stressful_experience_repeated_images_base"                   
+[283] "pcl.stressful_experience_upset_reminded_base"                    
+[284] "pcl.stressful_situation_avoiding_activities_base"                
+[285] "pcl.cut_people_feeling_distant_base"                             
+[286] "pcl.feeling_irritable_or_having_angry_outbursts_base"            
+[287] "pcl.difficulty_concentrating_base"                               
+[288] "pcl.stressful_experience_repeated_images_retro"                  
+[289] "pcl.stressful_experience_upset_reminded_retro"                   
+[290] "pcl.stressful_situation_avoiding_activities_retro"               
+[291] "pcl.cut_people_feeling_distant_retro"                            
+[292] "pcl.feeling_irritable_or_having_angry_outbursts_retro"           
+[293] "pcl.difficulty_concentrating_retro"                              
+[294] "pcl.stressful_experience_repeated_images_base_numeric"           
+[295] "pcl.stressful_experience_upset_reminded_base_numeric"            
+[296] "pcl.stressful_situation_avoiding_activities_base_numeric"        
+[297] "pcl.cut_people_feeling_distant_base_numeric"                     
+[298] "pcl.feeling_irritable_or_having_angry_outbursts_base_numeric"    
+[299] "pcl.difficulty_concentrating_base_numeric"                       
+[300] "pcl.stressful_experience_repeated_images_retro_numeric"          
+[301] "pcl.stressful_experience_upset_reminded_retro_numeric"           
+[302] "pcl.stressful_situation_avoiding_activities_retro_numeric"       
+[303] "pcl.cut_people_feeling_distant_retro_numeric"                    
+[304] "pcl.feeling_irritable_or_having_angry_outbursts_retro_numeric"   
+[305] "pcl.difficulty_concentrating_retro_numeric"                      
+[306] "pcl.sum_score_retro_raw"                                         
+[307] "pcl.sum_score_base_raw"                                          
+[308] "na_per_person_pcl_base"                                          
+[309] "na_per_person_pcl_retro"                                         
+[310] "pcl.sum_score_base"                                              
+[311] "pcl.sum_score_retro"                                             
+[312] "phq.problems_made_difficult_care"                                
+[313] "phq.pandemic_felt_feelings"                                      
+[314] "phq.little_interest_or_pleasure_in_doing_things_retro"           
+[315] "phq.feeling_down_depressed_or_hopeless_retro"                    
+[316] "phq.staying_asleep_sleeping_trouble_retro"                       
+[317] "phq.feeling_tired_or_having_little_energy_retro"                 
+[318] "phq.poor_appetite_or_overeating_retro"                           
+[319] "phq.feeling_bad_failure_family_retro"                            
+[320] "phq.trouble_concentrating_reading_newspaper_retro"               
+[321] "phq.moving_fidgety_noticed_opposite_retro"                       
+[322] "phq.dead_hurting_thoughts_retro"                                 
+[323] "phq.little_interest_or_pleasure_in_doing_things_base"            
+[324] "phq.feeling_down_depressed_or_hopeless_base"                     
+[325] "phq.staying_asleep_sleeping_trouble_base"                        
+[326] "phq.feeling_tired_or_having_little_energy_base"                  
+[327] "phq.poor_appetite_or_overeating_base"                            
+[328] "phq.feeling_bad_failure_family_base"                             
+[329] "phq.trouble_concentrating_reading_newspaper_base"                
+[330] "phq.moving_fidgety_noticed_opposite_base"                        
+[331] "phq.dead_hurting_thoughts_base"                                  
+[332] "phq.problems_made_difficult_care_numeric"                        
+[333] "phq.pandemic_felt_feelings_numeric"                              
+[334] "phq.little_interest_or_pleasure_in_doing_things_retro_numeric"   
+[335] "phq.feeling_down_depressed_or_hopeless_retro_numeric"            
+[336] "phq.staying_asleep_sleeping_trouble_retro_numeric"               
+[337] "phq.feeling_tired_or_having_little_energy_retro_numeric"         
+[338] "phq.poor_appetite_or_overeating_retro_numeric"                   
+[339] "phq.feeling_bad_failure_family_retro_numeric"                    
+[340] "phq.trouble_concentrating_reading_newspaper_retro_numeric"       
+[341] "phq.moving_fidgety_noticed_opposite_retro_numeric"               
+[342] "phq.dead_hurting_thoughts_retro_numeric"                         
+[343] "phq.little_interest_or_pleasure_in_doing_things_base_numeric"    
+[344] "phq.feeling_down_depressed_or_hopeless_base_numeric"             
+[345] "phq.staying_asleep_sleeping_trouble_base_numeric"                
+[346] "phq.feeling_tired_or_having_little_energy_base_numeric"          
+[347] "phq.poor_appetite_or_overeating_base_numeric"                    
+[348] "phq.feeling_bad_failure_family_base_numeric"                     
+[349] "phq.trouble_concentrating_reading_newspaper_base_numeric"        
+[350] "phq.moving_fidgety_noticed_opposite_base_numeric"                
+[351] "phq.dead_hurting_thoughts_base_numeric"                          
+[352] "phq.sum_score_retro_raw"                                         
+[353] "phq.sum_score_base_raw"                                          
+[354] "na_per_person_phq_retro"                                         
+[355] "phq.missing_only_suicide_item_retro"                             
+[356] "na_per_person_phq_base"                                          
+[357] "phq.missing_only_suicide_item_base"                              
+[358] "phq.sum_score_base"                                              
+[359] "phq.sum_score_8items_base"                                       
+[360] "phq.sum_score_retro"                                             
+[361] "phq.sum_score_8items_retro"                                      
+[362] "ocir.felt_pandemic_feelings"                                     
+[363] "ocir.i_repeatedly_check_doors_windows_drawers_etc_retro"         
+[364] "ocir.arranged_things_change_upset_retro"                         
+[365] "ocir.repeat_feel_numbers_retro"                                  
+[366] "ocir.clean_simply_wash_feel_retro"                               
+[367] "ocir.mind_upset_unpleasant_thoughts_retro"                       
+[368] "ocir.afraid_avoid_throwing_things_retro"                         
+[369] "ocir.light_switches_water_taps_retro"                            
+[370] "ocir.arranged_things_retro"                                      
+[371] "ocir.good_feel_bad_numbers_retro"                                
+[372] "ocir.hands_longer_wash_retro"                                    
+[373] "ocir.saved_things_retro"                                         
+[374] "ocir.frequently_difficulty_rid_nasty_retro"                      
+[375] "ocir.i_check_things_more_often_than_necessary_retro"             
+[376] "ocir.arranged_properly_objects_upset_retro"                      
+[377] "ocir.feel_compelled_count_things_retro"                          
+[378] "ocir.strangers_touch_touched_difficult_retro"                    
+[379] "ocir.control_difficult_find_thoughts_retro"                      
+[380] "ocir.i_collect_things_i_dont_need_retro"                         
+[381] "ocir.i_repeatedly_check_doors_windows_drawers_etc_base"          
+[382] "ocir.arranged_things_change_upset_base"                          
+[383] "ocir.repeat_feel_numbers_base"                                   
+[384] "ocir.clean_simply_wash_feel_base"                                
+[385] "ocir.mind_upset_unpleasant_thoughts_base"                        
+[386] "ocir.afraid_avoid_throwing_things_base"                          
+[387] "ocir.light_switches_water_taps_base"                             
+[388] "ocir.arranged_things_base"                                       
+[389] "ocir.good_feel_bad_numbers_base"                                 
+[390] "ocir.hands_longer_wash_base"                                     
+[391] "ocir.saved_things_base"                                          
+[392] "ocir.frequently_difficulty_rid_nasty_base"                       
+[393] "ocir.i_check_things_more_often_than_necessary_base"              
+[394] "ocir.arranged_properly_objects_upset_base"                       
+[395] "ocir.feel_compelled_count_things_base"                           
+[396] "ocir.strangers_touch_touched_difficult_base"                     
+[397] "ocir.control_difficult_find_thoughts_base"                       
+[398] "ocir.i_collect_things_i_dont_need_base"                          
+[399] "ocir.felt_pandemic_feelings_numeric"                             
+[400] "ocir.i_repeatedly_check_doors_windows_drawers_etc_retro_numeric" 
+[401] "ocir.arranged_things_change_upset_retro_numeric"                 
+[402] "ocir.repeat_feel_numbers_retro_numeric"                          
+[403] "ocir.clean_simply_wash_feel_retro_numeric"                       
+[404] "ocir.mind_upset_unpleasant_thoughts_retro_numeric"               
+[405] "ocir.afraid_avoid_throwing_things_retro_numeric"                 
+[406] "ocir.light_switches_water_taps_retro_numeric"                    
+[407] "ocir.arranged_things_retro_numeric"                              
+[408] "ocir.good_feel_bad_numbers_retro_numeric"                        
+[409] "ocir.hands_longer_wash_retro_numeric"                            
+[410] "ocir.saved_things_retro_numeric"                                 
+[411] "ocir.frequently_difficulty_rid_nasty_retro_numeric"              
+[412] "ocir.i_check_things_more_often_than_necessary_retro_numeric"     
+[413] "ocir.arranged_properly_objects_upset_retro_numeric"              
+[414] "ocir.feel_compelled_count_things_retro_numeric"                  
+[415] "ocir.strangers_touch_touched_difficult_retro_numeric"            
+[416] "ocir.control_difficult_find_thoughts_retro_numeric"              
+[417] "ocir.i_collect_things_i_dont_need_retro_numeric"                 
+[418] "ocir.i_repeatedly_check_doors_windows_drawers_etc_base_numeric"  
+[419] "ocir.arranged_things_change_upset_base_numeric"                  
+[420] "ocir.repeat_feel_numbers_base_numeric"                           
+[421] "ocir.clean_simply_wash_feel_base_numeric"                        
+[422] "ocir.mind_upset_unpleasant_thoughts_base_numeric"                
+[423] "ocir.afraid_avoid_throwing_things_base_numeric"                  
+[424] "ocir.light_switches_water_taps_base_numeric"                     
+[425] "ocir.arranged_things_base_numeric"                               
+[426] "ocir.good_feel_bad_numbers_base_numeric"                         
+[427] "ocir.hands_longer_wash_base_numeric"                             
+[428] "ocir.saved_things_base_numeric"                                  
+[429] "ocir.frequently_difficulty_rid_nasty_base_numeric"               
+[430] "ocir.i_check_things_more_often_than_necessary_base_numeric"      
+[431] "ocir.arranged_properly_objects_upset_base_numeric"               
+[432] "ocir.feel_compelled_count_things_base_numeric"                   
+[433] "ocir.strangers_touch_touched_difficult_base_numeric"             
+[434] "ocir.control_difficult_find_thoughts_base_numeric"               
+[435] "ocir.i_collect_things_i_dont_need_base_numeric"                  
+[436] "ocir.sum_score_retro_raw"                                        
+[437] "ocir.sum_score_base_raw"                                         
+[438] "na_per_person_ocir_retro"                                        
+[439] "na_per_person_ocir_base"                                         
+[440] "ocir.sum_score_base"                                             
+[441] "ocir.sum_score_retro"                                            
+[442] "alsfrs.limb_weakness_noticed_past"                               
+[443] "alsfrs.normal"                                                   
+[444] "alsfrs.slow_or_sloppy_all_words_are_legible"                     
+[445] "alsfrs.not_all_words_are_legible"                                
+[446] "alsfrs.able_to_grip_pen"                                         
+[447] "alsfrs.unable_to_grip_pen"                                       
+[448] "alsfrs.have_you_noticed_any_difficulty_walking"                  
+[449] "alsfrs.do_you_have_any_difficulty_climbing_stairs"               
+[450] "alsfrs.limb_weakness_noticed_past_numeric"                       
+[451] "alsfrs.normal_numeric"                                           
+[452] "alsfrs.slow_or_sloppy_all_words_are_legible_numeric"             
+[453] "alsfrs.not_all_words_are_legible_numeric"                        
+[454] "alsfrs.able_to_grip_pen_numeric"                                 
+[455] "alsfrs.unable_to_grip_pen_numeric"                               
+[456] "alsfrs.have_you_noticed_any_difficulty_walking_numeric"          
+[457] "alsfrs.do_you_have_any_difficulty_climbing_stairs_numeric"       
+[458] "ess.felt_excessively_sleepy_past"                                
+[459] "ess.sitting_and_reading"                                         
+[460] "ess.watching_tv"                                                 
+[461] "ess.sitting_inactive_in_a_public_place"                          
+[462] "ess.break_passenger_car_hour"                                    
+[463] "ess.afternoon_rest_circumstances_lying"                          
+[464] "ess.sitting_and_talking_to_someone"                              
+[465] "ess.sitting_quietly_after_a_lunch_without_alcohol"               
+[466] "ess.car_minutes_stopped_traffic"                                 
+[467] "ess.insomnia"                                                    
+[468] "ess.narcolepsy"                                                  
+[469] "ess.rem_sleep_behaviour_disorder"                                
+[470] "ess.restless_legs_syndrome"                                      
+[471] "ess.sleep_apnea"                                                 
+[472] "ess.sleep_terrors"                                               
+[473] "ess.sleepwalking"                                                
+[474] "ess.other"                                                       
+[475] "ess.none"                                                        
+[476] "ess.felt_excessively_sleepy_past_numeric"                        
+[477] "ess.sitting_and_reading_numeric"                                 
+[478] "ess.watching_tv_numeric"                                         
+[479] "ess.sitting_inactive_in_a_public_place_numeric"                  
+[480] "ess.break_passenger_car_hour_numeric"                            
+[481] "ess.afternoon_rest_circumstances_lying_numeric"                  
+[482] "ess.sitting_and_talking_to_someone_numeric"                      
+[483] "ess.sitting_quietly_after_a_lunch_without_alcohol_numeric"       
+[484] "ess.car_minutes_stopped_traffic_numeric"                         
+[485] "ess.insomnia_numeric"                                            
+[486] "ess.narcolepsy_numeric"                                          
+[487] "ess.rem_sleep_behaviour_disorder_numeric"                        
+[488] "ess.restless_legs_syndrome_numeric"                              
+[489] "ess.sleep_apnea_numeric"                                         
+[490] "ess.sleep_terrors_numeric"                                       
+[491] "ess.sleepwalking_numeric"                                        
+[492] "ess.other_numeric"                                               
+[493] "ess.none_numeric"                                                
+[494] "midas.headaches_suffered_past_month"                             
+[495] "midas.days_past_month_miss_work_school"                          
+[496] "midas.days_past_month_work_school_half_productivity"             
+[497] "midas.days_past_month_miss_housework"                            
+[498] "midas.days_past_month_housework_half_productivity"               
+[499] "midas.days_past_month_miss_social_activities"                    
+[500] "midas.headaches_suffered_past_month_numeric"                     
+[501] "midas.days_past_month_miss_work_school_numeric"                  
+[502] "midas.days_past_month_work_school_half_productivity_numeric"     
+[503] "midas.days_past_month_miss_housework_numeric"                    
+[504] "midas.days_past_month_housework_half_productivity_numeric"       
+[505] "midas.days_past_month_miss_social_activities_numeric"            
+[506] "nmss.ability_taste_food_smell"                                   
+[507] "nmss.severe_taste_smell_loss"                                    
+[508] "nmss.ability_taste_food_smell_numeric"                           
+[509] "nmss.severe_taste_smell_loss_numeric"                            
+[510] "nmsw.drink_problems_choking_difficulty"                          
+[511] "nmsw.regularly_night_pass_urine"                                 
+[512] "nmsw.sex_difficult_finding"                                      
+[513] "nmsw.weak_standing_feeling_light"                                
+[514] "nmsw.acting_moving_sleep_talking"                                
+[515] "nmsw.double_vision"                                              
+[516] "nmsw.drink_problems_choking_difficulty_numeric"                  
+[517] "nmsw.regularly_night_pass_urine_numeric"                         
+[518] "nmsw.sex_difficult_finding_numeric"                              
+[519] "nmsw.weak_standing_feeling_light_numeric"                        
+[520] "nmsw.acting_moving_sleep_talking_numeric"                        
+[521] "nmsw.double_vision_numeric"                                      
+[522] "tinnitus.ears_noises_minutes_head"                               
+[523] "tinnitus.ears_noises_minutes_head_frequency"                     
+[524] "tinnitus.noises_worry_worst_upset"                               
+[525] "tinnitus.ears_noises_minutes_head_numeric"                       
+[526] "tinnitus.ears_noises_minutes_head_frequency_numeric"             
+[527] "tinnitus.noises_worry_worst_upset_numeric"                       
+[528] "ID.dup"                                                          
+[529] "prepandemic_january_31_numeric"                                  
+[530] "prepandemic_january_31"                                          
+[531] "prepandemic_march_1_numeric"                                     
+[532] "prepandemic_march_1"                                             
+[533] "prepandemic_march_23_numeric"                                    
+[534] "prepandemic_march_23"                                            
+[535] "time_diff_coping_lockdown_march_23"                              
+[536] "time_diff_coping_awareness_march_1"                              
+[537] "time_diff_coping_first_case_uk_jan_31"                           
+[538] "time_diff_signup_lockdown_march_23"                              
+[539] "time_diff_signup_awareness_march_1"                              
+[540] "time_diff_signup_first_case_uk_jan_31"                           
+[541] "time_diff_sign_up_coping"                                        
+[542] "phq.diff_score_retro_prepan"                                     
+[543] "phq.diff_score_base_prepan"                                      
+[544] "phq.diff_score_base_retro"                                       
+[545] "gad.diff_score_retro_prepan"                                     
+[546] "gad.diff_score_base_prepan"                                      
+[547] "gad.diff_score_base_retro"                                       
+[548] "pcl.diff_score_base_prepan"                                      
+[549] "ocir.diff_score_retro_prepan"                                    
+[550] "ocir.diff_score_base_prepan"                                     
+[551] "ocir.diff_score_base_retro"                                      
+[552] "data_group_phq_numeric"                                          
+[553] "data_group_phq"                                                  
+[554] "data_group_gad_numeric"                                          
+[555] "data_group_gad"                                                  
+[556] "data_group_pcl_numeric"                                          
+[557] "data_group_pcl"                                                  
+[558] "data_group_ocir_numeric"                                         
+[559] "data_group_ocir"                                                 
+[560] "respiratory.breath_diarrhoea_fatigue_fever"                      
+[561] "respiratory.worst_ill_feel"                                      
+[562] "respiratory.persistent_cough"                                    
+[563] "respiratory.skipping_meals_because_you_felt_unwell"              
+[564] "respiratory.was_your_sense_of_smell_impaired"                    
+[565] "respiratory.was_your_sense_of_taste_impaired"                    
+[566] "respiratory.feeling_tiredfatigued"                               
+[567] "respiratory.throat_swab_coronavirus_nose"                        
+[568] "respiratory.throat_swab_test_nose"                               
+[569] "respiratory.coronavirus_antibody_test"                           
+[570] "respiratory.results_antibody_test"                               
+[571] "respiratory.breath_diarrhoea_fatigue_fever_numeric"              
+[572] "respiratory.worst_ill_feel_numeric"                              
+[573] "respiratory.persistent_cough_numeric"                            
+[574] "respiratory.skipping_meals_because_you_felt_unwell_numeric"      
+[575] "respiratory.was_your_sense_of_smell_impaired_numeric"            
+[576] "respiratory.was_your_sense_of_taste_impaired_numeric"            
+[577] "respiratory.feeling_tiredfatigued_numeric"                       
+[578] "respiratory.throat_swab_coronavirus_nose_numeric"                
+[579] "respiratory.throat_swab_test_nose_numeric"                       
+[580] "respiratory.coronavirus_antibody_test_numeric"                   
+[581] "respiratory.results_antibody_test_numeric"                       
+[582] "respiratory.anosmia_binary"                                      
+[583] "respiratory.pcough_binary"                                       
+[584] "respiratory.fatigue_binary"                                      
+[585] "respiratory.skipped_meals_binary"                                
+[586] "Sex_respiratory"                                                 
+[587] "Age_respiratory"                                                 
+[588] "covid_symptoms"                                                  
+[589] "covid_probability"                                               
+[590] "covid_odds_ratio"                                                
+[591] "covid_odds_ratio_50_numeric"                                     
+[592] "covid_odds_ratio_50"                                             
+[593] "covid_probable_case_incl_screening_numeric"                      
+[594] "covid_probable_case_incl_screening"                              
+[595] "COPING_ID"                                                       
+[596] "Birthyear_unc"                                                   
+[597] "Birthmonth"                                                      
+[598] "Birthday"                                                        
+[599] "Birthyear_unc_numeric"                                           
+[600] "Birthmonth_numeric"                                              
+[601] "Birthday_numeric"                                                
+[602] "Birthyear_numeric"                                               
+[603] "Birthdate"                                                       
+[604] "Cohort"                                                          
+[605] "Ethnicity.unc"                                                   
+[606] "Cohort_numeric"                                                  
+[607] "Ethnicity.unc_numeric"                                           
+[608] "Ethnicity_full"                                                  
+[609] "Transgender_uncleaned"                                           
+[610] "Transgender_uncleaned_numeric"                                   
+[611] "employment.what_is_your_highest_level_of_education"              
+[612] "employment.what_is_your_highest_level_of_education_numeric"      
+[613] "respiratory.coronavirus_week_antibody_test"                      
+[614] "respiratory.coronavirus_week_antibody_test_numeric"              
+[615] "covid_test_positive_double_numeric"                              
+[616] "covid_test_positive_double"                                      
+[617] "gad.covid_test_positive_numeric"                                 
+[618] "covid_test_positive"                                             
+[619] "age_category_collapsed_numeric"                                  
+[620] "age_category_collapsed"                                          
+[621] "age_category_collapsed_reordered"                                
+[622] "Gender_collapsed_numeric"                                        
+[623] "Gender_collapsed"                                                
+[624] "Ethnicity_collapsed_numeric"                                     
+[625] "Ethnicity_collapsed"                                             
+[626] "Disorder_hierarchical_psychosis_numeric"                         
+[627] "Disorder_hierarchical_psychosis"                                 
+[628] "Disorder_hierarchical_numeric"                                   
+[629] "Disorder_hierarchical"                                           
+[630] "gad.change_binary_numeric"                                       
+[631] "gad.change_binary"                                               
+[632] "phq.change_binary_numeric"                                       
+[633] "phq.change_binary"                                               
+[634] "ocir.change_binary_numeric"                                      
+[635] "ocir.change_binary"                                              
+[636] "prepandemic_3_months_numeric"                                    
+[637] "prepandemic_3_months"                                            
+[638] "prepandemic_6_months_numeric"                                    
+[639] "prepandemic_6_months"                                            
+[640] "prepandemic_9_months_numeric"                                    
 [641] "prepandemic_9_months"                                            
 ```
 
@@ -474,36 +803,7 @@ Warning in max(., na.rm = T): no non-missing arguments to max; returning -Inf
 Warning in max(., na.rm = T): no non-missing arguments to max; returning -Inf
 ```
 
-```
-# A tibble: 4 x 22
-  gad.change_bina… Prepan_mean Base_mean Retro_mean Prepan_sd Base_sd Retro_sd Prepan_median Base_median Retro_median Prepan_min Base_min Retro_min
-  <fct>                  <dbl>     <dbl>      <dbl>     <dbl>   <dbl>    <dbl>         <dbl>       <dbl>        <dbl>      <dbl>    <dbl>     <dbl>
-1 No change               8.25      2.67     NaN         6.20    4.45    NA                7         0             NA          0        0       Inf
-2 Worsening               9.40      8.70       4.64      5.86    5.70     4.28             8         7              4          0        0         0
-3 Improvement             9.23      4.77       8.36      5.82    4.83     5.47             8         3              7          0        0         0
-4 <NA>                   10         5.7      NaN         8.56    5.99    NA               13         4.5           NA          0        0       Inf
-# … with 9 more variables: Prepan_max <dbl>, Base_max <dbl>, Retro_max <dbl>, Prepan_skew <dbl>, Base_skew <dbl>, Retro_skew <dbl>,
-#   Prepan_kurtosis <dbl>, Base_kurtosis <dbl>, Retro_kurtosis <dbl>
-```
 
-
-```
-# A tibble: 12 x 9
-   Change      Variable   Min   Max   Mean Median    SD    Skew Kurtosis
-   <fct>       <chr>    <dbl> <dbl>  <dbl>  <dbl> <dbl>   <dbl>    <dbl>
- 1 No change   Base         0    21   2.67    0    4.45  2.18      4.45 
- 2 No change   Prepan       0    21   8.25    7    6.20  0.475    -0.903
- 3 No change   Retro      Inf  -Inf NaN      NA   NA    NA        NA    
- 4 Worsening   Base         0    21   8.70    7    5.70  0.525    -0.801
- 5 Worsening   Prepan       0    21   9.40    8    5.86  0.339    -0.933
- 6 Worsening   Retro        0    21   4.64    4    4.28  1.38      1.93 
- 7 Improvement Base         0    21   4.77    3    4.83  1.37      1.57 
- 8 Improvement Prepan       0    21   9.23    8    5.82  0.330    -0.903
- 9 Improvement Retro        0    21   8.36    7    5.47  0.512    -0.587
-10 <NA>        Base         0    21   5.7     4.5  5.99  1.04      0.101
-11 <NA>        Prepan       0    21  10      13    8.56 -0.0314   -1.99 
-12 <NA>        Retro      Inf  -Inf NaN      NA   NA    NA        NA    
-```
 
 Table for knitting
 gad sum score summary table
@@ -546,37 +846,7 @@ Warning in max(., na.rm = T): no non-missing arguments to max; returning -Inf
 Warning in max(., na.rm = T): no non-missing arguments to max; returning -Inf
 ```
 
-```
-# A tibble: 4 x 22
-  gad.change_bina… `Base - prepan_… `Base - retro_m… `Prepan - retro… `Base - prepan_… `Base - retro_s… `Prepan - retro… `Base - prepan_…
-  <fct>                       <dbl>            <dbl>            <dbl>            <dbl>            <dbl>            <dbl>            <dbl>
-1 No change                  -2.05            NaN             NaN                 4.73            NA               NA                  -1
-2 Worsening                   0.969             4.06           -3.58              5.31             4.29             5.11                1
-3 Improvement                -4.08             -3.59            0.354             5.49             5.32             5.69               -3
-4 <NA>                       -1.5             NaN             NaN                 5.43            NA               NA                  -2
-# … with 14 more variables: `Base - retro_median` <dbl>, `Prepan - retro_median` <dbl>, `Base - prepan_min` <dbl>, `Base - retro_min` <dbl>, `Prepan
-#   - retro_min` <dbl>, `Base - prepan_max` <dbl>, `Base - retro_max` <dbl>, `Prepan - retro_max` <dbl>, `Base - prepan_skew` <dbl>, `Base -
-#   retro_skew` <dbl>, `Prepan - retro_skew` <dbl>, `Base - prepan_kurtosis` <dbl>, `Base - retro_kurtosis` <dbl>, `Prepan - retro_kurtosis` <dbl>
-```
 
-
-```
-# A tibble: 12 x 9
-   Change      Variable         Min   Max    Mean Median    SD    Skew Kurtosis
-   <fct>       <chr>          <dbl> <dbl>   <dbl>  <dbl> <dbl>   <dbl>    <dbl>
- 1 No change   Base - prepan    -21    20  -2.05      -1  4.73 -0.487     1.51 
- 2 No change   Base - retro     Inf  -Inf NaN         NA NA    NA        NA    
- 3 No change   Prepan - retro   Inf  -Inf NaN         NA NA    NA        NA    
- 4 Worsening   Base - prepan    -18    21   0.969      1  5.31 -0.0146    0.601
- 5 Worsening   Base - retro     -21    21   4.06       3  4.29  0.770     0.879
- 6 Worsening   Prepan - retro   -21    18  -3.58      -3  5.11 -0.289     0.441
- 7 Improvement Base - prepan    -21    12  -4.08      -3  5.49 -0.297     0.126
- 8 Improvement Base - retro     -21    21  -3.59      -3  5.32  0.475     2.15 
- 9 Improvement Prepan - retro   -21    20   0.354      1  5.69 -0.158     0.875
-10 <NA>        Base - prepan     -9     6  -1.5       -2  5.43  0.0468   -1.68 
-11 <NA>        Base - retro     Inf  -Inf NaN         NA NA    NA        NA    
-12 <NA>        Prepan - retro   Inf  -Inf NaN         NA NA    NA        NA    
-```
 
 Table for knitting
 gad diff summary table
@@ -599,26 +869,8 @@ gad diff summary table
 ### Long format
 
 
-```
-  ID Sample Gender_collapsed Ethnicity_collapsed Disorder_hierarchical gad.diff_score   Time_point
-1  8   GLAD             Male            European  Depressive disorders             NA retro_prepan
-2 10   GLAD           Female            European  Depressive disorders             -5 retro_prepan
-3 11   GLAD             Male            European  Depressive disorders              7 retro_prepan
-4 13   GLAD           Female            European  Depressive disorders              0 retro_prepan
-5 15   GLAD           Female            European  Depressive disorders             NA retro_prepan
-6 20   GLAD           Female            European  Depressive disorders             15 retro_prepan
-```
 
 
-```
-  ID Sample Gender_collapsed Ethnicity_collapsed Disorder_hierarchical gad.sum_score Time_point Full_cohort Time_point_dup
-1  8   GLAD             Male            European  Depressive disorders            16     prepan Full cohort         prepan
-2 10   GLAD           Female            European  Depressive disorders             7     prepan Full cohort         prepan
-3 11   GLAD             Male            European  Depressive disorders             2     prepan Full cohort         prepan
-4 13   GLAD           Female            European  Depressive disorders             5     prepan Full cohort         prepan
-5 15   GLAD           Female            European  Depressive disorders             3     prepan Full cohort         prepan
-6 20   GLAD           Female            European  Depressive disorders             6     prepan Full cohort         prepan
-```
 
 
 ### Plots diff
@@ -629,14 +881,14 @@ makes this into percentages
 Warning: Removed 56536 rows containing non-finite values (stat_count).
 ```
 
-![plot of chunk gad absolut plot](figure/gad absolut plot-1.png)
+![plot of chunk gad absolut plot](figures/gad absolut plot-1.png)
 
 
 ```
 Warning: Removed 33099 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk gad percentage plot retro_prepan diff](figure/gad percentage plot retro_prepan diff-1.png)
+![plot of chunk gad percentage plot retro_prepan diff](figures/gad percentage plot retro_prepan diff-1.png)
 
 
 
@@ -644,7 +896,7 @@ Warning: Removed 33099 rows containing non-finite values (stat_bin).
 Warning: Removed 33099 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk gad percentage plot retro_prepan resized](figure/gad percentage plot retro_prepan resized-1.png)
+![plot of chunk gad percentage plot retro_prepan resized](figures/gad percentage plot retro_prepan resized-1.png)
 
 
 
@@ -653,7 +905,7 @@ Warning: Removed 33099 rows containing non-finite values (stat_bin).
 Warning: Removed 23437 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk gad plot retro_prepan diff](figure/gad plot retro_prepan diff-1.png)
+![plot of chunk gad plot retro_prepan diff](figures/gad plot retro_prepan diff-1.png)
 
 ### Plots sum
 
@@ -662,14 +914,14 @@ Warning: Removed 23437 rows containing non-finite values (stat_bin).
 Warning: Removed 33099 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk gad percentage plot retro_prepan sum](figure/gad percentage plot retro_prepan sum-1.png)
+![plot of chunk gad percentage plot retro_prepan sum](figures/gad percentage plot retro_prepan sum-1.png)
 
 
 ```
 Warning: Removed 33099 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk gad percentage plot retro_prepan sum resized](figure/gad percentage plot retro_prepan sum resized-1.png)
+![plot of chunk gad percentage plot retro_prepan sum resized](figures/gad percentage plot retro_prepan sum resized-1.png)
 
 ### Violin plots
 
@@ -698,7 +950,7 @@ Warning: Removed 33099 rows containing non-finite values (stat_summary).
 Warning: Removed 33099 rows containing missing values (geom_point).
 ```
 
-![plot of chunk gad.sum violin plot](figure/gad.sum violin plot-1.png)
+![plot of chunk gad.sum violin plot](figures/gad.sum violin plot-1.png)
 
 
 ```
@@ -725,7 +977,7 @@ Warning: Removed 33099 rows containing non-finite values (stat_summary).
 Warning: Removed 33099 rows containing missing values (geom_point).
 ```
 
-![plot of chunk gad.sum violin plot Sample](figure/gad.sum violin plot Sample-1.png)
+![plot of chunk gad.sum violin plot Sample](figures/gad.sum violin plot Sample-1.png)
 
 
 ```
@@ -752,7 +1004,7 @@ Warning: Removed 33099 rows containing non-finite values (stat_summary).
 Warning: Removed 33099 rows containing missing values (geom_point).
 ```
 
-![plot of chunk gad.sum violin plot Sample GLAD EDGI combined](figure/gad.sum violin plot Sample GLAD EDGI combined-1.png)
+![plot of chunk gad.sum violin plot Sample GLAD EDGI combined](figures/gad.sum violin plot Sample GLAD EDGI combined-1.png)
 
 
 ```
@@ -779,7 +1031,7 @@ Warning: Removed 33099 rows containing non-finite values (stat_summary).
 Warning: Removed 33099 rows containing missing values (geom_point).
 ```
 
-![plot of chunk gad.sum violin plot Disorder_hierarchical](figure/gad.sum violin plot Disorder_hierarchical-1.png)
+![plot of chunk gad.sum violin plot Disorder_hierarchical](figures/gad.sum violin plot Disorder_hierarchical-1.png)
 
 
 
@@ -800,34 +1052,22 @@ Warning in max(., na.rm = T): no non-missing arguments to max; returning -Inf
 ```
 
 ```
-# A tibble: 4 x 22
-  phq.change_bina… Prepan_mean Base_mean Retro_mean Prepan_sd Base_sd Retro_sd Prepan_median Base_median Retro_median Prepan_min Base_min Retro_min
-  <fct>                  <dbl>     <dbl>      <dbl>     <dbl>   <dbl>    <dbl>         <dbl>       <dbl>        <dbl>      <dbl>    <dbl>     <dbl>
-1 No change               10.5      3.78     NaN         7.21    5.48    NA                9           2           NA          0        0       Inf
-2 Worsening               11.7     10.3        5.71      6.74    6.60     5.28            11           9            4          0        0         0
-3 Improvement             11.5      6.76       9.81      6.72    5.76     6.78            11           5            9          0        0         0
-4 <NA>                    11.4      5.88     NaN         7.58    6.89    NA                9           3           NA          0        0       Inf
-# … with 9 more variables: Prepan_max <dbl>, Base_max <dbl>, Retro_max <dbl>, Prepan_skew <dbl>, Base_skew <dbl>, Retro_skew <dbl>,
-#   Prepan_kurtosis <dbl>, Base_kurtosis <dbl>, Retro_kurtosis <dbl>
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322bbe795d.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
 ```
-# A tibble: 12 x 9
-   Phq.change_binary Variable   Min   Max   Mean Median    SD   Skew Kurtosis
-   <fct>             <chr>    <dbl> <dbl>  <dbl>  <dbl> <dbl>  <dbl>    <dbl>
- 1 No change         Base         0    27   3.78      2  5.48  2.02     3.82 
- 2 No change         Prepan       0    27  10.5       9  7.21  0.474   -0.748
- 3 No change         Retro      Inf  -Inf NaN        NA NA    NA       NA    
- 4 Worsening         Base         0    27  10.3       9  6.60  0.593   -0.541
- 5 Worsening         Prepan       0    27  11.7      11  6.74  0.303   -0.773
- 6 Worsening         Retro        0    27   5.71      4  5.28  1.42     1.95 
- 7 Improvement       Base         0    27   6.76      5  5.76  1.06     0.707
- 8 Improvement       Prepan       0    27  11.5      11  6.72  0.305   -0.812
- 9 Improvement       Retro        0    27   9.81      9  6.78  0.596   -0.462
-10 <NA>              Base         0    27   5.88      3  6.89  1.15     0.368
-11 <NA>              Prepan       0    25  11.4       9  7.58  0.385   -1.14 
-12 <NA>              Retro      Inf  -Inf NaN        NA NA    NA       NA    
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321f4e5850.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 Table for knitting
@@ -872,35 +1112,22 @@ Warning in max(., na.rm = T): no non-missing arguments to max; returning -Inf
 ```
 
 ```
-# A tibble: 4 x 22
-  phq.change_bina… `Base - prepan_… `Base - retro_m… `Prepan - retro… `Base - prepan_… `Base - retro_s… `Prepan - retro… `Base - prepan_…
-  <fct>                       <dbl>            <dbl>            <dbl>            <dbl>            <dbl>            <dbl>            <dbl>
-1 No change                  -1.98            NaN             NaN                 5.13            NA               NA                  -1
-2 Worsening                   0.800             4.60           -4.25              5.55             4.54             5.50                1
-3 Improvement                -4.03             -3.05           -0.121             5.60             5.58             6.13               -3
-4 <NA>                       -0.531           NaN             NaN                 6.11            NA               NA                   0
-# … with 14 more variables: `Base - retro_median` <dbl>, `Prepan - retro_median` <dbl>, `Base - prepan_min` <dbl>, `Base - retro_min` <dbl>, `Prepan
-#   - retro_min` <dbl>, `Base - prepan_max` <dbl>, `Base - retro_max` <dbl>, `Prepan - retro_max` <dbl>, `Base - prepan_skew` <dbl>, `Base -
-#   retro_skew` <dbl>, `Prepan - retro_skew` <dbl>, `Base - prepan_kurtosis` <dbl>, `Base - retro_kurtosis` <dbl>, `Prepan - retro_kurtosis` <dbl>
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713265964a54.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
 ```
-# A tibble: 12 x 9
-   Phq.change_binary Variable         Min   Max    Mean Median    SD    Skew Kurtosis
-   <fct>             <chr>          <dbl> <dbl>   <dbl>  <dbl> <dbl>   <dbl>    <dbl>
- 1 No change         Base - prepan    -25    23  -1.98      -1  5.13 -0.317     1.69 
- 2 No change         Base - retro     Inf  -Inf NaN         NA NA    NA        NA    
- 3 No change         Prepan - retro   Inf  -Inf NaN         NA NA    NA        NA    
- 4 Worsening         Base - prepan    -23    24   0.800      1  5.55 -0.0686    0.878
- 5 Worsening         Base - retro     -18    27   4.60       4  4.54  0.927     1.34 
- 6 Worsening         Prepan - retro   -27    21  -4.25      -4  5.50 -0.377     0.604
- 7 Improvement       Base - prepan    -22    14  -4.03      -3  5.60 -0.412     0.231
- 8 Improvement       Base - retro     -24    23  -3.05      -3  5.58  0.0340    1.85 
- 9 Improvement       Prepan - retro   -27    22  -0.121      0  6.13 -0.0254    0.730
-10 <NA>              Base - prepan    -21     8  -0.531      0  6.11 -1.10      1.88 
-11 <NA>              Base - retro     Inf  -Inf NaN         NA NA    NA        NA    
-12 <NA>              Prepan - retro   Inf  -Inf NaN         NA NA    NA        NA    
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321ee7d06a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 Table for knitting
@@ -925,24 +1152,22 @@ phq diff summary table
 
 
 ```
-  ID Sample Gender_collapsed Ethnicity_collapsed Disorder_hierarchical phq.diff_score   Time_point
-1  8   GLAD             Male            European  Depressive disorders              9 retro_prepan
-2 10   GLAD           Female            European  Depressive disorders             -3 retro_prepan
-3 11   GLAD             Male            European  Depressive disorders              5 retro_prepan
-4 13   GLAD           Female            European  Depressive disorders             -1 retro_prepan
-5 15   GLAD           Female            European  Depressive disorders             NA retro_prepan
-6 20   GLAD           Female            European  Depressive disorders              7 retro_prepan
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713245a71751.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
 ```
-  ID Sample Gender_collapsed Ethnicity_collapsed Disorder_hierarchical phq.sum_score Time_point
-1  8   GLAD             Male            European  Depressive disorders            14     prepan
-2 10   GLAD           Female            European  Depressive disorders             4     prepan
-3 11   GLAD             Male            European  Depressive disorders             2     prepan
-4 13   GLAD           Female            European  Depressive disorders             8     prepan
-5 15   GLAD           Female            European  Depressive disorders             5     prepan
-6 20   GLAD           Female            European  Depressive disorders            13     prepan
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132474c399.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Plots
@@ -953,7 +1178,7 @@ makes this into percentages
 Warning: Removed 55288 rows containing non-finite values (stat_count).
 ```
 
-![plot of chunk phq absolut plot](figure/phq absolut plot-1.png)
+![plot of chunk phq absolut plot](figures/phq absolut plot-1.png)
 
 
 
@@ -961,21 +1186,21 @@ Warning: Removed 55288 rows containing non-finite values (stat_count).
 Warning: Removed 32162 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk phq percentage plot retro_prepan](figure/phq percentage plot retro_prepan-1.png)
+![plot of chunk phq percentage plot retro_prepan](figures/phq percentage plot retro_prepan-1.png)
 
 
 ```
 Warning: Removed 23126 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk phq plot retro_prepan diff](figure/phq plot retro_prepan diff-1.png)
+![plot of chunk phq plot retro_prepan diff](figures/phq plot retro_prepan diff-1.png)
 
 
 ```
 Warning: Removed 32162 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk phq percentage plot retro_prepan resized](figure/phq percentage plot retro_prepan resized-1.png)
+![plot of chunk phq percentage plot retro_prepan resized](figures/phq percentage plot retro_prepan resized-1.png)
 
 ### Plots sum
 
@@ -984,14 +1209,14 @@ Warning: Removed 32162 rows containing non-finite values (stat_bin).
 Warning: Removed 32162 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk phq percentage plot retro_prepan sum](figure/phq percentage plot retro_prepan sum-1.png)
+![plot of chunk phq percentage plot retro_prepan sum](figures/phq percentage plot retro_prepan sum-1.png)
 
 
 ```
 Warning: Removed 32162 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk phq percentage plot retro_prepan sum resized](figure/phq percentage plot retro_prepan sum resized-1.png)
+![plot of chunk phq percentage plot retro_prepan sum resized](figures/phq percentage plot retro_prepan sum resized-1.png)
 
 
 ### Violin plots
@@ -1021,7 +1246,7 @@ Warning: Removed 32162 rows containing non-finite values (stat_summary).
 Warning: Removed 32162 rows containing missing values (geom_point).
 ```
 
-![plot of chunk phq.sum violin plot](figure/phq.sum violin plot-1.png)
+![plot of chunk phq.sum violin plot](figures/phq.sum violin plot-1.png)
 
 
 ```
@@ -1048,35 +1273,7 @@ Warning: Removed 32162 rows containing non-finite values (stat_summary).
 Warning: Removed 32162 rows containing missing values (geom_point).
 ```
 
-![plot of chunk phq.sum violin plot Sample](figure/phq.sum violin plot Sample-1.png)
-
-
-
-```
-Warning: `fun.y` is deprecated. Use `fun` instead.
-```
-
-```
-Warning: `fun.ymin` is deprecated. Use `fun.min` instead.
-```
-
-```
-Warning: `fun.ymax` is deprecated. Use `fun.max` instead.
-```
-
-```
-Warning: Removed 32162 rows containing non-finite values (stat_ydensity).
-```
-
-```
-Warning: Removed 32162 rows containing non-finite values (stat_summary).
-```
-
-```
-Warning: Removed 32162 rows containing missing values (geom_point).
-```
-
-![plot of chunk phq.sum violin plot Sample GLAD EDGI combined](figure/phq.sum violin plot Sample GLAD EDGI combined-1.png)
+![plot of chunk phq.sum violin plot Sample](figures/phq.sum violin plot Sample-1.png)
 
 
 
@@ -1104,7 +1301,35 @@ Warning: Removed 32162 rows containing non-finite values (stat_summary).
 Warning: Removed 32162 rows containing missing values (geom_point).
 ```
 
-![plot of chunk phq.sum violin plot Disorder_hierarchical](figure/phq.sum violin plot Disorder_hierarchical-1.png)
+![plot of chunk phq.sum violin plot Sample GLAD EDGI combined](figures/phq.sum violin plot Sample GLAD EDGI combined-1.png)
+
+
+
+```
+Warning: `fun.y` is deprecated. Use `fun` instead.
+```
+
+```
+Warning: `fun.ymin` is deprecated. Use `fun.min` instead.
+```
+
+```
+Warning: `fun.ymax` is deprecated. Use `fun.max` instead.
+```
+
+```
+Warning: Removed 32162 rows containing non-finite values (stat_ydensity).
+```
+
+```
+Warning: Removed 32162 rows containing non-finite values (stat_summary).
+```
+
+```
+Warning: Removed 32162 rows containing missing values (geom_point).
+```
+
+![plot of chunk phq.sum violin plot Disorder_hierarchical](figures/phq.sum violin plot Disorder_hierarchical-1.png)
 
 
 ## ocir
@@ -1120,25 +1345,22 @@ Warning in max(., na.rm = T): no non-missing arguments to max; returning -Inf
 ```
 
 ```
-# A tibble: 4 x 22
-  ocir.change_bin… Prepan_mean Base_mean Retro_mean Prepan_sd Base_sd Retro_sd Prepan_median Base_median Retro_median Prepan_min Base_min Retro_min
-  <fct>                  <dbl>     <dbl>      <dbl>     <dbl>   <dbl>    <dbl>         <dbl>       <dbl>        <dbl>      <dbl>    <dbl>     <dbl>
-1 No change               25.4      14.3       17.4      13.0    12.3     12.7          24            11           15          0        0         0
-2 Worsening               27.5      17.8       17.0      14.1    12.9     12.8          26            15           14          1        0         0
-3 Improvement             27.5      21.8       18.1      14.5    14.1     11.5          23.5          18           16         10        0         0
-4 <NA>                    16.4     NaN         17        10.7    NA       NA            14            NA           17          0      Inf        17
-# … with 9 more variables: Prepan_max <dbl>, Base_max <dbl>, Retro_max <dbl>, Prepan_skew <dbl>, Base_skew <dbl>, Retro_skew <dbl>,
-#   Prepan_kurtosis <dbl>, Base_kurtosis <dbl>, Retro_kurtosis <dbl>
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132b0955df.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
 ```
-# A tibble: 3 x 8
-  Variable   Min   Max  Mean Median    SD  Skew Kurtosis
-  <chr>    <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl>    <dbl>
-1 Base         0    72  17.8     15  12.9 1.13    1.17  
-2 Prepan       1    71  27.5     26  14.1 0.627  -0.0287
-3 Retro        0    71  17.0     14  12.8 1.10    0.965 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323b1c005b.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 Table for knitting
@@ -1154,20 +1376,22 @@ ocir sum score summary table
 
 
 ```
-  Base - prepan_mean Base - retro_mean Prepan - retro_mean Base - prepan_sd Base - retro_sd Prepan - retro_sd Base - prepan_median
-1          -8.043956         0.9100517             -3.5058         10.74915        9.658776          9.301472                   -7
-  Base - retro_median Prepan - retro_median Base - prepan_min Base - retro_min Prepan - retro_min Base - prepan_max Base - retro_max
-1                   0                    -3               -40              -44                -30                34               72
-  Prepan - retro_max Base - prepan_skew Base - retro_skew Prepan - retro_skew Base - prepan_kurtosis Base - retro_kurtosis Prepan - retro_kurtosis
-1                 27         -0.1101172         0.2846682         -0.06193155              0.6746143              2.470417               0.3779813
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713278b04341.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
 ```
-        Variable Min Max       Mean Median        SD        Skew  Kurtosis
-1  Base - prepan -40  34 -8.0439560     -7 10.749154 -0.11011724 0.6746143
-2   Base - retro -44  72  0.9100517      0  9.658776  0.28466820 2.4704171
-3 Prepan - retro -30  27 -3.5058005     -3  9.301472 -0.06193155 0.3779813
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132656210dc.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 Table for knitting
@@ -1183,24 +1407,22 @@ ocir diff summary table
 
 
 ```
-  ID Sample Gender_collapsed Ethnicity_collapsed Disorder_hierarchical ocir.diff_score   Time_point
-1  8   GLAD             Male            European  Depressive disorders              NA retro_prepan
-2 10   GLAD           Female            European  Depressive disorders              NA retro_prepan
-3 11   GLAD             Male            European  Depressive disorders              NA retro_prepan
-4 13   GLAD           Female            European  Depressive disorders              NA retro_prepan
-5 15   GLAD           Female            European  Depressive disorders              NA retro_prepan
-6 20   GLAD           Female            European  Depressive disorders              NA retro_prepan
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322d53223d.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
 ```
-  ID Sample Gender_collapsed Ethnicity_collapsed Disorder_hierarchical ocir.sum_score Time_point
-1  8   GLAD             Male            European  Depressive disorders             NA     prepan
-2 10   GLAD           Female            European  Depressive disorders             NA     prepan
-3 11   GLAD             Male            European  Depressive disorders             NA     prepan
-4 13   GLAD           Female            European  Depressive disorders             NA     prepan
-5 15   GLAD           Female            European  Depressive disorders             NA     prepan
-6 20   GLAD           Female            European  Depressive disorders             NA     prepan
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713275f94d90.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Plots
@@ -1211,28 +1433,28 @@ makes this into percentages
 Warning: Removed 89888 rows containing non-finite values (stat_count).
 ```
 
-![plot of chunk ocir absolut plot](figure/ocir absolut plot-1.png)
+![plot of chunk ocir absolut plot](figures/ocir absolut plot-1.png)
 
 
 ```
 Warning: Removed 58866 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk ocir percentage plot retro_prepan](figure/ocir percentage plot retro_prepan-1.png)
+![plot of chunk ocir percentage plot retro_prepan](figures/ocir percentage plot retro_prepan-1.png)
 
 
 ```
 Warning: Removed 31022 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk ocir plot retro_prepan diff](figure/ocir plot retro_prepan diff-1.png)
+![plot of chunk ocir plot retro_prepan diff](figures/ocir plot retro_prepan diff-1.png)
 
 
 ```
 Warning: Removed 58866 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk ocir percentage plot retro_prepan resized](figure/ocir percentage plot retro_prepan resized-1.png)
+![plot of chunk ocir percentage plot retro_prepan resized](figures/ocir percentage plot retro_prepan resized-1.png)
 
 ### Plots sum
 
@@ -1241,14 +1463,14 @@ Warning: Removed 58866 rows containing non-finite values (stat_bin).
 Warning: Removed 81548 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk ocir percentage plot retro_prepan sum](figure/ocir percentage plot retro_prepan sum-1.png)
+![plot of chunk ocir percentage plot retro_prepan sum](figures/ocir percentage plot retro_prepan sum-1.png)
 
 
 ```
 Warning: Removed 81548 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk ocir percentage plot retro_prepan sum resized](figure/ocir percentage plot retro_prepan sum resized-1.png)
+![plot of chunk ocir percentage plot retro_prepan sum resized](figures/ocir percentage plot retro_prepan sum resized-1.png)
 
 
 ### Violin plots
@@ -1278,7 +1500,7 @@ Warning: Removed 81548 rows containing non-finite values (stat_summary).
 Warning: Removed 81548 rows containing missing values (geom_point).
 ```
 
-![plot of chunk ocir.sum violin plot](figure/ocir.sum violin plot-1.png)
+![plot of chunk ocir.sum violin plot](figures/ocir.sum violin plot-1.png)
 
 
 ```
@@ -1305,7 +1527,7 @@ Warning: Removed 81548 rows containing non-finite values (stat_summary).
 Warning: Removed 81548 rows containing missing values (geom_point).
 ```
 
-![plot of chunk ocir.sum violin plot Sample](figure/ocir.sum violin plot Sample-1.png)
+![plot of chunk ocir.sum violin plot Sample](figures/ocir.sum violin plot Sample-1.png)
 
 
 ```
@@ -1332,7 +1554,7 @@ Warning: Removed 81548 rows containing non-finite values (stat_summary).
 Warning: Removed 81548 rows containing missing values (geom_point).
 ```
 
-![plot of chunk ocir.sum violin plot Sample GLAD EDGI combined](figure/ocir.sum violin plot Sample GLAD EDGI combined-1.png)
+![plot of chunk ocir.sum violin plot Sample GLAD EDGI combined](figures/ocir.sum violin plot Sample GLAD EDGI combined-1.png)
 
 
 ```
@@ -1359,7 +1581,7 @@ Warning: Removed 81548 rows containing non-finite values (stat_summary).
 Warning: Removed 81548 rows containing missing values (geom_point).
 ```
 
-![plot of chunk ocir.sum violin plot Disorder_hierarchical](figure/ocir.sum violin plot Disorder_hierarchical-1.png)
+![plot of chunk ocir.sum violin plot Disorder_hierarchical](figures/ocir.sum violin plot Disorder_hierarchical-1.png)
 
 ++CH: Rank the disorders by the size of the change
 
@@ -1371,14 +1593,22 @@ Calculate the total GLAD, COPING, RAMP baseline
 
 
 ```
-  Base - prepan_mean Base - prepan_sd Base - prepan_median Base - prepan_min Base - prepan_max Base - prepan_skew Base - prepan_kurtosis
-1          0.2068164         5.666463                    0               -23                24        -0.07432746              0.6542706
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171328fb8ded.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
 ```
-       Variable Min Max      Mean Median       SD        Skew  Kurtosis
-1 Base - prepan -23  24 0.2068164      0 5.666463 -0.07432746 0.6542706
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326844c88e.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 Table for knitting
@@ -1391,15 +1621,22 @@ pcl sum score summary table
 
 
 ```
-  Base - prepan_mean Base - prepan_sd Base - prepan_median Base - prepan_min Base - prepan_max Base - prepan_skew Base - prepan_kurtosis
-1          0.2068164         5.666463                    0               -23                24        -0.07432746              0.6542706
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325589ded.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
 ```
-  Variable Min Max     Mean Median       SD      Skew    Kurtosis
-1     Base   6  30 12.33784     11 6.051631 0.9357645 -0.01527039
-2   Prepan   6  30 15.63577     15 6.120978 0.3799305 -0.73869515
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713271066478.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 Table for knitting
@@ -1412,13 +1649,12 @@ pcl diff summary table
 
 
 ```
-  ID Sample Gender_collapsed Ethnicity_collapsed Disorder_hierarchical pcl.sum_score Time_point
-1  8   GLAD             Male            European  Depressive disorders            18     prepan
-2 10   GLAD           Female            European  Depressive disorders            22     prepan
-3 11   GLAD             Male            European  Depressive disorders            11     prepan
-4 13   GLAD           Female            European  Depressive disorders            15     prepan
-5 15   GLAD           Female            European  Depressive disorders            16     prepan
-6 20   GLAD           Female            European  Depressive disorders            16     prepan
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132411ac4d6.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 For each item
@@ -1446,28 +1682,12 @@ present percentages of how say that this is due to the pandemic
 |pcl.stressful_situation_avoiding_activities_retro_numeric     |Missing      | 20261| 63.5|20261 (63.5%) |
 
 ```
-# A tibble: 18 x 5
-# Groups:   PCL Item [6]
-   `PCL Item`                                                    Binary_score     n  prop n_prop       
-   <chr>                                                         <fct>        <int> <dbl> <chr>        
- 1 pcl.cut_people_feeling_distant_retro_numeric                  0             5970  18.7 5970 (18.7%) 
- 2 pcl.cut_people_feeling_distant_retro_numeric                  1            15402  48.3 15402 (48.3%)
- 3 pcl.cut_people_feeling_distant_retro_numeric                  Missing      10512  33   10512 (33%)  
- 4 pcl.difficulty_concentrating_retro_numeric                    0             9916  31.1 9916 (31.1%) 
- 5 pcl.difficulty_concentrating_retro_numeric                    1            10289  32.3 10289 (32.3%)
- 6 pcl.difficulty_concentrating_retro_numeric                    Missing      11679  36.6 11679 (36.6%)
- 7 pcl.feeling_irritable_or_having_angry_outbursts_retro_numeric 0             8756  27.5 8756 (27.5%) 
- 8 pcl.feeling_irritable_or_having_angry_outbursts_retro_numeric 1             9870  31   9870 (31%)   
- 9 pcl.feeling_irritable_or_having_angry_outbursts_retro_numeric Missing      13258  41.6 13258 (41.6%)
-10 pcl.stressful_experience_repeated_images_retro_numeric        0            13112  41.1 13112 (41.1%)
-11 pcl.stressful_experience_repeated_images_retro_numeric        1             2902   9.1 2902 (9.1%)  
-12 pcl.stressful_experience_repeated_images_retro_numeric        Missing      15870  49.8 15870 (49.8%)
-13 pcl.stressful_experience_upset_reminded_retro_numeric         0            13848  43.4 13848 (43.4%)
-14 pcl.stressful_experience_upset_reminded_retro_numeric         1             3742  11.7 3742 (11.7%) 
-15 pcl.stressful_experience_upset_reminded_retro_numeric         Missing      14294  44.8 14294 (44.8%)
-16 pcl.stressful_situation_avoiding_activities_retro_numeric     0             9158  28.7 9158 (28.7%) 
-17 pcl.stressful_situation_avoiding_activities_retro_numeric     1             2465   7.7 2465 (7.7%)  
-18 pcl.stressful_situation_avoiding_activities_retro_numeric     Missing      20261  63.5 20261 (63.5%)
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324e4018cc.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -1478,14 +1698,14 @@ present percentages of how say that this is due to the pandemic
 Warning: Removed 43815 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk pcl percentage plot retro_prepan sum](figure/pcl percentage plot retro_prepan sum-1.png)
+![plot of chunk pcl percentage plot retro_prepan sum](figures/pcl percentage plot retro_prepan sum-1.png)
 
 
 ```
 Warning: Removed 43815 rows containing non-finite values (stat_bin).
 ```
 
-![plot of chunk pcl percentage plot retro_prepan sum resized](figure/pcl percentage plot retro_prepan sum resized-1.png)
+![plot of chunk pcl percentage plot retro_prepan sum resized](figures/pcl percentage plot retro_prepan sum resized-1.png)
 
 
 
@@ -1611,23 +1831,21 @@ b - overlapping disorder categories
 #SB Hashing out this chunk of code as it is not included in our final analysis and is currently breaking the code.
 
 ```
-# A tibble: 7 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            2.48     2.38         2.57        0.05  0.00e+00 
-2 Anxiety disorders    4.13     3.88         4.39        0.13  5.84e-217
-3 Eating disorders     3.76     2.94         4.58        0.42  3.03e-19 
-4 OCDs                 6.52     5.85         7.19        0.34  1.26e-80 
-5 PTSD                 4.97     4.31         5.64        0.34  3.36e-48 
-6 Depressive disorders 5.76     5.63         5.88        0.06  0.00e+00 
-7 Bipolar disorders    7.40     7.08         7.72        0.16  0.00e+00 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321824540a.rdf', probable reason 'No such file or directory'
 ```
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31331 0.22  0.22         1503.62 0.00e+00      6
+Error in gzfile(file, "wb"): cannot open the connection
+```
+
+```
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132790968e7.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -1649,22 +1867,12 @@ b - overlapping disorder categories
 |Personality disorder            |2.19     |1.89       |2.49      |0.15 |5.79e-46  |
 
 ```
-# A tibble: 13 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       2.67     " 2.59"      2.76        0.04  0.00e+00 
- 2 Depressive and anxiety disorder 5.63     " 5.50"      5.77        0.07  0.00e+00 
- 3 Only depressive disorder        2.08     " 1.90"      2.25        0.09  4.32e-117
- 4 Only anxiety disorder           4.03     " 3.81"      4.26        0.11  1.97e-264
- 5 Eating disorders                1.46     " 1.22"      1.69        0.12  1.10e-33 
- 6 OCDs                            1.94     " 1.71"      2.17        0.12  8.53e-63 
- 7 Psychotic and bipolar disorder  0.38     "-0.26"      1.02        0.33  0.24     
- 8 Only psychotic disorder         0.35     "-0.20"      0.90        0.28  0.21     
- 9 Only bipolar disorder           0.46     " 0.11"      0.80        0.18  0.009    
-10 PTSD                            1.56     " 1.35"      1.77        0.11  2.35e-48 
-11 ASD                             2.18     " 1.77"      2.59        0.21  1.80e-25 
-12 ADHD                            1.17     " 0.63"      1.71        0.28  2.36e-05 
-13 Personality disorder            2.19     " 1.89"      2.49        0.15  5.79e-46 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713244a5d80b.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -1674,10 +1882,12 @@ b - overlapping disorder categories
 |31331 |0.22 |0.22       |1503.62 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31331 0.22  0.22         1503.62 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132640add62.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -1709,20 +1919,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.24    |-0.27      |-0.21     |0.02 |1.66e-55  |
 
 ```
-# A tibble: 22 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             " 5.67"  " 5.38"      " 5.96"     0.15  9.14e-313
- 2 Anxiety disorders                     " 2.96"  " 2.70"      " 3.22"     0.13  1.10e-109
- 3 Eating disorders                      " 2.10"  " 1.30"      " 2.91"     0.41  3.42e-07 
- 4 OCDs                                  " 4.01"  " 3.35"      " 4.67"     0.34  1.26e-32 
- 5 PTSD                                  " 3.96"  " 3.30"      " 4.63"     0.34  2.24e-31 
- 6 Depressive disorders                  " 4.53"  " 4.39"      " 4.66"     0.07  0.00e+00 
- 7 Bipolar disorders                     " 6.08"  " 5.76"      " 6.39"     0.16  1.26e-299
- 8 Female                                " 1.00"  " 0.86"      " 1.14"     0.07  3.17e-44 
- 9 Non-binary/Self-defined               " 1.60"  " 1.04"      " 2.16"     0.29  2.64e-08 
-10 age_category_collapsed_reordered16-18 " 3.23"  " 2.85"      " 3.60"     0.19  1.44e-63 
-# … with 12 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713261776929.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -1732,10 +1934,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |31331 |0.22 |0.22       |1503.62 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31331 0.22  0.22         1503.62 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132669934bc.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -1774,20 +1978,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.25    |-0.27      |-0.22     |0.01 |1.60e-65  |
 
 ```
-# A tibble: 29 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 5.57"  " 5.28"      " 5.85"     0.14  2.40e-317
- 2 Depressive and anxiety disorder " 4.60"  " 4.46"      " 4.75"     0.07  0.00e+00 
- 3 Only depressive disorder        " 1.81"  " 1.63"      " 1.99"     0.09  2.60e-83 
- 4 Only anxiety disorder           " 3.05"  " 2.82"      " 3.28"     0.12  6.22e-145
- 5 Eating disorders                " 0.90"  " 0.67"      " 1.13"     0.12  3.61e-14 
- 6 OCDs                            " 1.45"  " 1.23"      " 1.67"     0.11  5.23e-37 
- 7 Psychotic and bipolar disorder  " 0.74"  " 0.11"      " 1.37"     0.32  0.02     
- 8 Only psychotic disorder         " 0.51"  "-0.03"      " 1.05"     0.27  0.06     
- 9 Only bipolar disorder           " 0.65"  " 0.31"      " 0.99"     0.17  1.79e-04 
-10 PTSD                            " 1.58"  " 1.38"      " 1.79"     0.11  1.05e-50 
-# … with 19 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322ed41af6.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -1797,10 +1993,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |31331 |0.22 |0.22       |1503.62 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31331 0.22  0.22         1503.62 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326736247e.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with Age^2
@@ -1825,25 +2023,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.04     |0.00       |0.08      |0.02 |0.03      |
 
 ```
-# A tibble: 16 x 6
-   `Indepent variable`                   Estimate  `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>     <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "   1.78" "   1.48"    "   2.09"   0.16  4.29e-30 
- 2 Anxiety disorders                     "   2.79" "   2.49"    "   3.10"   0.15  3.88e-72 
- 3 Eating disorders                      "   2.27" "   1.33"    "   3.20"   0.48  2.04e-06 
- 4 OCDs                                  "   4.46" "   3.65"    "   5.26"   0.41  3.29e-27 
- 5 PTSD                                  "   4.24" "   3.37"    "   5.12"   0.45  2.15e-21 
- 6 Depressive disorders                  "   4.80" "   4.64"    "   4.95"   0.08  0.00e+00 
- 7 Bipolar disorders                     "   6.26" "   5.92"    "   6.60"   0.17  6.20e-274
- 8 Female                                "   0.71" "   0.56"    "   0.86"   0.08  2.18e-20 
- 9 Non-binary/Self-defined               "   1.44" "   0.84"    "   2.05"   0.31  2.84e-06 
-10 Age                                   "-248.64" "-259.74"    "-237.54"   5.66  0.00e+00 
-11 Age^2                                 "  29.43" "  19.41"    "  39.45"   5.11  8.72e-09 
-12 Mixed or multiple ethnic origins      "   0.03" "  -0.46"    "   0.53"   0.25  0.90     
-13 Asian or Asian British                "  -0.06" "  -0.71"    "   0.60"   0.33  0.87     
-14 African or African British            "   0.02" "  -1.01"    "   1.06"   0.53  0.96     
-15 Other ethnicity                       "   1.44" "   0.51"    "   2.38"   0.48  0.002    
-16 Time difference: Lockdown to baseline "   0.04" "   0.00"    "   0.08"   0.02  0.03     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325d246939.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -1853,10 +2038,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |24462 |0.27 |0.27       |1541.15 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 24462 0.27  0.27         1541.15 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321784cf5.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 ### Model 2b: Disorder hierarchical, Adjusted with Age^2
 
@@ -1887,20 +2074,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.05     |0.02       |0.09      |0.02 |0.004     |
 
 ```
-# A tibble: 23 x 6
-   `Indepent variable`             Estimate  `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>     <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "   1.86" "   1.56"    "   2.15"   0.15  1.11e-34 
- 2 Depressive and anxiety disorder "   4.91" "   4.75"    "   5.07"   0.08  0.00e+00 
- 3 Only depressive disorder        "   1.98" "   1.78"    "   2.19"   0.10  8.03e-79 
- 4 Only anxiety disorder           "   3.02" "   2.75"    "   3.29"   0.14  1.46e-104
- 5 Eating disorders                "   1.09" "   0.84"    "   1.34"   0.13  2.20e-17 
- 6 OCDs                            "   1.38" "   1.13"    "   1.62"   0.12  8.44e-29 
- 7 Psychotic and bipolar disorder  "   0.44" "  -0.27"    "   1.15"   0.36  0.23     
- 8 Only psychotic disorder         "   0.48" "  -0.10"    "   1.06"   0.30  0.10     
- 9 Only bipolar disorder           "   0.64" "   0.29"    "   0.99"   0.18  3.50e-04 
-10 PTSD                            "   1.69" "   1.47"    "   1.92"   0.11  3.91e-49 
-# … with 13 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713248af7411.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -1910,10 +2089,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |24462 |0.27 |0.27       |1541.15 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 24462 0.27  0.27         1541.15 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713276ed2d5e.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # GAD prepan
@@ -1931,16 +2112,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Bipolar disorders    |0.80     |-0.21      |1.81      |0.52 |0.12    |
 
 ```
-# A tibble: 7 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            "-1.16"  -2.09        "-0.22"     0.48  0.02     
-2 Anxiety disorders    " 0.19"  -0.84        " 1.22"     0.53  0.72     
-3 Eating disorders     "-0.57"  -2.60        " 1.47"     1.04  0.59     
-4 OCDs                 "-0.14"  -1.55        " 1.26"     0.72  0.84     
-5 PTSD                 "-0.06"  -1.68        " 1.57"     0.83  0.95     
-6 Depressive disorders " 0.85"  -0.09        " 1.79"     0.48  0.08     
-7 Bipolar disorders    " 0.80"  -0.21        " 1.81"     0.52  0.12     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132dc7b275.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -1950,10 +2127,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |11144 |0.00 |0.00       |2.98 |0.007   |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11144 0.00  0.00         2.98  0.007         6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713231952664.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -1975,22 +2154,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Personality disorder            |-0.16    |-0.57      |0.24      |0.21 |0.43    |
 
 ```
-# A tibble: 13 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "-0.83"  "-1.51"      "-0.16"     0.34  0.02     
- 2 Depressive and anxiety disorder " 0.45"  "-0.24"      " 1.13"     0.35  0.20     
- 3 Only depressive disorder        " 0.98"  " 0.24"      " 1.72"     0.38  0.009    
- 4 Only anxiety disorder           "-0.24"  "-1.01"      " 0.53"     0.40  0.54     
- 5 Eating disorders                " 0.18"  "-0.15"      " 0.51"     0.17  0.29     
- 6 OCDs                            "-0.26"  "-0.57"      " 0.05"     0.16  0.11     
- 7 Psychotic and bipolar disorder  "-0.51"  "-1.42"      " 0.39"     0.46  0.27     
- 8 Only psychotic disorder         " 0.76"  " 0.00"      " 1.52"     0.39  0.05     
- 9 Only bipolar disorder           " 0.20"  "-0.26"      " 0.65"     0.23  0.40     
-10 PTSD                            " 0.14"  "-0.16"      " 0.43"     0.15  0.36     
-11 ASD                             " 0.16"  "-0.44"      " 0.76"     0.31  0.61     
-12 ADHD                            "-0.74"  "-1.56"      " 0.09"     0.42  0.08     
-13 Personality disorder            "-0.16"  "-0.57"      " 0.24"     0.21  0.43     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713256396d21.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2000,10 +2169,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |11144 |0.00 |0.00       |2.98 |0.007   |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11144 0.00  0.00         2.98  0.007         6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132542bbdc0.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -2035,20 +2206,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.00     |-0.07      |0.06      |0.03 |0.89     |
 
 ```
-# A tibble: 22 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "-1.46"  "-2.56"      "-0.37"     0.56  0.009    
- 2 Anxiety disorders                     " 0.13"  "-0.91"      " 1.16"     0.53  0.81     
- 3 Eating disorders                      "-0.72"  "-2.75"      " 1.32"     1.04  0.49     
- 4 OCDs                                  "-0.24"  "-1.65"      " 1.16"     0.72  0.74     
- 5 PTSD                                  "-0.21"  "-1.85"      " 1.43"     0.84  0.80     
- 6 Depressive disorders                  " 0.75"  "-0.19"      " 1.69"     0.48  0.12     
- 7 Bipolar disorders                     " 0.76"  "-0.26"      " 1.77"     0.52  0.14     
- 8 Female                                " 0.49"  " 0.21"      " 0.77"     0.14  5.29e-04 
- 9 Non-binary/Self-defined               " 0.42"  "-0.37"      " 1.22"     0.40  0.29     
-10 age_category_collapsed_reordered16-18 "-0.50"  "-1.16"      " 0.17"     0.34  0.14     
-# … with 12 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324fbd795b.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2058,10 +2221,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |11144 |0.00 |0.00       |2.98 |0.007   |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11144 0.00  0.00         2.98  0.007         6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132206a6e43.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -2100,20 +2265,12 @@ Model 1b + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.01    |-0.07      |0.06      |0.03 |0.85    |
 
 ```
-# A tibble: 29 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "-1.18"  "-2.07"      "-0.29"     0.46  0.010    
- 2 Depressive and anxiety disorder " 0.38"  "-0.31"      " 1.08"     0.35  0.27     
- 3 Only depressive disorder        " 0.92"  " 0.18"      " 1.67"     0.38  0.02     
- 4 Only anxiety disorder           "-0.29"  "-1.07"      " 0.49"     0.40  0.47     
- 5 Eating disorders                " 0.14"  "-0.20"      " 0.47"     0.17  0.42     
- 6 OCDs                            "-0.26"  "-0.58"      " 0.05"     0.16  0.10     
- 7 Psychotic and bipolar disorder  "-0.40"  "-1.31"      " 0.52"     0.47  0.39     
- 8 Only psychotic disorder         " 0.79"  " 0.02"      " 1.55"     0.39  0.04     
- 9 Only bipolar disorder           " 0.29"  "-0.17"      " 0.74"     0.23  0.22     
-10 PTSD                            " 0.11"  "-0.18"      " 0.41"     0.15  0.46     
-# … with 19 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713217289b9.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2145,25 +2302,12 @@ Model 0a + Gender_collapsed + age^2+ Ethnicity_collapsed + Time registration and
 |Time difference: Lockdown to baseline |-0.01    |-0.07      |0.06      |0.03 |0.85     |
 
 ```
-# A tibble: 16 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "-1.44"  " -2.51"     "-0.36"     0.55  0.009    
- 2 Anxiety disorders                     " 0.13"  " -0.90"     " 1.17"     0.53  0.80     
- 3 Eating disorders                      "-0.70"  " -2.74"     " 1.33"     1.04  0.50     
- 4 OCDs                                  "-0.23"  " -1.64"     " 1.17"     0.72  0.75     
- 5 PTSD                                  "-0.19"  " -1.83"     " 1.45"     0.84  0.82     
- 6 Depressive disorders                  " 0.76"  " -0.18"     " 1.71"     0.48  0.11     
- 7 Bipolar disorders                     " 0.76"  " -0.26"     " 1.78"     0.52  0.14     
- 8 Female                                " 0.49"  "  0.21"     " 0.77"     0.14  5.24e-04 
- 9 Non-binary/Self-defined               " 0.43"  " -0.37"     " 1.22"     0.40  0.29     
-10 Age                                   " 0.90"  "-10.29"     "12.09"     5.71  0.87     
-11 Age^2                                 "-9.06"  "-20.02"     " 1.89"     5.59  0.10     
-12 Mixed or multiple ethnic origins      " 0.30"  " -0.42"     " 1.02"     0.37  0.42     
-13 Asian or Asian British                "-0.25"  " -1.42"     " 0.92"     0.60  0.67     
-14 African or African British            "-1.26"  " -3.02"     " 0.50"     0.90  0.16     
-15 Other ethnicity                       " 0.04"  " -1.08"     " 1.16"     0.57  0.95     
-16 Time difference: Lockdown to baseline "-0.01"  " -0.07"     " 0.06"     0.03  0.85     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132de4e89.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2173,10 +2317,12 @@ Model 0a + Gender_collapsed + age^2+ Ethnicity_collapsed + Time registration and
 |11144 |0.00 |0.00       |2.98 |0.007   |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11144 0.00  0.00         2.98  0.007         6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322f604d1.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with Age^2
@@ -2209,20 +2355,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |-0.01    |-0.07      |0.06      |0.03 |0.81    |
 
 ```
-# A tibble: 23 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "-1.19"  " -2.06"     "-0.33"     0.44  0.007    
- 2 Depressive and anxiety disorder " 0.41"  " -0.28"     " 1.10"     0.35  0.25     
- 3 Only depressive disorder        " 0.95"  "  0.21"     " 1.70"     0.38  0.01     
- 4 Only anxiety disorder           "-0.27"  " -1.05"     " 0.51"     0.40  0.50     
- 5 Eating disorders                " 0.13"  " -0.20"     " 0.47"     0.17  0.44     
- 6 OCDs                            "-0.26"  " -0.58"     " 0.05"     0.16  0.10     
- 7 Psychotic and bipolar disorder  "-0.41"  " -1.32"     " 0.50"     0.47  0.38     
- 8 Only psychotic disorder         " 0.79"  "  0.03"     " 1.55"     0.39  0.04     
- 9 Only bipolar disorder           " 0.28"  " -0.17"     " 0.74"     0.23  0.23     
-10 PTSD                            " 0.10"  " -0.19"     " 0.40"     0.15  0.50     
-# … with 13 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321dcb9808.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2232,10 +2370,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11144 |0.00 |0.00       |2.98 |0.007   |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11144 0.00  0.00         2.98  0.007         6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132216a4480.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 ## Regression: Absolute scores
 ### Model 0a: Disorder_hierarchical, Unadjusted
@@ -2252,17 +2392,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Bipolar disorders    |1.86     |0.98       |2.75      |0.45 |3.80e-05 |
 
 ```
-# A tibble: 8 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            2.25     " 1.42"      3.07        0.42  9.22e-08 
-2 gad.sum_score_prepan 0.55     " 0.53"      0.56        0.01  0.00e+00 
-3 Anxiety disorders    0.59     "-0.31"      1.49        0.46  0.20     
-4 Eating disorders     0.79     "-0.98"      2.57        0.91  0.38     
-5 OCDs                 1.42     " 0.19"      2.65        0.63  0.02     
-6 PTSD                 1.15     "-0.27"      2.57        0.73  0.11     
-7 Depressive disorders 1.51     " 0.68"      2.33        0.42  3.39e-04 
-8 Bipolar disorders    1.86     " 0.98"      2.75        0.45  3.80e-05 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324ff4b21d.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2272,10 +2407,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11144 |0.32 |0.32       |743.84 |0.00e+00 |  7|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 11144 0.32  0.32         743.84 0.00e+00      7
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713249d9b6ed.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -2298,23 +2435,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Personality disorder            |0.92     |0.56       |1.27      |0.18 |3.95e-07 |
 
 ```
-# A tibble: 14 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 2.98"  " 2.38"      3.58        0.30  1.34e-22 
- 2 gad.sum_score_prepan            " 0.52"  " 0.50"      0.53        0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 0.83"  " 0.23"      1.42        0.30  0.006    
- 4 Only depressive disorder        "-0.24"  "-0.88"      0.40        0.33  0.47     
- 5 Only anxiety disorder           " 0.11"  "-0.56"      0.78        0.34  0.76     
- 6 Eating disorders                " 0.73"  " 0.44"      1.02        0.15  6.17e-07 
- 7 OCDs                            " 0.61"  " 0.34"      0.88        0.14  1.08e-05 
- 8 Psychotic and bipolar disorder  "-0.53"  "-1.31"      0.26        0.40  0.19     
- 9 Only psychotic disorder         " 0.39"  "-0.27"      1.05        0.34  0.24     
-10 Only bipolar disorder           " 0.17"  "-0.23"      0.56        0.20  0.41     
-11 PTSD                            " 0.75"  " 0.50"      1.01        0.13  5.96e-09 
-12 ASD                             " 0.90"  " 0.38"      1.42        0.27  7.08e-04 
-13 ADHD                            "-0.13"  "-0.84"      0.59        0.36  0.73     
-14 Personality disorder            " 0.92"  " 0.56"      1.27        0.18  3.95e-07 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321d3bb7fa.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2324,10 +2450,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11165 |0.01 |0.01       |11.04 |2.61e-12 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11165 0.01  0.01         11.04 2.61e-12      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323bab8d14.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -2361,20 +2489,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.00     |-0.06      |0.05      |0.03 |0.92     |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`     Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                   <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept               " 2.44"  " 1.48"      " 3.41"     0.49  7.57e-07 
- 2 gad.sum_score_prepan    " 0.52"  " 0.50"      " 0.53"     0.01  0.00e+00 
- 3 Anxiety disorders       " 0.56"  "-0.34"      " 1.46"     0.46  0.22     
- 4 Eating disorders        " 0.67"  "-1.09"      " 2.44"     0.90  0.45     
- 5 OCDs                    " 1.21"  "-0.01"      " 2.43"     0.62  0.05     
- 6 PTSD                    " 1.42"  " 0.00"      " 2.84"     0.73  0.05     
- 7 Depressive disorders    " 1.61"  " 0.79"      " 2.43"     0.42  1.29e-04 
- 8 Bipolar disorders       " 2.08"  " 1.20"      " 2.97"     0.45  4.22e-06 
- 9 Female                  " 0.52"  " 0.28"      " 0.76"     0.12  2.04e-05 
-10 Non-binary/Self-defined " 0.81"  " 0.13"      " 1.50"     0.35  0.02     
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324107a7c0.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2384,10 +2504,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |11165 |0.01 |0.01       |11.04 |2.61e-12 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11165 0.01  0.01         11.04 2.61e-12      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325d964f9a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -2427,20 +2549,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.00     |-0.05      |0.06      |0.03 |0.89     |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 3.08"  " 2.30"      " 3.85"     0.40  1.02e-14 
- 2 gad.sum_score_prepan            " 0.49"  " 0.48"      " 0.51"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 0.92"  " 0.33"      " 1.52"     0.30  0.002    
- 4 Only depressive disorder        " 0.01"  "-0.63"      " 0.66"     0.33  0.96     
- 5 Only anxiety disorder           " 0.07"  "-0.60"      " 0.74"     0.34  0.83     
- 6 Eating disorders                " 0.61"  " 0.32"      " 0.89"     0.15  3.79e-05 
- 7 OCDs                            " 0.53"  " 0.26"      " 0.80"     0.14  1.22e-04 
- 8 Psychotic and bipolar disorder  "-0.26"  "-1.05"      " 0.52"     0.40  0.51     
- 9 Only psychotic disorder         " 0.45"  "-0.20"      " 1.10"     0.33  0.18     
-10 Only bipolar disorder           " 0.32"  "-0.07"      " 0.71"     0.20  0.11     
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325f954052.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2450,10 +2564,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |11165 |0.01 |0.01       |11.04 |2.61e-12 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11165 0.01  0.01         11.04 2.61e-12      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323fb1f884.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
@@ -2481,27 +2597,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.00     |-0.06      |0.05      |0.03 |0.95     |
 
 ```
-# A tibble: 18 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "  2.18" "  1.24"     "  3.13"    0.48  6.32e-06 
- 2 gad.sum_score_prepan                  "  0.52" "  0.50"     "  0.53"    0.01  0.00e+00 
- 3 Anxiety disorders                     "  0.54" " -0.35"     "  1.44"    0.46  0.24     
- 4 Eating disorders                      "  0.65" " -1.12"     "  2.41"    0.90  0.47     
- 5 OCDs                                  "  1.22" "  0.00"     "  2.44"    0.62  0.05     
- 6 PTSD                                  "  1.39" " -0.03"     "  2.81"    0.72  0.05     
- 7 Depressive disorders                  "  1.58" "  0.76"     "  2.40"    0.42  1.69e-04 
- 8 Bipolar disorders                     "  2.05" "  1.16"     "  2.94"    0.45  5.84e-06 
- 9 Female                                "  0.50" "  0.26"     "  0.74"    0.12  3.76e-05 
-10 Non-binary/Self-defined               "  0.79" "  0.11"     "  1.48"    0.35  0.02     
-11 Age                                   "-71.59" "-81.58"     "-61.60"    5.10  2.00e-44 
-12 Age^2                                 " -9.17" "-18.94"     "  0.60"    4.98  0.07     
-13 Mixed or multiple ethnic origins      "  0.06" " -0.56"     "  0.69"    0.32  0.85     
-14 Asian or Asian British                " -0.16" " -1.17"     "  0.86"    0.52  0.76     
-15 African or African British            " -0.46" " -1.98"     "  1.06"    0.78  0.55     
-16 Other ethnicity                       "  0.49" " -0.49"     "  1.46"    0.50  0.33     
-17 Key worker                            " -0.34" " -0.53"     " -0.16"    0.10  3.12e-04 
-18 Time difference: Lockdown to baseline "  0.00" " -0.06"     "  0.05"    0.03  0.95     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324f91b634.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2511,10 +2612,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11165 |0.01 |0.01       |11.04 |2.61e-12 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11165 0.01  0.01         11.04 2.61e-12      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132675138bb.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -2548,20 +2651,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.00     |-0.05      |0.06      |0.03 |0.87     |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "  2.88" "  2.13"     "  3.63"    0.38  5.85e-14 
- 2 gad.sum_score_prepan            "  0.49" "  0.48"     "  0.51"    0.01  0.00e+00 
- 3 Depressive and anxiety disorder "  0.88" "  0.29"     "  1.47"    0.30  0.004    
- 4 Only depressive disorder        "  0.00" " -0.64"     "  0.64"    0.33  0.99     
- 5 Only anxiety disorder           "  0.04" " -0.63"     "  0.71"    0.34  0.90     
- 6 Eating disorders                "  0.61" "  0.32"     "  0.90"    0.15  3.27e-05 
- 7 OCDs                            "  0.52" "  0.25"     "  0.79"    0.14  1.44e-04 
- 8 Psychotic and bipolar disorder  " -0.25" " -1.03"     "  0.54"    0.40  0.54     
- 9 Only psychotic disorder         "  0.47" " -0.18"     "  1.12"    0.33  0.16     
-10 Only bipolar disorder           "  0.32" " -0.07"     "  0.71"    0.20  0.11     
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325439d880.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2571,10 +2666,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11165 |0.01 |0.01       |11.04 |2.61e-12 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11165 0.01  0.01         11.04 2.61e-12      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713221b4e6b3.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 # GAD prepan: sensitivity
 ## Regression: Absolute scores
@@ -2616,20 +2713,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.01    |-0.18      |0.16      |0.09 |0.89     |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 2.34"  "-0.05"      4.72        1.21  0.05     
- 2 gad.sum_score_prepan            " 0.54"  " 0.49"      0.60        0.03  1.22e-63 
- 3 Depressive and anxiety disorder " 0.73"  "-0.92"      2.38        0.84  0.39     
- 4 Only depressive disorder        "-0.27"  "-2.04"      1.51        0.90  0.77     
- 5 Only anxiety disorder           " 0.11"  "-1.87"      2.08        1.01  0.92     
- 6 Eating disorders                " 0.88"  "-0.16"      1.92        0.53  0.10     
- 7 OCDs                            " 0.03"  "-1.02"      1.08        0.54  0.96     
- 8 Psychotic and bipolar disorder  "-0.81"  "-3.33"      1.71        1.28  0.53     
- 9 Only psychotic disorder         " 0.37"  "-2.23"      2.96        1.32  0.78     
-10 Only bipolar disorder           "-0.53"  "-2.17"      1.11        0.84  0.53     
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713245a2c350.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2639,10 +2728,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |828 |0.01 |0.00       |1.47 |0.18    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 828   0.01  0.00         1.47  0.18          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713240c4dce7.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 #### Subset of participants 6 months prior to pandemic
@@ -2681,20 +2772,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.00     |-0.14      |0.13      |0.07 |0.95      |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 2.12"  " 0.46"      3.79        0.85  0.01     
- 2 gad.sum_score_prepan            " 0.54"  " 0.50"      0.58        0.02  1.01e-128
- 3 Depressive and anxiety disorder " 0.82"  "-0.26"      1.90        0.55  0.14     
- 4 Only depressive disorder        "-0.20"  "-1.39"      0.98        0.60  0.74     
- 5 Only anxiety disorder           " 0.31"  "-0.99"      1.62        0.66  0.64     
- 6 Eating disorders                " 0.55"  "-0.20"      1.30        0.38  0.15     
- 7 OCDs                            " 0.58"  "-0.12"      1.28        0.36  0.11     
- 8 Psychotic and bipolar disorder  "-0.47"  "-2.50"      1.56        1.03  0.65     
- 9 Only psychotic disorder         " 0.47"  "-1.08"      2.02        0.79  0.55     
-10 Only bipolar disorder           "-0.10"  "-1.15"      0.96        0.54  0.85     
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713234ff4e08.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2704,10 +2787,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |1634 |0.00 |0.00       |1.22 |0.29    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1634  0.00  0.00         1.22  0.29          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132655c0a66.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 #### Subset of participants 9 months prior to pandemic
@@ -2746,20 +2831,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.06    |-0.16      |0.05      |0.05 |0.28      |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 2.69"  " 1.39"      " 4.00"     0.67  5.44e-05 
- 2 gad.sum_score_prepan            " 0.53"  " 0.50"      " 0.57"     0.02  6.23e-209
- 3 Depressive and anxiety disorder " 1.03"  " 0.18"      " 1.89"     0.44  0.02     
- 4 Only depressive disorder        " 0.23"  "-0.70"      " 1.15"     0.47  0.63     
- 5 Only anxiety disorder           " 0.50"  "-0.54"      " 1.54"     0.53  0.34     
- 6 Eating disorders                " 0.91"  " 0.34"      " 1.49"     0.29  0.002    
- 7 OCDs                            " 0.57"  " 0.03"      " 1.12"     0.28  0.04     
- 8 Psychotic and bipolar disorder  "-0.68"  "-2.19"      " 0.82"     0.77  0.37     
- 9 Only psychotic disorder         " 0.74"  "-0.47"      " 1.95"     0.62  0.23     
-10 Only bipolar disorder           " 0.21"  "-0.59"      " 1.02"     0.41  0.60     
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132649a0be0.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2769,10 +2846,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |2710 |0.01 |0.00       |2.99 |0.007   |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 2710  0.01  0.00         2.99  0.007         6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323d81d2b9.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 ##KT
 
@@ -2791,16 +2870,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Bipolar disorders    |0.86     |0.49       |1.24      |0.19 |5.71e-06  |
 
 ```
-# A tibble: 7 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            2.58     " 2.44"      2.72        0.07  9.69e-272
-2 Anxiety disorders    0.82     " 0.51"      1.13        0.16  1.80e-07 
-3 Eating disorders     0.41     "-0.51"      1.33        0.47  0.38     
-4 OCDs                 1.10     " 0.32"      1.88        0.40  0.006    
-5 PTSD                 1.01     " 0.24"      1.78        0.39  0.01     
-6 Depressive disorders 0.87     " 0.71"      1.04        0.09  4.00e-24 
-7 Bipolar disorders    0.86     " 0.49"      1.24        0.19  5.71e-06 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132fb275df.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2810,10 +2885,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |18588 |0.01 |0.01       |18.23 |3.23e-21 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 18588 0.01  0.01         18.23 3.23e-21      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132d588b86.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -2835,22 +2912,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Personality disorder            |0.29     |-0.06      |0.64      |0.18 |0.11      |
 
 ```
-# A tibble: 13 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 2.58"  " 2.45"      2.71        0.07  2.17e-303
- 2 Depressive and anxiety disorder " 0.85"  " 0.68"      1.03        0.09  4.94e-21 
- 3 Only depressive disorder        " 0.25"  " 0.01"      0.48        0.12  0.04     
- 4 Only anxiety disorder           " 0.86"  " 0.58"      1.15        0.14  2.26e-09 
- 5 Eating disorders                " 0.49"  " 0.22"      0.76        0.14  4.28e-04 
- 6 OCDs                            " 0.05"  "-0.21"      0.31        0.13  0.72     
- 7 Psychotic and bipolar disorder  "-0.20"  "-0.96"      0.56        0.39  0.61     
- 8 Only psychotic disorder         "-0.28"  "-0.94"      0.38        0.34  0.41     
- 9 Only bipolar disorder           "-0.21"  "-0.62"      0.19        0.21  0.30     
-10 PTSD                            " 0.41"  " 0.17"      0.66        0.12  8.72e-04 
-11 ASD                             " 0.36"  "-0.12"      0.83        0.24  0.14     
-12 ADHD                            " 0.01"  "-0.63"      0.64        0.32  0.99     
-13 Personality disorder            " 0.29"  "-0.06"      0.64        0.18  0.11     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713223bd1cc5.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2860,10 +2927,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |18588 |0.01 |0.01       |18.23 |3.23e-21 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 18588 0.01  0.01         18.23 3.23e-21      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713254abdbd7.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -2895,20 +2964,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.23    |-0.26      |-0.19     |0.02 |5.86e-34  |
 
 ```
-# A tibble: 22 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             " 4.16"  " 3.79"      " 4.52"     0.19  4.36e-106
- 2 Anxiety disorders                     " 0.57"  " 0.25"      " 0.90"     0.17  5.51e-04 
- 3 Eating disorders                      " 0.02"  "-0.91"      " 0.96"     0.48  0.96     
- 4 OCDs                                  " 0.54"  "-0.25"      " 1.34"     0.41  0.18     
- 5 PTSD                                  " 0.78"  "-0.02"      " 1.58"     0.41  0.06     
- 6 Depressive disorders                  " 0.63"  " 0.45"      " 0.82"     0.10  3.17e-11 
- 7 Bipolar disorders                     " 0.65"  " 0.26"      " 1.03"     0.20  9.77e-04 
- 8 Female                                " 0.77"  " 0.57"      " 0.97"     0.10  2.26e-14 
- 9 Non-binary/Self-defined               "-0.24"  "-0.90"      " 0.42"     0.34  0.48     
-10 age_category_collapsed_reordered16-18 "-0.31"  "-0.74"      " 0.11"     0.22  0.15     
-# … with 12 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326675dd32.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2918,10 +2979,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |18588 |0.01 |0.01       |18.23 |3.23e-21 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 18588 0.01  0.01         18.23 3.23e-21      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132440d322b.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -2960,20 +3023,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.22    |-0.26      |-0.19     |0.02 |4.99e-34 |
 
 ```
-# A tibble: 29 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 3.94"  " 3.57"      " 4.31"     0.19  2.84e-95 
- 2 Depressive and anxiety disorder " 0.65"  " 0.46"      " 0.85"     0.10  4.95e-11 
- 3 Only depressive disorder        " 0.25"  " 0.00"      " 0.51"     0.13  0.05     
- 4 Only anxiety disorder           " 0.63"  " 0.34"      " 0.93"     0.15  2.96e-05 
- 5 Eating disorders                " 0.29"  " 0.01"      " 0.56"     0.14  0.04     
- 6 OCDs                            "-0.09"  "-0.36"      " 0.17"     0.14  0.50     
- 7 Psychotic and bipolar disorder  " 0.09"  "-0.67"      " 0.86"     0.39  0.81     
- 8 Only psychotic disorder         "-0.05"  "-0.71"      " 0.62"     0.34  0.89     
- 9 Only bipolar disorder           "-0.11"  "-0.52"      " 0.30"     0.21  0.60     
-10 PTSD                            " 0.43"  " 0.18"      " 0.68"     0.13  6.93e-04 
-# … with 19 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713236af8426.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -2983,10 +3038,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |18588 |0.01 |0.01       |18.23 |3.23e-21 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 18588 0.01  0.01         18.23 3.23e-21      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323d0cf6d6.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
 Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration and baseline
@@ -3011,25 +3068,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |-0.07    |-0.12      |-0.02     |0.03 |0.007    |
 
 ```
-# A tibble: 16 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "  2.11" "  1.67"     "  2.55"    0.22  4.09e-21 
- 2 Anxiety disorders                     "  0.54" "  0.13"     "  0.95"    0.21  0.010    
- 3 Eating disorders                      "  0.38" " -0.80"     "  1.56"    0.60  0.52     
- 4 OCDs                                  "  0.30" " -0.73"     "  1.34"    0.53  0.57     
- 5 PTSD                                  "  1.17" "  0.06"     "  2.28"    0.57  0.04     
- 6 Depressive disorders                  "  0.95" "  0.72"     "  1.18"    0.12  1.36e-15 
- 7 Bipolar disorders                     "  1.00" "  0.56"     "  1.44"    0.22  7.90e-06 
- 8 Female                                "  0.64" "  0.41"     "  0.86"    0.11  2.52e-08 
- 9 Non-binary/Self-defined               " -0.60" " -1.34"     "  0.14"    0.38  0.11     
-10 Age                                   "-78.52" "-90.65"     "-66.40"    6.19  1.10e-36 
-11 Age^2                                 "  7.26" " -4.22"     " 18.74"    5.86  0.22     
-12 Mixed or multiple ethnic origins      " -0.67" " -1.30"     " -0.04"    0.32  0.04     
-13 Asian or Asian British                " -0.22" " -1.14"     "  0.69"    0.47  0.63     
-14 African or African British            " -0.67" " -2.12"     "  0.79"    0.74  0.37     
-15 Other ethnicity                       "  0.16" " -0.97"     "  1.29"    0.58  0.78     
-16 Time difference: Lockdown to baseline " -0.07" " -0.12"     " -0.02"    0.03  0.007    
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132280ca81a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3039,10 +3083,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |13420 |0.01 |0.01       |30.14 |4.04e-36 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 13420 0.01  0.01         30.14 4.04e-36      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713256f05780.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -3075,20 +3121,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |Time difference: Lockdown to baseline |-0.07    |-0.12      |-0.02     |0.03 |0.009    |
 
 ```
-# A tibble: 23 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "  1.99" "  1.55"     "  2.43"    0.22  5.70e-19 
- 2 Depressive and anxiety disorder "  0.95" "  0.71"     "  1.18"    0.12  5.37e-15 
- 3 Only depressive disorder        "  0.48" "  0.17"     "  0.79"    0.16  0.002    
- 4 Only anxiety disorder           "  0.60" "  0.22"     "  0.98"    0.19  0.002    
- 5 Eating disorders                "  0.26" " -0.05"     "  0.58"    0.16  0.10     
- 6 OCDs                            " -0.27" " -0.57"     "  0.03"    0.15  0.08     
- 7 Psychotic and bipolar disorder  "  0.33" " -0.58"     "  1.23"    0.46  0.48     
- 8 Only psychotic disorder         " -0.06" " -0.81"     "  0.68"    0.38  0.87     
- 9 Only bipolar disorder           " -0.12" " -0.56"     "  0.33"    0.23  0.61     
-10 PTSD                            "  0.58" "  0.30"     "  0.86"    0.14  5.60e-05 
-# … with 13 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171327c84ec4a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3098,10 +3136,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |13420 |0.01 |0.01       |30.14 |4.04e-36 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 13420 0.01  0.01         30.14 4.04e-36      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171327ab52e23.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ## Regression: Absolute scores
@@ -3119,17 +3159,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |Bipolar disorders    |2.94     |2.57       |3.30      |0.18 |7.53e-57  |
 
 ```
-# A tibble: 8 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            3.53     3.40         3.67        0.07  0.00e+00 
-2 gad.sum_score_retro  0.61     0.59         0.62        0.01  0.00e+00 
-3 Anxiety disorders    1.81     1.52         2.11        0.15  1.59e-33 
-4 Eating disorders     1.26     0.40         2.13        0.44  0.004    
-5 OCDs                 2.70     1.97         3.44        0.38  5.91e-13 
-6 PTSD                 2.16     1.43         2.88        0.37  5.60e-09 
-7 Depressive disorders 2.28     2.11         2.45        0.09  1.24e-151
-8 Bipolar disorders    2.94     2.57         3.30        0.18  7.53e-57 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132626a6221.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3139,10 +3174,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |18588 |0.32 |0.32       |1276.84 |0.00e+00 |  7|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 18588 0.32  0.32         1276.84 0.00e+00      7
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713236509701.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -3165,23 +3202,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |Personality disorder            |1.09     |0.76       |1.42      |0.17 |6.62e-11  |
 
 ```
-# A tibble: 14 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       3.75     " 3.62"      3.88        0.07  0.00e+00 
- 2 gad.sum_score_retro             0.55     " 0.54"      0.57        0.01  0.00e+00 
- 3 Depressive and anxiety disorder 2.31     " 2.14"      2.49        0.09  3.78e-148
- 4 Only depressive disorder        0.67     " 0.45"      0.89        0.11  2.55e-09 
- 5 Only anxiety disorder           1.89     " 1.63"      2.16        0.14  4.35e-44 
- 6 Eating disorders                0.78     " 0.53"      1.03        0.13  1.83e-09 
- 7 OCDs                            0.75     " 0.50"      0.99        0.12  2.15e-09 
- 8 Psychotic and bipolar disorder  0.10     "-0.60"      0.81        0.36  0.77     
- 9 Only psychotic disorder         0.03     "-0.58"      0.65        0.31  0.92     
-10 Only bipolar disorder           0.16     "-0.21"      0.54        0.19  0.40     
-11 PTSD                            0.84     " 0.61"      1.07        0.12  3.49e-13 
-12 ASD                             1.02     " 0.58"      1.46        0.22  6.19e-06 
-13 ADHD                            0.44     "-0.15"      1.03        0.30  0.14     
-14 Personality disorder            1.09     " 0.76"      1.42        0.17  6.62e-11 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132360f5c90.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3191,10 +3217,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |23100 |0.15 |0.15       |660.52 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 23100 0.15  0.15         660.52 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322a860daa.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -3228,20 +3256,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.23    |-0.26      |-0.19     |0.02 |3.80e-39  |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`     Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                   <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept               " 5.56"  " 5.21"      " 5.92"     0.18  3.96e-203
- 2 gad.sum_score_retro     " 0.56"  " 0.54"      " 0.57"     0.01  0.00e+00 
- 3 Anxiety disorders       " 1.48"  " 1.18"      " 1.79"     0.15  1.29e-21 
- 4 Eating disorders        " 0.78"  "-0.09"      " 1.65"     0.44  0.08     
- 5 OCDs                    " 1.91"  " 1.17"      " 2.65"     0.38  4.63e-07 
- 6 PTSD                    " 1.98"  " 1.24"      " 2.73"     0.38  1.86e-07 
- 7 Depressive disorders    " 2.07"  " 1.89"      " 2.25"     0.09  2.61e-109
- 8 Bipolar disorders       " 2.77"  " 2.40"      " 3.14"     0.19  2.68e-49 
- 9 Female                  " 0.76"  " 0.57"      " 0.94"     0.09  7.47e-16 
-10 Non-binary/Self-defined " 0.28"  "-0.34"      " 0.90"     0.31  0.37     
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713278ff4e72.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3251,10 +3271,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |23100 |0.15 |0.15       |660.52 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 23100 0.15  0.15         660.52 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713241775c6d.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -3294,20 +3316,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.23    |-0.27      |-0.20     |0.02 |2.32e-42  |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 5.56"  " 5.22"      " 5.91"     0.18  3.62e-213
- 2 gad.sum_score_retro             " 0.51"  " 0.50"      " 0.53"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 2.15"  " 1.96"      " 2.33"     0.09  2.61e-112
- 4 Only depressive disorder        " 0.79"  " 0.55"      " 1.02"     0.12  3.46e-11 
- 5 Only anxiety disorder           " 1.61"  " 1.33"      " 1.89"     0.14  2.57e-30 
- 6 Eating disorders                " 0.52"  " 0.26"      " 0.77"     0.13  7.02e-05 
- 7 OCDs                            " 0.57"  " 0.33"      " 0.82"     0.13  5.06e-06 
- 8 Psychotic and bipolar disorder  " 0.42"  "-0.28"      " 1.12"     0.36  0.24     
- 9 Only psychotic disorder         " 0.26"  "-0.36"      " 0.87"     0.31  0.41     
-10 Only bipolar disorder           " 0.30"  "-0.08"      " 0.67"     0.19  0.13     
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132480931de.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3317,10 +3331,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |23100 |0.15 |0.15       |660.52 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 23100 0.15  0.15         660.52 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713253a90ac4.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
@@ -3348,27 +3364,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |-0.02    |-0.07      |0.02      |0.02 |0.34      |
 
 ```
-# A tibble: 18 x 6
-   `Indepent variable`                   Estimate  `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>     <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "   2.86" "   2.45"    "   3.27"   0.21  3.52e-42 
- 2 gad.sum_score_retro                   "   0.55" "   0.53"    "   0.57"   0.01  0.00e+00 
- 3 Anxiety disorders                     "   1.53" "   1.14"    "   1.91"   0.19  4.59e-15 
- 4 Eating disorders                      "   1.29" "   0.21"    "   2.37"   0.55  0.02     
- 5 OCDs                                  "   2.09" "   1.14"    "   3.05"   0.49  1.75e-05 
- 6 PTSD                                  "   2.58" "   1.56"    "   3.61"   0.52  7.56e-07 
- 7 Depressive disorders                  "   2.53" "   2.31"    "   2.75"   0.11  1.56e-106
- 8 Bipolar disorders                     "   3.23" "   2.81"    "   3.64"   0.21  5.28e-52 
- 9 Female                                "   0.58" "   0.37"    "   0.79"   0.11  3.42e-08 
-10 Non-binary/Self-defined               "  -0.04" "  -0.72"    "   0.64"   0.35  0.91     
-11 Age                                   "-121.62" "-133.06"    "-110.18"   5.84  8.19e-95 
-12 Age^2                                 "  10.80" "  -0.08"    "  21.68"   5.55  0.05     
-13 Mixed or multiple ethnic origins      "  -0.45" "  -1.03"    "   0.13"   0.30  0.13     
-14 Asian or Asian British                "   0.08" "  -0.76"    "   0.93"   0.43  0.85     
-15 African or African British            "  -0.07" "  -1.41"    "   1.27"   0.68  0.92     
-16 Other ethnicity                       "   0.55" "  -0.49"    "   1.59"   0.53  0.30     
-17 Key worker                            "  -0.05" "  -0.22"    "   0.12"   0.09  0.57     
-18 Time difference: Lockdown to baseline "  -0.02" "  -0.07"    "   0.02"   0.02  0.34     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132596cb100.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3378,10 +3379,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |16839 |0.19 |0.19       |657.64 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 16839 0.19  0.19         657.64 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326ed8a4dd.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -3415,20 +3418,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |-0.02    |-0.06      |0.03      |0.02 |0.47      |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`             Estimate  `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>     <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "   2.95" "   2.55"    "  3.35"    0.20  7.90e-47 
- 2 gad.sum_score_retro             "   0.51" "   0.50"    "  0.53"    0.01  0.00e+00 
- 3 Depressive and anxiety disorder "   2.57" "   2.34"    "  2.79"    0.11  2.83e-109
- 4 Only depressive disorder        "   1.14" "   0.85"    "  1.42"    0.14  4.22e-15 
- 5 Only anxiety disorder           "   1.70" "   1.35"    "  2.05"    0.18  7.64e-22 
- 6 Eating disorders                "   0.58" "   0.30"    "  0.87"    0.15  7.13e-05 
- 7 OCDs                            "   0.40" "   0.12"    "  0.67"    0.14  0.004    
- 8 Psychotic and bipolar disorder  "   0.39" "  -0.44"    "  1.21"    0.42  0.36     
- 9 Only psychotic disorder         "   0.34" "  -0.34"    "  1.02"    0.35  0.32     
-10 Only bipolar disorder           "   0.32" "  -0.09"    "  0.73"    0.21  0.12     
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321e9fdfe7.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3438,10 +3433,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |16839 |0.19 |0.19       |657.64 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 16839 0.19  0.19         657.64 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321224c666.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 # GAD retro: sensitivity
 ## Regression: Change scores
@@ -3458,16 +3455,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Bipolar disorders    |1.05     |-0.20      |2.30      |0.64 |0.10     |
 
 ```
-# A tibble: 7 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            2.16     " 1.00"      3.32        0.59  2.65e-04 
-2 Anxiety disorders    1.11     "-0.16"      2.38        0.65  0.09     
-3 Eating disorders     1.99     "-0.40"      4.38        1.22  0.10     
-4 OCDs                 1.16     "-0.57"      2.88        0.88  0.19     
-5 PTSD                 1.80     "-0.09"      3.70        0.97  0.06     
-6 Depressive disorders 1.19     " 0.03"      2.36        0.60  0.05     
-7 Bipolar disorders    1.05     "-0.20"      2.30        0.64  0.10     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322538d8a9.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3477,10 +3470,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |8058 |0.00 |0.00       |0.94 |0.47    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 8058  0.00  0.00         0.94  0.47          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713237185256.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -3502,22 +3497,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Personality disorder            |0.42     |-0.06      |0.90      |0.24 |0.09     |
 
 ```
-# A tibble: 13 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 2.55"  " 1.72"      3.38        0.42  1.97e-09 
- 2 Depressive and anxiety disorder " 0.73"  "-0.11"      1.57        0.43  0.09     
- 3 Only depressive disorder        " 0.15"  "-0.76"      1.07        0.47  0.74     
- 4 Only anxiety disorder           " 0.84"  "-0.11"      1.78        0.48  0.08     
- 5 Eating disorders                " 0.55"  " 0.16"      0.93        0.20  0.006    
- 6 OCDs                            "-0.21"  "-0.57"      0.15        0.18  0.25     
- 7 Psychotic and bipolar disorder  "-0.30"  "-1.39"      0.79        0.56  0.59     
- 8 Only psychotic disorder         "-0.16"  "-1.07"      0.74        0.46  0.73     
- 9 Only bipolar disorder           "-0.29"  "-0.83"      0.24        0.27  0.28     
-10 PTSD                            " 0.39"  " 0.06"      0.73        0.17  0.02     
-11 ASD                             " 0.22"  "-0.49"      0.92        0.36  0.55     
-12 ADHD                            " 0.12"  "-0.86"      1.09        0.50  0.81     
-13 Personality disorder            " 0.42"  "-0.06"      0.90        0.24  0.09     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321bb03f49.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3527,10 +3512,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |8058 |0.00 |0.00       |0.94 |0.47    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 8058  0.00  0.00         0.94  0.47          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132500adfd2.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -3562,20 +3549,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.07    |-0.15      |0.00      |0.04 |0.05     |
 
 ```
-# A tibble: 22 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             " 2.52"  " 1.18"      " 3.86"     0.68  2.21e-04 
- 2 Anxiety disorders                     " 0.99"  "-0.27"      " 2.25"     0.64  0.12     
- 3 Eating disorders                      " 1.69"  "-0.69"      " 4.06"     1.21  0.16     
- 4 OCDs                                  " 0.90"  "-0.81"      " 2.61"     0.87  0.30     
- 5 PTSD                                  " 1.94"  " 0.06"      " 3.82"     0.96  0.04     
- 6 Depressive disorders                  " 1.23"  " 0.06"      " 2.39"     0.59  0.04     
- 7 Bipolar disorders                     " 1.17"  "-0.08"      " 2.41"     0.63  0.07     
- 8 Female                                " 0.67"  " 0.33"      " 1.01"     0.17  1.22e-04 
- 9 Non-binary/Self-defined               "-0.64"  "-1.56"      " 0.28"     0.47  0.17     
-10 age_category_collapsed_reordered16-18 "-0.22"  "-0.99"      " 0.54"     0.39  0.57     
-# … with 12 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713215059bb6.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3585,10 +3564,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |8058 |0.00 |0.00       |0.94 |0.47    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 8058  0.00  0.00         0.94  0.47          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322331d482.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -3627,20 +3608,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.07    |-0.15      |0.00      |0.04 |0.06     |
 
 ```
-# A tibble: 29 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 2.81"  " 1.73"      " 3.89"     0.55  3.49e-07 
- 2 Depressive and anxiety disorder " 0.71"  "-0.14"      " 1.55"     0.43  0.10     
- 3 Only depressive disorder        " 0.37"  "-0.54"      " 1.29"     0.47  0.43     
- 4 Only anxiety disorder           " 0.67"  "-0.27"      " 1.62"     0.48  0.16     
- 5 Eating disorders                " 0.37"  "-0.02"      " 0.76"     0.20  0.06     
- 6 OCDs                            "-0.27"  "-0.63"      " 0.09"     0.18  0.15     
- 7 Psychotic and bipolar disorder  " 0.03"  "-1.05"      " 1.12"     0.55  0.95     
- 8 Only psychotic disorder         " 0.11"  "-0.80"      " 1.02"     0.46  0.81     
- 9 Only bipolar disorder           "-0.17"  "-0.70"      " 0.37"     0.27  0.54     
-10 PTSD                            " 0.46"  " 0.12"      " 0.80"     0.17  0.008    
-# … with 19 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132355ba476.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3650,10 +3623,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |8058 |0.00 |0.00       |0.94 |0.47    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 8058  0.00  0.00         0.94  0.47          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132138a5a58.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3672,17 +3647,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Bipolar disorders    |2.17     |1.03       |3.31      |0.58 |1.86e-04 |
 
 ```
-# A tibble: 8 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            4.62     3.56         5.69        0.54  2.04e-17 
-2 gad.sum_score_retro  0.52     0.50         0.55        0.01  0.00e+00 
-3 Anxiety disorders    1.15     0.00         2.31        0.59  0.05     
-4 Eating disorders     2.74     0.56         4.93        1.11  0.01     
-5 OCDs                 2.21     0.64         3.78        0.80  0.006    
-6 PTSD                 2.11     0.39         3.84        0.88  0.02     
-7 Depressive disorders 1.73     0.66         2.79        0.54  0.001    
-8 Bipolar disorders    2.17     1.03         3.31        0.58  1.86e-04 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713245d8fc71.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3692,10 +3662,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |8058 |0.20 |0.20       |290.49 |0.00e+00 |  7|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 8058  0.20  0.20         290.49 0.00e+00      7
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713228a5828a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -3718,23 +3690,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Personality disorder            |1.26     |0.83       |1.69      |0.22 |1.31e-08 |
 
 ```
-# A tibble: 14 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 5.45"  " 4.69"      6.21        0.39  2.82e-44 
- 2 gad.sum_score_retro             " 0.48"  " 0.46"      0.51        0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 0.89"  " 0.13"      1.65        0.39  0.02     
- 4 Only depressive disorder        "-0.64"  "-1.46"      0.18        0.42  0.13     
- 5 Only anxiety disorder           " 0.67"  "-0.18"      1.52        0.43  0.12     
- 6 Eating disorders                " 0.88"  " 0.53"      1.23        0.18  8.46e-07 
- 7 OCDs                            " 0.51"  " 0.19"      0.84        0.17  0.002    
- 8 Psychotic and bipolar disorder  "-0.33"  "-1.31"      0.65        0.50  0.51     
- 9 Only psychotic disorder         " 0.14"  "-0.68"      0.95        0.42  0.74     
-10 Only bipolar disorder           " 0.07"  "-0.41"      0.55        0.25  0.77     
-11 PTSD                            " 0.84"  " 0.54"      1.15        0.16  6.51e-08 
-12 ASD                             " 0.86"  " 0.23"      1.49        0.32  0.008    
-13 ADHD                            " 0.52"  "-0.36"      1.39        0.45  0.25     
-14 Personality disorder            " 1.26"  " 0.83"      1.69        0.22  1.31e-08 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132817dfa9.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3744,10 +3705,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |9688 |0.01 |0.01       |11.18 |1.82e-12 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 9688  0.01  0.01         11.18 1.82e-12      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132575cd465.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -3781,20 +3744,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.04    |-0.11      |0.03      |0.03 |0.30     |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`     Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                   <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept               " 4.78"  " 3.55"      " 6.01"     0.63  2.77e-14 
- 2 gad.sum_score_retro     " 0.50"  " 0.48"      " 0.53"     0.01  0.00e+00 
- 3 Anxiety disorders       " 1.16"  " 0.02"      " 2.31"     0.58  0.05     
- 4 Eating disorders        " 2.59"  " 0.43"      " 4.74"     1.10  0.02     
- 5 OCDs                    " 2.00"  " 0.44"      " 3.55"     0.79  0.01     
- 6 PTSD                    " 2.51"  " 0.80"      " 4.22"     0.87  0.004    
- 7 Depressive disorders    " 1.99"  " 0.93"      " 3.05"     0.54  2.34e-04 
- 8 Bipolar disorders       " 2.54"  " 1.40"      " 3.67"     0.58  1.17e-05 
- 9 Female                  " 0.53"  " 0.22"      " 0.84"     0.16  7.40e-04 
-10 Non-binary/Self-defined " 0.01"  "-0.82"      " 0.84"     0.42  0.99     
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322e6ea70f.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3804,10 +3759,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |9688 |0.01 |0.01       |11.18 |1.82e-12 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 9688  0.01  0.01         11.18 1.82e-12      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326299e199.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -3847,20 +3804,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.03    |-0.10      |0.04      |0.03 |0.39      |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 5.60"  " 4.63"      " 6.58"     0.50  3.63e-29 
- 2 gad.sum_score_retro             " 0.47"  " 0.45"      " 0.49"     0.01  2.49e-310
- 3 Depressive and anxiety disorder " 1.03"  " 0.27"      " 1.79"     0.39  0.008    
- 4 Only depressive disorder        "-0.21"  "-1.03"      " 0.61"     0.42  0.61     
- 5 Only anxiety disorder           " 0.58"  "-0.27"      " 1.43"     0.43  0.18     
- 6 Eating disorders                " 0.69"  " 0.34"      " 1.04"     0.18  1.04e-04 
- 7 OCDs                            " 0.42"  " 0.10"      " 0.75"     0.17  0.01     
- 8 Psychotic and bipolar disorder  "-0.02"  "-0.99"      " 0.95"     0.50  0.97     
- 9 Only psychotic disorder         " 0.34"  "-0.47"      " 1.16"     0.41  0.41     
-10 Only bipolar disorder           " 0.21"  "-0.27"      " 0.69"     0.24  0.39     
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713262d84de8.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3870,10 +3819,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |9688 |0.01 |0.01       |11.18 |1.82e-12 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 9688  0.01  0.01         11.18 1.82e-12      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713266e2ed0a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PHQ baseline, not controlling for prior symptoms
@@ -3890,16 +3841,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Bipolar disorders    |9.75     |9.39       |10.12     |0.19 |0.00e+00  |
 
 ```
-# A tibble: 7 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            3.31     3.20         " 3.42"     0.05  0.00e+00 
-2 Anxiety disorders    3.48     3.20         " 3.77"     0.15  1.82e-122
-3 Eating disorders     4.06     3.14         " 4.99"     0.47  8.24e-18 
-4 OCDs                 6.00     5.24         " 6.76"     0.39  3.57e-54 
-5 PTSD                 5.18     4.42         " 5.93"     0.39  5.41e-41 
-6 Depressive disorders 7.19     7.05         " 7.33"     0.07  0.00e+00 
-7 Bipolar disorders    9.75     9.39         "10.12"     0.19  0.00e+00 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321939fad0.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3909,10 +3856,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |31315 |0.26 |0.26       |1846.76 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31315 0.26  0.26         1846.76 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322d817aa0.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -3934,22 +3883,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Personality disorder            |3.40     |3.06       |3.74      |0.17 |6.36e-84  |
 
 ```
-# A tibble: 13 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       3.56     " 3.46"      3.66        0.05  0.00e+00 
- 2 Depressive and anxiety disorder 6.64     " 6.49"      6.79        0.08  0.00e+00 
- 3 Only depressive disorder        3.53     " 3.33"      3.73        0.10  7.11e-257
- 4 Only anxiety disorder           3.22     " 2.97"      3.48        0.13  5.24e-133
- 5 Eating disorders                2.18     " 1.92"      2.45        0.14  4.24e-57 
- 6 OCDs                            2.04     " 1.78"      2.30        0.13  4.62e-54 
- 7 Psychotic and bipolar disorder  0.27     "-0.46"      1.00        0.37  0.47     
- 8 Only psychotic disorder         0.80     " 0.17"      1.42        0.32  0.01     
- 9 Only bipolar disorder           1.31     " 0.91"      1.70        0.20  6.16e-11 
-10 PTSD                            2.05     " 1.81"      2.29        0.12  1.16e-63 
-11 ASD                             2.80     " 2.34"      3.27        0.24  4.82e-32 
-12 ADHD                            1.90     " 1.28"      2.51        0.31  1.73e-09 
-13 Personality disorder            3.40     " 3.06"      3.74        0.17  6.36e-84 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713234690961.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -3959,10 +3898,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |31315 |0.26 |0.26       |1846.76 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31315 0.26  0.26         1846.76 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325be6da28.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -3994,20 +3935,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.21    |-0.25      |-0.18     |0.02 |9.53e-36  |
 
 ```
-# A tibble: 22 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             " 6.21"  " 5.88"      " 6.54"     0.17  2.84e-294
- 2 Anxiety disorders                     " 2.11"  " 1.82"      " 2.40"     0.15  4.71e-45 
- 3 Eating disorders                      " 2.21"  " 1.30"      " 3.12"     0.46  2.01e-06 
- 4 OCDs                                  " 3.15"  " 2.41"      " 3.90"     0.38  1.13e-16 
- 5 PTSD                                  " 4.04"  " 3.29"      " 4.79"     0.38  9.48e-26 
- 6 Depressive disorders                  " 5.91"  " 5.76"      " 6.07"     0.08  0.00e+00 
- 7 Bipolar disorders                     " 8.33"  " 7.97"      " 8.69"     0.18  0.00e+00 
- 8 Female                                " 0.92"  " 0.76"      " 1.08"     0.08  4.69e-30 
- 9 Non-binary/Self-defined               " 2.57"  " 1.93"      " 3.20"     0.32  2.88e-15 
-10 age_category_collapsed_reordered16-18 " 5.86"  " 5.43"      " 6.28"     0.22  5.17e-160
-# … with 12 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323b471b33.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4017,10 +3950,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |31315 |0.26 |0.26       |1846.76 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31315 0.26  0.26         1846.76 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132394acfac.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -4059,20 +3994,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.22    |-0.25      |-0.19     |0.02 |9.25e-42  |
 
 ```
-# A tibble: 29 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 6.34"  " 6.02"      " 6.66"     0.16  2.46e-321
- 2 Depressive and anxiety disorder " 5.56"  " 5.39"      " 5.72"     0.08  0.00e+00 
- 3 Only depressive disorder        " 3.37"  " 3.17"      " 3.58"     0.11  2.75e-220
- 4 Only anxiety disorder           " 2.04"  " 1.78"      " 2.31"     0.13  1.74e-52 
- 5 Eating disorders                " 1.56"  " 1.29"      " 1.82"     0.13  4.43e-31 
- 6 OCDs                            " 1.44"  " 1.19"      " 1.69"     0.13  6.49e-29 
- 7 Psychotic and bipolar disorder  " 0.55"  "-0.16"      " 1.26"     0.36  0.13     
- 8 Only psychotic disorder         " 0.87"  " 0.26"      " 1.48"     0.31  0.005    
- 9 Only bipolar disorder           " 1.48"  " 1.10"      " 1.86"     0.20  3.66e-14 
-10 PTSD                            " 2.08"  " 1.84"      " 2.31"     0.12  1.95e-67 
-# … with 19 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713243cbb656.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4082,10 +4009,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |31315 |0.26 |0.26       |1846.76 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31315 0.26  0.26         1846.76 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132732feadf.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4112,25 +4041,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.09     |0.04       |0.13      |0.02 |6.90e-05 |
 
 ```
-# A tibble: 16 x 6
-   `Indepent variable`                   Estimate  `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>     <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "   2.34" "   2.00"    "   2.69"   0.18  1.27e-39 
- 2 Anxiety disorders                     "   2.02" "   1.68"    "   2.37"   0.18  1.40e-30 
- 3 Eating disorders                      "   2.44" "   1.38"    "   3.49"   0.54  6.42e-06 
- 4 OCDs                                  "   3.94" "   3.02"    "   4.86"   0.47  3.70e-17 
- 5 PTSD                                  "   4.00" "   3.00"    "   5.00"   0.51  3.81e-15 
- 6 Depressive disorders                  "   6.15" "   5.97"    "   6.32"   0.09  0.00e+00 
- 7 Bipolar disorders                     "   8.50" "   8.11"    "   8.89"   0.20  0.00e+00 
- 8 Female                                "   0.56" "   0.39"    "   0.73"   0.09  1.01e-10 
- 9 Non-binary/Self-defined               "   2.17" "   1.48"    "   2.85"   0.35  5.84e-10 
-10 Age                                   "-280.44" "-293.04"    "-267.84"   6.43  0.00e+00 
-11 Age^2                                 "  31.51" "  20.12"    "  42.89"   5.81  5.88e-08 
-12 Mixed or multiple ethnic origins      "   0.44" "  -0.13"    "   1.00"   0.29  0.13     
-13 Asian or Asian British                "   0.04" "  -0.70"    "   0.78"   0.38  0.91     
-14 African or African British            "  -0.12" "  -1.29"    "   1.06"   0.60  0.84     
-15 Other ethnicity                       "   1.48" "   0.42"    "   2.54"   0.54  0.006    
-16 Time difference: Lockdown to baseline "   0.09" "   0.04"    "   0.13"   0.02  6.90e-05 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713220e36872.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4140,10 +4056,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |24450 |0.31 |0.31       |1872.46 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 24450 0.31  0.31         1872.46 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713231de253c.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -4176,20 +4094,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |Time difference: Lockdown to baseline |0.10     |0.06       |0.14      |0.02 |4.65e-06  |
 
 ```
-# A tibble: 23 x 6
-   `Indepent variable`             Estimate  `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>     <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "   2.64" "   2.30"    "   2.97"   0.17  1.09e-52 
- 2 Depressive and anxiety disorder "   5.84" "   5.66"    "   6.03"   0.09  0.00e+00 
- 3 Only depressive disorder        "   3.61" "   3.37"    "   3.84"   0.12  2.68e-196
- 4 Only anxiety disorder           "   2.14" "   1.83"    "   2.45"   0.16  6.67e-42 
- 5 Eating disorders                "   1.79" "   1.51"    "   2.08"   0.15  1.61e-34 
- 6 OCDs                            "   1.46" "   1.18"    "   1.74"   0.14  3.17e-25 
- 7 Psychotic and bipolar disorder  "   0.34" "  -0.47"    "   1.14"   0.41  0.42     
- 8 Only psychotic disorder         "   0.83" "   0.17"    "   1.49"   0.34  0.01     
- 9 Only bipolar disorder           "   1.48" "   1.08"    "   1.88"   0.20  5.23e-13 
-10 PTSD                            "   2.05" "   1.80"    "   2.31"   0.13  2.48e-55 
-# … with 13 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322d47e080.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4199,10 +4109,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |24450 |0.31 |0.31       |1872.46 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 24450 0.31  0.31         1872.46 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713249e40ab9.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PHQ prepan
@@ -4220,16 +4132,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |Bipolar disorders    |0.79     |-0.27      |1.85      |0.54 |0.15     |
 
 ```
-# A tibble: 7 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            "-1.65"  "-2.63"      "-0.67"     0.50  9.81e-04 
-2 Anxiety disorders    " 1.89"  " 0.81"      " 2.97"     0.55  5.93e-04 
-3 Eating disorders     " 0.02"  "-2.07"      " 2.12"     1.07  0.98     
-4 OCDs                 " 1.82"  " 0.36"      " 3.29"     0.75  0.01     
-5 PTSD                 " 1.28"  "-0.43"      " 2.99"     0.87  0.14     
-6 Depressive disorders " 1.19"  " 0.20"      " 2.17"     0.50  0.02     
-7 Bipolar disorders    " 0.79"  "-0.27"      " 1.85"     0.54  0.15     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324a7a2ec8.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4239,10 +4147,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |11134 |0.00 |0.00       |3.57 |0.002   |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11134 0.00  0.00         3.57  0.002         6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321b9572ab.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -4264,22 +4174,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |Personality disorder            |-0.02    |-0.44      |0.41      |0.22 |0.93     |
 
 ```
-# A tibble: 13 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "-1.55"  "-2.26"      "-0.84"     0.36  1.69e-05 
- 2 Depressive and anxiety disorder " 1.08"  " 0.36"      " 1.79"     0.37  0.003    
- 3 Only depressive disorder        " 0.94"  " 0.16"      " 1.71"     0.39  0.02     
- 4 Only anxiety disorder           " 1.75"  " 0.94"      " 2.56"     0.41  2.28e-05 
- 5 Eating disorders                " 0.37"  " 0.02"      " 0.72"     0.18  0.04     
- 6 OCDs                            " 0.01"  "-0.32"      " 0.33"     0.17  0.96     
- 7 Psychotic and bipolar disorder  "-0.79"  "-1.75"      " 0.17"     0.49  0.11     
- 8 Only psychotic disorder         " 0.13"  "-0.66"      " 0.92"     0.40  0.75     
- 9 Only bipolar disorder           "-0.32"  "-0.80"      " 0.15"     0.24  0.18     
-10 PTSD                            "-0.17"  "-0.48"      " 0.13"     0.16  0.26     
-11 ASD                             " 0.35"  "-0.28"      " 0.98"     0.32  0.28     
-12 ADHD                            " 0.07"  "-0.79"      " 0.93"     0.44  0.87     
-13 Personality disorder            "-0.02"  "-0.44"      " 0.41"     0.22  0.93     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132623e89df.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4289,10 +4189,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |11134 |0.00 |0.00       |3.57 |0.002   |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11134 0.00  0.00         3.57  0.002         6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713277cdc1dc.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -4324,20 +4226,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.06     |0.00       |0.13      |0.03 |0.07     |
 
 ```
-# A tibble: 22 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "-2.11"  "-3.26"      "-0.97"     0.58  2.90e-04 
- 2 Anxiety disorders                     " 1.82"  " 0.74"      " 2.90"     0.55  9.92e-04 
- 3 Eating disorders                      "-0.14"  "-2.24"      " 1.96"     1.07  0.90     
- 4 OCDs                                  " 1.65"  " 0.18"      " 3.11"     0.75  0.03     
- 5 PTSD                                  " 1.03"  "-0.69"      " 2.75"     0.88  0.24     
- 6 Depressive disorders                  " 1.13"  " 0.14"      " 2.12"     0.50  0.02     
- 7 Bipolar disorders                     " 0.79"  "-0.28"      " 1.85"     0.54  0.15     
- 8 Female                                " 0.29"  " 0.00"      " 0.58"     0.15  0.05     
- 9 Non-binary/Self-defined               "-0.11"  "-0.93"      " 0.72"     0.42  0.80     
-10 age_category_collapsed_reordered16-18 " 0.03"  "-0.66"      " 0.72"     0.35  0.93     
-# … with 12 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713244499382.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4347,10 +4241,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |11134 |0.00 |0.00       |3.57 |0.002   |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11134 0.00  0.00         3.57  0.002         6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323a735ed4.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -4389,20 +4285,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.06     |0.00       |0.13      |0.03 |0.06     |
 
 ```
-# A tibble: 29 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "-2.15"  "-3.08"      "-1.21"     0.48  6.66e-06 
- 2 Depressive and anxiety disorder " 1.09"  " 0.37"      " 1.81"     0.37  0.003    
- 3 Only depressive disorder        " 0.99"  " 0.21"      " 1.77"     0.40  0.01     
- 4 Only anxiety disorder           " 1.72"  " 0.91"      " 2.54"     0.42  3.42e-05 
- 5 Eating disorders                " 0.32"  "-0.03"      " 0.67"     0.18  0.07     
- 6 OCDs                            "-0.02"  "-0.34"      " 0.31"     0.17  0.92     
- 7 Psychotic and bipolar disorder  "-0.69"  "-1.65"      " 0.27"     0.49  0.16     
- 8 Only psychotic disorder         " 0.15"  "-0.65"      " 0.94"     0.41  0.72     
- 9 Only bipolar disorder           "-0.22"  "-0.70"      " 0.25"     0.24  0.36     
-10 PTSD                            "-0.17"  "-0.48"      " 0.14"     0.16  0.27     
-# … with 19 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713237008d3b.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4412,10 +4300,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |11134 |0.00 |0.00       |3.57 |0.002   |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11134 0.00  0.00         3.57  0.002         6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713253838b3.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
@@ -4441,25 +4331,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.06     |0.00       |0.13      |0.03 |0.07     |
 
 ```
-# A tibble: 16 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             " -2.27" " -3.39"     "-1.15"     0.57  7.10e-05 
- 2 Anxiety disorders                     "  1.83" "  0.75"     " 2.91"     0.55  9.15e-04 
- 3 Eating disorders                      " -0.12" " -2.22"     " 1.98"     1.07  0.91     
- 4 OCDs                                  "  1.66" "  0.19"     " 3.12"     0.75  0.03     
- 5 PTSD                                  "  1.07" " -0.65"     " 2.79"     0.88  0.22     
- 6 Depressive disorders                  "  1.15" "  0.16"     " 2.14"     0.50  0.02     
- 7 Bipolar disorders                     "  0.81" " -0.25"     " 1.87"     0.54  0.14     
- 8 Female                                "  0.29" "  0.00"     " 0.58"     0.15  0.05     
- 9 Non-binary/Self-defined               " -0.12" " -0.94"     " 0.71"     0.42  0.78     
-10 Age                                   "-17.75" "-29.42"     "-6.08"     5.95  0.003    
-11 Age^2                                 " -0.08" "-11.51"     "11.35"     5.83  0.99     
-12 Mixed or multiple ethnic origins      " -0.01" " -0.77"     " 0.74"     0.38  0.97     
-13 Asian or Asian British                " -1.33" " -2.55"     "-0.11"     0.62  0.03     
-14 African or African British            " -1.13" " -2.97"     " 0.70"     0.94  0.23     
-15 Other ethnicity                       " -0.05" " -1.22"     " 1.12"     0.60  0.93     
-16 Time difference: Lockdown to baseline "  0.06" "  0.00"     " 0.13"     0.03  0.07     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323d17b1ff.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4469,10 +4346,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11134 |0.00 |0.00       |3.57 |0.002   |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11134 0.00  0.00         3.57  0.002         6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325ea6fbae.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -4505,20 +4384,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |Time difference: Lockdown to baseline |0.06     |0.00       |0.13      |0.03 |0.06     |
 
 ```
-# A tibble: 23 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " -2.28" " -3.18"     "-1.38"     0.46  7.32e-07 
- 2 Depressive and anxiety disorder "  1.11" "  0.38"     " 1.83"     0.37  0.003    
- 3 Only depressive disorder        "  1.01" "  0.23"     " 1.78"     0.40  0.01     
- 4 Only anxiety disorder           "  1.73" "  0.92"     " 2.55"     0.42  3.12e-05 
- 5 Eating disorders                "  0.32" " -0.03"     " 0.67"     0.18  0.07     
- 6 OCDs                            " -0.02" " -0.34"     " 0.31"     0.17  0.92     
- 7 Psychotic and bipolar disorder  " -0.69" " -1.66"     " 0.27"     0.49  0.16     
- 8 Only psychotic disorder         "  0.16" " -0.63"     " 0.96"     0.41  0.69     
- 9 Only bipolar disorder           " -0.22" " -0.69"     " 0.26"     0.24  0.37     
-10 PTSD                            " -0.18" " -0.48"     " 0.13"     0.16  0.26     
-# … with 13 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132401fa506.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4528,10 +4399,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |11134 |0.00 |0.00       |3.57 |0.002   |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11134 0.00  0.00         3.57  0.002         6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325d8b4dcd.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 ## Regression: Absolute scores
 ### Model 0a: Disorder_hierarchical, Unadjusted
@@ -4548,17 +4421,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |Bipolar disorders    |2.21     |1.26       |3.16      |0.48 |4.76e-06 |
 
 ```
-# A tibble: 8 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            2.15     " 1.27"      3.04        0.45  1.76e-06 
-2 phq.sum_score_prepan 0.61     " 0.60"      0.63        0.01  0.00e+00 
-3 Anxiety disorders    0.84     "-0.13"      1.80        0.49  0.09     
-4 Eating disorders     0.25     "-1.62"      2.12        0.95  0.79     
-5 OCDs                 1.91     " 0.61"      3.21        0.66  0.004    
-6 PTSD                 1.14     "-0.38"      2.66        0.78  0.14     
-7 Depressive disorders 1.83     " 0.95"      2.71        0.45  4.61e-05 
-8 Bipolar disorders    2.21     " 1.26"      3.16        0.48  4.76e-06 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132570a9b0.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4568,10 +4436,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |11134 |0.41 |0.41       |1107.68 |0.00e+00 |  7|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 11134 0.41  0.41         1107.68 0.00e+00      7
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322794649a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -4594,23 +4464,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |Personality disorder            |1.28     |0.90       |1.66      |0.19 |3.03e-11 |
 
 ```
-# A tibble: 14 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 2.76"  " 2.12"      3.40        0.33  3.18e-17 
- 2 phq.sum_score_prepan            " 0.59"  " 0.57"      0.60        0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 1.18"  " 0.55"      1.81        0.32  2.47e-04 
- 4 Only depressive disorder        " 0.52"  "-0.16"      1.20        0.35  0.13     
- 5 Only anxiety disorder           " 0.40"  "-0.32"      1.11        0.37  0.28     
- 6 Eating disorders                " 1.02"  " 0.72"      1.33        0.16  6.68e-11 
- 7 OCDs                            " 0.68"  " 0.39"      0.96        0.15  4.12e-06 
- 8 Psychotic and bipolar disorder  "-0.69"  "-1.53"      0.16        0.43  0.11     
- 9 Only psychotic disorder         " 0.19"  "-0.50"      0.89        0.36  0.58     
-10 Only bipolar disorder           " 0.15"  "-0.27"      0.56        0.21  0.49     
-11 PTSD                            " 0.58"  " 0.31"      0.85        0.14  2.86e-05 
-12 ASD                             " 1.04"  " 0.48"      1.59        0.28  2.62e-04 
-13 ADHD                            " 0.46"  "-0.30"      1.22        0.39  0.23     
-14 Personality disorder            " 1.28"  " 0.90"      1.66        0.19  3.03e-11 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321f6e63df.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4620,10 +4479,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |11162 |0.02 |0.02       |44.52 |4.15e-54 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11162 0.02  0.02         44.52 4.15e-54      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713285ed598.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -4657,20 +4518,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.06     |0.00       |0.12      |0.03 |0.04     |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`     Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                   <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept               " 2.13"  " 1.09"      " 3.16"     0.53  5.46e-05 
- 2 phq.sum_score_prepan    " 0.58"  " 0.57"      " 0.60"     0.01  0.00e+00 
- 3 Anxiety disorders       " 0.74"  "-0.22"      " 1.70"     0.49  0.13     
- 4 Eating disorders        " 0.16"  "-1.69"      " 2.02"     0.95  0.86     
- 5 OCDs                    " 1.60"  " 0.31"      " 2.90"     0.66  0.02     
- 6 PTSD                    " 1.26"  "-0.26"      " 2.78"     0.78  0.10     
- 7 Depressive disorders    " 2.01"  " 1.13"      " 2.89"     0.45  7.48e-06 
- 8 Bipolar disorders       " 2.51"  " 1.56"      " 3.46"     0.48  2.07e-07 
- 9 Female                  " 0.29"  " 0.03"      " 0.54"     0.13  0.03     
-10 Non-binary/Self-defined " 0.69"  "-0.04"      " 1.42"     0.37  0.06     
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326bd56132.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4680,10 +4533,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |11162 |0.02 |0.02       |44.52 |4.15e-54 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11162 0.02  0.02         44.52 4.15e-54      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325e050ed.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -4723,20 +4578,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.07     |0.01       |0.13      |0.03 |0.02     |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 2.70"  " 1.87"      " 3.53"     0.42  2.12e-10 
- 2 phq.sum_score_prepan            " 0.56"  " 0.55"      " 0.58"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 1.35"  " 0.72"      " 1.98"     0.32  2.87e-05 
- 4 Only depressive disorder        " 0.90"  " 0.22"      " 1.58"     0.35  0.010    
- 5 Only anxiety disorder           " 0.30"  "-0.41"      " 1.02"     0.36  0.40     
- 6 Eating disorders                " 0.92"  " 0.62"      " 1.23"     0.16  3.80e-09 
- 7 OCDs                            " 0.57"  " 0.28"      " 0.86"     0.15  9.41e-05 
- 8 Psychotic and bipolar disorder  "-0.50"  "-1.34"      " 0.34"     0.43  0.24     
- 9 Only psychotic disorder         " 0.24"  "-0.45"      " 0.94"     0.35  0.50     
-10 Only bipolar disorder           " 0.31"  "-0.10"      " 0.73"     0.21  0.14     
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325165c0f6.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4746,10 +4593,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |11162 |0.02 |0.02       |44.52 |4.15e-54 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11162 0.02  0.02         44.52 4.15e-54      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326f5f8039.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
@@ -4777,27 +4626,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.07     |0.01       |0.12      |0.03 |0.03     |
 
 ```
-# A tibble: 18 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "  1.87" "  0.86"     "  2.88"    0.52  3.01e-04 
- 2 phq.sum_score_prepan                  "  0.59" "  0.57"     "  0.60"    0.01  0.00e+00 
- 3 Anxiety disorders                     "  0.73" " -0.23"     "  1.69"    0.49  0.13     
- 4 Eating disorders                      "  0.12" " -1.73"     "  1.98"    0.95  0.90     
- 5 OCDs                                  "  1.64" "  0.34"     "  2.93"    0.66  0.01     
- 6 PTSD                                  "  1.21" " -0.31"     "  2.73"    0.78  0.12     
- 7 Depressive disorders                  "  1.96" "  1.08"     "  2.84"    0.45  1.25e-05 
- 8 Bipolar disorders                     "  2.45" "  1.51"     "  3.40"    0.48  3.81e-07 
- 9 Female                                "  0.26" "  0.01"     "  0.52"    0.13  0.04     
-10 Non-binary/Self-defined               "  0.66" " -0.07"     "  1.39"    0.37  0.07     
-11 Age                                   "-77.24" "-87.78"     "-66.69"    5.38  2.46e-46 
-12 Age^2                                 " -3.49" "-13.89"     "  6.91"    5.31  0.51     
-13 Mixed or multiple ethnic origins      "  0.08" " -0.58"     "  0.75"    0.34  0.80     
-14 Asian or Asian British                " -0.88" " -1.96"     "  0.20"    0.55  0.11     
-15 African or African British            " -0.45" " -2.07"     "  1.17"    0.83  0.59     
-16 Other ethnicity                       "  0.31" " -0.73"     "  1.34"    0.53  0.56     
-17 Key worker                            " -0.55" " -0.75"     " -0.35"    0.10  5.63e-08 
-18 Time difference: Lockdown to baseline "  0.07" "  0.01"     "  0.12"    0.03  0.03     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324a40f6a3.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4807,10 +4641,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11162 |0.02 |0.02       |44.52 |4.15e-54 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11162 0.02  0.02         44.52 4.15e-54      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326f006d6a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted
@@ -4844,20 +4680,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.07     |0.01       |0.13      |0.03 |0.02     |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "  2.53" "  1.73"     "  3.34"    0.41  7.05e-10 
- 2 phq.sum_score_prepan            "  0.57" "  0.55"     "  0.58"    0.01  0.00e+00 
- 3 Depressive and anxiety disorder "  1.26" "  0.63"     "  1.89"    0.32  8.78e-05 
- 4 Only depressive disorder        "  0.85" "  0.16"     "  1.53"    0.35  0.02     
- 5 Only anxiety disorder           "  0.26" " -0.45"     "  0.98"    0.36  0.47     
- 6 Eating disorders                "  0.93" "  0.62"     "  1.24"    0.16  2.98e-09 
- 7 OCDs                            "  0.56" "  0.28"     "  0.85"    0.15  1.15e-04 
- 8 Psychotic and bipolar disorder  " -0.47" " -1.31"     "  0.37"    0.43  0.28     
- 9 Only psychotic disorder         "  0.27" " -0.42"     "  0.97"    0.35  0.44     
-10 Only bipolar disorder           "  0.31" " -0.11"     "  0.73"    0.21  0.14     
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323d66da4b.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4867,10 +4695,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11162 |0.02 |0.02       |44.52 |4.15e-54 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11162 0.02  0.02         44.52 4.15e-54      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322b85916b.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PHQ prepan: sensitivity
@@ -4913,20 +4743,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.06     |-0.12      |0.23      |0.09 |0.52     |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 2.20"  "-0.23"      " 4.63"     1.24  0.08     
- 2 phq.sum_score_prepan            " 0.64"  " 0.59"      " 0.69"     0.03  1.62e-99 
- 3 Depressive and anxiety disorder " 0.09"  "-1.58"      " 1.76"     0.85  0.92     
- 4 Only depressive disorder        "-0.11"  "-1.91"      " 1.69"     0.92  0.91     
- 5 Only anxiety disorder           "-0.15"  "-2.15"      " 1.85"     1.02  0.88     
- 6 Eating disorders                " 1.14"  " 0.09"      " 2.20"     0.54  0.03     
- 7 OCDs                            " 0.04"  "-1.02"      " 1.11"     0.54  0.94     
- 8 Psychotic and bipolar disorder  "-0.82"  "-3.46"      " 1.83"     1.35  0.55     
- 9 Only psychotic disorder         "-0.84"  "-3.47"      " 1.78"     1.34  0.53     
-10 Only bipolar disorder           "-0.13"  "-1.80"      " 1.53"     0.85  0.88     
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132dbad42.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -4936,10 +4758,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |827 |0.02 |0.01       |2.97 |0.007   |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 827   0.02  0.01         2.97  0.007         6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132564bc87e.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 #### Subset of participants 6 months prior to pandemic
@@ -4978,20 +4802,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.09     |-0.04      |0.23      |0.07 |0.19      |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 1.94"  " 0.22"      " 3.66"     0.88  0.03     
- 2 phq.sum_score_prepan            " 0.62"  " 0.59"      " 0.66"     0.02  1.08e-190
- 3 Depressive and anxiety disorder " 0.57"  "-0.55"      " 1.68"     0.57  0.32     
- 4 Only depressive disorder        " 0.29"  "-0.93"      " 1.52"     0.62  0.64     
- 5 Only anxiety disorder           "-0.13"  "-1.47"      " 1.21"     0.69  0.85     
- 6 Eating disorders                " 1.35"  " 0.58"      " 2.13"     0.39  5.91e-04 
- 7 OCDs                            " 0.40"  "-0.33"      " 1.12"     0.37  0.28     
- 8 Psychotic and bipolar disorder  "-1.39"  "-3.53"      " 0.75"     1.09  0.20     
- 9 Only psychotic disorder         "-0.05"  "-1.65"      " 1.55"     0.81  0.95     
-10 Only bipolar disorder           "-0.02"  "-1.11"      " 1.07"     0.55  0.97     
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326d72321d.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5001,10 +4817,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |1633 |0.02 |0.02       |5.49 |1.22e-05 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1633  0.02  0.02         5.49  1.22e-05      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326438460d.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 #### Subset of participants 9 months prior to pandemic
@@ -5043,20 +4861,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.00     |-0.11      |0.12      |0.06 |0.94      |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 3.03"  " 1.62"      " 4.43"     0.72  2.51e-05 
- 2 phq.sum_score_prepan            " 0.60"  " 0.57"      " 0.63"     0.01  6.22e-281
- 3 Depressive and anxiety disorder " 0.78"  "-0.13"      " 1.70"     0.47  0.09     
- 4 Only depressive disorder        " 0.52"  "-0.47"      " 1.51"     0.51  0.30     
- 5 Only anxiety disorder           "-0.29"  "-1.40"      " 0.82"     0.57  0.60     
- 6 Eating disorders                " 1.40"  " 0.78"      " 2.02"     0.32  9.53e-06 
- 7 OCDs                            " 0.38"  "-0.20"      " 0.96"     0.30  0.20     
- 8 Psychotic and bipolar disorder  "-0.75"  "-2.36"      " 0.87"     0.82  0.36     
- 9 Only psychotic disorder         " 0.55"  "-0.74"      " 1.85"     0.66  0.40     
-10 Only bipolar disorder           " 0.40"  "-0.46"      " 1.27"     0.44  0.36     
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324e5a93a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5066,10 +4876,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |2709 |0.03 |0.03       |13.19 |9.03e-15 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 2709  0.03  0.03         13.19 9.03e-15      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321c92159.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5088,16 +4900,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Bipolar disorders    |0.89     |0.50       |1.27      |0.20 |7.07e-06 |
 
 ```
-# A tibble: 7 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            3.04     " 2.90"      3.18        0.07  0.00e+00 
-2 Anxiety disorders    0.61     " 0.28"      0.93        0.17  2.45e-04 
-3 Eating disorders     0.57     "-0.40"      1.54        0.50  0.25     
-4 OCDs                 1.07     " 0.29"      1.85        0.40  0.007    
-5 PTSD                 1.06     " 0.26"      1.86        0.41  0.010    
-6 Depressive disorders 0.92     " 0.74"      1.09        0.09  1.60e-25 
-7 Bipolar disorders    0.89     " 0.50"      1.27        0.20  7.07e-06 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323088b00a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5107,10 +4915,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |19512 |0.01 |0.01       |18.92 |4.40e-22 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 19512 0.01  0.01         18.92 4.40e-22      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325ddd796a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -5132,22 +4942,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Personality disorder            |0.29     |-0.07      |0.65      |0.18 |0.11     |
 
 ```
-# A tibble: 13 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 3.08"  " 2.95"      " 3.22"     0.07  0.00e+00 
- 2 Depressive and anxiety disorder " 0.74"  " 0.56"      " 0.92"     0.09  1.08e-15 
- 3 Only depressive disorder        " 0.41"  " 0.17"      " 0.65"     0.12  8.67e-04 
- 4 Only anxiety disorder           " 0.59"  " 0.29"      " 0.88"     0.15  9.74e-05 
- 5 Eating disorders                " 0.66"  " 0.37"      " 0.94"     0.14  5.62e-06 
- 6 OCDs                            " 0.19"  "-0.08"      " 0.47"     0.14  0.16     
- 7 Psychotic and bipolar disorder  "-0.92"  "-1.71"      "-0.14"     0.40  0.02     
- 8 Only psychotic disorder         "-0.55"  "-1.23"      " 0.13"     0.35  0.11     
- 9 Only bipolar disorder           "-0.09"  "-0.51"      " 0.34"     0.22  0.69     
-10 PTSD                            " 0.56"  " 0.30"      " 0.81"     0.13  1.57e-05 
-11 ASD                             " 0.51"  " 0.02"      " 1.00"     0.25  0.04     
-12 ADHD                            " 0.08"  "-0.57"      " 0.73"     0.33  0.80     
-13 Personality disorder            " 0.29"  "-0.07"      " 0.65"     0.18  0.11     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713235f61977.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5157,10 +4957,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |19512 |0.01 |0.01       |18.92 |4.40e-22 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 19512 0.01  0.01         18.92 4.40e-22      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323001ef4e.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -5192,20 +4994,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.24    |-0.27      |-0.20     |0.02 |9.59e-36  |
 
 ```
-# A tibble: 22 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             " 4.47"  " 4.09"      " 4.84"     0.19  1.67e-119
- 2 Anxiety disorders                     " 0.24"  "-0.11"      " 0.58"     0.17  0.18     
- 3 Eating disorders                      " 0.03"  "-0.97"      " 1.04"     0.51  0.95     
- 4 OCDs                                  " 0.35"  "-0.46"      " 1.15"     0.41  0.40     
- 5 PTSD                                  " 0.75"  "-0.09"      " 1.58"     0.43  0.08     
- 6 Depressive disorders                  " 0.69"  " 0.50"      " 0.88"     0.10  1.63e-12 
- 7 Bipolar disorders                     " 0.70"  " 0.30"      " 1.10"     0.20  6.20e-04 
- 8 Female                                " 0.75"  " 0.55"      " 0.95"     0.10  2.56e-13 
- 9 Non-binary/Self-defined               " 0.16"  "-0.52"      " 0.84"     0.35  0.64     
-10 age_category_collapsed_reordered16-18 " 1.41"  " 0.98"      " 1.84"     0.22  1.45e-10 
-# … with 12 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132138e8baf.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5215,10 +5009,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |19512 |0.01 |0.01       |18.92 |4.40e-22 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 19512 0.01  0.01         18.92 4.40e-22      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713273749830.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -5257,20 +5053,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.24    |-0.27      |-0.20     |0.02 |1.00e-36  |
 
 ```
-# A tibble: 29 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 4.35"  " 3.98"      " 4.73"     0.19  9.70e-113
- 2 Depressive and anxiety disorder " 0.59"  " 0.39"      " 0.79"     0.10  8.12e-09 
- 3 Only depressive disorder        " 0.45"  " 0.20"      " 0.71"     0.13  5.25e-04 
- 4 Only anxiety disorder           " 0.26"  "-0.05"      " 0.57"     0.16  0.11     
- 5 Eating disorders                " 0.43"  " 0.15"      " 0.72"     0.15  0.003    
- 6 OCDs                            " 0.04"  "-0.23"      " 0.32"     0.14  0.76     
- 7 Psychotic and bipolar disorder  "-0.69"  "-1.48"      " 0.10"     0.40  0.09     
- 8 Only psychotic disorder         "-0.42"  "-1.11"      " 0.27"     0.35  0.23     
- 9 Only bipolar disorder           " 0.05"  "-0.38"      " 0.48"     0.22  0.83     
-10 PTSD                            " 0.57"  " 0.31"      " 0.83"     0.13  1.50e-05 
-# … with 19 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132628df44e.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5280,10 +5068,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |19512 |0.01 |0.01       |18.92 |4.40e-22 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 19512 0.01  0.01         18.92 4.40e-22      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713255a25f6e.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
@@ -5309,25 +5099,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |-0.08    |-0.13      |-0.04     |0.02 |7.29e-04 |
 
 ```
-# A tibble: 16 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "  2.70" "  2.28"     "  3.13"    0.22  2.00e-35 
- 2 Anxiety disorders                     "  0.27" " -0.15"     "  0.69"    0.21  0.21     
- 3 Eating disorders                      "  0.19" " -1.03"     "  1.41"    0.62  0.76     
- 4 OCDs                                  "  0.17" " -0.84"     "  1.18"    0.51  0.74     
- 5 PTSD                                  "  0.93" " -0.26"     "  2.11"    0.60  0.12     
- 6 Depressive disorders                  "  0.94" "  0.71"     "  1.17"    0.12  1.12e-15 
- 7 Bipolar disorders                     "  0.94" "  0.49"     "  1.38"    0.23  3.45e-05 
- 8 Female                                "  0.51" "  0.29"     "  0.73"    0.11  6.00e-06 
- 9 Non-binary/Self-defined               " -0.56" " -1.30"     "  0.18"    0.38  0.14     
-10 Age                                   "-77.73" "-89.91"     "-65.54"    6.22  1.14e-35 
-11 Age^2                                 "  7.11" " -4.48"     " 18.71"    5.92  0.23     
-12 Mixed or multiple ethnic origins      " -0.30" " -0.93"     "  0.32"    0.32  0.34     
-13 Asian or Asian British                " -0.53" " -1.42"     "  0.35"    0.45  0.23     
-14 African or African British            " -0.16" " -1.60"     "  1.28"    0.73  0.83     
-15 Other ethnicity                       " -0.12" " -1.24"     "  1.00"    0.57  0.84     
-16 Time difference: Lockdown to baseline " -0.08" " -0.13"     " -0.04"    0.02  7.29e-04 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713218b26162.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5337,10 +5114,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |14206 |0.01 |0.01       |31.21 |1.73e-37 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 14206 0.01  0.01         31.21 1.73e-37      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713267177598.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -5373,20 +5152,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |-0.08    |-0.13      |-0.03     |0.02 |7.77e-04 |
 
 ```
-# A tibble: 23 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "  2.63" "  2.20"     "  3.05"    0.22  1.95e-33 
- 2 Depressive and anxiety disorder "  0.84" "  0.60"     "  1.08"    0.12  3.13e-12 
- 3 Only depressive disorder        "  0.70" "  0.40"     "  1.01"    0.16  6.54e-06 
- 4 Only anxiety disorder           "  0.28" " -0.11"     "  0.66"    0.20  0.16     
- 5 Eating disorders                "  0.36" "  0.04"     "  0.68"    0.16  0.03     
- 6 OCDs                            " -0.10" " -0.40"     "  0.21"    0.16  0.53     
- 7 Psychotic and bipolar disorder  " -0.55" " -1.47"     "  0.37"    0.47  0.24     
- 8 Only psychotic disorder         " -0.26" " -1.01"     "  0.49"    0.38  0.50     
- 9 Only bipolar disorder           "  0.01" " -0.45"     "  0.47"    0.23  0.97     
-10 PTSD                            "  0.64" "  0.35"     "  0.93"    0.15  1.45e-05 
-# … with 13 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713238599d7c.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5396,10 +5167,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |14206 |0.01 |0.01       |31.21 |1.73e-37 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 14206 0.01  0.01         31.21 1.73e-37      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713237254cb.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 ## Regression: Absolute scores
 ### Model 0a: Disorder_hierarchical, Unadjusted
@@ -5416,17 +5189,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Bipolar disorders    |3.32     |2.94       |3.70      |0.19 |7.81e-66  |
 
 ```
-# A tibble: 8 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            3.98     3.84         4.12        0.07  0.00e+00 
-2 phq.sum_score_retro  0.67     0.65         0.68        0.01  0.00e+00 
-3 Anxiety disorders    1.27     0.96         1.58        0.16  5.42e-16 
-4 Eating disorders     1.44     0.52         2.36        0.47  0.002    
-5 OCDs                 2.27     1.53         3.01        0.38  1.97e-09 
-6 PTSD                 2.06     1.30         2.83        0.39  1.05e-07 
-7 Depressive disorders 2.53     2.35         2.70        0.09  4.76e-173
-8 Bipolar disorders    3.32     2.94         3.70        0.19  7.81e-66 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713237fde070.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5436,10 +5204,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |19512 |0.43 |0.43       |2104.41 |0.00e+00 |  7|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 19512 0.43  0.43         2104.41 0.00e+00      7
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171327c99f5c7.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -5462,23 +5232,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Personality disorder            |1.39     |1.05       |1.73      |0.17 |1.23e-15  |
 
 ```
-# A tibble: 14 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 4.22"  " 4.09"      4.36        0.07  0.00e+00 
- 2 phq.sum_score_retro             " 0.63"  " 0.61"      0.64        0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 2.33"  " 2.15"      2.51        0.09  1.27e-140
- 4 Only depressive disorder        " 1.19"  " 0.96"      1.42        0.12  1.20e-24 
- 5 Only anxiety disorder           " 1.22"  " 0.94"      1.49        0.14  9.57e-18 
- 6 Eating disorders                " 1.08"  " 0.81"      1.34        0.14  1.85e-15 
- 7 OCDs                            " 0.78"  " 0.52"      1.03        0.13  2.12e-09 
- 8 Psychotic and bipolar disorder  "-0.59"  "-1.32"      0.14        0.37  0.12     
- 9 Only psychotic disorder         "-0.16"  "-0.80"      0.48        0.32  0.62     
-10 Only bipolar disorder           " 0.45"  " 0.05"      0.84        0.20  0.03     
-11 PTSD                            " 1.01"  " 0.77"      1.25        0.12  8.41e-17 
-12 ASD                             " 1.31"  " 0.85"      1.76        0.23  1.83e-08 
-13 ADHD                            " 0.74"  " 0.13"      1.35        0.31  0.02     
-14 Personality disorder            " 1.39"  " 1.05"      1.73        0.17  1.23e-15 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132235d3fd7.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5488,10 +5247,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |23090 |0.18 |0.18       |844.05 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 23090 0.18  0.18         844.05 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323f0a4e64.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -5525,20 +5286,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.22    |-0.26      |-0.19     |0.02 |3.56e-37  |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`     Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                   <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept               " 5.76"  " 5.40"      " 6.12"     0.18  7.54e-213
- 2 phq.sum_score_retro     " 0.62"  " 0.60"      " 0.63"     0.01  0.00e+00 
- 3 Anxiety disorders       " 0.78"  " 0.46"      " 1.10"     0.16  1.72e-06 
- 4 Eating disorders        " 0.80"  "-0.13"      " 1.73"     0.48  0.09     
- 5 OCDs                    " 1.22"  " 0.47"      " 1.97"     0.38  0.001    
- 6 PTSD                    " 1.72"  " 0.94"      " 2.50"     0.40  1.57e-05 
- 7 Depressive disorders    " 2.37"  " 2.18"      " 2.56"     0.10  3.02e-132
- 8 Bipolar disorders       " 3.26"  " 2.88"      " 3.65"     0.20  1.30e-61 
- 9 Female                  " 0.76"  " 0.57"      " 0.95"     0.10  1.27e-15 
-10 Non-binary/Self-defined " 0.96"  " 0.33"      " 1.59"     0.32  0.003    
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171327e594032.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5548,10 +5301,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |23090 |0.18 |0.18       |844.05 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 23090 0.18  0.18         844.05 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321585d36c.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -5591,20 +5346,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.23    |-0.26      |-0.19     |0.02 |6.65e-39  |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 5.82"  " 5.47"      " 6.17"     0.18  1.94e-227
- 2 phq.sum_score_retro             " 0.58"  " 0.57"      " 0.60"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 2.24"  " 2.05"      " 2.44"     0.10  2.38e-114
- 4 Only depressive disorder        " 1.39"  " 1.15"      " 1.63"     0.12  4.57e-30 
- 5 Only anxiety disorder           " 0.79"  " 0.50"      " 1.08"     0.15  8.38e-08 
- 6 Eating disorders                " 0.81"  " 0.54"      " 1.08"     0.14  2.63e-09 
- 7 OCDs                            " 0.58"  " 0.32"      " 0.84"     0.13  8.74e-06 
- 8 Psychotic and bipolar disorder  "-0.30"  "-1.02"      " 0.43"     0.37  0.42     
- 9 Only psychotic disorder         "-0.01"  "-0.64"      " 0.63"     0.32  0.99     
-10 Only bipolar disorder           " 0.65"  " 0.26"      " 1.05"     0.20  0.001    
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713213ff40c0.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5614,10 +5361,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |23090 |0.18 |0.18       |844.05 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 23090 0.18  0.18         844.05 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325af40781.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
@@ -5645,27 +5394,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |-0.04    |-0.08      |0.01      |0.02 |0.12      |
 
 ```
-# A tibble: 18 x 6
-   `Indepent variable`                   Estimate  `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>     <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "   3.43" "   3.03"    "   3.83"   0.20  3.48e-62 
- 2 phq.sum_score_retro                   "   0.63" "   0.62"    "   0.65"   0.01  0.00e+00 
- 3 Anxiety disorders                     "   0.83" "   0.44"    "   1.22"   0.20  2.94e-05 
- 4 Eating disorders                      "   1.25" "   0.12"    "   2.38"   0.58  0.03     
- 5 OCDs                                  "   1.51" "   0.57"    "   2.44"   0.48  0.002    
- 6 PTSD                                  "   2.16" "   1.06"    "   3.25"   0.56  1.13e-04 
- 7 Depressive disorders                  "   2.69" "   2.47"    "   2.92"   0.12  2.45e-118
- 8 Bipolar disorders                     "   3.52" "   3.10"    "   3.95"   0.22  1.37e-58 
- 9 Female                                "   0.51" "   0.30"    "   0.71"   0.10  1.28e-06 
-10 Non-binary/Self-defined               "   0.32" "  -0.37"    "   1.00"   0.35  0.36     
-11 Age                                   "-119.55" "-131.11"    "-107.99"   5.90  5.87e-90 
-12 Age^2                                 "  11.33" "   0.25"    "  22.41"   5.65  0.05     
-13 Mixed or multiple ethnic origins      "  -0.09" "  -0.67"    "   0.49"   0.30  0.76     
-14 Asian or Asian British                "  -0.26" "  -1.07"    "   0.56"   0.42  0.54     
-15 African or African British            "  -0.16" "  -1.49"    "   1.17"   0.68  0.82     
-16 Other ethnicity                       "   0.34" "  -0.71"    "   1.39"   0.53  0.52     
-17 Key worker                            "  -0.17" "  -0.34"    "   0.00"   0.09  0.05     
-18 Time difference: Lockdown to baseline "  -0.04" "  -0.08"    "   0.01"   0.02  0.12     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324b3b053f.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5675,10 +5409,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |16833 |0.23 |0.23       |815.64 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 16833 0.23  0.23         815.64 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132fd591af.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -5712,20 +5448,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |-0.03    |-0.07      |0.02      |0.02 |0.20      |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`             Estimate  `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>     <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "   3.54" "   3.15"    "  3.94"    0.20  3.53e-69 
- 2 phq.sum_score_retro             "   0.60" "   0.59"    "  0.62"    0.01  0.00e+00 
- 3 Depressive and anxiety disorder "   2.55" "   2.32"    "  2.78"    0.12  2.42e-105
- 4 Only depressive disorder        "   1.74" "   1.45"    "  2.02"    0.14  5.79e-33 
- 5 Only anxiety disorder           "   0.91" "   0.56"    "  1.27"    0.18  4.19e-07 
- 6 Eating disorders                "   0.84" "   0.55"    "  1.14"    0.15  2.07e-08 
- 7 OCDs                            "   0.45" "   0.17"    "  0.74"    0.14  0.002    
- 8 Psychotic and bipolar disorder  "  -0.36" "  -1.20"    "  0.49"    0.43  0.41     
- 9 Only psychotic disorder         "   0.12" "  -0.56"    "  0.81"    0.35  0.72     
-10 Only bipolar disorder           "   0.62" "   0.20"    "  1.04"    0.21  0.004    
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713256efe4f.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5735,10 +5463,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |16833 |0.23 |0.23       |815.64 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 16833 0.23  0.23         815.64 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713239f9f752.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PHQ retro: Sensitivity
@@ -5756,16 +5486,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Bipolar disorders    |0.79     |-0.44      |2.02      |0.63 |0.21     |
 
 ```
-# A tibble: 7 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            2.75     " 1.61"      3.89        0.58  2.21e-06 
-2 Anxiety disorders    0.64     "-0.62"      1.90        0.64  0.32     
-3 Eating disorders     0.84     "-1.60"      3.28        1.25  0.50     
-4 OCDs                 0.73     "-0.96"      2.42        0.86  0.40     
-5 PTSD                 1.07     "-0.87"      3.01        0.99  0.28     
-6 Depressive disorders 0.99     "-0.15"      2.14        0.59  0.09     
-7 Bipolar disorders    0.79     "-0.44"      2.02        0.63  0.21     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321c86afb8.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5775,10 +5501,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |8319 |0.00 |0.00       |0.83 |0.55    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 8319  0.00  0.00         0.83  0.55          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324e7a67a9.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -5800,22 +5528,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Personality disorder            |0.38     |-0.10      |0.86      |0.25 |0.12     |
 
 ```
-# A tibble: 13 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 2.95"  " 2.13"      3.77        0.42  1.94e-12 
- 2 Depressive and anxiety disorder " 0.68"  "-0.16"      1.51        0.42  0.11     
- 3 Only depressive disorder        " 0.48"  "-0.42"      1.38        0.46  0.30     
- 4 Only anxiety disorder           " 0.50"  "-0.44"      1.44        0.48  0.30     
- 5 Eating disorders                " 0.55"  " 0.16"      0.95        0.20  0.006    
- 6 OCDs                            "-0.12"  "-0.49"      0.24        0.19  0.51     
- 7 Psychotic and bipolar disorder  "-0.74"  "-1.85"      0.38        0.57  0.19     
- 8 Only psychotic disorder         "-0.46"  "-1.38"      0.47        0.47  0.33     
- 9 Only bipolar disorder           "-0.27"  "-0.81"      0.27        0.28  0.33     
-10 PTSD                            " 0.43"  " 0.09"      0.78        0.18  0.01     
-11 ASD                             " 0.01"  "-0.70"      0.71        0.36  0.99     
-12 ADHD                            " 0.27"  "-0.72"      1.26        0.50  0.59     
-13 Personality disorder            " 0.38"  "-0.10"      0.86        0.25  0.12     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325e5085d6.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5825,10 +5543,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |8319 |0.00 |0.00       |0.83 |0.55    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 8319  0.00  0.00         0.83  0.55          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171327882d4f9.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -5860,20 +5580,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.06    |-0.14      |0.01      |0.04 |0.10     |
 
 ```
-# A tibble: 22 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             " 3.01"  " 1.69"      " 4.33"     0.67  8.01e-06 
- 2 Anxiety disorders                     " 0.51"  "-0.75"      " 1.76"     0.64  0.43     
- 3 Eating disorders                      " 0.54"  "-1.89"      " 2.97"     1.24  0.66     
- 4 OCDs                                  " 0.41"  "-1.28"      " 2.09"     0.86  0.64     
- 5 PTSD                                  " 1.08"  "-0.87"      " 3.03"     0.99  0.28     
- 6 Depressive disorders                  " 1.02"  "-0.13"      " 2.17"     0.58  0.08     
- 7 Bipolar disorders                     " 0.93"  "-0.30"      " 2.16"     0.63  0.14     
- 8 Female                                " 0.57"  " 0.22"      " 0.91"     0.17  0.001    
- 9 Non-binary/Self-defined               "-0.47"  "-1.39"      " 0.45"     0.47  0.32     
-10 age_category_collapsed_reordered16-18 " 0.70"  "-0.05"      " 1.44"     0.38  0.07     
-# … with 12 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323f6af542.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5883,10 +5595,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |8319 |0.00 |0.00       |0.83 |0.55    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 8319  0.00  0.00         0.83  0.55          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713270be095.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -5925,20 +5639,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.06    |-0.14      |0.01      |0.04 |0.10     |
 
 ```
-# A tibble: 29 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 3.08"  " 2.01"      " 4.15"     0.55  1.94e-08 
- 2 Depressive and anxiety disorder " 0.77"  "-0.07"      " 1.60"     0.43  0.07     
- 3 Only depressive disorder        " 0.80"  "-0.11"      " 1.71"     0.46  0.08     
- 4 Only anxiety disorder           " 0.42"  "-0.52"      " 1.37"     0.48  0.38     
- 5 Eating disorders                " 0.40"  " 0.01"      " 0.80"     0.20  0.05     
- 6 OCDs                            "-0.17"  "-0.54"      " 0.19"     0.19  0.36     
- 7 Psychotic and bipolar disorder  "-0.49"  "-1.61"      " 0.62"     0.57  0.38     
- 8 Only psychotic disorder         "-0.23"  "-1.15"      " 0.70"     0.47  0.63     
- 9 Only bipolar disorder           "-0.10"  "-0.65"      " 0.44"     0.28  0.71     
-10 PTSD                            " 0.48"  " 0.13"      " 0.83"     0.18  0.007    
-# … with 19 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132608b7571.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5948,10 +5654,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |8319 |0.00 |0.00       |0.83 |0.55    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 8319  0.00  0.00         0.83  0.55          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713263cb7f3b.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ## Regression: Absolute scores
@@ -5969,17 +5677,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Bipolar disorders    |2.10     |0.97       |3.24      |0.58 |2.74e-04 |
 
 ```
-# A tibble: 8 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            5.30     " 4.25"      6.35        0.54  8.28e-23 
-2 phq.sum_score_retro  0.61     " 0.60"      0.63        0.01  0.00e+00 
-3 Anxiety disorders    0.02     "-1.14"      1.17        0.59  0.98     
-4 Eating disorders     1.40     "-0.84"      3.65        1.14  0.22     
-5 OCDs                 1.16     "-0.39"      2.71        0.79  0.14     
-6 PTSD                 1.08     "-0.70"      2.86        0.91  0.24     
-7 Depressive disorders 1.56     " 0.51"      2.62        0.54  0.004    
-8 Bipolar disorders    2.10     " 0.97"      3.24        0.58  2.74e-04 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713225d89a9f.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -5989,10 +5692,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |8319 |0.34 |0.34       |602.29 |0.00e+00 |  7|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 8319  0.34  0.34         602.29 0.00e+00      7
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322f8f5022.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -6015,23 +5720,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Personality disorder            |1.50     |1.06       |1.94      |0.22 |3.07e-11 |
 
 ```
-# A tibble: 14 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 5.91"  " 5.15"      6.67        0.39  7.36e-52 
- 2 phq.sum_score_retro             " 0.59"  " 0.57"      0.61        0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 0.80"  " 0.04"      1.56        0.39  0.04     
- 4 Only depressive disorder        " 0.18"  "-0.64"      1.00        0.42  0.67     
- 5 Only anxiety disorder           "-0.35"  "-1.20"      0.51        0.44  0.43     
- 6 Eating disorders                " 1.04"  " 0.69"      1.40        0.18  1.14e-08 
- 7 OCDs                            " 0.51"  " 0.17"      0.84        0.17  0.003    
- 8 Psychotic and bipolar disorder  "-0.75"  "-1.77"      0.26        0.52  0.15     
- 9 Only psychotic disorder         "-0.14"  "-0.98"      0.70        0.43  0.74     
-10 Only bipolar disorder           " 0.25"  "-0.24"      0.75        0.25  0.31     
-11 PTSD                            " 0.84"  " 0.52"      1.15        0.16  1.90e-07 
-12 ASD                             " 0.72"  " 0.07"      1.36        0.33  0.03     
-13 ADHD                            " 0.73"  "-0.17"      1.62        0.46  0.11     
-14 Personality disorder            " 1.50"  " 1.06"      1.94        0.22  3.07e-11 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713260bfa786.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6041,10 +5735,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |9687 |0.02 |0.02       |39.82 |3.86e-48 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 9687  0.02  0.02         39.82 3.86e-48      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132468f8009.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -6078,20 +5774,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.03    |-0.10      |0.04      |0.04 |0.39     |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`     Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                   <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept               " 5.37"  " 4.15"      " 6.60"     0.63  1.15e-17 
- 2 phq.sum_score_retro     " 0.59"  " 0.57"      " 0.61"     0.01  0.00e+00 
- 3 Anxiety disorders       " 0.01"  "-1.14"      " 1.17"     0.59  0.98     
- 4 Eating disorders        " 1.28"  "-0.94"      " 3.50"     1.13  0.26     
- 5 OCDs                    " 0.89"  "-0.65"      " 2.43"     0.79  0.26     
- 6 PTSD                    " 1.38"  "-0.40"      " 3.16"     0.91  0.13     
- 7 Depressive disorders    " 1.87"  " 0.81"      " 2.93"     0.54  5.19e-04 
- 8 Bipolar disorders       " 2.56"  " 1.42"      " 3.70"     0.58  1.02e-05 
- 9 Female                  " 0.45"  " 0.14"      " 0.76"     0.16  0.005    
-10 Non-binary/Self-defined " 0.50"  "-0.34"      " 1.34"     0.43  0.25     
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713210e79ae2.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6101,10 +5789,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |9687 |0.02 |0.02       |39.82 |3.86e-48 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 9687  0.02  0.02         39.82 3.86e-48      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713255697419.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -6144,20 +5834,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.02    |-0.09      |0.04      |0.03 |0.48     |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 6.03"  " 5.05"      " 7.01"     0.50  3.16e-33 
- 2 phq.sum_score_retro             " 0.57"  " 0.55"      " 0.59"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 1.05"  " 0.30"      " 1.81"     0.39  0.006    
- 4 Only depressive disorder        " 0.71"  "-0.10"      " 1.53"     0.42  0.09     
- 5 Only anxiety disorder           "-0.39"  "-1.24"      " 0.47"     0.44  0.37     
- 6 Eating disorders                " 0.88"  " 0.52"      " 1.24"     0.18  1.37e-06 
- 7 OCDs                            " 0.43"  " 0.09"      " 0.76"     0.17  0.01     
- 8 Psychotic and bipolar disorder  "-0.49"  "-1.49"      " 0.52"     0.51  0.34     
- 9 Only psychotic disorder         " 0.05"  "-0.79"      " 0.88"     0.43  0.91     
-10 Only bipolar disorder           " 0.45"  "-0.04"      " 0.94"     0.25  0.07     
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713274b617ae.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6167,10 +5849,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |9687 |0.02 |0.02       |39.82 |3.86e-48 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 9687  0.02  0.02         39.82 3.86e-48      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325eccdc5e.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6189,16 +5873,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Bipolar disorders    |12.77    |11.15      |14.38     |0.82 |4.97e-53  |
 
 ```
-# A tibble: 7 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            "12.34"  "11.53"      "13.16"     0.41  2.57e-180
-2 Anxiety disorders    " 2.05"  " 0.59"      " 3.52"     0.75  0.006    
-3 Eating disorders     " 4.27"  " 0.09"      " 8.44"     2.13  0.05     
-4 OCDs                 "10.43"  " 7.72"      "13.15"     1.38  5.70e-14 
-5 PTSD                 " 6.78"  " 3.74"      " 9.83"     1.55  1.30e-05 
-6 Depressive disorders " 5.74"  " 4.83"      " 6.66"     0.47  3.07e-34 
-7 Bipolar disorders    "12.77"  "11.15"      "14.38"     0.82  4.97e-53 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324bd50631.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6208,10 +5888,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |5187 |0.06 |0.06       |52.91 |1.40e-63 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 5187  0.06  0.06         52.91 1.40e-63      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132e89a1dc.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -6233,22 +5915,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Personality disorder            |3.43     |2.16       |4.71      |0.65 |1.23e-07  |
 
 ```
-# A tibble: 13 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "13.33"  "12.63"      "14.03"     0.36  1.93e-271
- 2 Depressive and anxiety disorder " 2.50"  " 1.63"      " 3.36"     0.44  1.64e-08 
- 3 Only depressive disorder        "-0.78"  "-1.98"      " 0.41"     0.61  0.20     
- 4 Only anxiety disorder           " 0.78"  "-0.45"      " 2.01"     0.63  0.21     
- 5 Eating disorders                " 0.62"  "-0.45"      " 1.68"     0.54  0.26     
- 6 OCDs                            " 7.47"  " 6.53"      " 8.41"     0.48  1.21e-53 
- 7 Psychotic and bipolar disorder  " 7.02"  " 4.50"      " 9.54"     1.29  5.11e-08 
- 8 Only psychotic disorder         " 4.35"  " 2.05"      " 6.65"     1.17  2.09e-04 
- 9 Only bipolar disorder           " 3.31"  " 1.66"      " 4.97"     0.84  8.90e-05 
-10 PTSD                            " 1.96"  " 1.03"      " 2.89"     0.47  3.42e-05 
-11 ASD                             " 9.07"  " 7.38"      "10.75"     0.86  7.54e-26 
-12 ADHD                            " 2.71"  " 0.39"      " 5.03"     1.18  0.02     
-13 Personality disorder            " 3.43"  " 2.16"      " 4.71"     0.65  1.23e-07 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326e0ec123.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6258,10 +5930,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |5187 |0.06 |0.06       |52.91 |1.40e-63 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 5187  0.06  0.06         52.91 1.40e-63      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132aaa1948.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -6293,20 +5967,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.39    |-0.56      |-0.23     |0.08 |1.84e-06 |
 
 ```
-# A tibble: 22 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "15.44"  "13.75"      "17.13"     0.86  2.03e-69 
- 2 Anxiety disorders                     " 1.67"  " 0.21"      " 3.14"     0.75  0.03     
- 3 Eating disorders                      " 3.33"  "-0.84"      " 7.49"     2.13  0.12     
- 4 OCDs                                  " 8.67"  " 5.97"      "11.37"     1.38  3.21e-10 
- 5 PTSD                                  " 6.49"  " 3.45"      " 9.53"     1.55  2.85e-05 
- 6 Depressive disorders                  " 6.05"  " 5.10"      " 7.00"     0.48  2.77e-35 
- 7 Bipolar disorders                     "12.70"  "11.08"      "14.33"     0.83  6.51e-52 
- 8 Female                                "-0.91"  "-1.87"      " 0.05"     0.49  0.06     
- 9 Non-binary/Self-defined               " 1.82"  "-0.80"      " 4.45"     1.34  0.17     
-10 age_category_collapsed_reordered16-18 " 8.24"  " 6.60"      " 9.89"     0.84  1.47e-22 
-# … with 12 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323773393c.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6316,10 +5982,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |5187 |0.06 |0.06       |52.91 |1.40e-63 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 5187  0.06  0.06         52.91 1.40e-63      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326db2ae94.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -6358,20 +6026,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.39    |-0.54      |-0.24     |0.08 |5.58e-07 |
 
 ```
-# A tibble: 29 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "15.69"  "14.10"      "17.29"     0.81  4.46e-80 
- 2 Depressive and anxiety disorder " 3.34"  " 2.44"      " 4.24"     0.46  3.43e-13 
- 3 Only depressive disorder        " 0.35"  "-0.86"      " 1.55"     0.62  0.58     
- 4 Only anxiety disorder           " 0.92"  "-0.31"      " 2.16"     0.63  0.14     
- 5 Eating disorders                " 0.25"  "-0.81"      " 1.31"     0.54  0.64     
- 6 OCDs                            " 7.03"  " 6.10"      " 7.96"     0.48  2.32e-48 
- 7 Psychotic and bipolar disorder  " 6.97"  " 4.48"      " 9.46"     1.27  4.23e-08 
- 8 Only psychotic disorder         " 3.92"  " 1.66"      " 6.19"     1.15  6.78e-04 
- 9 Only bipolar disorder           " 3.29"  " 1.64"      " 4.93"     0.84  9.11e-05 
-10 PTSD                            " 2.30"  " 1.38"      " 3.23"     0.47  1.14e-06 
-# … with 19 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171327ee9d065.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6381,10 +6041,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |5187 |0.06 |0.06       |52.91 |1.40e-63 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 5187  0.06  0.06         52.91 1.40e-63      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322870d7fb.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
@@ -6410,25 +6072,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.29     |0.02       |0.56      |0.14  |0.03     |
 
 ```
-# A tibble: 16 x 6
-   `Indepent variable`                   Estimate  `95% CI low` `95% CI up` SE      `p value`
-   <fct>                                 <chr>     <chr>        <chr>       <chr>   <chr>    
- 1 Intercept                             "   6.35" "   3.59"    "   9.10"   " 1.41" 6.71e-06 
- 2 Anxiety disorders                     "   0.17" "  -2.64"    "   2.99"   " 1.43" 0.90     
- 3 Eating disorders                      "   8.06" "   2.15"    "  13.98"   " 3.02" 0.008    
- 4 OCDs                                  "  11.04" "   6.42"    "  15.66"   " 2.36" 2.98e-06 
- 5 PTSD                                  "   9.49" "   3.54"    "  15.44"   " 3.03" 0.002    
- 6 Depressive disorders                  "   7.29" "   5.47"    "   9.12"   " 0.93" 7.14e-15 
- 7 Bipolar disorders                     "  12.92" "  10.40"    "  15.43"   " 1.28" 2.13e-23 
- 8 Female                                "  -0.44" "  -1.81"    "   0.93"   " 0.70" 0.53     
- 9 Non-binary/Self-defined               "   2.94" "  -0.64"    "   6.52"   " 1.82" 0.11     
-10 Age                                   "-228.51" "-325.53"    "-131.48"   "49.48" 4.09e-06 
-11 Age^2                                 " -37.91" "-127.72"    "  51.91"   "45.80" 0.41     
-12 Mixed or multiple ethnic origins      "   1.96" "  -1.24"    "   5.16"   " 1.63" 0.23     
-13 Asian or Asian British                "  10.02" "   3.52"    "  16.52"   " 3.32" 0.003    
-14 African or African British            "   4.66" "  -4.87"    "  14.20"   " 4.86" 0.34     
-15 Other ethnicity                       "   3.60" "  -1.10"    "   8.29"   " 2.39" 0.13     
-16 Time difference: Lockdown to baseline "   0.29" "   0.02"    "   0.56"   " 0.14" 0.03     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132644dfb92.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6438,10 +6087,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |2351 |0.07 |0.07       |30.38 |2.76e-35 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 2351  0.07  0.07         30.38 2.76e-35      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323bbf61b0.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -6474,20 +6125,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.26     |0.01       |0.51      |0.13  |0.04     |
 
 ```
-# A tibble: 23 x 6
-   `Indepent variable`             Estimate  `95% CI low` `95% CI up` SE      `p value`
-   <fct>                           <chr>     <chr>        <chr>       <chr>   <chr>    
- 1 Intercept                       "   8.06" "   5.49"    " 10.63"    " 1.31" 9.66e-10 
- 2 Depressive and anxiety disorder "   4.47" "   2.83"    "  6.10"    " 0.83" 9.06e-08 
- 3 Only depressive disorder        "   2.32" "   0.15"    "  4.49"    " 1.11" 0.04     
- 4 Only anxiety disorder           "   0.91" "  -1.42"    "  3.23"    " 1.19" 0.45     
- 5 Eating disorders                "   1.43" "  -0.01"    "  2.87"    " 0.73" 0.05     
- 6 OCDs                            "   6.94" "   5.67"    "  8.21"    " 0.65" 2.50e-26 
- 7 Psychotic and bipolar disorder  "   6.19" "   2.53"    "  9.84"    " 1.86" 9.23e-04 
- 8 Only psychotic disorder         "   3.02" "   0.07"    "  5.97"    " 1.50" 0.04     
- 9 Only bipolar disorder           "   3.51" "   1.41"    "  5.61"    " 1.07" 0.001    
-10 PTSD                            "   2.23" "   0.97"    "  3.49"    " 0.64" 5.21e-04 
-# … with 13 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324c48c260.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6497,10 +6140,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |2351 |0.07 |0.07       |30.38 |2.76e-35 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 2351  0.07  0.07         30.38 2.76e-35      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323cd153c0.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # OCIR prepan
@@ -6518,16 +6163,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Bipolar disorders    |-9.36    |-21.92     |3.19      |6.39 |0.14    |
 
 ```
-# A tibble: 7 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            "  2.00" -10.15       "14.15"     6.18  0.75     
-2 Anxiety disorders    "-10.07" -23.37       " 3.24"     6.77  0.14     
-3 Eating disorders     " -8.00" -27.20       "11.20"     9.77  0.41     
-4 OCDs                 "-12.64" -26.34       " 1.07"     6.97  0.07     
-5 PTSD                 "-24.50" -43.70       "-5.30"     9.77  0.01     
-6 Depressive disorders "-10.11" -22.30       " 2.09"     6.20  0.10     
-7 Bipolar disorders    " -9.36" -21.92       " 3.19"     6.39  0.14     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713238894c31.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6537,10 +6178,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |436 |0.02 |0.00       |1.20 |0.31    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 436   0.02  0.00         1.20  0.31          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323de941f6.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -6562,22 +6205,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Personality disorder            |-1.65    |-4.91      |1.61      |1.66 |0.32     |
 
 ```
-# A tibble: 13 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "-1.97"  " -9.82"     " 5.88"     3.99  0.62     
- 2 Depressive and anxiety disorder "-4.69"  "-12.65"     " 3.26"     4.05  0.25     
- 3 Only depressive disorder        "-4.49"  "-13.22"     " 4.24"     4.44  0.31     
- 4 Only anxiety disorder           "-8.20"  "-16.94"     " 0.54"     4.45  0.07     
- 5 Eating disorders                "-0.11"  " -2.79"     " 2.58"     1.37  0.94     
- 6 OCDs                            "-1.25"  " -3.47"     " 0.98"     1.13  0.27     
- 7 Psychotic and bipolar disorder  "12.95"  "  5.33"     "20.57"     3.88  9.07e-04 
- 8 Only psychotic disorder         "-0.95"  " -6.48"     " 4.59"     2.82  0.74     
- 9 Only bipolar disorder           "-1.15"  " -4.80"     " 2.50"     1.86  0.54     
-10 PTSD                            "-3.79"  " -6.25"     "-1.33"     1.25  0.003    
-11 ASD                             "-0.45"  " -4.77"     " 3.88"     2.20  0.84     
-12 ADHD                            " 6.08"  " -0.41"     "12.57"     3.30  0.07     
-13 Personality disorder            "-1.65"  " -4.91"     " 1.61"     1.66  0.32     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322d519b51.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6587,10 +6220,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |436 |0.02 |0.00       |1.20 |0.31    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 436   0.02  0.00         1.20  0.31          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713248abfa15.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -6621,20 +6256,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.46     |-0.30      |1.22      |0.39  |0.23     |
 
 ```
-# A tibble: 21 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE      `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr>   <chr>    
- 1 Intercept                             "  2.04" "-11.93"     " 16.02"    " 7.11" 0.77     
- 2 Anxiety disorders                     " -8.89" "-22.30"     "  4.52"    " 6.82" 0.19     
- 3 Eating disorders                      " -6.73" "-25.88"     " 12.42"    " 9.74" 0.49     
- 4 OCDs                                  "-11.92" "-25.71"     "  1.86"    " 7.01" 0.09     
- 5 PTSD                                  "-23.03" "-42.29"     " -3.77"    " 9.80" 0.02     
- 6 Depressive disorders                  " -9.92" "-22.25"     "  2.40"    " 6.27" 0.11     
- 7 Bipolar disorders                     " -9.57" "-22.24"     "  3.09"    " 6.44" 0.14     
- 8 Female                                " -2.40" " -5.48"     "  0.68"    " 1.57" 0.13     
- 9 Non-binary/Self-defined               " -2.97" " -8.90"     "  2.96"    " 3.02" 0.33     
-10 age_category_collapsed_reordered16-18 " -7.23" "-14.16"     " -0.30"    " 3.52" 0.04     
-# … with 11 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713247ac5004.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6644,10 +6271,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |436 |0.02 |0.00       |1.20 |0.31    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 436   0.02  0.00         1.20  0.31          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321b95b5f.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -6685,20 +6314,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.52     |-0.23      |1.27      |0.38  |0.17    |
 
 ```
-# A tibble: 28 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE      `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr>   <chr>    
- 1 Intercept                       " -3.92" "-14.68"     " 6.84"     " 5.47" 0.47     
- 2 Depressive and anxiety disorder " -4.23" "-13.00"     " 4.54"     " 4.46" 0.34     
- 3 Only depressive disorder        " -4.32" "-13.77"     " 5.14"     " 4.81" 0.37     
- 4 Only anxiety disorder           " -6.76" "-16.24"     " 2.72"     " 4.82" 0.16     
- 5 Eating disorders                "  0.10" " -2.63"     " 2.83"     " 1.39" 0.94     
- 6 OCDs                            " -1.13" " -3.38"     " 1.11"     " 1.14" 0.32     
- 7 Psychotic and bipolar disorder  " 11.21" "  3.49"     "18.93"     " 3.93" 0.005    
- 8 Only psychotic disorder         " -1.54" " -7.19"     " 4.10"     " 2.87" 0.59     
- 9 Only bipolar disorder           " -1.19" " -4.91"     " 2.53"     " 1.89" 0.53     
-10 PTSD                            " -3.44" " -5.97"     "-0.91"     " 1.29" 0.008    
-# … with 18 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326fd6988a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6708,10 +6329,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |436 |0.02 |0.00       |1.20 |0.31    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 436   0.02  0.00         1.20  0.31          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713271b8c562.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
@@ -6737,25 +6360,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.45     |-0.30      |1.21      |0.38  |0.24     |
 
 ```
-# A tibble: 16 x 6
-   `Indepent variable`                   Estimate  `95% CI low` `95% CI up` SE      `p value`
-   <fct>                                 <chr>     <chr>        <chr>       <chr>   <chr>    
- 1 Intercept                             "   0.82" " -12.88"    " 14.52"    " 6.97" 0.91     
- 2 Anxiety disorders                     "  -9.53" " -22.75"    "  3.69"    " 6.73" 0.16     
- 3 Eating disorders                      "  -5.99" " -24.93"    " 12.94"    " 9.63" 0.53     
- 4 OCDs                                  " -11.80" " -25.29"    "  1.68"    " 6.86" 0.09     
- 5 PTSD                                  " -23.80" " -42.78"    " -4.82"    " 9.65" 0.01     
- 6 Depressive disorders                  "  -9.84" " -21.94"    "  2.26"    " 6.16" 0.11     
- 7 Bipolar disorders                     "  -9.78" " -22.24"    "  2.67"    " 6.34" 0.12     
- 8 Female                                "  -2.36" "  -5.43"    "  0.70"    " 1.56" 0.13     
- 9 Non-binary/Self-defined               "  -2.80" "  -8.69"    "  3.09"    " 3.00" 0.35     
-10 Age                                   "   6.51" "-113.13"    "126.16"    "60.87" 0.91     
-11 Age^2                                 "-163.21" "-285.29"    "-41.12"    "62.11" 0.009    
-12 Mixed or multiple ethnic origins      "   2.26" "  -4.38"    "  8.91"    " 3.38" 0.50     
-13 Asian or Asian British                " -25.30" " -39.96"    "-10.65"    " 7.46" 7.55e-04 
-14 African or African British            "  19.00" "  -2.12"    " 40.11"    "10.74" 0.08     
-15 Other ethnicity                       "  -1.18" "  -9.78"    "  7.43"    " 4.38" 0.79     
-16 Time difference: Lockdown to baseline "   0.45" "  -0.30"    "  1.21"    " 0.38" 0.24     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321a8b7336.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6765,10 +6375,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |436 |0.02 |0.00       |1.20 |0.31    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 436   0.02  0.00         1.20  0.31          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323938ebd7.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -6801,20 +6413,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.51     |-0.24      |1.26      |0.38  |0.18    |
 
 ```
-# A tibble: 23 x 6
-   `Indepent variable`             Estimate  `95% CI low` `95% CI up` SE      `p value`
-   <fct>                           <chr>     <chr>        <chr>       <chr>   <chr>    
- 1 Intercept                       "  -3.88" " -14.22"    "  6.46"    " 5.26" 0.46     
- 2 Depressive and anxiety disorder "  -5.09" " -13.66"    "  3.49"    " 4.36" 0.24     
- 3 Only depressive disorder        "  -5.61" " -14.87"    "  3.65"    " 4.71" 0.23     
- 4 Only anxiety disorder           "  -8.09" " -17.40"    "  1.21"    " 4.73" 0.09     
- 5 Eating disorders                "   0.06" "  -2.66"    "  2.78"    " 1.38" 0.97     
- 6 OCDs                            "  -1.21" "  -3.43"    "  1.02"    " 1.13" 0.29     
- 7 Psychotic and bipolar disorder  "  10.86" "   3.17"    " 18.55"    " 3.91" 0.006    
- 8 Only psychotic disorder         "  -1.50" "  -7.07"    "  4.07"    " 2.83" 0.60     
- 9 Only bipolar disorder           "  -1.37" "  -5.06"    "  2.32"    " 1.88" 0.47     
-10 PTSD                            "  -3.64" "  -6.15"    " -1.12"    " 1.28" 0.005    
-# … with 13 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713261459e65.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6824,10 +6428,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |436 |0.02 |0.00       |1.20 |0.31    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 436   0.02  0.00         1.20  0.31          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713221a22ac7.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ## Regression: Absolute scores
@@ -6845,17 +6451,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Bipolar disorders     |-5.59    |-16.81     |5.63      |5.71 |0.33     |
 
 ```
-# A tibble: 8 x 6
-  `Indepent variable`   Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                 <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept             "  9.60" " -1.32"     "20.52"     5.56  0.08     
-2 ocir.sum_score_prepan "  0.65" "  0.58"     " 0.71"     0.03  3.49e-61 
-3 Anxiety disorders     "-11.49" "-23.36"     " 0.38"     6.04  0.06     
-4 Eating disorders      " -9.29" "-26.42"     " 7.84"     8.71  0.29     
-5 OCDs                  " -9.11" "-21.35"     " 3.13"     6.23  0.14     
-6 PTSD                  "-20.88" "-38.02"     "-3.73"     8.72  0.02     
-7 Depressive disorders  " -8.32" "-19.20"     " 2.56"     5.54  0.13     
-8 Bipolar disorders     " -5.59" "-16.81"     " 5.63"     5.71  0.33     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321e21eb4c.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6865,10 +6466,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |436 |0.49 |0.49       |59.80 |1.44e-59 |  7|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 436   0.49  0.49         59.80 1.44e-59      7
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713244deda08.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -6891,23 +6494,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Personality disorder            |-0.69    |-3.62      |2.25      |1.49 |0.65     |
 
 ```
-# A tibble: 14 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 5.70"  " -1.50"     "12.89"     3.66  0.12     
- 2 ocir.sum_score_prepan           " 0.64"  "  0.57"     " 0.71"     0.04  1.22e-53 
- 3 Depressive and anxiety disorder "-4.17"  "-11.31"     " 2.97"     3.63  0.25     
- 4 Only depressive disorder        "-5.37"  "-13.21"     " 2.46"     3.99  0.18     
- 5 Only anxiety disorder           "-8.62"  "-16.46"     "-0.78"     3.99  0.03     
- 6 Eating disorders                " 0.48"  " -1.94"     " 2.89"     1.23  0.70     
- 7 OCDs                            " 2.28"  "  0.17"     " 4.39"     1.07  0.03     
- 8 Psychotic and bipolar disorder  "11.83"  "  4.99"     "18.67"     3.48  7.37e-04 
- 9 Only psychotic disorder         " 0.58"  " -4.40"     " 5.55"     2.53  0.82     
-10 Only bipolar disorder           " 0.87"  " -2.43"     " 4.17"     1.68  0.61     
-11 PTSD                            "-2.65"  " -4.87"     "-0.43"     1.13  0.02     
-12 ASD                             " 0.22"  " -3.66"     " 4.10"     1.97  0.91     
-13 ADHD                            " 4.02"  " -1.82"     " 9.85"     2.97  0.18     
-14 Personality disorder            "-0.69"  " -3.62"     " 2.25"     1.49  0.65     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321ef03114.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6917,10 +6509,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |1786 |0.03 |0.03       |10.03 |6.36e-11 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1786  0.03  0.03         10.03 6.36e-11      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322b2627ea.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -6953,20 +6547,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.29     |-0.40      |0.99      |0.35 |0.40     |
 
 ```
-# A tibble: 23 x 6
-   `Indepent variable`     Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                   <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept               " 14.34" " -1.04"     "29.71"     7.82  0.07     
- 2 ocir.sum_score_prepan   "  0.66" "  0.59"     " 0.73"     0.03  4.03e-59 
- 3 Anxiety disorders       "-15.86" "-30.44"     "-1.27"     7.42  0.03     
- 4 Eating disorders        "-13.66" "-32.79"     " 5.48"     9.73  0.16     
- 5 OCDs                    "-14.11" "-28.95"     " 0.73"     7.55  0.06     
- 6 PTSD                    "-25.47" "-44.67"     "-6.27"     9.77  0.009    
- 7 Depressive disorders    "-13.35" "-27.11"     " 0.42"     7.00  0.06     
- 8 Bipolar disorders       "-10.79" "-24.80"     " 3.22"     7.13  0.13     
- 9 Female                  " -1.78" " -4.57"     " 1.01"     1.42  0.21     
-10 Non-binary/Self-defined " -1.60" " -6.96"     " 3.77"     2.73  0.56     
-# … with 13 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132473f93f0.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -6976,10 +6562,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |1786 |0.03 |0.03       |10.03 |6.36e-11 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1786  0.03  0.03         10.03 6.36e-11      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321f09961b.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -7018,20 +6606,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.47     |-0.21      |1.15      |0.35 |0.17     |
 
 ```
-# A tibble: 29 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "  4.70" " -5.19"     "14.59"     5.03  0.35     
- 2 ocir.sum_score_prepan           "  0.64" "  0.57"     " 0.72"     0.04  7.34e-51 
- 3 Depressive and anxiety disorder " -5.06" "-12.99"     " 2.87"     4.03  0.21     
- 4 Only depressive disorder        " -6.01" "-14.57"     " 2.55"     4.35  0.17     
- 5 Only anxiety disorder           " -8.84" "-17.42"     "-0.25"     4.37  0.04     
- 6 Eating disorders                "  0.86" " -1.61"     " 3.33"     1.26  0.49     
- 7 OCDs                            "  2.41" "  0.26"     " 4.57"     1.10  0.03     
- 8 Psychotic and bipolar disorder  " 10.72" "  3.74"     "17.70"     3.55  0.003    
- 9 Only psychotic disorder         "  0.10" " -5.02"     " 5.21"     2.60  0.97     
-10 Only bipolar disorder           "  0.61" " -2.78"     " 3.99"     1.72  0.73     
-# … with 19 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713212af9280.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7041,10 +6621,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |1786 |0.03 |0.03       |10.03 |6.36e-11 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1786  0.03  0.03         10.03 6.36e-11      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713244bb1b15.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
@@ -7072,27 +6654,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.28     |-0.40      |0.97      |0.35  |0.42     |
 
 ```
-# A tibble: 18 x 6
-   `Indepent variable`                   Estimate  `95% CI low` `95% CI up` SE      `p value`
-   <fct>                                 <chr>     <chr>        <chr>       <chr>   <chr>    
- 1 Intercept                             "  12.31" "  -2.62"    " 27.24"    " 7.59" 0.11     
- 2 ocir.sum_score_prepan                 "   0.66" "   0.60"    "  0.73"    " 0.03" 9.77e-61 
- 3 Anxiety disorders                     " -14.89" " -29.15"    " -0.63"    " 7.25" 0.04     
- 4 Eating disorders                      " -11.62" " -30.39"    "  7.15"    " 9.55" 0.22     
- 5 OCDs                                  " -12.41" " -26.82"    "  2.00"    " 7.33" 0.09     
- 6 PTSD                                  " -24.34" " -43.16"    " -5.53"    " 9.57" 0.01     
- 7 Depressive disorders                  " -11.88" " -25.27"    "  1.52"    " 6.82" 0.08     
- 8 Bipolar disorders                     "  -9.39" " -23.07"    "  4.28"    " 6.96" 0.18     
- 9 Female                                "  -1.75" "  -4.51"    "  1.02"    " 1.41" 0.22     
-10 Non-binary/Self-defined               "  -1.46" "  -6.78"    "  3.86"    " 2.71" 0.59     
-11 Age                                   " -34.22" "-143.84"    " 75.40"    "55.77" 0.54     
-12 Age^2                                 "-146.19" "-258.05"    "-34.33"    "56.90" 0.01     
-13 Mixed or multiple ethnic origins      "   0.79" "  -5.21"    "  6.79"    " 3.05" 0.80     
-14 Asian or Asian British                " -16.72" " -30.09"    " -3.36"    " 6.80" 0.01     
-15 African or African British            "  22.89" "   3.86"    " 41.91"    " 9.68" 0.02     
-16 Other ethnicity                       "   0.88" "  -6.89"    "  8.66"    " 3.95" 0.82     
-17 Key worker                            "   0.09" "  -1.90"    "  2.07"    " 1.01" 0.93     
-18 Time difference: Lockdown to baseline "   0.28" "  -0.40"    "  0.97"    " 0.35" 0.42     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713214dfac9f.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7102,10 +6669,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |1786 |0.03 |0.03       |10.03 |6.36e-11 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1786  0.03  0.03         10.03 6.36e-11      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713268be056d.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -7139,20 +6708,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.43     |-0.25      |1.10      |0.34  |0.21     |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`             Estimate  `95% CI low` `95% CI up` SE      `p value`
-   <fct>                           <chr>     <chr>        <chr>       <chr>   <chr>    
- 1 Intercept                       "   4.86" "  -4.65"    " 14.37"    " 4.84" 0.32     
- 2 ocir.sum_score_prepan           "   0.65" "   0.58"    "  0.72"    " 0.04" 5.32e-53 
- 3 Depressive and anxiety disorder "  -5.20" " -12.95"    "  2.55"    " 3.94" 0.19     
- 4 Only depressive disorder        "  -6.59" " -14.96"    "  1.78"    " 4.26" 0.12     
- 5 Only anxiety disorder           "  -9.27" " -17.69"    " -0.86"    " 4.28" 0.03     
- 6 Eating disorders                "   0.72" "  -1.74"    "  3.18"    " 1.25" 0.57     
- 7 OCDs                            "   2.22" "   0.09"    "  4.35"    " 1.08" 0.04     
- 8 Psychotic and bipolar disorder  "  10.57" "   3.62"    " 17.52"    " 3.54" 0.003    
- 9 Only psychotic disorder         "  -0.11" "  -5.16"    "  4.93"    " 2.57" 0.97     
-10 Only bipolar disorder           "   0.67" "  -2.69"    "  4.03"    " 1.71" 0.69     
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132f02dc37.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7162,10 +6723,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |1786 |0.03 |0.03       |10.03 |6.36e-11 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1786  0.03  0.03         10.03 6.36e-11      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324c7a694.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 # OCIR retro
 ## Regression: Change scores
@@ -7182,16 +6745,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Bipolar disorders    |-3.57    |-4.89      |-2.24     |0.68 |1.40e-07 |
 
 ```
-# A tibble: 7 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            " 3.87"  " 3.16"      " 4.58"     0.36  1.93e-26 
-2 Anxiety disorders    "-0.87"  "-2.14"      " 0.41"     0.65  0.18     
-3 Eating disorders     "-3.63"  "-7.18"      "-0.07"     1.81  0.05     
-4 OCDs                 "-1.87"  "-4.22"      " 0.48"     1.20  0.12     
-5 PTSD                 "-0.55"  "-3.15"      " 2.06"     1.33  0.68     
-6 Depressive disorders "-3.95"  "-4.74"      "-3.17"     0.40  1.59e-22 
-7 Bipolar disorders    "-3.57"  "-4.89"      "-2.24"     0.68  1.40e-07 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323c0a4e24.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7201,10 +6760,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |4329 |0.03 |0.03       |19.83 |5.68e-23 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 4329  0.03  0.03         19.83 5.68e-23      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713248903c47.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -7226,22 +6787,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Personality disorder            |-0.61    |-1.69      |0.47      |0.55 |0.27     |
 
 ```
-# A tibble: 13 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 3.83"  " 3.19"      " 4.47"     0.33  4.16e-31 
- 2 Depressive and anxiety disorder "-4.38"  "-5.16"      "-3.60"     0.40  6.38e-28 
- 3 Only depressive disorder        "-2.11"  "-3.19"      "-1.03"     0.55  1.37e-04 
- 4 Only anxiety disorder           "-1.42"  "-2.54"      "-0.31"     0.57  0.01     
- 5 Eating disorders                "-0.25"  "-1.18"      " 0.68"     0.47  0.60     
- 6 OCDs                            " 0.30"  "-0.50"      " 1.11"     0.41  0.46     
- 7 Psychotic and bipolar disorder  " 2.22"  " 0.03"      " 4.40"     1.11  0.05     
- 8 Only psychotic disorder         " 0.58"  "-1.38"      " 2.53"     1.00  0.56     
- 9 Only bipolar disorder           "-0.55"  "-1.93"      " 0.82"     0.70  0.43     
-10 PTSD                            " 0.21"  "-0.58"      " 1.00"     0.40  0.60     
-11 ASD                             " 1.82"  " 0.35"      " 3.30"     0.75  0.02     
-12 ADHD                            " 2.21"  " 0.12"      " 4.29"     1.06  0.04     
-13 Personality disorder            "-0.61"  "-1.69"      " 0.47"     0.55  0.27     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325a564eee.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7251,10 +6802,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |4329 |0.03 |0.03       |19.83 |5.68e-23 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 4329  0.03  0.03         19.83 5.68e-23      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713258581997.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -7286,20 +6839,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-1.65    |-1.77      |-1.52     |0.06 |6.65e-134 |
 
 ```
-# A tibble: 22 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "11.33"  " 9.98"      "12.69"     0.69  1.48e-58 
- 2 Anxiety disorders                     "-0.24"  "-1.45"      " 0.97"     0.62  0.70     
- 3 Eating disorders                      "-2.11"  "-5.41"      " 1.18"     1.68  0.21     
- 4 OCDs                                  "-0.32"  "-2.52"      " 1.89"     1.13  0.78     
- 5 PTSD                                  "-0.45"  "-2.91"      " 2.01"     1.25  0.72     
- 6 Depressive disorders                  "-2.12"  "-2.90"      "-1.35"     0.40  8.11e-08 
- 7 Bipolar disorders                     "-1.61"  "-2.87"      "-0.35"     0.64  0.01     
- 8 Female                                " 0.19"  "-0.57"      " 0.95"     0.39  0.62     
- 9 Non-binary/Self-defined               "-0.14"  "-2.20"      " 1.91"     1.05  0.89     
-10 age_category_collapsed_reordered16-18 " 4.14"  " 2.72"      " 5.56"     0.72  1.14e-08 
-# … with 12 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132952c53.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7309,10 +6854,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |4329 |0.03 |0.03       |19.83 |5.68e-23 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 4329  0.03  0.03         19.83 5.68e-23      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324190fd71.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -7351,20 +6898,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-1.61    |-1.73      |-1.48     |0.06 |8.63e-132 |
 
 ```
-# A tibble: 29 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "11.18"  " 9.84"      "12.53"     0.69  3.87e-58 
- 2 Depressive and anxiety disorder "-2.52"  "-3.28"      "-1.75"     0.39  1.10e-10 
- 3 Only depressive disorder        "-1.45"  "-2.49"      "-0.42"     0.53  0.006    
- 4 Only anxiety disorder           "-0.73"  "-1.79"      " 0.33"     0.54  0.18     
- 5 Eating disorders                "-0.09"  "-0.96"      " 0.77"     0.44  0.83     
- 6 OCDs                            " 0.38"  "-0.38"      " 1.13"     0.38  0.33     
- 7 Psychotic and bipolar disorder  " 2.27"  " 0.23"      " 4.30"     1.04  0.03     
- 8 Only psychotic disorder         " 0.30"  "-1.51"      " 2.12"     0.93  0.74     
- 9 Only bipolar disorder           "-0.31"  "-1.61"      " 0.98"     0.66  0.64     
-10 PTSD                            " 0.16"  "-0.59"      " 0.91"     0.38  0.68     
-# … with 19 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171328000da8.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7374,10 +6913,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |4329 |0.03 |0.03       |19.83 |5.68e-23 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 4329  0.03  0.03         19.83 5.68e-23      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323b8094b2.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
@@ -7403,25 +6944,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |-0.03    |-0.19      |0.12      |0.08  |0.67     |
 
 ```
-# A tibble: 16 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE      `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr>   <chr>    
- 1 Intercept                             " -3.61" " -5.25"     " -1.98"    " 0.83" 1.55e-05 
- 2 Anxiety disorders                     " -0.51" " -2.15"     "  1.14"    " 0.84" 0.55     
- 3 Eating disorders                      "  1.23" " -2.21"     "  4.66"    " 1.75" 0.48     
- 4 OCDs                                  " -1.05" " -3.73"     "  1.63"    " 1.37" 0.44     
- 5 PTSD                                  " -2.80" " -6.26"     "  0.65"    " 1.76" 0.11     
- 6 Depressive disorders                  " -0.86" " -1.92"     "  0.20"    " 0.54" 0.11     
- 7 Bipolar disorders                     " -1.17" " -2.64"     "  0.29"    " 0.75" 0.12     
- 8 Female                                " -0.59" " -1.40"     "  0.21"    " 0.41" 0.15     
- 9 Non-binary/Self-defined               " -0.72" " -2.80"     "  1.36"    " 1.06" 0.50     
-10 Age                                   " 74.54" " 31.90"     "117.17"    "21.74" 6.19e-04 
-11 Age^2                                 "-24.16" "-65.99"     " 17.67"    "21.33" 0.26     
-12 Mixed or multiple ethnic origins      "  2.68" "  0.82"     "  4.54"    " 0.95" 0.005    
-13 Asian or Asian British                " -0.83" " -4.61"     "  2.94"    " 1.92" 0.67     
-14 African or African British            " -0.67" " -6.20"     "  4.86"    " 2.82" 0.81     
-15 Other ethnicity                       "  1.15" " -1.58"     "  3.88"    " 1.39" 0.41     
-16 Time difference: Lockdown to baseline " -0.03" " -0.19"     "  0.12"    " 0.08" 0.67     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321a5bf887.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7431,10 +6959,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |2307 |0.00 |0.00       |1.72 |0.11    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 2307  0.00  0.00         1.72  0.11          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132c197496.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -7467,20 +6997,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |-0.04    |-0.19      |0.12      |0.08  |0.64     |
 
 ```
-# A tibble: 23 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE      `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr>   <chr>    
- 1 Intercept                       " -3.62" " -5.23"     " -2.02"    " 0.82" 9.55e-06 
- 2 Depressive and anxiety disorder " -0.65" " -1.64"     "  0.35"    " 0.51" 0.21     
- 3 Only depressive disorder        " -1.15" " -2.48"     "  0.19"    " 0.68" 0.09     
- 4 Only anxiety disorder           " -1.06" " -2.49"     "  0.36"    " 0.73" 0.14     
- 5 Eating disorders                "  0.46" " -0.42"     "  1.34"    " 0.45" 0.30     
- 6 OCDs                            " -0.27" " -1.04"     "  0.50"    " 0.39" 0.50     
- 7 Psychotic and bipolar disorder  "  0.49" " -1.77"     "  2.74"    " 1.15" 0.67     
- 8 Only psychotic disorder         "  0.11" " -1.70"     "  1.92"    " 0.92" 0.91     
- 9 Only bipolar disorder           " -0.27" " -1.54"     "  1.01"    " 0.65" 0.68     
-10 PTSD                            " -0.60" " -1.37"     "  0.17"    " 0.39" 0.13     
-# … with 13 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171327f5c2be9.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7490,10 +7012,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |2307 |0.00 |0.00       |1.72 |0.11    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 2307  0.00  0.00         1.72  0.11          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171327c470f51.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ## Regression: Absolute scores
@@ -7511,17 +7035,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Bipolar disorders    |0.55     |-0.74      |1.84      |0.66 |0.40     |
 
 ```
-# A tibble: 8 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            " 6.44"  " 5.74"      " 7.13"     0.36  1.09e-70 
-2 ocir.sum_score_retro " 0.73"  " 0.71"      " 0.75"     0.01  0.00e+00 
-3 Anxiety disorders    "-0.10"  "-1.30"      " 1.10"     0.61  0.87     
-4 Eating disorders     "-1.54"  "-4.88"      " 1.80"     1.70  0.37     
-5 OCDs                 " 1.47"  "-0.76"      " 3.69"     1.13  0.20     
-6 PTSD                 " 1.43"  "-1.02"      " 3.88"     1.25  0.25     
-7 Depressive disorders "-1.50"  "-2.27"      "-0.73"     0.39  1.33e-04 
-8 Bipolar disorders    " 0.55"  "-0.74"      " 1.84"     0.66  0.40     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713266ca733.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7531,10 +7050,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |4329 |0.52 |0.52       |665.07 |0.00e+00 |  7|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 4329  0.52  0.52         665.07 0.00e+00      7
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713247550890.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -7557,23 +7078,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Personality disorder            |0.67     |-0.34      |1.69      |0.52 |0.19     |
 
 ```
-# A tibble: 14 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 6.91"  " 6.26"      " 7.55"     0.33  1.85e-93 
- 2 ocir.sum_score_retro            " 0.70"  " 0.68"      " 0.73"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder "-2.55"  "-3.29"      "-1.81"     0.38  1.67e-11 
- 4 Only depressive disorder        "-1.71"  "-2.72"      "-0.69"     0.52  9.57e-04 
- 5 Only anxiety disorder           "-0.70"  "-1.74"      " 0.35"     0.53  0.19     
- 6 Eating disorders                "-0.09"  "-0.95"      " 0.78"     0.44  0.84     
- 7 OCDs                            " 2.46"  " 1.69"      " 3.23"     0.39  4.48e-10 
- 8 Psychotic and bipolar disorder  " 3.47"  " 1.43"      " 5.51"     1.04  8.69e-04 
- 9 Only psychotic disorder         " 1.72"  "-0.11"      " 3.55"     0.93  0.07     
-10 Only bipolar disorder           " 0.59"  "-0.69"      " 1.88"     0.66  0.37     
-11 PTSD                            " 0.78"  " 0.04"      " 1.52"     0.38  0.04     
-12 ASD                             " 3.70"  " 2.31"      " 5.08"     0.71  1.73e-07 
-13 ADHD                            " 2.01"  " 0.06"      " 3.95"     0.99  0.04     
-14 Personality disorder            " 0.67"  "-0.34"      " 1.69"     0.52  0.19     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321cbfb3a5.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7583,10 +7093,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |5094 |0.06 |0.06       |51.24 |1.63e-61 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 5094  0.06  0.06         51.24 1.63e-61      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326dab2461.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -7620,20 +7132,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-1.40    |-1.52      |-1.28     |0.06 |1.25e-105 |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`     Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                   <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept               "12.90"  "11.58"      "14.22"     0.67  1.24e-78 
- 2 ocir.sum_score_retro    " 0.77"  " 0.75"      " 0.79"     0.01  0.00e+00 
- 3 Anxiety disorders       " 0.15"  "-1.00"      " 1.30"     0.59  0.79     
- 4 Eating disorders        "-0.79"  "-3.92"      " 2.34"     1.60  0.62     
- 5 OCDs                    " 1.71"  "-0.41"      " 3.83"     1.08  0.11     
- 6 PTSD                    " 1.12"  "-1.24"      " 3.48"     1.20  0.35     
- 7 Depressive disorders    "-0.46"  "-1.21"      " 0.30"     0.39  0.24     
- 8 Bipolar disorders       " 1.41"  " 0.17"      " 2.65"     0.63  0.03     
- 9 Female                  " 0.14"  "-0.58"      " 0.87"     0.37  0.69     
-10 Non-binary/Self-defined " 0.56"  "-1.40"      " 2.51"     1.00  0.58     
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132bde2a7e.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7643,10 +7147,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |5094 |0.06 |0.06       |51.24 |1.63e-61 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 5094  0.06  0.06         51.24 1.63e-61      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713226b7bc48.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -7686,20 +7192,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-1.35    |-1.47      |-1.23     |0.06 |7.16e-102 |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "12.78"  "11.50"      "14.06"     0.65  8.31e-82 
- 2 ocir.sum_score_retro            " 0.75"  " 0.72"      " 0.77"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder "-1.21"  "-1.94"      "-0.48"     0.37  0.001    
- 4 Only depressive disorder        "-1.02"  "-2.00"      "-0.03"     0.50  0.04     
- 5 Only anxiety disorder           "-0.29"  "-1.29"      " 0.72"     0.51  0.57     
- 6 Eating disorders                "-0.05"  "-0.87"      " 0.78"     0.42  0.91     
- 7 OCDs                            " 2.11"  " 1.38"      " 2.84"     0.37  1.56e-08 
- 8 Psychotic and bipolar disorder  " 3.34"  " 1.41"      " 5.27"     0.98  6.97e-04 
- 9 Only psychotic disorder         " 1.23"  "-0.50"      " 2.95"     0.88  0.16     
-10 Only bipolar disorder           " 0.58"  "-0.65"      " 1.81"     0.63  0.35     
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171327ce85453.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7709,10 +7207,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |5094 |0.06 |0.06       |51.24 |1.63e-61 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 5094  0.06  0.06         51.24 1.63e-61      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713278f85535.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
 Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration and baseline
@@ -7739,27 +7239,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.02     |-0.13      |0.17      |0.08  |0.80     |
 
 ```
-# A tibble: 18 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE      `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr>   <chr>    
- 1 Intercept                             " -1.38" " -2.95"     " 0.20"     " 0.80" 0.09     
- 2 ocir.sum_score_retro                  "  0.81" "  0.78"     " 0.83"     " 0.01" 0.00e+00 
- 3 Anxiety disorders                     " -0.39" " -1.94"     " 1.15"     " 0.79" 0.62     
- 4 Eating disorders                      "  2.53" " -0.68"     " 5.75"     " 1.64" 0.12     
- 5 OCDs                                  "  1.25" " -1.27"     " 3.78"     " 1.29" 0.33     
- 6 PTSD                                  " -0.42" " -3.66"     " 2.82"     " 1.65" 0.80     
- 7 Depressive disorders                  "  0.68" " -0.33"     " 1.70"     " 0.52" 0.19     
- 8 Bipolar disorders                     "  1.65" "  0.24"     " 3.06"     " 0.72" 0.02     
- 9 Female                                " -0.52" " -1.27"     " 0.23"     " 0.38" 0.17     
-10 Non-binary/Self-defined               " -0.02" " -1.97"     " 1.93"     " 0.99" 0.98     
-11 Age                                   " 21.02" "-19.75"     "61.79"     "20.79" 0.31     
-12 Age^2                                 "-30.35" "-70.33"     " 9.63"     "20.39" 0.14     
-13 Mixed or multiple ethnic origins      "  2.54" "  0.77"     " 4.31"     " 0.90" 0.005    
-14 Asian or Asian British                "  1.26" " -2.28"     " 4.80"     " 1.80" 0.48     
-15 African or African British            "  0.31" " -4.87"     " 5.49"     " 2.64" 0.91     
-16 Other ethnicity                       "  1.49" " -1.11"     " 4.10"     " 1.33" 0.26     
-17 Key worker                            " -0.34" " -0.91"     " 0.23"     " 0.29" 0.24     
-18 Time difference: Lockdown to baseline "  0.02" " -0.13"     " 0.17"     " 0.08" 0.80     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323f4dba6e.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7769,10 +7254,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |2313 |0.07 |0.07       |30.36 |3.08e-35 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 2313  0.07  0.07         30.36 3.08e-35      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713280aac3a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -7806,20 +7293,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.02     |-0.13      |0.17      |0.07  |0.79     |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE      `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr>   <chr>    
- 1 Intercept                       " -1.12" " -2.64"     " 0.40"     " 0.78" 0.15     
- 2 ocir.sum_score_retro            "  0.79" "  0.77"     " 0.82"     " 0.01" 0.00e+00 
- 3 Depressive and anxiety disorder "  0.43" " -0.51"     " 1.38"     " 0.48" 0.37     
- 4 Only depressive disorder        " -0.40" " -1.65"     " 0.85"     " 0.64" 0.53     
- 5 Only anxiety disorder           " -0.63" " -1.96"     " 0.70"     " 0.68" 0.35     
- 6 Eating disorders                "  0.63" " -0.19"     " 1.45"     " 0.42" 0.13     
- 7 OCDs                            "  1.22" "  0.48"     " 1.96"     " 0.38" 0.001    
- 8 Psychotic and bipolar disorder  "  1.77" " -0.34"     " 3.88"     " 1.07" 0.10     
- 9 Only psychotic disorder         "  0.75" " -0.94"     " 2.45"     " 0.86" 0.38     
-10 Only bipolar disorder           "  0.50" " -0.69"     " 1.70"     " 0.61" 0.41     
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132169c11ad.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7829,10 +7308,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |2313 |0.07 |0.07       |30.36 |3.08e-35 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 2313  0.07  0.07         30.36 3.08e-35      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132604c8073.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # OCIR retro
@@ -7850,16 +7331,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Bipolar disorders    |-2.70    |-6.95      |1.54      |2.16 |0.21    |
 
 ```
-# A tibble: 7 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            -2.83    " -6.91"     1.24        2.08  0.17     
-2 Anxiety disorders    -2.22    " -6.61"     2.17        2.24  0.32     
-3 Eating disorders     -2.17    " -8.88"     4.55        3.42  0.53     
-4 OCDs                 -3.29    " -8.28"     1.70        2.55  0.20     
-5 PTSD                 -5.17    "-11.06"     0.73        3.01  0.09     
-6 Depressive disorders -2.57    " -6.66"     1.52        2.09  0.22     
-7 Bipolar disorders    -2.70    " -6.95"     1.54        2.16  0.21     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713219ebb690.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7869,10 +7346,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |1746 |0.00 |0.00       |0.58 |0.75    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1746  0.00  0.00         0.58  0.75          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132421eb53b.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -7894,22 +7373,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Personality disorder            |-0.75    |-1.86      |0.36      |0.57 |0.18    |
 
 ```
-# A tibble: 13 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "-3.69"  -6.52        "-0.87"     1.44  0.01     
- 2 Depressive and anxiety disorder "-1.42"  -4.27        " 1.44"     1.46  0.33     
- 3 Only depressive disorder        "-1.99"  -5.10        " 1.12"     1.59  0.21     
- 4 Only anxiety disorder           "-2.05"  -5.16        " 1.07"     1.59  0.20     
- 5 Eating disorders                " 0.14"  -0.85        " 1.12"     0.50  0.79     
- 6 OCDs                            "-0.26"  -1.11        " 0.58"     0.43  0.54     
- 7 Psychotic and bipolar disorder  " 0.76"  -1.82        " 3.33"     1.31  0.56     
- 8 Only psychotic disorder         "-0.04"  -2.04        " 1.96"     1.02  0.97     
- 9 Only bipolar disorder           "-0.26"  -1.65        " 1.13"     0.71  0.71     
-10 PTSD                            "-0.48"  -1.31        " 0.36"     0.43  0.26     
-11 ASD                             "-0.16"  -1.97        " 1.65"     0.92  0.86     
-12 ADHD                            " 1.24"  -1.46        " 3.93"     1.37  0.37     
-13 Personality disorder            "-0.75"  -1.86        " 0.36"     0.57  0.18     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326bfc7afb.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7919,10 +7388,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |1746 |0.00 |0.00       |0.58 |0.75    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1746  0.00  0.00         0.58  0.75          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132cee2c20.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -7954,20 +7425,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.07     |-0.14      |0.27      |0.11 |0.54    |
 
 ```
-# A tibble: 22 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "-3.18"  " -7.64"     1.29        2.28  0.16     
- 2 Anxiety disorders                     "-2.23"  " -6.61"     2.15        2.23  0.32     
- 3 Eating disorders                      "-2.00"  " -8.71"     4.71        3.42  0.56     
- 4 OCDs                                  "-3.21"  " -8.19"     1.76        2.54  0.21     
- 5 PTSD                                  "-5.21"  "-11.11"     0.70        3.01  0.08     
- 6 Depressive disorders                  "-2.76"  " -6.86"     1.35        2.09  0.19     
- 7 Bipolar disorders                     "-3.11"  " -7.36"     1.14        2.17  0.15     
- 8 Female                                "-0.78"  " -1.77"     0.22        0.51  0.13     
- 9 Non-binary/Self-defined               "-0.68"  " -3.02"     1.67        1.19  0.57     
-10 age_category_collapsed_reordered16-18 " 0.28"  " -2.20"     2.76        1.26  0.82     
-# … with 12 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326aa33ca.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -7977,10 +7440,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |1746 |0.00 |0.00       |0.58 |0.75    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1746  0.00  0.00         0.58  0.75          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132102e1631.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -8019,20 +7484,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.07     |-0.14      |0.27      |0.11 |0.54    |
 
 ```
-# A tibble: 29 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "-4.07"  -7.52        "-0.62"     1.76  0.02     
- 2 Depressive and anxiety disorder "-1.64"  -4.57        " 1.28"     1.49  0.27     
- 3 Only depressive disorder        "-2.51"  -5.69        " 0.66"     1.62  0.12     
- 4 Only anxiety disorder           "-2.13"  -5.29        " 1.03"     1.61  0.19     
- 5 Eating disorders                " 0.38"  -0.61        " 1.37"     0.51  0.45     
- 6 OCDs                            "-0.16"  -1.00        " 0.69"     0.43  0.72     
- 7 Psychotic and bipolar disorder  " 0.36"  -2.21        " 2.94"     1.31  0.78     
- 8 Only psychotic disorder         "-0.37"  -2.38        " 1.63"     1.02  0.71     
- 9 Only bipolar disorder           "-0.32"  -1.73        " 1.08"     0.72  0.65     
-10 PTSD                            "-0.46"  -1.31        " 0.39"     0.43  0.29     
-# … with 19 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324b80d567.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8042,10 +7499,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |1746 |0.00 |0.00       |0.58 |0.75    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1746  0.00  0.00         0.58  0.75          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132773a83ea.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ## Regression: Absolute scores
@@ -8063,17 +7522,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Bipolar disorders    |-1.69    |-5.66      |2.27      |2.02 |0.40     |
 
 ```
-# A tibble: 8 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            " 1.61"  "-2.24"      5.46        1.96  0.41     
-2 ocir.sum_score_retro " 0.80"  " 0.78"      0.83        0.01  0.00e+00 
-3 Anxiety disorders    "-3.75"  "-7.86"      0.35        2.09  0.07     
-4 Eating disorders     "-2.66"  "-8.93"      3.62        3.20  0.41     
-5 OCDs                 "-1.97"  "-6.64"      2.69        2.38  0.41     
-6 PTSD                 "-4.33"  "-9.84"      1.18        2.81  0.12     
-7 Depressive disorders "-2.63"  "-6.45"      1.20        1.95  0.18     
-8 Bipolar disorders    "-1.69"  "-5.66"      2.27        2.02  0.40     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713275441082.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8083,10 +7537,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |1746 |0.71 |0.71       |615.64 |0.00e+00 |  7|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 1746  0.71  0.71         615.64 0.00e+00      7
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132479802f3.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -8109,23 +7565,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Personality disorder            |0.25     |-0.78      |1.29      |0.53 |0.63     |
 
 ```
-# A tibble: 14 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 1.14"  "-1.55"      " 3.83"     1.37  0.41     
- 2 ocir.sum_score_retro            " 0.78"  " 0.76"      " 0.81"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder "-2.11"  "-4.77"      " 0.55"     1.35  0.12     
- 4 Only depressive disorder        "-3.03"  "-5.93"      "-0.14"     1.48  0.04     
- 5 Only anxiety disorder           "-3.28"  "-6.18"      "-0.39"     1.48  0.03     
- 6 Eating disorders                " 0.29"  "-0.63"      " 1.21"     0.47  0.53     
- 7 OCDs                            " 1.45"  " 0.63"      " 2.26"     0.41  5.00e-04 
- 8 Psychotic and bipolar disorder  " 1.84"  "-0.56"      " 4.24"     1.22  0.13     
- 9 Only psychotic disorder         " 0.37"  "-1.49"      " 2.23"     0.95  0.70     
-10 Only bipolar disorder           " 0.39"  "-0.91"      " 1.68"     0.66  0.56     
-11 PTSD                            " 0.06"  "-0.72"      " 0.84"     0.40  0.87     
-12 ASD                             " 1.15"  "-0.54"      " 2.84"     0.86  0.18     
-13 ADHD                            " 1.06"  "-1.45"      " 3.57"     1.28  0.41     
-14 Personality disorder            " 0.25"  "-0.78"      " 1.29"     0.53  0.63     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132752a83e.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8135,10 +7580,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |1750 |0.03 |0.03       |9.60 |2.04e-10 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1750  0.03  0.03         9.60  2.04e-10      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713243a38233.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -8172,20 +7619,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.13     |-0.06      |0.33      |0.10 |0.17     |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`     Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                   <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept               " 1.67"  " -2.72"     " 6.06"     2.24  0.45     
- 2 ocir.sum_score_retro    " 0.80"  "  0.78"     " 0.83"     0.01  0.00e+00 
- 3 Anxiety disorders       "-4.58"  " -8.83"     "-0.32"     2.17  0.04     
- 4 Eating disorders        "-3.19"  " -9.57"     " 3.19"     3.25  0.33     
- 5 OCDs                    "-2.77"  " -7.56"     " 2.02"     2.44  0.26     
- 6 PTSD                    "-5.05"  "-10.68"     " 0.59"     2.87  0.08     
- 7 Depressive disorders    "-3.55"  " -7.56"     " 0.46"     2.04  0.08     
- 8 Bipolar disorders       "-2.64"  " -6.79"     " 1.50"     2.11  0.21     
- 9 Female                  "-0.61"  " -1.54"     " 0.33"     0.48  0.20     
-10 Non-binary/Self-defined "-0.10"  " -2.30"     " 2.09"     1.12  0.93     
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713247f4c4cc.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8195,10 +7634,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |1750 |0.03 |0.03       |9.60 |2.04e-10 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1750  0.03  0.03         9.60  2.04e-10      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713216a451fc.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -8238,20 +7679,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.14     |-0.05      |0.34      |0.10 |0.14     |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 0.34"  "-2.91"      " 3.60"     1.66  0.84     
- 2 ocir.sum_score_retro            " 0.78"  " 0.76"      " 0.81"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder "-2.31"  "-5.03"      " 0.41"     1.39  0.10     
- 4 Only depressive disorder        "-3.37"  "-6.32"      "-0.41"     1.51  0.03     
- 5 Only anxiety disorder           "-3.39"  "-6.33"      "-0.44"     1.50  0.02     
- 6 Eating disorders                " 0.48"  "-0.45"      " 1.40"     0.47  0.31     
- 7 OCDs                            " 1.52"  " 0.70"      " 2.33"     0.42  2.77e-04 
- 8 Psychotic and bipolar disorder  " 1.50"  "-0.90"      " 3.90"     1.22  0.22     
- 9 Only psychotic disorder         " 0.06"  "-1.80"      " 1.93"     0.95  0.95     
-10 Only bipolar disorder           " 0.36"  "-0.95"      " 1.67"     0.67  0.59     
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713256e6b5a1.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8261,10 +7694,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |1750 |0.03 |0.03       |9.60 |2.04e-10 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1750  0.03  0.03         9.60  2.04e-10      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132449e8999.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8282,16 +7717,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Bipolar disorders    |8.99     |8.67       |9.31      |0.16 |0.00e+00  |
 
 ```
-# A tibble: 7 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            8.44     8.35         8.54        0.05  0.00e+00 
-2 Anxiety disorders    3.42     3.16         3.67        0.13  3.65e-153
-3 Eating disorders     3.66     2.85         4.46        0.41  6.61e-19 
-4 OCDs                 5.54     4.88         6.20        0.34  1.20e-60 
-5 PTSD                 6.20     5.54         6.86        0.34  1.99e-75 
-6 Depressive disorders 6.48     6.36         6.60        0.06  0.00e+00 
-7 Bipolar disorders    8.99     8.67         9.31        0.16  0.00e+00 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322358dce3.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8301,10 +7732,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |31227 |0.28 |0.28       |1988.78 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31227 0.28  0.28         1988.78 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321f0dcd36.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -8326,22 +7759,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Personality disorder            |2.82     |2.52       |3.11      |0.15 |4.00e-78  |
 
 ```
-# A tibble: 13 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       8.65     8.57         8.74        0.04  0.00e+00 
- 2 Depressive and anxiety disorder 6.11     5.98         6.24        0.07  0.00e+00 
- 3 Only depressive disorder        2.78     2.61         2.95        0.09  1.85e-216
- 4 Only anxiety disorder           3.28     3.06         3.50        0.11  6.19e-185
- 5 Eating disorders                1.34     1.11         1.57        0.12  5.16e-30 
- 6 OCDs                            1.74     1.52         1.97        0.11  1.82e-53 
- 7 Psychotic and bipolar disorder  1.21     0.59         1.84        0.32  1.50e-04 
- 8 Only psychotic disorder         0.72     0.19         1.26        0.27  0.008    
- 9 Only bipolar disorder           1.16     0.82         1.50        0.17  1.61e-11 
-10 PTSD                            2.86     2.65         3.06        0.10  7.16e-163
-11 ASD                             1.99     1.59         2.39        0.20  2.03e-22 
-12 ADHD                            1.21     0.67         1.74        0.27  9.18e-06 
-13 Personality disorder            2.82     2.52         3.11        0.15  4.00e-78 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324bb61edc.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8351,10 +7774,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |31227 |0.28 |0.28       |1988.78 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31227 0.28  0.28         1988.78 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713221a42459.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -8386,20 +7811,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.01    |-0.04      |0.02      |0.02 |0.35      |
 
 ```
-# A tibble: 22 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             " 9.91"  " 9.62"      "10.20"     0.15  0.00e+00 
- 2 Anxiety disorders                     " 2.40"  " 2.13"      " 2.66"     0.13  4.80e-72 
- 3 Eating disorders                      " 2.19"  " 1.38"      " 3.00"     0.41  1.05e-07 
- 4 OCDs                                  " 3.33"  " 2.67"      " 3.99"     0.34  5.90e-23 
- 5 PTSD                                  " 5.30"  " 4.63"      " 5.97"     0.34  4.83e-54 
- 6 Depressive disorders                  " 5.42"  " 5.28"      " 5.55"     0.07  0.00e+00 
- 7 Bipolar disorders                     " 7.78"  " 7.47"      " 8.10"     0.16  0.00e+00 
- 8 Female                                " 0.77"  " 0.63"      " 0.91"     0.07  8.71e-27 
- 9 Non-binary/Self-defined               " 2.27"  " 1.70"      " 2.83"     0.29  3.65e-15 
-10 age_category_collapsed_reordered16-18 " 3.65"  " 3.28"      " 4.03"     0.19  2.14e-80 
-# … with 12 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325295343e.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8409,10 +7826,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |31227 |0.28 |0.28       |1988.78 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31227 0.28  0.28         1988.78 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324198fccd.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -8451,20 +7870,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |-0.03    |-0.05      |0.00      |0.01 |0.07      |
 
 ```
-# A tibble: 29 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 9.95"  " 9.67"      "10.23"     0.14  0.00e+00 
- 2 Depressive and anxiety disorder " 5.23"  " 5.08"      " 5.37"     0.07  0.00e+00 
- 3 Only depressive disorder        " 2.64"  " 2.46"      " 2.82"     0.09  1.59e-177
- 4 Only anxiety disorder           " 2.44"  " 2.21"      " 2.67"     0.12  1.98e-95 
- 5 Eating disorders                " 0.86"  " 0.63"      " 1.09"     0.12  1.80e-13 
- 6 OCDs                            " 1.30"  " 1.08"      " 1.53"     0.11  6.65e-31 
- 7 Psychotic and bipolar disorder  " 1.44"  " 0.82"      " 2.06"     0.32  5.13e-06 
- 8 Only psychotic disorder         " 0.77"  " 0.24"      " 1.30"     0.27  0.005    
- 9 Only bipolar disorder           " 1.25"  " 0.92"      " 1.59"     0.17  2.66e-13 
-10 PTSD                            " 2.86"  " 2.66"      " 3.07"     0.10  4.95e-163
-# … with 19 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132164b5892.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8474,10 +7885,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |31227 |0.28 |0.28       |1988.78 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31227 0.28  0.28         1988.78 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322ca3e4ad.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
@@ -8503,25 +7916,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.12     |0.08       |0.16      |0.02 |2.50e-09  |
 
 ```
-# A tibble: 16 x 6
-   `Indepent variable`                   Estimate  `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>     <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "   7.37" "   7.05"    "   7.70"   0.17  0.00e+00 
- 2 Anxiety disorders                     "   2.43" "   2.11"    "   2.76"   0.16  1.39e-49 
- 3 Eating disorders                      "   2.39" "   1.41"    "   3.37"   0.50  1.89e-06 
- 4 OCDs                                  "   3.88" "   3.03"    "   4.73"   0.43  4.63e-19 
- 5 PTSD                                  "   5.62" "   4.69"    "   6.55"   0.47  1.66e-32 
- 6 Depressive disorders                  "   5.83" "   5.67"    "   5.99"   0.08  0.00e+00 
- 7 Bipolar disorders                     "   8.10" "   7.74"    "   8.47"   0.18  0.00e+00 
- 8 Female                                "   0.54" "   0.38"    "   0.69"   0.08  3.21e-11 
- 9 Non-binary/Self-defined               "   2.04" "   1.40"    "   2.67"   0.32  3.68e-10 
-10 Age                                   "-229.09" "-240.82"    "-217.36"   5.98  2.96e-310
-11 Age^2                                 "  36.72" "  26.13"    "  47.31"   5.40  1.10e-11 
-12 Mixed or multiple ethnic origins      "   0.57" "   0.05"    "   1.10"   0.27  0.03     
-13 Asian or Asian British                "   0.67" "  -0.02"    "   1.37"   0.35  0.06     
-14 African or African British            "   1.16" "   0.07"    "   2.25"   0.56  0.04     
-15 Other ethnicity                       "   1.29" "   0.30"    "   2.28"   0.51  0.01     
-16 Time difference: Lockdown to baseline "   0.12" "   0.08"    "   0.16"   0.02  2.50e-09 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322696ac03.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8531,10 +7931,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |24380 |0.32 |0.32       |1898.00 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 24380 0.32  0.32         1898.00 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326df70cbf.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -8567,20 +7969,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.13     |0.09       |0.17      |0.02 |1.13e-11  |
 
 ```
-# A tibble: 23 x 6
-   `Indepent variable`             Estimate  `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>     <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "   7.57" "   7.26"    "   7.88"   0.16  0.00e+00 
- 2 Depressive and anxiety disorder "   5.71" "   5.54"    "   5.88"   0.09  0.00e+00 
- 3 Only depressive disorder        "   2.94" "   2.73"    "   3.16"   0.11  1.54e-155
- 4 Only anxiety disorder           "   2.67" "   2.39"    "   2.96"   0.14  2.70e-75 
- 5 Eating disorders                "   1.09" "   0.82"    "   1.35"   0.13  6.52e-16 
- 6 OCDs                            "   1.31" "   1.06"    "   1.56"   0.13  3.87e-24 
- 7 Psychotic and bipolar disorder  "   1.06" "   0.31"    "   1.80"   0.38  0.005    
- 8 Only psychotic disorder         "   0.44" "  -0.17"    "   1.04"   0.31  0.16     
- 9 Only bipolar disorder           "   1.23" "   0.86"    "   1.60"   0.19  6.52e-11 
-10 PTSD                            "   2.88" "   2.65"    "   3.12"   0.12  1.27e-125
-# … with 13 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713224973313.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8590,10 +7984,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |24380 |0.32 |0.32       |1898.00 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 24380 0.32  0.32         1898.00 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132429a3729.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PCL prepan
@@ -8611,16 +8007,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Bipolar disorders    |-0.27    |-1.33      |0.79      |0.54 |0.61    |
 
 ```
-# A tibble: 7 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            " 0.28"  -0.70        1.26        0.50  0.58     
-2 Anxiety disorders    "-0.07"  -1.15        1.01        0.55  0.89     
-3 Eating disorders     "-0.55"  -2.63        1.53        1.06  0.61     
-4 OCDs                 "-0.30"  -1.76        1.15        0.74  0.68     
-5 PTSD                 "-1.60"  -3.30        0.10        0.86  0.06     
-6 Depressive disorders "-0.04"  -1.03        0.94        0.50  0.93     
-7 Bipolar disorders    "-0.27"  -1.33        0.79        0.54  0.61     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713258b5f6fd.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8630,10 +8022,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11019 |0.00 |0.00       |1.05 |0.39    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11019 0.00  0.00         1.05  0.39          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132126a898b.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -8655,22 +8049,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Personality disorder            |-0.29    |-0.71      |0.13      |0.22 |0.18     |
 
 ```
-# A tibble: 13 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 0.39"  -0.31        " 1.09"     0.36  0.27     
- 2 Depressive and anxiety disorder " 0.02"  -0.68        " 0.73"     0.36  0.95     
- 3 Only depressive disorder        "-0.16"  -0.92        " 0.61"     0.39  0.69     
- 4 Only anxiety disorder           "-0.21"  -1.01        " 0.59"     0.41  0.61     
- 5 Eating disorders                " 0.13"  -0.21        " 0.48"     0.18  0.45     
- 6 OCDs                            "-0.08"  -0.40        " 0.24"     0.16  0.64     
- 7 Psychotic and bipolar disorder  "-0.69"  -1.63        " 0.24"     0.48  0.15     
- 8 Only psychotic disorder         "-0.03"  -0.82        " 0.75"     0.40  0.93     
- 9 Only bipolar disorder           " 0.06"  -0.41        " 0.53"     0.24  0.79     
-10 PTSD                            "-0.89"  -1.20        "-0.59"     0.15  7.68e-09 
-11 ASD                             "-0.12"  -0.74        " 0.51"     0.32  0.72     
-12 ADHD                            "-0.23"  -1.09        " 0.63"     0.44  0.60     
-13 Personality disorder            "-0.29"  -0.71        " 0.13"     0.22  0.18     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713226131da5.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8680,10 +8064,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11019 |0.00 |0.00       |1.05 |0.39    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11019 0.00  0.00         1.05  0.39          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713230ff4f2a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -8715,20 +8101,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.06     |0.00       |0.13      |0.03 |0.06     |
 
 ```
-# A tibble: 22 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "-0.50"  "-1.64"      " 0.64"     0.58  0.39     
- 2 Anxiety disorders                     "-0.08"  "-1.16"      " 1.00"     0.55  0.88     
- 3 Eating disorders                      "-0.67"  "-2.74"      " 1.41"     1.06  0.53     
- 4 OCDs                                  "-0.46"  "-1.92"      " 0.99"     0.74  0.53     
- 5 PTSD                                  "-1.60"  "-3.30"      " 0.11"     0.87  0.07     
- 6 Depressive disorders                  " 0.01"  "-0.97"      " 1.00"     0.50  0.98     
- 7 Bipolar disorders                     "-0.12"  "-1.18"      " 0.94"     0.54  0.82     
- 8 Female                                " 0.62"  " 0.33"      " 0.91"     0.15  2.26e-05 
- 9 Non-binary/Self-defined               "-0.04"  "-0.85"      " 0.78"     0.42  0.93     
-10 age_category_collapsed_reordered16-18 "-0.11"  "-0.80"      " 0.57"     0.35  0.74     
-# … with 12 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324bd6f5d7.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8738,10 +8116,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |11019 |0.00 |0.00       |1.05 |0.39    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11019 0.00  0.00         1.05  0.39          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132da61d27.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -8780,20 +8160,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.07     |0.00       |0.13      |0.03 |0.04     |
 
 ```
-# A tibble: 29 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "-0.36"  -1.29        " 0.56"     0.47  0.44     
- 2 Depressive and anxiety disorder " 0.08"  -0.63        " 0.79"     0.36  0.82     
- 3 Only depressive disorder        "-0.03"  -0.80        " 0.74"     0.39  0.95     
- 4 Only anxiety disorder           "-0.23"  -1.03        " 0.58"     0.41  0.58     
- 5 Eating disorders                " 0.00"  -0.35        " 0.35"     0.18  1.00     
- 6 OCDs                            "-0.11"  -0.43        " 0.21"     0.16  0.50     
- 7 Psychotic and bipolar disorder  "-0.59"  -1.53        " 0.34"     0.48  0.22     
- 8 Only psychotic disorder         " 0.07"  -0.72        " 0.86"     0.40  0.86     
- 9 Only bipolar disorder           " 0.20"  -0.28        " 0.67"     0.24  0.41     
-10 PTSD                            "-0.87"  -1.18        "-0.57"     0.16  1.96e-08 
-# … with 19 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324c61e35d.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8803,10 +8175,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |11019 |0.00 |0.00       |1.05 |0.39    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11019 0.00  0.00         1.05  0.39          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322e9615d8.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
@@ -8832,25 +8206,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.06     |0.00       |0.13      |0.03 |0.06     |
 
 ```
-# A tibble: 16 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             " -0.76" " -1.88"     "  0.36"    0.57  0.18     
- 2 Anxiety disorders                     " -0.07" " -1.15"     "  1.01"    0.55  0.89     
- 3 Eating disorders                      " -0.73" " -2.80"     "  1.35"    1.06  0.49     
- 4 OCDs                                  " -0.49" " -1.94"     "  0.97"    0.74  0.51     
- 5 PTSD                                  " -1.61" " -3.31"     "  0.09"    0.87  0.06     
- 6 Depressive disorders                  "  0.02" " -0.96"     "  1.01"    0.50  0.96     
- 7 Bipolar disorders                     " -0.11" " -1.17"     "  0.95"    0.54  0.84     
- 8 Female                                "  0.63" "  0.34"     "  0.92"    0.15  1.63e-05 
- 9 Non-binary/Self-defined               " -0.02" " -0.84"     "  0.80"    0.42  0.96     
-10 Age                                   "-23.23" "-34.81"     "-11.64"    5.91  8.52e-05 
-11 Age^2                                 " 15.74" "  4.38"     " 27.09"    5.79  0.007    
-12 Mixed or multiple ethnic origins      "  0.36" " -0.38"     "  1.11"    0.38  0.34     
-13 Asian or Asian British                "  0.11" " -1.12"     "  1.34"    0.63  0.87     
-14 African or African British            " -0.41" " -2.22"     "  1.41"    0.92  0.66     
-15 Other ethnicity                       " -0.40" " -1.56"     "  0.76"    0.59  0.50     
-16 Time difference: Lockdown to baseline "  0.06" "  0.00"     "  0.13"    0.03  0.06     
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713224ee3b73.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8860,10 +8221,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11019 |0.00 |0.00       |1.05 |0.39    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11019 0.00  0.00         1.05  0.39          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713214810df6.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -8896,20 +8259,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.07     |0.00       |0.13      |0.03 |0.05     |
 
 ```
-# A tibble: 23 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " -0.65" " -1.54"     "  0.24"    0.45  0.15     
- 2 Depressive and anxiety disorder "  0.12" " -0.60"     "  0.83"    0.36  0.75     
- 3 Only depressive disorder        "  0.00" " -0.76"     "  0.77"    0.39  0.99     
- 4 Only anxiety disorder           " -0.20" " -1.01"     "  0.60"    0.41  0.62     
- 5 Eating disorders                "  0.00" " -0.35"     "  0.34"    0.18  0.98     
- 6 OCDs                            " -0.11" " -0.44"     "  0.21"    0.16  0.49     
- 7 Psychotic and bipolar disorder  " -0.58" " -1.52"     "  0.36"    0.48  0.22     
- 8 Only psychotic disorder         "  0.05" " -0.73"     "  0.84"    0.40  0.90     
- 9 Only bipolar disorder           "  0.19" " -0.28"     "  0.66"    0.24  0.43     
-10 PTSD                            " -0.88" " -1.18"     " -0.58"    0.16  1.46e-08 
-# … with 13 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713218fe5389.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8919,10 +8274,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11019 |0.00 |0.00       |1.05 |0.39    |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11019 0.00  0.00         1.05  0.39          6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132611e5430.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ## Regression: Absolute scores
@@ -8940,17 +8297,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Bipolar disorders    |1.47     |0.52       |2.41      |0.48 |0.002    |
 
 ```
-# A tibble: 8 x 6
-  `Indepent variable`  Estimate `95% CI low` `95% CI up` SE    `p value`
-  <fct>                <chr>    <chr>        <chr>       <chr> <chr>    
-1 Intercept            " 6.08"  " 5.18"      6.97        0.46  3.93e-40 
-2 pcl.sum_score_prepan " 0.57"  " 0.55"      0.58        0.01  0.00e+00 
-3 Anxiety disorders    "-0.34"  "-1.30"      0.62        0.49  0.49     
-4 Eating disorders     " 0.04"  "-1.81"      1.89        0.94  0.97     
-5 OCDs                 " 0.37"  "-0.92"      1.66        0.66  0.57     
-6 PTSD                 " 0.12"  "-1.39"      1.62        0.77  0.88     
-7 Depressive disorders " 0.94"  " 0.06"      1.82        0.45  0.04     
-8 Bipolar disorders    " 1.47"  " 0.52"      2.41        0.48  0.002    
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713239867723.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -8960,10 +8312,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11019 |0.33 |0.33       |764.66 |0.00e+00 |  7|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 11019 0.33  0.33         764.66 0.00e+00      7
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322af7b856.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 0b: Overlapping disorders, Unadjusted
@@ -8986,23 +8340,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Personality disorder            |1.08     |0.71       |1.46      |0.19 |1.71e-08 |
 
 ```
-# A tibble: 14 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 6.83"  " 6.17"      7.48        0.33  7.35e-91 
- 2 pcl.sum_score_prepan            " 0.53"  " 0.52"      0.55        0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 0.51"  "-0.12"      1.13        0.32  0.11     
- 4 Only depressive disorder        "-0.51"  "-1.19"      0.16        0.34  0.14     
- 5 Only anxiety disorder           "-0.63"  "-1.34"      0.08        0.36  0.08     
- 6 Eating disorders                " 0.59"  " 0.29"      0.89        0.16  1.40e-04 
- 7 OCDs                            " 0.61"  " 0.33"      0.90        0.15  2.59e-05 
- 8 Psychotic and bipolar disorder  "-0.40"  "-1.23"      0.42        0.42  0.34     
- 9 Only psychotic disorder         "-0.05"  "-0.74"      0.65        0.35  0.89     
-10 Only bipolar disorder           " 0.35"  "-0.07"      0.76        0.21  0.10     
-11 PTSD                            " 0.73"  " 0.46"      1.01        0.14  1.43e-07 
-12 ASD                             " 0.65"  " 0.10"      1.20        0.28  0.02     
-13 ADHD                            " 0.24"  "-0.51"      1.00        0.39  0.53     
-14 Personality disorder            " 1.08"  " 0.71"      1.46        0.19  1.71e-08 
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321082e5f2.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9012,10 +8355,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11081 |0.02 |0.02       |32.92 |1.45e-39 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11081 0.02  0.02         32.92 1.45e-39      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321c67b56.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1a: Disorder hierarchical, Adjusted
@@ -9049,20 +8394,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.08     |0.03       |0.14      |0.03 |0.004    |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`     Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                   <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept               " 5.85"  " 4.81"      " 6.88"     0.53  2.66e-28 
- 2 pcl.sum_score_prepan    " 0.54"  " 0.53"      " 0.56"     0.01  0.00e+00 
- 3 Anxiety disorders       "-0.36"  "-1.31"      " 0.59"     0.49  0.46     
- 4 Eating disorders        "-0.01"  "-1.84"      " 1.82"     0.93  0.99     
- 5 OCDs                    " 0.11"  "-1.17"      " 1.39"     0.65  0.87     
- 6 PTSD                    " 0.49"  "-1.01"      " 1.99"     0.77  0.52     
- 7 Depressive disorders    " 1.14"  " 0.27"      " 2.01"     0.44  0.01     
- 8 Bipolar disorders       " 1.77"  " 0.83"      " 2.71"     0.48  2.22e-04 
- 9 Female                  " 0.58"  " 0.32"      " 0.83"     0.13  8.54e-06 
-10 Non-binary/Self-defined " 0.77"  " 0.05"      " 1.49"     0.37  0.04     
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171321deb6008.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9072,10 +8409,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |11081 |0.02 |0.02       |32.92 |1.45e-39 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11081 0.02  0.02         32.92 1.45e-39      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713247edbc90.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 1b: Overlapping disorders, Adjusted
@@ -9115,20 +8454,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |Time difference: Lockdown to baseline |0.09     |0.04       |0.15      |0.03 |0.002    |
 
 ```
-# A tibble: 30 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 6.46"  " 5.62"      " 7.30"     0.43  5.49e-51 
- 2 pcl.sum_score_prepan            " 0.51"  " 0.50"      " 0.53"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 0.70"  " 0.08"      " 1.33"     0.32  0.03     
- 4 Only depressive disorder        "-0.12"  "-0.79"      " 0.55"     0.34  0.73     
- 5 Only anxiety disorder           "-0.64"  "-1.35"      " 0.06"     0.36  0.07     
- 6 Eating disorders                " 0.42"  " 0.12"      " 0.73"     0.15  0.006    
- 7 OCDs                            " 0.52"  " 0.23"      " 0.80"     0.14  3.41e-04 
- 8 Psychotic and bipolar disorder  "-0.20"  "-1.02"      " 0.62"     0.42  0.63     
- 9 Only psychotic disorder         " 0.04"  "-0.65"      " 0.72"     0.35  0.92     
-10 Only bipolar disorder           " 0.51"  " 0.10"      " 0.92"     0.21  0.02     
-# … with 20 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323d5d3db8.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9138,10 +8469,12 @@ Model 0a + Gender_collapsed + age_category_collapsed_reordered + Ethnicity_colla
 |11081 |0.02 |0.02       |32.92 |1.45e-39 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11081 0.02  0.02         32.92 1.45e-39      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132347f1a81.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2a: Disorder hierarchical, Adjusted with age^2
@@ -9169,27 +8502,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |Time difference: Lockdown to baseline |0.09     |0.03       |0.14      |0.03 |0.004    |
 
 ```
-# A tibble: 18 x 6
-   `Indepent variable`                   Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                                 <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                             "  5.49" "  4.47"     "  6.50"    0.52  4.74e-26 
- 2 pcl.sum_score_prepan                  "  0.54" "  0.53"     "  0.56"    0.01  0.00e+00 
- 3 Anxiety disorders                     " -0.38" " -1.33"     "  0.58"    0.49  0.44     
- 4 Eating disorders                      " -0.11" " -1.94"     "  1.71"    0.93  0.90     
- 5 OCDs                                  "  0.11" " -1.17"     "  1.39"    0.65  0.87     
- 6 PTSD                                  "  0.40" " -1.10"     "  1.90"    0.77  0.60     
- 7 Depressive disorders                  "  1.10" "  0.23"     "  1.97"    0.44  0.01     
- 8 Bipolar disorders                     "  1.72" "  0.78"     "  2.66"    0.48  3.28e-04 
- 9 Female                                "  0.57" "  0.32"     "  0.82"    0.13  1.09e-05 
-10 Non-binary/Self-defined               "  0.77" "  0.05"     "  1.49"    0.37  0.04     
-11 Age                                   "-73.48" "-83.85"     "-63.11"    5.29  1.73e-43 
-12 Age^2                                 "  2.03" " -8.27"     " 12.33"    5.25  0.70     
-13 Mixed or multiple ethnic origins      "  0.27" " -0.38"     "  0.93"    0.34  0.42     
-14 Asian or Asian British                "  0.38" " -0.70"     "  1.47"    0.56  0.49     
-15 African or African British            "  0.61" " -0.98"     "  2.20"    0.81  0.45     
-16 Other ethnicity                       "  0.13" " -0.89"     "  1.16"    0.52  0.80     
-17 Key worker                            " -0.69" " -0.88"     " -0.49"    0.10  9.55e-12 
-18 Time difference: Lockdown to baseline "  0.09" "  0.03"     "  0.14"    0.03  0.004    
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171327666ed6d.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9199,10 +8517,12 @@ Model 0a + Gender_collapsed + age^2 + Ethnicity_collapsed + Time registration an
 |11081 |0.02 |0.02       |32.92 |1.45e-39 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11081 0.02  0.02         32.92 1.45e-39      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325f6dcbd5.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 ### Model 2b: Overlapping disorders, Adjusted with age^2
@@ -9236,20 +8556,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |Time difference: Lockdown to baseline |0.09     |0.04       |0.15      |0.03 |0.001    |
 
 ```
-# A tibble: 24 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "  6.15" "  5.34"     "  6.97"    0.41  1.99e-49 
- 2 pcl.sum_score_prepan            "  0.51" "  0.50"     "  0.53"    0.01  0.00e+00 
- 3 Depressive and anxiety disorder "  0.66" "  0.04"     "  1.28"    0.32  0.04     
- 4 Only depressive disorder        " -0.14" " -0.81"     "  0.54"    0.34  0.69     
- 5 Only anxiety disorder           " -0.67" " -1.37"     "  0.04"    0.36  0.06     
- 6 Eating disorders                "  0.43" "  0.13"     "  0.73"    0.15  0.005    
- 7 OCDs                            "  0.51" "  0.23"     "  0.79"    0.14  3.97e-04 
- 8 Psychotic and bipolar disorder  " -0.18" " -1.00"     "  0.65"    0.42  0.67     
- 9 Only psychotic disorder         "  0.04" " -0.65"     "  0.72"    0.35  0.92     
-10 Only bipolar disorder           "  0.50" "  0.08"     "  0.91"    0.21  0.02     
-# … with 14 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713277269681.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9259,10 +8571,12 @@ Model 0a + Gender_collapsed +  age^2 + Ethnicity_collapsed + Time registration a
 |11081 |0.02 |0.02       |32.92 |1.45e-39 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11081 0.02  0.02         32.92 1.45e-39      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326632c44.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 # SENSITIVITY based on highest level of education
 
@@ -9313,20 +8627,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Highest education University          |-1.00    |-1.18      |-0.81     |0.10 |1.68e-25  |
 
 ```
-# A tibble: 32 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 9.22"  " 8.81"      " 9.63"     0.21  0.00e+00 
- 2 Depressive and anxiety disorder " 4.54"  " 4.40"      " 4.69"     0.07  0.00e+00 
- 3 Only depressive disorder        " 1.84"  " 1.65"      " 2.02"     0.10  2.77e-82 
- 4 Only anxiety disorder           " 3.06"  " 2.83"      " 3.30"     0.12  4.07e-142
- 5 Eating disorders                " 0.92"  " 0.69"      " 1.16"     0.12  1.57e-14 
- 6 OCDs                            " 1.43"  " 1.20"      " 1.66"     0.12  8.75e-35 
- 7 Psychotic and bipolar disorder  " 0.65"  " 0.01"      " 1.29"     0.33  0.05     
- 8 Only psychotic disorder         " 0.46"  "-0.09"      " 1.02"     0.28  0.10     
- 9 Only bipolar disorder           " 0.62"  " 0.27"      " 0.96"     0.18  4.39e-04 
-10 PTSD                            " 1.53"  " 1.32"      " 1.74"     0.11  1.00e-45 
-# … with 22 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132695a6c0e.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9336,10 +8642,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |31331 |0.22 |0.22       |1503.62 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31331 0.22  0.22         1503.62 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322f6c412b.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # GAD retro
@@ -9383,20 +8691,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Highest education University          |-0.82    |-1.06      |-0.58     |0.12 |1.51e-11  |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 7.16"  " 6.68"      " 7.64"     0.25  3.95e-183
- 2 gad.sum_score_retro             " 0.50"  " 0.49"      " 0.52"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 2.14"  " 1.95"      " 2.33"     0.10  2.25e-108
- 4 Only depressive disorder        " 0.82"  " 0.58"      " 1.06"     0.12  1.14e-11 
- 5 Only anxiety disorder           " 1.66"  " 1.38"      " 1.93"     0.14  2.69e-31 
- 6 Eating disorders                " 0.53"  " 0.27"      " 0.79"     0.13  5.45e-05 
- 7 OCDs                            " 0.59"  " 0.34"      " 0.84"     0.13  4.37e-06 
- 8 Psychotic and bipolar disorder  " 0.39"  "-0.33"      " 1.11"     0.37  0.29     
- 9 Only psychotic disorder         " 0.23"  "-0.39"      " 0.86"     0.32  0.47     
-10 Only bipolar disorder           " 0.30"  "-0.09"      " 0.69"     0.20  0.13     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325bdbfe73.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9406,10 +8706,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |23100 |0.15 |0.15       |660.52 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 23100 0.15  0.15         660.52 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132481e5f22.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # GAD prepan
@@ -9453,20 +8755,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Highest education University          |-1.15    |-1.51      |-0.79     |0.18 |3.56e-10 |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 4.15"  " 3.11"      " 5.18"     0.53  5.09e-15 
- 2 pcl.sum_score_prepan            " 0.36"  " 0.35"      " 0.38"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 0.93"  " 0.29"      " 1.57"     0.33  0.004    
- 4 Only depressive disorder        "-0.82"  "-1.51"      "-0.13"     0.35  0.02     
- 5 Only anxiety disorder           " 0.76"  " 0.04"      " 1.48"     0.37  0.04     
- 6 Eating disorders                " 0.79"  " 0.48"      " 1.11"     0.16  7.01e-07 
- 7 OCDs                            " 0.84"  " 0.55"      " 1.14"     0.15  1.69e-08 
- 8 Psychotic and bipolar disorder  "-0.32"  "-1.17"      " 0.53"     0.43  0.46     
- 9 Only psychotic disorder         " 0.09"  "-0.62"      " 0.80"     0.36  0.81     
-10 Only bipolar disorder           " 0.17"  "-0.25"      " 0.60"     0.22  0.42     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132760dc2e2.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9476,10 +8770,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |11165 |0.01 |0.01       |11.04 |2.61e-12 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11165 0.01  0.01         11.04 2.61e-12      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132175bffb.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PHQ baseline
@@ -9522,20 +8818,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Highest education University          |-1.44    |-1.65      |-1.23     |0.11 |7.56e-41  |
 
 ```
-# A tibble: 32 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "12.69"  "12.23"      "13.15"     0.24  0.00e+00 
- 2 Depressive and anxiety disorder " 5.51"  " 5.34"      " 5.67"     0.08  0.00e+00 
- 3 Only depressive disorder        " 3.43"  " 3.22"      " 3.64"     0.11  1.56e-220
- 4 Only anxiety disorder           " 2.04"  " 1.78"      " 2.31"     0.14  1.87e-51 
- 5 Eating disorders                " 1.60"  " 1.33"      " 1.86"     0.14  6.44e-32 
- 6 OCDs                            " 1.36"  " 1.10"      " 1.61"     0.13  3.41e-25 
- 7 Psychotic and bipolar disorder  " 0.45"  "-0.27"      " 1.17"     0.37  0.22     
- 8 Only psychotic disorder         " 0.88"  " 0.26"      " 1.50"     0.32  0.006    
- 9 Only bipolar disorder           " 1.44"  " 1.06"      " 1.83"     0.20  3.17e-13 
-10 PTSD                            " 2.06"  " 1.82"      " 2.29"     0.12  1.51e-64 
-# … with 22 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132395bc2d3.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9545,10 +8833,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |31315 |0.26 |0.26       |1846.76 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31315 0.26  0.26         1846.76 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323753c810.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PHQ retro
@@ -9592,20 +8882,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Highest education University          |-1.24    |-1.48      |-0.99     |0.13 |2.60e-22  |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 9.41"  " 8.93"      " 9.90"     0.25  5.85e-303
- 2 phq.sum_score_retro             " 0.57"  " 0.56"      " 0.59"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 2.27"  " 2.07"      " 2.46"     0.10  1.05e-113
- 4 Only depressive disorder        " 1.45"  " 1.20"      " 1.69"     0.12  1.31e-31 
- 5 Only anxiety disorder           " 0.81"  " 0.52"      " 1.10"     0.15  3.99e-08 
- 6 Eating disorders                " 0.84"  " 0.57"      " 1.11"     0.14  8.54e-10 
- 7 OCDs                            " 0.54"  " 0.28"      " 0.80"     0.13  4.81e-05 
- 8 Psychotic and bipolar disorder  "-0.28"  "-1.02"      " 0.46"     0.38  0.45     
- 9 Only psychotic disorder         " 0.00"  "-0.65"      " 0.64"     0.33  1.00     
-10 Only bipolar disorder           " 0.69"  " 0.29"      " 1.09"     0.21  8.01e-04 
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713255da099e.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9615,10 +8897,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |23090 |0.18 |0.18       |844.05 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 23090 0.18  0.18         844.05 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325dad901a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PHQ prepan
@@ -9662,20 +8946,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Highest education University          |-1.56    |-1.96      |-1.16     |0.20 |2.48e-14 |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 6.49"  " 5.33"      " 7.64"     0.59  5.98e-28 
- 2 pcl.sum_score_prepan            " 0.43"  " 0.41"      " 0.45"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 1.17"  " 0.45"      " 1.88"     0.36  0.001    
- 4 Only depressive disorder        " 1.01"  " 0.23"      " 1.78"     0.39  0.01     
- 5 Only anxiety disorder           "-1.07"  "-1.88"      "-0.26"     0.41  0.009    
- 6 Eating disorders                " 1.41"  " 1.06"      " 1.76"     0.18  2.74e-15 
- 7 OCDs                            " 0.71"  " 0.38"      " 1.03"     0.17  2.21e-05 
- 8 Psychotic and bipolar disorder  "-0.58"  "-1.53"      " 0.37"     0.48  0.23     
- 9 Only psychotic disorder         " 0.38"  "-0.41"      " 1.18"     0.41  0.34     
-10 Only bipolar disorder           " 0.76"  " 0.28"      " 1.23"     0.24  0.002    
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132251907cd.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9685,10 +8961,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |11162 |0.02 |0.02       |44.52 |4.15e-54 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11162 0.02  0.02         44.52 4.15e-54      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132e4f36c2.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # OCIR baseline
@@ -9731,20 +9009,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Highest education University          |-3.16    |-4.18      |-2.14     |0.52 |1.43e-09  |
 
 ```
-# A tibble: 32 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 25.10" " 23.19"     "27.01"     0.97  1.28e-137
- 2 Depressive and anxiety disorder "  3.13" "  2.23"     " 4.04"     0.46  1.22e-11 
- 3 Only depressive disorder        "  0.37" " -0.84"     " 1.58"     0.62  0.55     
- 4 Only anxiety disorder           "  0.83" " -0.42"     " 2.07"     0.64  0.19     
- 5 Eating disorders                "  0.37" " -0.70"     " 1.44"     0.54  0.50     
- 6 OCDs                            "  7.04" "  6.10"     " 7.98"     0.48  7.00e-48 
- 7 Psychotic and bipolar disorder  "  7.02" "  4.44"     " 9.60"     1.32  9.88e-08 
- 8 Only psychotic disorder         "  4.28" "  1.98"     " 6.58"     1.17  2.66e-04 
- 9 Only bipolar disorder           "  2.84" "  1.18"     " 4.50"     0.85  7.90e-04 
-10 PTSD                            "  2.09" "  1.16"     " 3.03"     0.48  1.16e-05 
-# … with 22 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713253085a80.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9754,10 +9024,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |5187 |0.06 |0.06       |52.91 |1.40e-63 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 5187  0.06  0.06         52.91 1.40e-63      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132496db416.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # OCIR retro
@@ -9801,20 +9073,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Highest education University          |-1.39    |-2.20      |-0.58     |0.41 |8.07e-04  |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "18.69"  "17.06"      "20.33"     0.83  5.27e-105
- 2 ocir.sum_score_retro            " 0.74"  " 0.72"      " 0.77"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder "-1.21"  "-1.94"      "-0.47"     0.38  0.001    
- 4 Only depressive disorder        "-0.92"  "-1.91"      " 0.07"     0.50  0.07     
- 5 Only anxiety disorder           "-0.39"  "-1.41"      " 0.62"     0.52  0.45     
- 6 Eating disorders                "-0.12"  "-0.96"      " 0.71"     0.42  0.77     
- 7 OCDs                            " 2.16"  " 1.42"      " 2.90"     0.38  1.15e-08 
- 8 Psychotic and bipolar disorder  " 4.16"  " 2.15"      " 6.17"     1.02  4.97e-05 
- 9 Only psychotic disorder         " 1.50"  "-0.26"      " 3.27"     0.90  0.10     
-10 Only bipolar disorder           " 0.45"  "-0.79"      " 1.69"     0.63  0.48     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326f202071.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9824,10 +9088,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |5094 |0.06 |0.06       |51.24 |1.63e-61 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 5094  0.06  0.06         51.24 1.63e-61      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132263213b6.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # OCIR prepan
@@ -9871,20 +9137,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Highest education University          |-2.69    |-4.54      |-0.85     |0.94 |0.004    |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 9.88"  "  3.59"     "16.18"     3.21  0.002    
- 2 pcl.sum_score_prepan            " 0.61"  "  0.51"     " 0.70"     0.05  4.70e-35 
- 3 Depressive and anxiety disorder "-4.65"  " -9.00"     "-0.30"     2.22  0.04     
- 4 Only depressive disorder        "-5.24"  " -9.97"     "-0.52"     2.41  0.03     
- 5 Only anxiety disorder           "-6.10"  "-10.81"     "-1.39"     2.40  0.01     
- 6 Eating disorders                " 0.54"  " -0.99"     " 2.07"     0.78  0.49     
- 7 OCDs                            " 7.17"  "  5.85"     " 8.49"     0.67  1.05e-25 
- 8 Psychotic and bipolar disorder  " 6.00"  "  1.88"     "10.11"     2.10  0.004    
- 9 Only psychotic disorder         " 1.33"  " -1.73"     " 4.40"     1.56  0.39     
-10 Only bipolar disorder           " 1.86"  " -0.34"     " 4.06"     1.12  0.10     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322cc5fa1c.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9894,10 +9152,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |1786 |0.03 |0.03       |10.03 |6.36e-11 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1786  0.03  0.03         10.03 6.36e-11      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713279a75b3a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PCL baseline
@@ -9940,20 +9200,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Highest education University          |-0.71    |-0.90      |-0.53     |0.09 |4.72e-14  |
 
 ```
-# A tibble: 32 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "13.97"  "13.56"      "14.38"     0.21  0.00e+00 
- 2 Depressive and anxiety disorder " 5.16"  " 5.02"      " 5.31"     0.07  0.00e+00 
- 3 Only depressive disorder        " 2.65"  " 2.46"      " 2.83"     0.09  4.29e-171
- 4 Only anxiety disorder           " 2.44"  " 2.20"      " 2.67"     0.12  7.92e-93 
- 5 Eating disorders                " 0.91"  " 0.68"      " 1.15"     0.12  1.73e-14 
- 6 OCDs                            " 1.24"  " 1.02"      " 1.47"     0.11  2.75e-27 
- 7 Psychotic and bipolar disorder  " 1.30"  " 0.67"      " 1.94"     0.32  5.57e-05 
- 8 Only psychotic disorder         " 0.77"  " 0.22"      " 1.31"     0.28  0.006    
- 9 Only bipolar disorder           " 1.23"  " 0.89"      " 1.57"     0.17  1.82e-12 
-10 PTSD                            " 2.83"  " 2.62"      " 3.04"     0.11  3.74e-154
-# … with 22 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713263b48cd2.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -9963,10 +9215,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |31227 |0.28 |0.28       |1988.78 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31227 0.28  0.28         1988.78 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713262896221.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 #PCL prepan
@@ -10010,20 +9264,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Highest education University          |-0.79    |-1.14      |-0.44     |0.18 |1.19e-05 |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 8.39"  " 7.36"      " 9.41"     0.52  2.65e-57 
- 2 pcl.sum_score_prepan            " 0.50"  " 0.49"      " 0.52"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 0.65"  " 0.02"      " 1.28"     0.32  0.04     
- 4 Only depressive disorder        "-0.17"  "-0.86"      " 0.51"     0.35  0.62     
- 5 Only anxiety disorder           "-0.66"  "-1.37"      " 0.06"     0.36  0.07     
- 6 Eating disorders                " 0.50"  " 0.19"      " 0.81"     0.16  0.001    
- 7 OCDs                            " 0.49"  " 0.20"      " 0.78"     0.15  8.84e-04 
- 8 Psychotic and bipolar disorder  "-0.19"  "-1.02"      " 0.65"     0.43  0.66     
- 9 Only psychotic disorder         " 0.00"  "-0.70"      " 0.71"     0.36  0.99     
-10 Only bipolar disorder           " 0.57"  " 0.15"      " 0.99"     0.21  0.008    
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713281cf265.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -10033,10 +9279,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |11081 |0.02 |0.02       |32.92 |1.45e-39 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11081 0.02  0.02         32.92 1.45e-39      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132246dc90c.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # Sensitivity anlayses based on employment prior to covid
@@ -10086,20 +9334,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Retired                               |-0.21    |-0.42      |0.00      |0.11 |0.05      |
 
 ```
-# A tibble: 32 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 8.52"  " 8.09"      " 8.95"     0.22  1.28e-322
- 2 Depressive and anxiety disorder " 4.40"  " 4.25"      " 4.54"     0.07  0.00e+00 
- 3 Only depressive disorder        " 1.76"  " 1.57"      " 1.94"     0.09  1.08e-78 
- 4 Only anxiety disorder           " 3.01"  " 2.77"      " 3.24"     0.12  2.94e-142
- 5 Eating disorders                " 0.97"  " 0.73"      " 1.21"     0.12  2.39e-15 
- 6 OCDs                            " 1.36"  " 1.13"      " 1.59"     0.12  6.38e-31 
- 7 Psychotic and bipolar disorder  " 0.98"  " 0.32"      " 1.65"     0.34  0.004    
- 8 Only psychotic disorder         " 0.22"  "-0.35"      " 0.78"     0.29  0.45     
- 9 Only bipolar disorder           " 0.47"  " 0.11"      " 0.83"     0.18  0.010    
-10 PTSD                            " 1.44"  " 1.23"      " 1.66"     0.11  5.96e-39 
-# … with 22 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132da0d1c6.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -10109,10 +9349,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |31331 |0.22 |0.22       |1503.62 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31331 0.22  0.22         1503.62 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132392c2527.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # GAD retro
@@ -10156,20 +9398,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Retired                               |-0.03    |-0.31      |0.25      |0.14 |0.81      |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 6.59"  " 6.09"      " 7.08"     0.25  1.24e-145
- 2 gad.sum_score_retro             " 0.51"  " 0.49"      " 0.53"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 2.05"  " 1.86"      " 2.24"     0.10  8.50e-101
- 4 Only depressive disorder        " 0.79"  " 0.55"      " 1.02"     0.12  4.67e-11 
- 5 Only anxiety disorder           " 1.62"  " 1.34"      " 1.90"     0.14  1.60e-30 
- 6 Eating disorders                " 0.58"  " 0.32"      " 0.85"     0.14  1.82e-05 
- 7 OCDs                            " 0.61"  " 0.36"      " 0.87"     0.13  2.88e-06 
- 8 Psychotic and bipolar disorder  " 0.72"  "-0.03"      " 1.46"     0.38  0.06     
- 9 Only psychotic disorder         " 0.04"  "-0.61"      " 0.69"     0.33  0.90     
-10 Only bipolar disorder           " 0.28"  "-0.13"      " 0.68"     0.21  0.18     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325919047d.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -10179,10 +9413,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |23100 |0.15 |0.15       |660.52 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 23100 0.15  0.15         660.52 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171327975d83d.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # GAD prepan
@@ -10226,20 +9462,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Retired                               |0.06     |-0.38      |0.51      |0.23 |0.79     |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 3.30"  " 2.28"      " 4.33"     0.52  2.83e-10 
- 2 pcl.sum_score_prepan            " 0.36"  " 0.35"      " 0.38"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 0.84"  " 0.20"      " 1.48"     0.33  0.010    
- 4 Only depressive disorder        "-0.83"  "-1.51"      "-0.14"     0.35  0.02     
- 5 Only anxiety disorder           " 0.72"  " 0.00"      " 1.44"     0.37  0.05     
- 6 Eating disorders                " 0.85"  " 0.53"      " 1.17"     0.16  2.50e-07 
- 7 OCDs                            " 0.82"  " 0.51"      " 1.12"     0.15  1.11e-07 
- 8 Psychotic and bipolar disorder  "-0.24"  "-1.14"      " 0.66"     0.46  0.60     
- 9 Only psychotic disorder         "-0.13"  "-0.87"      " 0.61"     0.38  0.73     
-10 Only bipolar disorder           " 0.09"  "-0.36"      " 0.53"     0.23  0.70     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322de66768.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -10249,10 +9477,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |11165 |0.01 |0.01       |11.04 |2.61e-12 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11165 0.01  0.01         11.04 2.61e-12      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132718ef462.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PHQ baseline
@@ -10295,20 +9525,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Retired                               |-0.07    |-0.31      |0.16      |0.12 |0.55      |
 
 ```
-# A tibble: 32 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "11.55"  "11.07"      "12.04"     0.25  0.00e+00 
- 2 Depressive and anxiety disorder " 5.26"  " 5.10"      " 5.42"     0.08  0.00e+00 
- 3 Only depressive disorder        " 3.27"  " 3.07"      " 3.48"     0.10  3.90e-210
- 4 Only anxiety disorder           " 1.97"  " 1.71"      " 2.23"     0.13  4.28e-50 
- 5 Eating disorders                " 1.55"  " 1.28"      " 1.82"     0.14  1.73e-29 
- 6 OCDs                            " 1.29"  " 1.03"      " 1.55"     0.13  2.48e-22 
- 7 Psychotic and bipolar disorder  " 0.47"  "-0.28"      " 1.23"     0.38  0.22     
- 8 Only psychotic disorder         " 0.47"  "-0.16"      " 1.11"     0.32  0.14     
- 9 Only bipolar disorder           " 1.19"  " 0.79"      " 1.60"     0.21  7.37e-09 
-10 PTSD                            " 1.80"  " 1.56"      " 2.05"     0.12  1.18e-47 
-# … with 22 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713243ce3219.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -10318,10 +9540,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |31315 |0.26 |0.26       |1846.76 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31315 0.26  0.26         1846.76 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132163b2a16.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PHQ retro
@@ -10365,20 +9589,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Retired                               |-0.05    |-0.34      |0.25      |0.15 |0.76      |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 8.64"  " 8.13"      " 9.14"     0.26  4.21e-239
- 2 phq.sum_score_retro             " 0.58"  " 0.56"      " 0.59"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 2.18"  " 1.99"      " 2.38"     0.10  5.18e-106
- 4 Only depressive disorder        " 1.39"  " 1.14"      " 1.63"     0.12  2.30e-29 
- 5 Only anxiety disorder           " 0.78"  " 0.49"      " 1.07"     0.15  1.36e-07 
- 6 Eating disorders                " 0.86"  " 0.58"      " 1.14"     0.14  1.15e-09 
- 7 OCDs                            " 0.55"  " 0.29"      " 0.82"     0.14  4.53e-05 
- 8 Psychotic and bipolar disorder  "-0.19"  "-0.96"      " 0.57"     0.39  0.62     
- 9 Only psychotic disorder         "-0.12"  "-0.79"      " 0.55"     0.34  0.73     
-10 Only bipolar disorder           " 0.64"  " 0.21"      " 1.06"     0.22  0.003    
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132668c351f.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -10388,10 +9604,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |23090 |0.18 |0.18       |844.05 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 23090 0.18  0.18         844.05 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171327ef3bad1.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PHQ prepan
@@ -10435,20 +9653,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Retired                               |0.60     |0.10       |1.09      |0.25 |0.02     |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 5.10"  " 3.97"      " 6.24"     0.58  1.58e-18 
- 2 pcl.sum_score_prepan            " 0.43"  " 0.41"      " 0.45"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 0.97"  " 0.26"      " 1.67"     0.36  0.007    
- 4 Only depressive disorder        " 0.82"  " 0.05"      " 1.58"     0.39  0.04     
- 5 Only anxiety disorder           "-1.19"  "-1.99"      "-0.39"     0.41  0.003    
- 6 Eating disorders                " 1.37"  " 1.01"      " 1.72"     0.18  7.08e-14 
- 7 OCDs                            " 0.68"  " 0.35"      " 1.01"     0.17  6.25e-05 
- 8 Psychotic and bipolar disorder  "-1.05"  "-2.05"      "-0.05"     0.51  0.04     
- 9 Only psychotic disorder         " 0.13"  "-0.69"      " 0.94"     0.42  0.76     
-10 Only bipolar disorder           " 0.60"  " 0.10"      " 1.09"     0.25  0.02     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713272f2a0d.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -10458,10 +9668,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |11162 |0.02 |0.02       |44.52 |4.15e-54 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11162 0.02  0.02         44.52 4.15e-54      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322971bf2a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # OCIR baseline
@@ -10504,20 +9716,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Retired                               |-0.47    |-1.78      |0.84      |0.67 |0.49      |
 
 ```
-# A tibble: 32 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 24.03" " 21.99"     "26.07"     1.04  3.31e-112
- 2 Depressive and anxiety disorder "  3.06" "  2.16"     " 3.96"     0.46  3.15e-11 
- 3 Only depressive disorder        "  0.40" " -0.81"     " 1.61"     0.62  0.51     
- 4 Only anxiety disorder           "  1.01" " -0.21"     " 2.23"     0.62  0.11     
- 5 Eating disorders                "  0.59" " -0.52"     " 1.70"     0.56  0.30     
- 6 OCDs                            "  6.39" "  5.42"     " 7.36"     0.49  1.39e-37 
- 7 Psychotic and bipolar disorder  "  6.55" "  3.94"     " 9.16"     1.33  9.13e-07 
- 8 Only psychotic disorder         "  3.52" "  1.06"     " 5.98"     1.26  0.005    
- 9 Only bipolar disorder           "  3.01" "  1.27"     " 4.75"     0.89  6.95e-04 
-10 PTSD                            "  2.01" "  1.03"     " 2.99"     0.50  5.63e-05 
-# … with 22 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323bf40fb0.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -10527,10 +9731,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |5187 |0.06 |0.06       |52.91 |1.40e-63 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 5187  0.06  0.06         52.91 1.40e-63      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713214320a90.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # OCIR retro
@@ -10574,20 +9780,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Retired                               |-0.33    |-1.37      |0.70      |0.53 |0.53     |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "18.07"  "16.34"      "19.80"     0.88  9.60e-89 
- 2 ocir.sum_score_retro            " 0.74"  " 0.71"      " 0.76"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder "-1.13"  "-1.87"      "-0.39"     0.38  0.003    
- 4 Only depressive disorder        "-0.97"  "-1.96"      " 0.02"     0.50  0.06     
- 5 Only anxiety disorder           "-0.17"  "-1.17"      " 0.83"     0.51  0.74     
- 6 Eating disorders                " 0.04"  "-0.83"      " 0.91"     0.44  0.93     
- 7 OCDs                            " 1.91"  " 1.14"      " 2.68"     0.39  1.08e-06 
- 8 Psychotic and bipolar disorder  " 3.09"  " 1.07"      " 5.12"     1.03  0.003    
- 9 Only psychotic disorder         " 0.75"  "-1.15"      " 2.64"     0.97  0.44     
-10 Only bipolar disorder           " 0.43"  "-0.87"      " 1.74"     0.67  0.52     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713230889fd8.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -10597,10 +9795,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |5094 |0.06 |0.06       |51.24 |1.63e-61 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 5094  0.06  0.06         51.24 1.63e-61      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713259b636cc.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # OCIR prepan
@@ -10644,20 +9844,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Retired                               |2.92     |0.52       |5.33      |1.23 |0.02     |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 7.90"  "  1.55"     "14.25"     3.24  0.01     
- 2 pcl.sum_score_prepan            " 0.59"  "  0.49"     " 0.69"     0.05  2.12e-31 
- 3 Depressive and anxiety disorder "-4.87"  " -9.31"     "-0.43"     2.26  0.03     
- 4 Only depressive disorder        "-5.61"  "-10.43"     "-0.79"     2.45  0.02     
- 5 Only anxiety disorder           "-6.11"  "-10.90"     "-1.31"     2.44  0.01     
- 6 Eating disorders                " 1.15"  " -0.46"     " 2.76"     0.82  0.16     
- 7 OCDs                            " 6.29"  "  4.91"     " 7.66"     0.70  8.43e-19 
- 8 Psychotic and bipolar disorder  " 3.37"  " -0.69"     " 7.43"     2.07  0.10     
- 9 Only psychotic disorder         " 0.47"  " -2.86"     " 3.79"     1.70  0.78     
-10 Only bipolar disorder           " 2.57"  "  0.27"     " 4.86"     1.17  0.03     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171325748bad8.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -10667,10 +9859,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |1786 |0.03 |0.03       |10.03 |6.36e-11 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1786  0.03  0.03         10.03 6.36e-11      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713267e2e7ac.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PCL baseline
@@ -10713,20 +9907,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Retired                               |-0.14    |-0.35      |0.06      |0.11 |0.17      |
 
 ```
-# A tibble: 32 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "13.21"  "12.78"      "13.63"     0.22  0.00e+00 
- 2 Depressive and anxiety disorder " 5.01"  " 4.87"      " 5.15"     0.07  0.00e+00 
- 3 Only depressive disorder        " 2.58"  " 2.40"      " 2.76"     0.09  1.45e-171
- 4 Only anxiety disorder           " 2.40"  " 2.17"      " 2.63"     0.12  3.33e-94 
- 5 Eating disorders                " 0.82"  " 0.58"      " 1.06"     0.12  9.35e-12 
- 6 OCDs                            " 1.19"  " 0.97"      " 1.42"     0.12  8.84e-25 
- 7 Psychotic and bipolar disorder  " 1.49"  " 0.84"      " 2.15"     0.34  8.61e-06 
- 8 Only psychotic disorder         " 0.42"  "-0.13"      " 0.98"     0.28  0.13     
- 9 Only bipolar disorder           " 0.98"  " 0.63"      " 1.34"     0.18  6.32e-08 
-10 PTSD                            " 2.70"  " 2.48"      " 2.91"     0.11  3.16e-134
-# … with 22 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322c8b4d13.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -10736,10 +9922,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |31227 |0.28 |0.28       |1988.78 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31227 0.28  0.28         1988.78 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326d71313d.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 #PCL prepan
@@ -10783,20 +9971,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |Retired                               |-0.04    |-0.48      |0.40      |0.22 |0.86     |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 7.45"  " 6.43"      " 8.46"     0.52  1.53e-46 
- 2 pcl.sum_score_prepan            " 0.50"  " 0.48"      " 0.52"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 0.64"  " 0.01"      " 1.27"     0.32  0.05     
- 4 Only depressive disorder        "-0.13"  "-0.81"      " 0.55"     0.35  0.70     
- 5 Only anxiety disorder           "-0.65"  "-1.36"      " 0.07"     0.36  0.08     
- 6 Eating disorders                " 0.43"  " 0.11"      " 0.75"     0.16  0.008    
- 7 OCDs                            " 0.46"  " 0.17"      " 0.76"     0.15  0.002    
- 8 Psychotic and bipolar disorder  "-0.25"  "-1.13"      " 0.64"     0.45  0.59     
- 9 Only psychotic disorder         "-0.13"  "-0.86"      " 0.60"     0.37  0.72     
-10 Only bipolar disorder           " 0.44"  " 0.00"      " 0.88"     0.23  0.05     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132341a7e38.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -10806,10 +9986,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |11081 |0.02 |0.02       |32.92 |1.45e-39 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11081 0.02  0.02         32.92 1.45e-39      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323754a941.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # Sensitivity anlayses based on employment change
@@ -10859,20 +10041,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |employment_changeEmployment not changed |-0.33    |-0.54      |-0.12     |0.11 |0.002     |
 
 ```
-# A tibble: 32 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 9.24"  " 8.62"      " 9.85"     0.31  1.59e-188
- 2 Depressive and anxiety disorder " 4.78"  " 4.60"      " 4.96"     0.09  0.00e+00 
- 3 Only depressive disorder        " 1.98"  " 1.74"      " 2.23"     0.12  2.59e-57 
- 4 Only anxiety disorder           " 3.28"  " 2.98"      " 3.58"     0.15  7.36e-101
- 5 Eating disorders                " 0.69"  " 0.40"      " 0.97"     0.14  1.92e-06 
- 6 OCDs                            " 1.36"  " 1.09"      " 1.62"     0.14  3.87e-23 
- 7 Psychotic and bipolar disorder  " 0.59"  "-0.17"      " 1.36"     0.39  0.13     
- 8 Only psychotic disorder         " 0.25"  "-0.42"      " 0.91"     0.34  0.47     
- 9 Only bipolar disorder           " 0.71"  " 0.30"      " 1.12"     0.21  6.25e-04 
-10 PTSD                            " 1.47"  " 1.22"      " 1.72"     0.13  1.08e-30 
-# … with 22 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132a287055.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -10882,10 +10056,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |31331 |0.22 |0.22       |1503.62 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31331 0.22  0.22         1503.62 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713264e6e1a8.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # GAD retro
@@ -10929,20 +10105,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |employment_changeEmployment not changed |-0.06    |-0.29      |0.17      |0.12 |0.62     |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 7.24"  " 6.57"      " 7.91"     0.34  2.40e-97 
- 2 gad.sum_score_retro             " 0.50"  " 0.48"      " 0.52"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 2.39"  " 2.16"      " 2.61"     0.12  1.41e-92 
- 4 Only depressive disorder        " 0.98"  " 0.68"      " 1.27"     0.15  6.81e-11 
- 5 Only anxiety disorder           " 1.87"  " 1.53"      " 2.21"     0.17  8.71e-27 
- 6 Eating disorders                " 0.43"  " 0.13"      " 0.74"     0.16  0.006    
- 7 OCDs                            " 0.53"  " 0.24"      " 0.82"     0.15  3.86e-04 
- 8 Psychotic and bipolar disorder  " 0.79"  "-0.07"      " 1.66"     0.44  0.07     
- 9 Only psychotic disorder         " 0.03"  "-0.71"      " 0.77"     0.38  0.93     
-10 Only bipolar disorder           " 0.48"  " 0.03"      " 0.92"     0.23  0.04     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171327c303bd4.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -10952,10 +10120,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |23100 |0.15 |0.15       |660.52 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 23100 0.15  0.15         660.52 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713242a81afe.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # GAD prepan
@@ -10999,20 +10169,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |employment_changeEmployment not changed |-0.14    |-0.46      |0.18      |0.16 |0.38      |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 3.63"  " 2.35"      " 4.91"     0.65  2.67e-08 
- 2 pcl.sum_score_prepan            " 0.37"  " 0.35"      " 0.39"     0.01  1.58e-285
- 3 Depressive and anxiety disorder " 1.16"  " 0.41"      " 1.91"     0.38  0.002    
- 4 Only depressive disorder        "-0.61"  "-1.41"      " 0.20"     0.41  0.14     
- 5 Only anxiety disorder           " 1.10"  " 0.26"      " 1.94"     0.43  0.01     
- 6 Eating disorders                " 0.63"  " 0.27"      " 0.98"     0.18  5.52e-04 
- 7 OCDs                            " 0.77"  " 0.45"      " 1.10"     0.17  3.77e-06 
- 8 Psychotic and bipolar disorder  "-0.54"  "-1.51"      " 0.42"     0.49  0.27     
- 9 Only psychotic disorder         "-0.03"  "-0.83"      " 0.78"     0.41  0.95     
-10 Only bipolar disorder           " 0.27"  "-0.22"      " 0.75"     0.25  0.28     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324f77883c.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -11022,10 +10184,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |11165 |0.01 |0.01       |11.04 |2.61e-12 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11165 0.01  0.01         11.04 2.61e-12      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_17132309143e6.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PHQ baseline
@@ -11068,20 +10232,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |employment_changeEmployment not changed |-0.31    |-0.55      |-0.08     |0.12 |0.008     |
 
 ```
-# A tibble: 32 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "12.44"  " 11.75"     "13.12"     0.35  1.33e-268
- 2 Depressive and anxiety disorder " 5.68"  "  5.47"     " 5.88"     0.10  0.00e+00 
- 3 Only depressive disorder        " 3.57"  "  3.30"     " 3.84"     0.14  1.80e-143
- 4 Only anxiety disorder           " 2.13"  "  1.80"     " 2.47"     0.17  2.33e-35 
- 5 Eating disorders                " 1.37"  "  1.06"     " 1.69"     0.16  1.68e-17 
- 6 OCDs                            " 1.35"  "  1.05"     " 1.65"     0.15  1.59e-18 
- 7 Psychotic and bipolar disorder  " 0.22"  " -0.63"     " 1.07"     0.43  0.62     
- 8 Only psychotic disorder         " 0.59"  " -0.16"     " 1.33"     0.38  0.12     
- 9 Only bipolar disorder           " 1.50"  "  1.04"     " 1.95"     0.23  1.49e-10 
-10 PTSD                            " 1.91"  "  1.63"     " 2.19"     0.14  2.31e-40 
-# … with 22 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324aca793d.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -11091,10 +10247,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |31315 |0.26 |0.26       |1846.76 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31315 0.26  0.26         1846.76 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713232ddba27.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PHQ retro
@@ -11138,20 +10296,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |employment_changeEmployment not changed |-0.24    |-0.48      |0.00      |0.12 |0.05      |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 9.22"  " 8.53"      " 9.90"     0.35  1.01e-148
- 2 phq.sum_score_retro             " 0.57"  " 0.55"      " 0.58"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 2.40"  " 2.16"      " 2.64"     0.12  2.83e-87 
- 4 Only depressive disorder        " 1.46"  " 1.16"      " 1.76"     0.15  2.82e-21 
- 5 Only anxiety disorder           " 0.86"  " 0.51"      " 1.22"     0.18  1.91e-06 
- 6 Eating disorders                " 0.78"  " 0.46"      " 1.10"     0.16  1.48e-06 
- 7 OCDs                            " 0.51"  " 0.21"      " 0.81"     0.15  8.99e-04 
- 8 Psychotic and bipolar disorder  "-0.27"  "-1.15"      " 0.62"     0.45  0.55     
- 9 Only psychotic disorder         "-0.34"  "-1.10"      " 0.42"     0.39  0.38     
-10 Only bipolar disorder           " 0.70"  " 0.24"      " 1.17"     0.24  0.003    
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323233ee1b.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -11161,10 +10311,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |23090 |0.18 |0.18       |844.05 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F      `p value`    df
-  <chr> <chr> <chr>        <chr>  <chr>     <dbl>
-1 23090 0.18  0.18         844.05 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326f55485c.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PHQ prepan
@@ -11208,20 +10360,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |employment_changeEmployment not changed |-0.09    |-0.45      |0.26      |0.18 |0.61     |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 5.78"  " 4.36"      " 7.20"     0.72  1.59e-15 
- 2 pcl.sum_score_prepan            " 0.45"  " 0.43"      " 0.47"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 1.18"  " 0.36"      " 2.01"     0.42  0.005    
- 4 Only depressive disorder        " 0.97"  " 0.07"      " 1.86"     0.46  0.03     
- 5 Only anxiety disorder           "-0.95"  "-1.89"      "-0.02"     0.48  0.04     
- 6 Eating disorders                " 1.15"  " 0.75"      " 1.54"     0.20  1.26e-08 
- 7 OCDs                            " 0.65"  " 0.29"      " 1.01"     0.19  4.41e-04 
- 8 Psychotic and bipolar disorder  "-0.80"  "-1.87"      " 0.26"     0.54  0.14     
- 9 Only psychotic disorder         " 0.09"  "-0.80"      " 0.99"     0.46  0.84     
-10 Only bipolar disorder           " 0.85"  " 0.31"      " 1.39"     0.27  0.002    
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326d3af580.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -11231,10 +10375,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |11162 |0.02 |0.02       |44.52 |4.15e-54 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11162 0.02  0.02         44.52 4.15e-54      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713239cbde86.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # OCIR baseline
@@ -11277,20 +10423,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |employment_changeEmployment not changed |0.17     |-0.92      |1.27      |0.56 |0.76     |
 
 ```
-# A tibble: 32 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 24.45" " 21.73"     "27.16"     1.38  4.84e-67 
- 2 Depressive and anxiety disorder "  2.81" "  1.69"     " 3.93"     0.57  9.66e-07 
- 3 Only depressive disorder        "  0.25" " -1.29"     " 1.79"     0.79  0.75     
- 4 Only anxiety disorder           "  0.59" " -0.97"     " 2.15"     0.80  0.46     
- 5 Eating disorders                "  0.12" " -1.14"     " 1.38"     0.64  0.85     
- 6 OCDs                            "  6.84" "  5.73"     " 7.94"     0.56  4.16e-33 
- 7 Psychotic and bipolar disorder  "  6.67" "  3.71"     " 9.63"     1.51  9.95e-06 
- 8 Only psychotic disorder         "  4.44" "  1.68"     " 7.19"     1.41  0.002    
- 9 Only bipolar disorder           "  3.19" "  1.28"     " 5.11"     0.98  0.001    
-10 PTSD                            "  2.61" "  1.50"     " 3.71"     0.56  3.81e-06 
-# … with 22 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324f50f6c.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -11300,10 +10438,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |5187 |0.06 |0.06       |52.91 |1.40e-63 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 5187  0.06  0.06         52.91 1.40e-63      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713274c77dfe.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # OCIR retro
@@ -11347,20 +10487,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |employment_changeEmployment not changed |0.18     |-0.65      |1.01      |0.43 |0.67     |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "18.38"  " 16.14"     "20.62"     1.14  7.90e-56 
- 2 ocir.sum_score_retro            " 0.75"  "  0.72"     " 0.78"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder "-1.62"  " -2.51"     "-0.72"     0.46  3.91e-04 
- 4 Only depressive disorder        "-1.50"  " -2.72"     "-0.27"     0.63  0.02     
- 5 Only anxiety disorder           "-0.91"  " -2.14"     " 0.32"     0.63  0.15     
- 6 Eating disorders                "-0.03"  " -0.99"     " 0.92"     0.49  0.95     
- 7 OCDs                            " 2.22"  "  1.37"     " 3.07"     0.43  3.06e-07 
- 8 Psychotic and bipolar disorder  " 3.58"  "  1.33"     " 5.82"     1.15  0.002    
- 9 Only psychotic disorder         " 1.12"  " -0.93"     " 3.18"     1.05  0.28     
-10 Only bipolar disorder           " 0.35"  " -1.06"     " 1.75"     0.72  0.63     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713264098b2a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -11370,10 +10502,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |5094 |0.06 |0.06       |51.24 |1.63e-61 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 5094  0.06  0.06         51.24 1.63e-61      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171322e8fa5b5.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # OCIR prepan
@@ -11417,20 +10551,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |employment_changeEmployment not changed |1.57     |-0.19      |3.32      |0.89  |0.08     |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE      `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr>   <chr>    
- 1 Intercept                       " 2.71"  " -4.91"     "10.33"     " 3.89" 0.49     
- 2 pcl.sum_score_prepan            " 0.64"  "  0.53"     " 0.74"     " 0.05" 7.33e-30 
- 3 Depressive and anxiety disorder "-3.75"  " -8.69"     " 1.19"     " 2.52" 0.14     
- 4 Only depressive disorder        "-5.18"  "-10.61"     " 0.25"     " 2.77" 0.06     
- 5 Only anxiety disorder           "-5.45"  "-10.80"     "-0.10"     " 2.73" 0.05     
- 6 Eating disorders                "-0.05"  " -1.77"     " 1.67"     " 0.88" 0.96     
- 7 OCDs                            " 6.25"  "  4.74"     " 7.75"     " 0.77" 7.92e-16 
- 8 Psychotic and bipolar disorder  " 4.95"  "  0.57"     " 9.33"     " 2.23" 0.03     
- 9 Only psychotic disorder         " 1.66"  " -2.02"     " 5.34"     " 1.88" 0.38     
-10 Only bipolar disorder           " 3.05"  "  0.62"     " 5.49"     " 1.24" 0.01     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171323c33e3b5.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -11440,10 +10566,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |1786 |0.03 |0.03       |10.03 |6.36e-11 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 1786  0.03  0.03         10.03 6.36e-11      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713272aa9ef3.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # PCL baseline
@@ -11486,20 +10614,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |employment_changeEmployment not changed |-0.51    |-0.72      |-0.31     |0.10 |9.56e-07  |
 
 ```
-# A tibble: 32 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       "13.96"  "13.36"      "14.56"     0.31  0.00e+00 
- 2 Depressive and anxiety disorder " 5.36"  " 5.18"      " 5.54"     0.09  0.00e+00 
- 3 Only depressive disorder        " 2.84"  " 2.60"      " 3.07"     0.12  4.88e-118
- 4 Only anxiety disorder           " 2.62"  " 2.32"      " 2.91"     0.15  6.53e-67 
- 5 Eating disorders                " 0.68"  " 0.41"      " 0.96"     0.14  1.34e-06 
- 6 OCDs                            " 1.18"  " 0.92"      " 1.44"     0.13  1.93e-18 
- 7 Psychotic and bipolar disorder  " 1.05"  " 0.29"      " 1.80"     0.38  0.006    
- 8 Only psychotic disorder         " 0.73"  " 0.08"      " 1.38"     0.33  0.03     
- 9 Only bipolar disorder           " 1.24"  " 0.83"      " 1.64"     0.21  1.83e-09 
-10 PTSD                            " 2.71"  " 2.46"      " 2.95"     0.13  1.57e-101
-# … with 22 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713238d9eeb0.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -11509,10 +10629,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |31227 |0.28 |0.28       |1988.78 |0.00e+00 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F       `p value`    df
-  <chr> <chr> <chr>        <chr>   <chr>     <dbl>
-1 31227 0.28  0.28         1988.78 0.00e+00      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171326bc581f8.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 #PCL prepan
@@ -11556,20 +10678,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |employment_changeEmployment not changed |-0.56    |-0.88      |-0.25     |0.16 |4.64e-04 |
 
 ```
-# A tibble: 33 x 6
-   `Indepent variable`             Estimate `95% CI low` `95% CI up` SE    `p value`
-   <fct>                           <chr>    <chr>        <chr>       <chr> <chr>    
- 1 Intercept                       " 8.09"  " 6.83"      " 9.34"     0.64  2.98e-36 
- 2 pcl.sum_score_prepan            " 0.50"  " 0.48"      " 0.52"     0.01  0.00e+00 
- 3 Depressive and anxiety disorder " 0.71"  "-0.02"      " 1.45"     0.38  0.06     
- 4 Only depressive disorder        "-0.09"  "-0.89"      " 0.70"     0.41  0.82     
- 5 Only anxiety disorder           "-0.42"  "-1.25"      " 0.41"     0.42  0.32     
- 6 Eating disorders                " 0.30"  "-0.05"      " 0.64"     0.18  0.09     
- 7 OCDs                            " 0.40"  " 0.08"      " 0.72"     0.16  0.01     
- 8 Psychotic and bipolar disorder  "-0.09"  "-1.03"      " 0.85"     0.48  0.85     
- 9 Only psychotic disorder         " 0.07"  "-0.72"      " 0.85"     0.40  0.87     
-10 Only bipolar disorder           " 0.53"  " 0.06"      " 1.01"     0.24  0.03     
-# … with 23 more rows
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_1713267de9a8c.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 
@@ -11579,10 +10693,12 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 |11081 |0.02 |0.02       |32.92 |1.45e-39 |  6|
 
 ```
-# A tibble: 1 x 6
-  n     R2    `adjust. R2` F     `p value`    df
-  <chr> <chr> <chr>        <chr> <chr>     <dbl>
-1 11081 0.02  0.02         32.92 1.45e-39      6
+Warning in gzfile(file, "wb"): cannot open compressed file '/Users/kirstin/.rstudio-desktop/notebooks/4B75133E-PANCHANGE_analysis/
+1/3BE413B1410ED5D1/cpwss7xlr3opb_t/_rs_rdf_171324774929a.rdf', probable reason 'No such file or directory'
+```
+
+```
+Error in gzfile(file, "wb"): cannot open the connection
 ```
 
 # Forest Plots
@@ -11603,71 +10719,15 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 
 
 
-```
-Error in stats::model.frame(formula = gad.sum_score_base.gad.sum_score_prepan.glmformula, : object 'gad.sum_score_base.gad.sum_score_prepan.glmformula' not found
-```
-
-```
-Error in stats::model.frame(formula = gad.sum_score_base.gad.sum_score_retro.glmformula, : object 'gad.sum_score_base.gad.sum_score_retro.glmformula' not found
-```
-
-```
-Error in stats::model.frame(formula = phq.sum_score_base.phq.sum_score_prepan.glmformula, : object 'phq.sum_score_base.phq.sum_score_prepan.glmformula' not found
-```
-
-```
-Error in stats::model.frame(formula = phq.sum_score_base.phq.sum_score_retro.glmformula, : object 'phq.sum_score_base.phq.sum_score_retro.glmformula' not found
-```
-
-```
-Error in stats::model.frame(formula = pcl.sum_score_base.pcl.sum_score_prepan.glmformula, : object 'pcl.sum_score_base.pcl.sum_score_prepan.glmformula' not found
-```
-
-```
-Error in stats::model.frame(formula = pcl.sum_score_base.pcl.sum_score_retro.glmformula, : object 'pcl.sum_score_base.pcl.sum_score_retro.glmformula' not found
-```
 
 ###Subset retrospective data by samples
 
 
 
+### add a single "other ethnicity individual" as a jitter for NBR so this category remains included wihout adding explanation.
 
 
-```
-Error in stats::model.frame(formula = gad.sum_score_base.gad.sum_score_retro.glmformula, : object 'gad.sum_score_base.gad.sum_score_retro.glmformula' not found
-```
 
-```
-Error in stats::model.frame(formula = gad.sum_score_base.gad.sum_score_retro.glmformula, : object 'gad.sum_score_base.gad.sum_score_retro.glmformula' not found
-```
-
-```
-Error in stats::model.frame(formula = gad.sum_score_base.gad.sum_score_retro.glmformula, : object 'gad.sum_score_base.gad.sum_score_retro.glmformula' not found
-```
-
-```
-Error in stats::model.frame(formula = phq.sum_score_base.phq.sum_score_retro.glmformula, : object 'phq.sum_score_base.phq.sum_score_retro.glmformula' not found
-```
-
-```
-Error in stats::model.frame(formula = phq.sum_score_base.phq.sum_score_retro.glmformula, : object 'phq.sum_score_base.phq.sum_score_retro.glmformula' not found
-```
-
-```
-Error in stats::model.frame(formula = phq.sum_score_base.phq.sum_score_retro.glmformula, : object 'phq.sum_score_base.phq.sum_score_retro.glmformula' not found
-```
-
-```
-Error in stats::model.frame(formula = pcl.sum_score_base.pcl.sum_score_retro.glmformula, : object 'pcl.sum_score_base.pcl.sum_score_retro.glmformula' not found
-```
-
-```
-Error in stats::model.frame(formula = pcl.sum_score_base.pcl.sum_score_retro.glmformula, : object 'pcl.sum_score_base.pcl.sum_score_retro.glmformula' not found
-```
-
-```
-Error in stats::model.frame(formula = pcl.sum_score_base.pcl.sum_score_retro.glmformula, : object 'pcl.sum_score_base.pcl.sum_score_retro.glmformula' not found
-```
 
 
 ## Function to create dataframes ready for forest plots from lm models. 
@@ -11681,138 +10741,80 @@ Error in stats::model.frame(formula = pcl.sum_score_base.pcl.sum_score_retro.glm
 ## Create data frames and plots using functions and models generated above.
 
 
-```
-Error in summary(lmobject): object 'gad.prepan.lm' not found
-```
-
-```
-Error in summary(lmobject): object 'gad.retro.lm' not found
-```
-
-```
-Error in summary(lmobject): object 'phq.prepan.lm' not found
-```
-
-```
-Error in summary(lmobject): object 'phq.retro.lm' not found
-```
-
-```
-Error in summary(lmobject): object 'pcl.prepan.lm' not found
-```
-
-```
-Error in summary(lmobject): object 'pcl.retro.lm' not found
-```
-
-```
-Error in summary(lmobject): object 'gad.retro.lm.glad' not found
-```
-
-```
-Error in summary(lmobject): object 'gad.retro.lm.nbr' not found
-```
-
-```
-Error in summary(lmobject): object 'gad.retro.lm.ramp' not found
-```
-
-```
-Error in summary(lmobject): object 'phq.retro.lm.glad' not found
-```
-
-```
-Error in summary(lmobject): object 'phq.retro.lm.nbr' not found
-```
-
-```
-Error in summary(lmobject): object 'phq.retro.lm.ramp' not found
-```
-
-```
-Error in summary(lmobject): object 'pcl.retro.lm.glad' not found
-```
-
-```
-Error in summary(lmobject): object 'pcl.retro.lm.nbr' not found
-```
-
-```
-Error in summary(lmobject): object 'pcl.retro.lm.ramp' not found
-```
 
 
-```
-Error in rbind(gad.prepan.lm.for.plot, phq.prepan.lm.for.plot, pcl.prepan.lm.for.plot): object 'gad.prepan.lm.for.plot' not found
-```
-
-```
-Error in rbind(gad.retro.lm.for.plot, phq.retro.lm.for.plot, pcl.retro.lm.for.plot): object 'gad.retro.lm.for.plot' not found
-```
-
-```
-Error in rbind(gad.prepan.lm.for.plot.timegroup, gad.retro.lm.for.plot.timegroup): object 'gad.prepan.lm.for.plot.timegroup' not found
-```
-
-```
-Error in rbind(phq.prepan.lm.for.plot.timegroup, phq.retro.lm.for.plot.timegroup): object 'phq.prepan.lm.for.plot.timegroup' not found
-```
-
-```
-Error in rbind(pcl.prepan.lm.for.plot.timegroup, pcl.retro.lm.for.plot.timegroup): object 'pcl.prepan.lm.for.plot.timegroup' not found
-```
-
-```
-Error in rbind(gad.retro.lm.for.plot.GLAD, gad.retro.lm.for.plot.NBR, : object 'gad.retro.lm.for.plot.GLAD' not found
-```
-
-```
-Error in rbind(phq.retro.lm.for.plot.GLAD, phq.retro.lm.for.plot.NBR, : object 'phq.retro.lm.for.plot.GLAD' not found
-```
-
-```
-Error in rbind(pcl.retro.lm.for.plot.GLAD, pcl.retro.lm.for.plot.NBR, : object 'pcl.retro.lm.for.plot.GLAD' not found
-```
 
 ## Forest plots
 ### disorder
 
 ```
-Error in ggplot(data = data, aes(x = RowLabels, y = Estimate, colour = Group)): object 'plot.dat.disorder.prepan' not found
+Warning: geom_hline(): Ignoring `mapping` because `yintercept` was provided.
 ```
+
+![plot of chunk forest plot by disorder prepan](figures/forest plot by disorder prepan-1.png)
 
 
 ```
-Error in ggplot(data = data, aes(x = RowLabels, y = Estimate, colour = Group)): object 'plot.dat.disorder.retro' not found
+Warning: geom_hline(): Ignoring `mapping` because `yintercept` was provided.
 ```
+
+![plot of chunk forest plot by disorder retro](figures/forest plot by disorder retro-1.png)
+
+### disorder (no PCL)
+
+```
+Warning: geom_hline(): Ignoring `mapping` because `yintercept` was provided.
+```
+
+![plot of chunk forest plot by disorder prepan no pcl](figures/forest plot by disorder prepan no pcl-1.png)
+
+
+```
+Warning: geom_hline(): Ignoring `mapping` because `yintercept` was provided.
+```
+
+![plot of chunk forest plot by disorder retro no pcl](figures/forest plot by disorder retro no pcl-1.png)
+
 ### time point 
 
 ```
-Error in ggplot(data = data, aes(x = RowLabels, y = Estimate, colour = Group)): object 'plot.dat.time.gad' not found
+Warning: geom_hline(): Ignoring `mapping` because `yintercept` was provided.
 ```
+
+![plot of chunk forest plot by time point gad](figures/forest plot by time point gad-1.png)
 
 
 ```
-Error in ggplot(data = data, aes(x = RowLabels, y = Estimate, colour = Group)): object 'plot.dat.time.phq' not found
+Warning: geom_hline(): Ignoring `mapping` because `yintercept` was provided.
 ```
+
+![plot of chunk forest plot by time point phq](figures/forest plot by time point phq-1.png)
 
 
 ```
-Error in ggplot(data = data, aes(x = RowLabels, y = Estimate, colour = Group)): object 'plot.dat.time.phq' not found
+Warning: geom_hline(): Ignoring `mapping` because `yintercept` was provided.
 ```
+
+![plot of chunk forest plot by time point pcl](figures/forest plot by time point pcl-1.png)
 ### Sample (retrospective only)
 
 
 ```
-Error in ggplot(data = data, aes(x = RowLabels, y = Estimate, colour = Group)): object 'plot.dat.sample.gad' not found
+Warning: geom_hline(): Ignoring `mapping` because `yintercept` was provided.
 ```
+
+![plot of chunk forest plot by sample retro only gad](figures/forest plot by sample retro only gad-1.png)
 
 
 ```
-Error in ggplot(data = data, aes(x = RowLabels, y = Estimate, colour = Group)): object 'plot.dat.sample.phq' not found
+Warning: geom_hline(): Ignoring `mapping` because `yintercept` was provided.
 ```
+
+![plot of chunk forest plot by sample retro only phq](figures/forest plot by sample retro only phq-1.png)
 
 
 ```
-Error in ggplot(data = data, aes(x = RowLabels, y = Estimate, colour = Group)): object 'plot.dat.sample.pcl' not found
+Warning: geom_hline(): Ignoring `mapping` because `yintercept` was provided.
 ```
+
+![plot of chunk forest plot by sample retro only pcl](figures/forest plot by sample retro only pcl-1.png)

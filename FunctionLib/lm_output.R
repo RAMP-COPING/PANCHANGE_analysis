@@ -2,7 +2,6 @@
 # Independent variable set is not flexible as we will only need this for final models / limited model set.
 # KLPurves
 
-
 lmoutput_format <- function(lmobject, explan_var, group, dfname){
   
   ## Row labels
