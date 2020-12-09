@@ -73,10 +73,7 @@ library(broom)
 library(tidyverse)
 library(ggpubr)
 
-if(!require(sjPlot)){
-    install.packages("sjPlot")
-    library(sjPlot)
-}
+
 ```
 
 # R functions
@@ -180,41 +177,6 @@ theme_personal <-  theme(
     )
 ```
 
-# Function for split violin plot
-```{r Function for split violin plot}
-GeomSplitViolin <- ggproto("GeomSplitViolin", GeomViolin,
-                           draw_group = function(self, data, ..., draw_quantiles = NULL) {
-  data <- transform(data, xminv = x - violinwidth * (x - xmin), xmaxv = x + violinwidth * (xmax - x))
-  grp <- data[1, "group"]
-  newdata <- plyr::arrange(transform(data, x = if (grp %% 2 == 1) xminv else xmaxv), if (grp %% 2 == 1) y else -y)
-  newdata <- rbind(newdata[1, ], newdata, newdata[nrow(newdata), ], newdata[1, ])
-  newdata[c(1, nrow(newdata) - 1, nrow(newdata)), "x"] <- round(newdata[1, "x"])
-
-  if (length(draw_quantiles) > 0 & !scales::zero_range(range(data$y))) {
-    stopifnot(all(draw_quantiles >= 0), all(draw_quantiles <=
-      1))
-    quantiles <- ggplot2:::create_quantile_segment_frame(data, draw_quantiles)
-    aesthetics <- data[rep(1, nrow(quantiles)), setdiff(names(data), c("x", "y")), drop = FALSE]
-    aesthetics$alpha <- rep(1, nrow(quantiles))
-    both <- cbind(quantiles, aesthetics)
-    quantile_grob <- GeomPath$draw_panel(both, ...)
-    ggplot2:::ggname("geom_split_violin", grid::grobTree(GeomPolygon$draw_panel(newdata, ...), quantile_grob))
-  }
-  else {
-    ggplot2:::ggname("geom_split_violin", GeomPolygon$draw_panel(newdata, ...))
-  }
-})
-
-geom_split_violin <- function(mapping = NULL, data = NULL, stat = "ydensity", position = "identity", ...,
-                              draw_quantiles = NULL, trim = TRUE, scale = "area", na.rm = FALSE,
-                              show.legend = NA, inherit.aes = TRUE) {
-  layer(data = data, mapping = mapping, stat = stat, geom = GeomSplitViolin,
-        position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-        params = list(trim = trim, scale = scale, draw_quantiles = draw_quantiles, na.rm = na.rm, ...))
-}
-```
-
-
 
 # Data import
 
@@ -231,7 +193,7 @@ source("../PANCHANGE_raw_path.R")
 ```{r read in data}
 dat <- readRDS(file = paste0(data_path, "/four_cohorts_variables_exclusion.rds"))
 dim(dat)
-colnames(dat)
+
 ```
 
 ## Important vectors with collections of columns
@@ -8147,6 +8109,170 @@ pcl_prepan_model1b_education_reg_stats
 
 # Forest Plots
 
+## functions that assign global variables and need to be in the markdown
+
+```{r functions required in book for globa assignments}
+lmoutput_format <- function(lmobject, explan_var, group, dfname){
+  
+  ## Row labels
+  independent.variables <- c("intercept",
+                             explan_var,
+                             "comorbid depression and anxiety compared to control",
+                             "depressive disorder compared to control",
+                             "anxiety disorder compared to control",
+                             "eating disorders compared to control",
+                             "obsessive compulsive disorders compared to control",
+                             "comorbid psychotic and bipolar disorder compared to control",
+                             "psychotic disorder compared to control",
+                             "bipolar disorder compared to control",
+                             "mhd.posttraumatic_stress_disorder_ptsd compared to control",
+                             "autism_spectrum_disorder compared to control",
+                             "mhd.attention_deficit_hyperactivity_disorder compared to control",
+                             "mhd.personality_disorder compared to control",
+                             "Female compared to male",
+                             "Non-binary/Self-defined compared to male",
+                             "16-18 compared to 26-35",
+                             "19-25 compared to 26-35",
+                             "36-45 compared to 26-35",
+                             "46-55 compared to 26-35",
+                             "56-65 compared to 26-35",
+                             "66-70 compared to 26-35",
+                             "71-75 compared to 26-35",
+                             "76+ compared to 26-35",
+                             "Mixed or multiple ethnicities compared to White",
+                             "Asian compared to White",
+                             "Black compared to White",
+                             "Other compared to White",
+                             "key_worker compared to non-keyworker",
+                             "time_diff_coping_lockdown_march_23")
+  ## categories to facet on  
+  categories <- c("Intercept",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Gender",
+                  "Gender",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Other",
+                  "Other")
+  
+  ## Disoprder dimension  
+  groups <- c(group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group)
+  
+  # create data frame
+  df <- as.data.frame(coef(summary(lmobject)),row.names=F)
+  
+  # add row labels
+  df$RowLabels <- independent.variables
+  
+  # Add category labels
+  df$Categories <- categories
+  
+  # Add group labels
+  df$Group <- groups
+  
+  # calculate upper and lower confidence intervals
+  df <- df %>%
+    mutate(LowerBound = Estimate - (1.96*`Std. Error`),
+           UpperBound = Estimate + (1.96*`Std. Error`))
+  
+  # drop intercept row
+  df <- df[(df$RowLabels != 'intercept'),]
+  
+  # order factors
+  df$RowLabels <- factor(df$RowLabels, levels = rev(independent.variables))   ## individual rows
+  df$Categories <- factor(df$Categories, levels = unique(categories))   ## categories
+  
+  
+  # assign dataframe to global environment
+  assign(dfname, df, envir = .GlobalEnv)
+  
+}
+
+
+model1b.lm.form <- function(outcome, explan_var) {
+  
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c(explan_var,
+                             "depression_and_anxiety",
+                             "eating_disorders",
+                             "obsessive_compulsive_disorders",
+                             "bipolar_and_schizophrenia",
+                             "mhd.posttraumatic_stress_disorder_ptsd",
+                             "autism_spectrum_disorder",
+                             "mhd.attention_deficit_hyperactivity_disorder",
+                             "mhd.personality_disorder",
+                             "Gender_collapsed",
+                             "age_category_collapsed_reordered",
+                             "Ethnicity_collapsed",
+                             "key_worker",
+                             "time_diff_coping_lockdown_march_23"
+  )
+  # create the formula
+  glm.formula <- paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ ")
+  
+  # assign it globally with the right variable name.
+  assign(paste0(outcome,".", explan_var, ".glmformula"),
+         glm.formula,
+         envir = .GlobalEnv
+         
+  )
+}
+```
+
+
 ## run regression models to get normal output
 
 
@@ -8172,14 +8298,14 @@ dat.retro[(names(dat.retro) %in% lin_preds)] <- apply(dat.retro[(names(dat.retro
 
 ```{r create formulas for forest models}
 
-model1b.lm.form("gad.sum_score_base", "gad.sum_score_prepan", dat.prepan)
-model1b.lm.form("gad.sum_score_base", "gad.sum_score_retro", dat.retro)
+model1b.lm.form("gad.sum_score_base", "gad.sum_score_prepan")
+model1b.lm.form("gad.sum_score_base", "gad.sum_score_retro")
 
-model1b.lm.form("phq.sum_score_base", "phq.sum_score_prepan", dat.prepan)
-model1b.lm.form("phq.sum_score_base", "phq.sum_score_retro", dat.retro)
+model1b.lm.form("phq.sum_score_base", "phq.sum_score_prepan")
+model1b.lm.form("phq.sum_score_base", "phq.sum_score_retro")
 
-model1b.lm.form("pcl.sum_score_base", "pcl.sum_score_prepan", dat.prepan)
-model1b.lm.form("pcl.sum_score_base", "pcl.sum_score_retro", dat.retro)
+model1b.lm.form("pcl.sum_score_base", "pcl.sum_score_prepan")
+model1b.lm.form("pcl.sum_score_base", "pcl.sum_score_retro")
 
 ```
 

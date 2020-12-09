@@ -3,7 +3,7 @@
 # KLPurves
 
 
-model1b.lm.form <- function(outcome, explan_var, data_set) {
+model1b.lm.form <- function(outcome, explan_var) {
   
   # define the variable name of the dependent variable
   dependent.variable <- outcome

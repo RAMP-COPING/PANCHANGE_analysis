@@ -8,7 +8,7 @@ lm.forest <- function(data,title){
              aes(x =RowLabels,y = Estimate,
                  colour = Group)) +
     
-    geom_point(size = 2,
+    geom_point(size = 4,
                position = position_dodge(0.9)) +
     
     geom_hline(aes(fill=Group),
@@ -29,12 +29,13 @@ lm.forest <- function(data,title){
     
     scale_colour_manual(values=COPINGpalette5) +
     
-    theme(plot.title=element_text(size=40,face="bold"),
-          axis.text.y=element_text(face="bold"),
-          axis.text.x=element_text(face="bold"),
+    theme(plot.title=element_text(size=20,face="bold"),
+          axis.text=element_text(face="bold",size=16,),
+          legend.text=element_text(size=16,),
+          legend.title=element_text(face="bold",size=18,),
           axis.title.x=element_text(size=28,face="bold"),
           axis.title.y=element_blank(),
-          strip.text.y = element_text(angle=180,face="bold",size=30),
+          strip.text.y = element_text(angle=180,face="bold",size=20),
           panel.background = element_blank(),
           strip.background = element_rect(fill = "light grey"),
           panel.border = element_rect(colour = "grey",fill = NA)) +
