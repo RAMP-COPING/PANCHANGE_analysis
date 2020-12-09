@@ -8522,3 +8522,50 @@ plot.dat.sample.pcl <- rbind(pcl.retro.lm.for.plot.GLAD,
                              pcl.retro.lm.for.plot.RAMP)
 
 ```
+
+## Forest plots
+### disorder
+```{r forest plot by disorder prepan, fig.height=14, fig.width=8}
+
+lm.forest(plot.dat.disorder.prepan,"Predictors of pandemic symptoms controlling for prepandemic symptoms")
+
+```
+
+```{r forest plot by disorder retro, fig.height=14, fig.width=8}
+
+lm.forest(plot.dat.disorder.retro,"Predictors of pandemic symptoms controlling for retrospective symptoms")
+
+```
+### time point 
+```{r forest plot by time point gad, fig.height=14, fig.width=8}
+
+lm.forest(plot.dat.time.gad,"Predictors of anxiety during pandemic controlling for retrospective or prepandemic symptoms")
+
+```
+```{r forest plot by time point phq, fig.height=14, fig.width=8}
+
+lm.forest(plot.dat.time.phq,"Predictors of depression during pandemic controlling for retrospective or prepandemic symptoms")
+
+```
+```{r forest plot by time point pcl, fig.height=14, fig.width=8}
+
+lm.forest(plot.dat.time.phq,"Predictors of PTSD during pandemic controlling for retrospective or prepandemic symptoms")
+
+```
+### Sample (retrospective only)
+
+```{r forest plot by sample retro only gad, fig.height=14, fig.width=8}
+
+lm.forest(plot.dat.sample.gad ,"Predictors of anxiety controlling for retrospective symptoms across samples")
+
+```
+```{r forest plot by sample retro only phq, fig.height=14, fig.width=8}
+
+lm.forest(plot.dat.sample.phq ,"Predictors of depression controlling for retrospective symptoms across samples")
+
+```
+```{r forest plot by sample retro only pcl, fig.height=14, fig.width=8}
+
+lm.forest(plot.dat.sample.pcl ,"Predictors of PTSD controlling for retrospective symptoms across samples")
+
+```
