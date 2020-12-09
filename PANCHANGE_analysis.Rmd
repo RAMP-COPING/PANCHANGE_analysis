@@ -8284,7 +8284,7 @@ pcl.retro.lm.ramp <- lm(formula = pcl.sum_score_base.pcl.sum_score_retro.glmform
 
 # function to create dataframe from model output
 
-lmoutput_format <- function(lmobject,explan_var,dfname){
+lmoutput_format <- function(lmobject,explan_var, group, dfname){
   
   ## Row labels
   independent.variables <- c("intercept",
@@ -8349,6 +8349,38 @@ lmoutput_format <- function(lmobject,explan_var,dfname){
                   "Other",
                   "Other")
   
+  ## Disoprder dimension  
+  groups <- c(group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group,
+                  group)
+  
   # create data frame
   df <- as.data.frame(coef(summary(lmobject)),row.names=F)
   
@@ -8356,18 +8388,74 @@ lmoutput_format <- function(lmobject,explan_var,dfname){
   df$RowLabels <- independent.variables
   
   # Add category labels
-  
   df$Categories <- categories
+  
+  # Add group labels
+  df$Group <- groups
   
   # calculate upper and lower confidence intervals
   df <- df %>%
     mutate(LowerBound = Estimate - (1.96*`Std. Error`),
            UpperBound = Estimate + (1.96*`Std. Error`))
   
+  # drop intercept row
+    df <- df[(df$RowLabels != 'intercept'),]
+  
+  # order factors
+    
+  
+  # assign dataframe to global environment
   assign(dfname, df, envir = .GlobalEnv)
   
 }
 
 ```
 
+## Function to create forest plots
+
+
+```{r function for creating forest plots}
+
+lm.forest <- function(data,title)
+    
+  p = ggplot(data=data,
+             aes(x =RowLabels,y = Estimate,
+                colour = Group)) +
+    
+    geom_point(size = 2,
+               position = position_dodge(0.9)) +
+    
+    geom_hline(aes(fill=Group),
+               yintercept =0, 
+               linetype=2)  +
+   
+    xlab('Group') + 
+    ylab("Estimate (95% Confidence Interval)")  +
+  ggtitle(title) +
+
+    geom_errorbar(aes(ymin = LowerBound,
+                      ymax = UpperBound),
+                  width = .5,
+                  position = position_dodge(0.9))  + 
+    
+    facet_wrap(. ~ Categories,
+               strip.position="left",nrow=5,scales = "free_y") +
+  
+  scale_colour_manual(values=COPINGpalette5) +
+
+    theme(plot.title=element_text(size=20,face="bold"),
+          axis.text.y=element_text(face="bold"),
+          axis.text.x=element_text(face="bold"),
+          axis.title.x=element_text(size=14,face="bold"),
+          axis.title.y=element_blank(),
+          strip.text.y = element_text(angle=180,face="bold"),
+          panel.background = element_blank(),
+          strip.background = element_rect(fill = "light grey"),
+          panel.border = element_rect(colour = "grey",fill = NA)) +
+    coord_flip()
+  return(p)
+
+}
+
+```
 
