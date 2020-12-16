@@ -7040,7 +7040,6 @@ model1b.estimates <- function(outcome, data_set) {
                              "Gender_collapsed",
                              "age_category_collapsed",
                              "Ethnicity_collapsed",
-                             "key_worker",
                              "time_diff_coping_lockdown_march_23",
                              "employment_prior_covid"
                                 )
@@ -7091,8 +7090,8 @@ model1b.estimates <- function(outcome, data_set) {
                "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
                "Ethnicity_collapsedAfrican or African British" = "African or African British",
                "Ethnicity_collapsedOther" = "Other ethnicity",
-               "key_workerKey worker" = "Key worker",
                "time_diff_coping_lockdown_march_23" = "Time difference: Lockdown to baseline",
+               "employment_prior_covidKey worker" = "Key worker",
                "employment_prior_covidEmployed" = "Employed",
                "employment_prior_covidUnemployed" = "Unemployed",
                "employment_prior_covidRetired" = "Retired",
@@ -7210,7 +7209,6 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
                              "Gender_collapsed",
                              "age_category_collapsed",
                              "Ethnicity_collapsed",
-                             "key_worker",
                              "time_diff_coping_lockdown_march_23",
                              "employment_prior_covid"
   )
@@ -7261,8 +7259,8 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
                "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
                "Ethnicity_collapsedAfrican or African British" = "African or African British",
                "Ethnicity_collapsedOther" = "Other ethnicity",
-               "key_workerKey worker" = "Key worker",
                "time_diff_coping_lockdown_march_23" = "Time difference: Lockdown to baseline",
+               "employment_prior_covidKey worker" = "Key worker",
                "employment_prior_covidEmployed" = "Employed",
                "employment_prior_covidUnemployed" = "Unemployed",
                "employment_prior_covidRetired" = "Retired",
@@ -8143,7 +8141,10 @@ lmoutput_format <- function(lmobject, explan_var, group, dfname){
                              "Asian compared to White",
                              "Black compared to White",
                              "Other compared to White",
-                             "key_worker compared to non-keyworker",
+                             "key_worker compared to employed",
+                             "unemployed compared to employed",
+                             "student compared to employed",
+                             "retired compared to employed",
                              "time_diff_coping_lockdown_march_23")
   ## categories to facet on  
   categories <- c("Intercept",
@@ -8174,11 +8175,17 @@ lmoutput_format <- function(lmobject, explan_var, group, dfname){
                   "Ethnicity",
                   "Ethnicity",
                   "Ethnicity",
-                  "Other",
+                  "Employment",
+                  "Employment",
+                  "Employment",
+                  "Employment",
                   "Other")
   
-  ## Disoprder dimension  
+  ## Disorder dimension  
   groups <- c(group,
+              group,
+              group,
+              group,
               group,
               group,
               group,
@@ -8257,7 +8264,7 @@ model1b.lm.form <- function(outcome, explan_var) {
                              "Gender_collapsed",
                              "age_category_collapsed_reordered",
                              "Ethnicity_collapsed",
-                             "key_worker",
+                             "employment_prior_covid",
                              "time_diff_coping_lockdown_march_23"
   )
   # create the formula
