@@ -171,7 +171,6 @@ source("../PANCHANGE_raw_path.R")
 ```{r read in data}
 dat <- readRDS(file = paste0(data_path, "/four_cohorts.rds"))
 dim(dat)
-colnames(dat)
 ```
 
 
@@ -398,6 +397,24 @@ dat <- dat %>%
 
 dat %>%
   freq(Ethnicity_collapsed)
+```
+
+## Employment
+Adjust so employed category is keyworker vs non keyworker
+
+```{r adjust employment prior covid category}
+
+dat <- 
+  dat %>%
+  mutate(employment_prior_covid_2 =  
+           case_when(dat$employment_prior_covid == "Employed" & key_worker == "Key worker" ~ "Key worker",
+                     dat$employment_prior_covid == "Employed" & key_worker == "No key worker" ~ "Employed",
+                    dat$employment_prior_covid == "Unemployed" ~ "Unemployed",
+                     dat$employment_prior_covid == "Student" ~ "Student",
+                    dat$employment_prior_covid == "Retired" ~ "Retired"))
+
+dat$employment_prior_covid <- dat$employment_prior_covid_2
+
 ```
 
 

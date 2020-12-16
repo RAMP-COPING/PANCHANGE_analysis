@@ -323,6 +323,12 @@ dat %>%
 dat %>%
   freq(age_category_collapsed) 
 ```
+### Employment
+
+```{r freq table employment collapsed}
+dat %>%
+  freq(employment_prior_covid) 
+```
 
 ### anxiety disorders
 ```{r freq table diagnosis anxiety}
