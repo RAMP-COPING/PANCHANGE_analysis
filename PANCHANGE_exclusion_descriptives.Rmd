@@ -292,6 +292,115 @@ nrow(dat.raw)-nrow(dat)
 
 # frequencies and descriptives in exclusion data
 
+### pandemic change gad
+
+```{r freq table gad perceived change}
+dat %>%
+  freq(gad.pandemic_felt_feelings)
+
+```
+### pandemic change phq
+
+```{r freq table phq perceived change}
+
+dat %>%
+  freq(phq.pandemic_felt_feelings)
+
+```
+
+### Ethnicity
+```{r freq table ethnicity}
+dat %>%
+  freq(Ethnicity_collapsed) 
+```
+### Gender
+```{r freq table gender}
+dat %>%
+  freq(Gender_collapsed) 
+```
+### age categorical
+```{r freq table age collapsed}
+dat %>%
+  freq(age_category_collapsed) 
+```
+
+### anxiety disorders
+```{r freq table diagnosis anxiety}
+dat %>%
+  freq(anxiety_disorders) 
+```
+
+### Depressive disorders
+```{r freq table diagnosis depression}
+dat %>%
+  freq(depressive_disorders) 
+```
+### Depression and anxiety
+```{r freq table diagnosis depression and anxiety}
+dat %>%
+  freq(depression_and_anxiety) 
+```
+### Eating disorders
+```{r freq table diagnosis eating disorder}
+dat %>%
+  freq(eating_disorders) 
+
+```
+### OCD
+```{r freq table diagnosis obsessive compulsive disorders}
+dat %>%
+  freq(obsessive_compulsive_disorders) 
+
+```
+
+### Psychosis
+```{r freq table diagnosis psychotic disorders}
+dat %>%
+  freq(psychotic_disorders) 
+
+```
+
+### Bipolar
+```{r freq table diagnosis bipolar}
+dat %>%
+  freq(mhd.mania_hypomania_bipolar_or_manicdepression) 
+
+```
+
+### PTSD
+```{r freq table diagnosis PTSD}
+dat %>%
+  freq(mhd.posttraumatic_stress_disorder_ptsd) 
+
+```
+
+### ASD
+
+```{r freq table diagnosis ASD}
+dat %>%
+  freq(autism_spectrum_disorder) 
+
+```
+
+### ADHD
+```{r freq table diagnosis ADHD}
+dat %>%
+  freq(mhd.attention_deficit_hyperactivity_disorder) 
+
+```
+
+### Personality disorders
+```{r freq table diagnosis personality disorder}
+dat %>%
+  freq(mhd.personality_disorder) 
+
+```
+
+### Controls 
+```{r freq table diagnosis control}
+dat %>%
+  freq(control) 
+```
 
 # Data availability per questionnaire GAD, PHQ, PCL, and OCI-R
 ++MD: These 'data availability' chunks caused my R to crash, so I'm hashing them out for now. Others can test if it works for them and unhash as needed, otherwise I think they should be removed.
