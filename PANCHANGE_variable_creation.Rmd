@@ -32,6 +32,8 @@ knitr::opts_chunk$set(echo = FALSE,
                       cache=FALSE)
 
 
+knitr::opts_chunk$set(fig.path="figures/")
+
 options(bitmapType = 'quartz') # to render fonts better
 ```
 
@@ -377,7 +379,7 @@ dat <- dat %>%
              Ethnicity_numeric == 2 ~ 1, #Mixed or multiple ethnic origins 
              Ethnicity_numeric == 3 ~ 2, #Asian or Asian British
              Ethnicity_numeric == 4 ~ 3, #African or African British
-             Ethnicity_numeric == 5 ~ 3, #Arab - combined with African/African British
+             Ethnicity_numeric == 5 ~ 4, #Arab - combined with African/African British
              Ethnicity_numeric == 6 ~ 4  #Other ethnic group
            )
   )
@@ -694,6 +696,27 @@ dat <- dat %>%
 
 dat %>%
   freq(prepandemic_9_months)
+```
+## create a variable for chose not to respond to the Mental health questions
+
+```{r choce not to respond MHD}
+
+dat <- dat %>%
+  mutate(DidNotRespondMHD  = 
+           case_when(
+             (is.na(depressive_disorders) &
+ is.na(anxiety_disorders) &
+  is.na(eating_disorders) &
+  is.na(obsessive_compulsive_disorders) &
+ is.na(psychotic_disorders) &
+  is.na(mhd.mania_hypomania_bipolar_or_manicdepression) &
+  is.na(mhd.posttraumatic_stress_disorder_ptsd) &    
+  is.na(autism_spectrum_disorder) &
+  is.na(mhd.attention_deficit_hyperactivity_disorder) &
+  is.na(mhd.personality_disorder) &
+  is.na(control)) ~ 1))
+
+
 ```
 
 ##Export data

@@ -32,6 +32,8 @@ knitr::opts_chunk$set(echo = FALSE,
                       cache=FALSE)
 
 
+knitr::opts_chunk$set(fig.path="figures/")
+
 options(bitmapType = 'quartz') # to render fonts better
 ```
 
@@ -170,7 +172,7 @@ source("../PANCHANGE_raw_path.R")
 ```{r read in data}
 dat.raw <- readRDS(file = paste0(data_path, "four_cohorts_variables.rds"))
 dim(dat.raw)
-colnames(dat.raw)
+
 ```
 
 ## Important vectors with collections of columns
@@ -261,7 +263,7 @@ Individuals with NAs for age/gender have already been excluded in pre-processing
 ```{r Exclusion criteria for PANCHANGE}
 dat <- dat.raw %>%
   filter( # Participants should have responded to the mental health diagnosis (MHD) questionnaire
-  !is.na(depressive_disorders) &
+  (!is.na(depressive_disorders) &
  !is.na(anxiety_disorders) &
   !is.na(eating_disorders) &
   !is.na(obsessive_compulsive_disorders) &
@@ -271,7 +273,8 @@ dat <- dat.raw %>%
   !is.na(autism_spectrum_disorder) &
   !is.na(mhd.attention_deficit_hyperactivity_disorder) &
   !is.na(mhd.personality_disorder) &
-  !is.na(control)
+  !is.na(control)) |
+  !is.na(DidNotRespondMHD)
   ) %>% 
  filter(
    !is.na(data_group_gad) & # Participants should have answered at least the GAD, the PHQ, or the PCL once
@@ -286,6 +289,9 @@ dim(dat.raw)
 dim(dat)
 nrow(dat.raw)-nrow(dat)
 ```
+
+# frequencies and descriptives in exclusion data
+
 
 # Data availability per questionnaire GAD, PHQ, PCL, and OCI-R
 ++MD: These 'data availability' chunks caused my R to crash, so I'm hashing them out for now. Others can test if it works for them and unhash as needed, otherwise I think they should be removed.
