@@ -16,9 +16,7 @@ source("/Users/kirstin/Dropbox/SGDP/RAMP/Projects/PANCHANGE/PANCHANGE_raw_path.R
 
 # read in the 4 cohort data
 
-alldat <-  readRDS(file = paste0(data_path, "/four_cohorts.rds"))
-rampdat <-  readRDS(file = paste0(data_path, "/ramp.rds"))
-
+alldat <-  readRDS(file = paste0(data_path, "/four_cohorts_variables_exclusion.rds"))
 ## Subset samples
 
 GLAD <- alldat %>%
@@ -37,3 +35,11 @@ max(RAMP$startDate.coping)
 max(GLAD$startDate.coping)
 max(NBR$startDate.coping)
 
+## T-tests for average scores
+
+
+t.test(alldat$gad.sum_score_base,alldat$gad.sum_score_prepan, paired = T)
+t.test(alldat$phq.sum_score_base,alldat$phq.sum_score_prepan, paired = T)
+
+t.test(alldat$gad.sum_score_base,alldat$gad.sum_score_retro, paired = T)
+t.test(alldat$phq.sum_score_base,alldat$phq.sum_score_retro, paired = T)
