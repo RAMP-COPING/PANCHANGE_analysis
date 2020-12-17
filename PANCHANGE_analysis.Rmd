@@ -2198,6 +2198,14 @@ Filter data frame to create 2 additional datasets. Additional exclusion criteria
 
 Retro-baseline analyses
 
+Note: make sure we impute retrospective data for those who did not change their feelings
+
+```{r impute retro for those who did not change}
+
+dat$gad.sum_score_retro <- ifelse(dat$gad.pandemic_felt_feelings == "No different", dat$gad.sum_score_base,dat$gad.sum_score_retro)
+dat$phq.sum_score_retro <- ifelse(dat$phq.pandemic_felt_feelings == "No different", dat$phq.sum_score_base,dat$phq.sum_score_retro)
+
+```
 
 ```{r subsample for retro-baseline analysis}
 dat.retro <- dat %>%
@@ -8127,6 +8135,7 @@ lmoutput_format <- function(lmobject, explan_var, group, dfname){
                              "Autism spectrum disorder",
                              "Attention deficit hyperactivity disorder",
                              "Personality disorders",
+                             "Did not report or did not know",
                              "Female",
                              "Non-binary/Self-defined",
                              "16-18",
@@ -8148,6 +8157,7 @@ lmoutput_format <- function(lmobject, explan_var, group, dfname){
                              "Time between lockdown and baseline")
   ## categories to facet on  
   categories <- c("Intercept",
+                  "Pre-existing mental health (Reference controls)",
                   "Pre-existing mental health (Reference controls)",
                   "Pre-existing mental health (Reference controls)",
                   "Pre-existing mental health (Reference controls)",
@@ -8183,6 +8193,7 @@ lmoutput_format <- function(lmobject, explan_var, group, dfname){
   
   ## Disorder dimension  
   groups <- c(group,
+              group,
               group,
               group,
               group,
@@ -8261,6 +8272,7 @@ model1b.lm.form <- function(outcome, explan_var) {
                              "autism_spectrum_disorder",
                              "mhd.attention_deficit_hyperactivity_disorder",
                              "mhd.personality_disorder",
+                             "DidNotRespondMHD",
                              "Gender_collapsed",
                              "age_category_collapsed_reordered",
                              "Ethnicity_collapsed",
@@ -8331,6 +8343,7 @@ model1b.lm.form("pcl.sum_score_base", "PCL.retrospective")
 
 gad.prepan.lm <-  lm(formula = gad.sum_score_base.GAD.prepandemic.glmformula,
                             dat.prepan)
+
 gad.retro.lm <- lm(formula = gad.sum_score_base.GAD.retrospective.glmformula,
                             dat.retro)
 

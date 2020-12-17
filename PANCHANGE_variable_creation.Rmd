@@ -731,8 +731,14 @@ dat <- dat %>%
   is.na(autism_spectrum_disorder) &
   is.na(mhd.attention_deficit_hyperactivity_disorder) &
   is.na(mhd.personality_disorder) &
-  is.na(control)) ~ 1))
+  is.na(control)) ~ "Prefer not to say", 
+ TRUE ~ "Responded to MHD"))
 
+
+dat <- dat %>%
+  mutate(DidNotRespondMHD = recode_factor(DidNotRespondMHD, 
+                "Prefer not to say" ="Prefer not to say",
+                "Responded to MHD" ="Responded to MHD"))
 
 ```
 
