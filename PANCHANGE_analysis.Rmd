@@ -8115,70 +8115,70 @@ lmoutput_format <- function(lmobject, explan_var, group, dfname){
   ## Row labels
   independent.variables <- c("intercept",
                              explan_var,
-                             "comorbid depression and anxiety compared to control",
-                             "depressive disorder compared to control",
-                             "anxiety disorder compared to control",
-                             "eating disorders compared to control",
-                             "obsessive compulsive disorders compared to control",
-                             "comorbid psychotic and bipolar disorder compared to control",
-                             "psychotic disorder compared to control",
-                             "bipolar disorder compared to control",
-                             "mhd.posttraumatic_stress_disorder_ptsd compared to control",
-                             "autism_spectrum_disorder compared to control",
-                             "mhd.attention_deficit_hyperactivity_disorder compared to control",
-                             "mhd.personality_disorder compared to control",
-                             "Female compared to male",
-                             "Non-binary/Self-defined compared to male",
-                             "16-18 compared to 26-35",
-                             "19-25 compared to 26-35",
-                             "36-45 compared to 26-35",
-                             "46-55 compared to 26-35",
-                             "56-65 compared to 26-35",
-                             "66-70 compared to 26-35",
-                             "71-75 compared to 26-35",
-                             "76+ compared to 26-35",
-                             "Mixed or multiple ethnicities compared to White",
-                             "Asian compared to White",
-                             "Black compared to White",
-                             "Other compared to White",
-                             "key_worker compared to employed",
-                             "unemployed compared to employed",
-                             "student compared to employed",
-                             "retired compared to employed",
-                             "time_diff_coping_lockdown_march_23")
+                             "Comorbid depression and anxiety",
+                             "Depressive disorders",
+                             "Anxiety disorders",
+                             "Eating disorders",
+                             "Obsessive compulsive disorders",
+                             "Comorbid psychotic and bipolar disorders",
+                             "Psychotic disorders",
+                             "Bipolar disorder",
+                             "Post traumatic stress disorder",
+                             "Autism spectrum disorder",
+                             "Attention deficit hyperactivity disorder",
+                             "Personality disorders",
+                             "Female",
+                             "Non-binary/Self-defined",
+                             "16-18",
+                             "19-25",
+                             "36-45",
+                             "46-55",
+                             "56-65",
+                             "66-70",
+                             "71-75",
+                             "76+",
+                             "Mixed or multiple ethnicities",
+                             "Asian",
+                             "Black",
+                             "Other",
+                             "Key worker",
+                             "Unemployed",
+                             "Student",
+                             "Retired",
+                             "Time between lockdown and baseline")
   ## categories to facet on  
   categories <- c("Intercept",
-                  "Pre-existing mental health",
-                  "Pre-existing mental health",
-                  "Pre-existing mental health",
-                  "Pre-existing mental health",
-                  "Pre-existing mental health",
-                  "Pre-existing mental health",
-                  "Pre-existing mental health",
-                  "Pre-existing mental health",
-                  "Pre-existing mental health",
-                  "Pre-existing mental health",
-                  "Pre-existing mental health",
-                  "Pre-existing mental health",
-                  "Pre-existing mental health",
-                  "Gender",
-                  "Gender",
-                  "Age",
-                  "Age",
-                  "Age",
-                  "Age",
-                  "Age",
-                  "Age",
-                  "Age",
-                  "Age",
-                  "Ethnicity",
-                  "Ethnicity",
-                  "Ethnicity",
-                  "Ethnicity",
-                  "Employment",
-                  "Employment",
-                  "Employment",
-                  "Employment",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Gender (Reference male)",
+                  "Gender (Reference male)",
+                  "Age (Reference 26-35)",
+                  "Age (Reference 26-35)",
+                  "Age (Reference 26-35)",
+                  "Age (Reference 26-35)",
+                  "Age (Reference 26-35)",
+                  "Age (Reference 26-35)",
+                  "Age (Reference 26-35)",
+                  "Age (Reference 26-35)",
+                  "Ethnicity (Reference White)",
+                  "Ethnicity (Reference White)",
+                  "Ethnicity (Reference White)",
+                  "Ethnicity (Reference White)",
+                  "Employment (Reference: Employed)",
+                  "Employment (Reference: Employed)",
+                  "Employment (Reference: Employed)",
+                  "Employment (Reference: Employed)",
                   "Other")
   
   ## Disorder dimension  
@@ -8287,13 +8287,24 @@ model1b.lm.form <- function(outcome, explan_var) {
 
 
 ```{r standardise linear variables}
+
+## Create copies of the variables renamed
+
+dat.prepan$GAD.prepandemic <- dat.prepan$gad.sum_score_prepan
+dat.prepan$PHQ.prepandemic <- dat.prepan$phq.sum_score_prepan
+dat.prepan$PCL.prepandemic <- dat.prepan$pcl.sum_score_prepan
+
+dat.retro$GAD.retrospective <- dat.retro$gad.sum_score_retro
+dat.retro$PHQ.retrospective <- dat.retro$phq.sum_score_retro
+dat.retro$PCL.retrospective <- dat.retro$pcl.sum_score_retro
+
 lin_preds <- c("time_diff_coping_lockdown_march_23",
-               "gad.sum_score_prepan",
-               "phq.sum_score_prepan",
-               "pcl.sum_score_prepan",
-               "gad.sum_score_retro",
-               "phq.sum_score_retro",
-               "pcl.sum_score_retro"
+               "GAD.prepandemic",
+               "PHQ.prepandemic",
+               "PCL.prepandemic",
+               "GAD.retrospective",
+               "PHQ.retrospective",
+               "PCL.retrospective"
                )
 
 dat.prepan[(names(dat.prepan) %in% lin_preds)] <- apply(dat.prepan[(names(dat.prepan) %in% lin_preds)],2,scale)
@@ -8305,32 +8316,32 @@ dat.retro[(names(dat.retro) %in% lin_preds)] <- apply(dat.retro[(names(dat.retro
 
 ```{r create formulas for forest models}
 
-model1b.lm.form("gad.sum_score_base", "gad.sum_score_prepan")
-model1b.lm.form("gad.sum_score_base", "gad.sum_score_retro")
+model1b.lm.form("gad.sum_score_base", "GAD.prepandemic")
+model1b.lm.form("gad.sum_score_base", "GAD.retrospective")
 
-model1b.lm.form("phq.sum_score_base", "phq.sum_score_prepan")
-model1b.lm.form("phq.sum_score_base", "phq.sum_score_retro")
+model1b.lm.form("phq.sum_score_base", "PHQ.prepandemic")
+model1b.lm.form("phq.sum_score_base", "PHQ.retrospective")
 
-model1b.lm.form("pcl.sum_score_base", "pcl.sum_score_prepan")
-model1b.lm.form("pcl.sum_score_base", "pcl.sum_score_retro")
+model1b.lm.form("pcl.sum_score_base", "PCL.prepandemic")
+model1b.lm.form("pcl.sum_score_base", "PCL.retrospective")
 
 ```
 
 ```{r run models for all forest plot items}
 
-gad.prepan.lm <-  lm(formula = gad.sum_score_base.gad.sum_score_prepan.glmformula,
+gad.prepan.lm <-  lm(formula = gad.sum_score_base.GAD.prepandemic.glmformula,
                             dat.prepan)
-gad.retro.lm <- lm(formula = gad.sum_score_base.gad.sum_score_retro.glmformula,
+gad.retro.lm <- lm(formula = gad.sum_score_base.GAD.retrospective.glmformula,
                             dat.retro)
 
-phq.prepan.lm <-  lm(formula = phq.sum_score_base.phq.sum_score_prepan.glmformula,
+phq.prepan.lm <-  lm(formula = phq.sum_score_base.PHQ.prepandemic.glmformula,
                             dat.prepan)
-phq.retro.lm <- lm(formula = phq.sum_score_base.phq.sum_score_retro.glmformula,
+phq.retro.lm <- lm(formula = phq.sum_score_base.PHQ.retrospective.glmformula,
                             dat.retro)
 
-pcl.prepan.lm <-  lm(formula = pcl.sum_score_base.pcl.sum_score_prepan.glmformula,
+pcl.prepan.lm <-  lm(formula = pcl.sum_score_base.PCL.prepandemic.glmformula,
                             dat.prepan)
-pcl.retro.lm <- lm(formula = pcl.sum_score_base.pcl.sum_score_retro.glmformula,
+pcl.retro.lm <- lm(formula = pcl.sum_score_base.PCL.retrospective.glmformula,
                             dat.retro)
   
 ```
@@ -8362,26 +8373,26 @@ dat.retro.nbr$Ethnicity_collapsed[998] <- "Other"  #this person was an NA
 ```{r run models for rero by sample forest plots}
 
 
-gad.retro.lm.glad <- lm(formula = gad.sum_score_base.gad.sum_score_retro.glmformula,
+gad.retro.lm.glad <- lm(formula = gad.sum_score_base.GAD.retrospective.glmformula,
                             dat.retro.glad)
-gad.retro.lm.nbr <- lm(formula = gad.sum_score_base.gad.sum_score_retro.glmformula,
+gad.retro.lm.nbr <- lm(formula = gad.sum_score_base.GAD.retrospective.glmformula,
                             dat.retro.nbr)
-gad.retro.lm.ramp <- lm(formula = gad.sum_score_base.gad.sum_score_retro.glmformula,
+gad.retro.lm.ramp <- lm(formula = gad.sum_score_base.GAD.retrospective.glmformula,
                             dat.retro.ramp)
 
 
-phq.retro.lm.glad <- lm(formula = phq.sum_score_base.phq.sum_score_retro.glmformula,
+phq.retro.lm.glad <- lm(formula = phq.sum_score_base.PHQ.retrospective.glmformula,
                             dat.retro.glad)
-phq.retro.lm.nbr <- lm(formula = phq.sum_score_base.phq.sum_score_retro.glmformula,
+phq.retro.lm.nbr <- lm(formula = phq.sum_score_base.PHQ.retrospective.glmformula,
                             dat.retro.nbr)
-phq.retro.lm.ramp <- lm(formula = phq.sum_score_base.phq.sum_score_retro.glmformula,
+phq.retro.lm.ramp <- lm(formula = phq.sum_score_base.PHQ.retrospective.glmformula,
                             dat.retro.ramp)
 
-pcl.retro.lm.glad <- lm(formula = pcl.sum_score_base.pcl.sum_score_retro.glmformula,
+pcl.retro.lm.glad <- lm(formula = pcl.sum_score_base.PCL.retrospective.glmformula,
                             dat.retro.glad)
-pcl.retro.lm.nbr <- lm(formula = pcl.sum_score_base.pcl.sum_score_retro.glmformula,
+pcl.retro.lm.nbr <- lm(formula = pcl.sum_score_base.PCL.retrospective.glmformula,
                             dat.retro.nbr)
-pcl.retro.lm.ramp <- lm(formula = pcl.sum_score_base.pcl.sum_score_retro.glmformula,
+pcl.retro.lm.ramp <- lm(formula = pcl.sum_score_base.PCL.retrospective.glmformula,
                             dat.retro.ramp)
   
 ```
@@ -8392,37 +8403,37 @@ pcl.retro.lm.ramp <- lm(formula = pcl.sum_score_base.pcl.sum_score_retro.glmform
 ```{r generate datasets for all plots}
 
 # prepandemic and retrospective, grouped by disorder measure
-lmoutput_format(gad.prepan.lm,"gad.sum_score_prepan","GAD-7", "gad.prepan.lm.for.plot")
-lmoutput_format(gad.retro.lm,"gad.sum_score_retro","GAD-7", "gad.retro.lm.for.plot")
+lmoutput_format(gad.prepan.lm,"GAD.prepandemic","GAD-7", "gad.prepan.lm.for.plot")
+lmoutput_format(gad.retro.lm,"GAD.retrospective","GAD-7", "gad.retro.lm.for.plot")
 
-lmoutput_format(phq.prepan.lm,"phq.sum_score_prepan","PHQ-9", "phq.prepan.lm.for.plot")
-lmoutput_format(phq.retro.lm,"phq.sum_score_retro","PHQ-9", "phq.retro.lm.for.plot")
+lmoutput_format(phq.prepan.lm,"PHQ.prepandemic","PHQ-9", "phq.prepan.lm.for.plot")
+lmoutput_format(phq.retro.lm,"PHQ.retrospective","PHQ-9", "phq.retro.lm.for.plot")
 
-lmoutput_format(pcl.prepan.lm,"pcl.sum_score_prepan","PCL", "pcl.prepan.lm.for.plot")
-lmoutput_format(pcl.retro.lm,"pcl.sum_score_retro","PCL", "pcl.retro.lm.for.plot")
+lmoutput_format(pcl.prepan.lm,"PCL.prepandemic","PCL", "pcl.prepan.lm.for.plot")
+lmoutput_format(pcl.retro.lm,"PCL.retrospective","PCL", "pcl.retro.lm.for.plot")
 
 # prepandemic and retrospective, grouped by time point
-lmoutput_format(gad.prepan.lm,"gad.sum_score_prepan","Prepandemic", "gad.prepan.lm.for.plot.timegroup")
-lmoutput_format(gad.retro.lm,"gad.sum_score_retro","Retrospective", "gad.retro.lm.for.plot.timegroup")
+lmoutput_format(gad.prepan.lm,"GAD.prepandemic","Prepandemic", "gad.prepan.lm.for.plot.timegroup")
+lmoutput_format(gad.retro.lm,"GAD.retrospective","Retrospective", "gad.retro.lm.for.plot.timegroup")
 
-lmoutput_format(phq.prepan.lm,"phq.sum_score_prepan","Prepandemic", "phq.prepan.lm.for.plot.timegroup")
-lmoutput_format(phq.retro.lm,"phq.sum_score_retro","Retrospective", "phq.retro.lm.for.plot.timegroup")
+lmoutput_format(phq.prepan.lm,"PHQ.prepandemic","Prepandemic", "phq.prepan.lm.for.plot.timegroup")
+lmoutput_format(phq.retro.lm,"PHQ.retrospective","Retrospective", "phq.retro.lm.for.plot.timegroup")
 
-lmoutput_format(pcl.prepan.lm,"pcl.sum_score_prepan","Prepandemic", "pcl.prepan.lm.for.plot.timegroup")
-lmoutput_format(pcl.retro.lm,"pcl.sum_score_retro","Retrospective", "pcl.retro.lm.for.plot.timegroup")
+lmoutput_format(pcl.prepan.lm,"PCL.prepandemic","Prepandemic", "pcl.prepan.lm.for.plot.timegroup")
+lmoutput_format(pcl.retro.lm,"PCL.retrospective","Retrospective", "pcl.retro.lm.for.plot.timegroup")
 
 # Retrospective, grouped by sample
-lmoutput_format(gad.retro.lm.glad,"gad.sum_score_retro","GLAD and EDGI", "gad.retro.lm.for.plot.GLAD")
-lmoutput_format(gad.retro.lm.nbr,"gad.sum_score_retro","NBR", "gad.retro.lm.for.plot.NBR")
-lmoutput_format(gad.retro.lm.ramp,"gad.sum_score_retro","RAMP", "gad.retro.lm.for.plot.RAMP")
+lmoutput_format(gad.retro.lm.glad,"GAD.retrospective","GLAD and EDGI", "gad.retro.lm.for.plot.GLAD")
+lmoutput_format(gad.retro.lm.nbr,"GAD.retrospective","NBR", "gad.retro.lm.for.plot.NBR")
+lmoutput_format(gad.retro.lm.ramp,"GAD.retrospective","RAMP", "gad.retro.lm.for.plot.RAMP")
 
-lmoutput_format(phq.retro.lm.glad,"phq.sum_score_retro","GLAD and EDGI", "phq.retro.lm.for.plot.GLAD")
-lmoutput_format(phq.retro.lm.nbr,"phq.sum_score_retro","NBR", "phq.retro.lm.for.plot.NBR")
-lmoutput_format(phq.retro.lm.ramp,"phq.sum_score_retro","RAMP", "phq.retro.lm.for.plot.RAMP")
+lmoutput_format(phq.retro.lm.glad,"PHQ.retrospective","GLAD and EDGI", "phq.retro.lm.for.plot.GLAD")
+lmoutput_format(phq.retro.lm.nbr,"PHQ.retrospective","NBR", "phq.retro.lm.for.plot.NBR")
+lmoutput_format(phq.retro.lm.ramp,"PHQ.retrospective","RAMP", "phq.retro.lm.for.plot.RAMP")
 
-lmoutput_format(pcl.retro.lm.glad,"pcl.sum_score_retro","GLAD and EDGI", "pcl.retro.lm.for.plot.GLAD")
-lmoutput_format(pcl.retro.lm.nbr,"pcl.sum_score_retro","NBR", "pcl.retro.lm.for.plot.NBR")
-lmoutput_format(pcl.retro.lm.ramp,"pcl.sum_score_retro","RAMP", "pcl.retro.lm.for.plot.RAMP")
+lmoutput_format(pcl.retro.lm.glad,"PCL.retrospective","GLAD and EDGI", "pcl.retro.lm.for.plot.GLAD")
+lmoutput_format(pcl.retro.lm.nbr,"PCL.retrospective","NBR", "pcl.retro.lm.for.plot.NBR")
+lmoutput_format(pcl.retro.lm.ramp,"PCL.retrospective","RAMP", "pcl.retro.lm.for.plot.RAMP")
 
 
 ```
@@ -8473,64 +8484,64 @@ plot.dat.sample.pcl <- rbind(pcl.retro.lm.for.plot.GLAD,
 
 ## Forest plots
 ### disorder
-```{r forest plot by disorder prepan, fig.height=20, fig.width=20, dpi=120}
+```{r forest plot by disorder prepan, fig.height=30, fig.width=35, dpi=120}
 
 lm.forest(plot.dat.disorder.prepan,"Predictors of pandemic symptoms controlling for prepandemic symptoms")
 
 ```
 
-```{r forest plot by disorder retro, fig.height=20, fig.width=20, dpi=120}
+```{r forest plot by disorder retro, fig.height=30, fig.width=30, dpi=120}
 
 lm.forest(plot.dat.disorder.retro,"Predictors of pandemic symptoms controlling for retrospective symptoms")
 
 ```
 
 ### disorder (no PCL)
-```{r forest plot by disorder prepan no pcl, fig.height=20, fig.width=20, dpi=120}
+```{r forest plot by disorder prepan no pcl, fig.height=30, fig.width=30, dpi=120}
 
 lm.forest(plot.dat.disorder.prepan.gadphq,"Predictors of pandemic symptoms controlling for prepandemic symptoms")
 
 ```
 
-```{r forest plot by disorder retro no pcl, fig.height=20, fig.width=20, dpi=120}
+```{r forest plot by disorder retro no pcl, fig.height=30, fig.width=30, dpi=120}
 
 lm.forest(plot.dat.disorder.retro.gadphq,"Predictors of pandemic symptoms controlling for retrospective symptoms")
 
 ```
 
 ### time point 
-```{r forest plot by time point gad, fig.height=20, fig.width=20, dpi=120}
+```{r forest plot by time point gad, fig.height=30, fig.width=30, dpi=120}
 
 lm.forest(plot.dat.time.gad,"Predictors of anxiety during pandemic controlling for retrospective or prepandemic symptoms")
 
 ```
 
-```{r forest plot by time point phq, fig.height=20, fig.width=20, dpi=120}
+```{r forest plot by time point phq, fig.height=30, fig.width=30, dpi=120}
 
 lm.forest(plot.dat.time.phq,"Predictors of depression during pandemic controlling for retrospective or prepandemic symptoms")
 
 ```
 
-```{r forest plot by time point pcl, fig.height=20, fig.width=20, dpi=120}
+```{r forest plot by time point pcl, fig.height=30, fig.width=30, dpi=120}
 
 lm.forest(plot.dat.time.phq,"Predictors of PTSD during pandemic controlling for retrospective or prepandemic symptoms")
 
 ```
 ### Sample (retrospective only)
 
-```{r forest plot by sample retro only gad, fig.height=20, fig.width=20, dpi=120}
+```{r forest plot by sample retro only gad, fig.height=30, fig.width=30, dpi=120}
 
 lm.forest(plot.dat.sample.gad ,"Predictors of anxiety controlling for retrospective symptoms across samples")
 
 ```
 
-```{r forest plot by sample retro only phq, fig.height=20, fig.width=20, dpi=120}
+```{r forest plot by sample retro only phq, fig.height=30, fig.width=30, dpi=120}
 
 lm.forest(plot.dat.sample.phq ,"Predictors of depression controlling for retrospective symptoms across samples")
 
 ```
 
-```{r forest plot by sample retro only pcl, fig.height=20, fig.width=20, dpi=120}
+```{r forest plot by sample retro only pcl, fig.height=30, fig.width=30, dpi=120}
 
 lm.forest(plot.dat.sample.pcl ,"Predictors of PTSD controlling for retrospective symptoms across samples")
 
