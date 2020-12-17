@@ -8175,10 +8175,10 @@ lmoutput_format <- function(lmobject, explan_var, group, dfname){
                   "Ethnicity (Reference White)",
                   "Ethnicity (Reference White)",
                   "Ethnicity (Reference White)",
-                  "Employment (Reference: Employed)",
-                  "Employment (Reference: Employed)",
-                  "Employment (Reference: Employed)",
-                  "Employment (Reference: Employed)",
+                  "Employment (Reference employed)",
+                  "Employment (Reference employed)",
+                  "Employment (Reference employed)",
+                  "Employment (Reference employed)",
                   "Other")
   
   ## Disorder dimension  
