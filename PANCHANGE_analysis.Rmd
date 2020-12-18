@@ -2185,6 +2185,73 @@ dat.long.pcl.sum %>%
   facet_wrap("Disorder_hierarchical")
 ```
 
+### Violin plots
+
+```{r pcl.sum violin plot sample}
+dat.long.pcl.sum %>%
+  filter(Time_point != "retro") %>%
+  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD and EDGI",
+                            Sample == "RAMP" ~ "RAMP",
+                            Sample == "NBR" ~ "NBR")) %>% 
+  mutate(Time_point_renamed = fct_recode(Time_point,
+                                         "Prepandemic" = "prepan",
+                                         "Baseline" = "base")
+  ) %>%
+  mutate(Time_point_reordered = fct_relevel(Time_point_renamed,
+                                            "Baseline",
+                                            "Prepandemic")
+  ) %>%
+  ggplot(mapping = aes(
+    x = Time_point_reordered,
+    y = pcl.sum_score,
+    fill = Time_point_reordered)) +
+  geom_hline(yintercept = 21, linetype = "dashed", color = "gray") +
+#  geom_hline(yintercept = 10, linetype = "dashed", color = "gray") +
+#  geom_hline(yintercept = 15, linetype = "dashed", color = "gray") +
+  geom_flat_violin(
+    position = position_nudge(x = .2, y = 0),
+    trim = FALSE,
+    alpha = 0.5
+  ) +
+  geom_point(
+    aes(
+      y = pcl.sum_score,
+      color = Time_point_reordered),
+    position = position_jitter(width = .15),
+    size = .5,
+    alpha = 0.8) +
+  #  geom_boxplot(
+  #    width = .1,
+  #    guides = FALSE,
+  #    outlier.shape = NA,
+  #    alpha = 0.5) +
+  stat_summary(fun.y = mean,
+               fun.ymin = function(x) mean(x) - sd(x),
+               fun.ymax = function(x) mean(x) + sd(x),
+               geom = "pointrange"
+  ) +
+  labs(
+    y = "PCL scores",
+    fill = "Time point") +
+  theme_personal +
+  theme(
+    axis.text.y = element_blank()
+  ) +
+  scale_fill_manual(
+    values = COPINGpalette3,
+    breaks = c("Prepandemic", "Baseline")
+  ) +
+  scale_alpha(guide = 'none') +
+  scale_size(guide = 'none') +
+  scale_color_manual(
+    values = COPINGpalette3,
+    breaks = c("Prepandemic", "Baseline"),
+    guide = "none") +
+    facet_wrap(facets = vars(sample),
+             nrow = 4
+  ) +
+  coord_flip()
+```
 
 
 # Create subsets of data for analyses
@@ -8373,9 +8440,9 @@ dat.retro.ramp <- dat.retro %>%
 
 ### add a single "other ethnicity individual" as a jitter for NBR so this category remains included wihout adding explanation.
 ```{r add jitter "other" for NBR other ethnicity so this cat is available for plotting}
-
-dat.retro.nbr$Ethnicity_collapsed[801] <- "Other"  #this person was an NA
-dat.retro.nbr$Ethnicity_collapsed[998] <- "Other"  #this person was an NA
+dat.retro.nbr$Ethnicity_collapsed[586] <- "Other"  #this person was an NA
+dat.retro.nbr$Ethnicity_collapsed[856] <- "Other"  #this person was an NA
+dat.retro.nbr$Ethnicity_collapsed[871] <- "Other"  #this person was an NA
 
 ```
 

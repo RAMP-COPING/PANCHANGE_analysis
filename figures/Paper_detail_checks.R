@@ -95,10 +95,3 @@ alldat %>%
             m.pcl.base = mean(pcl.sum_score_base, na.rm = TRUE),
             sd.pcl.base = sd(pcl.sum_score_base, na.rm = TRUE)
             )
-
-
-
-apply(varssamp, 2, function(x) list(mean=mean(!is.na(x)), sd=sd(!is.na(x))))
-
-DT[, sapply(.SD, function(x) list(mean=mean(x), sd=sd(x))), by=ID]
-

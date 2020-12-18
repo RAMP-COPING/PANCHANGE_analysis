@@ -742,7 +742,7 @@ dat <- dat %>%
 
 ```
 
-## create facor comparing prefer not to say to controls
+## create factor comparing prefer not to say to controls
 
 ```{r prefer not to say to controls}
 
