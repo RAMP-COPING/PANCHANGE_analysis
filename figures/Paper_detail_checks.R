@@ -60,3 +60,45 @@ alldat %>%
   mutate(p_value = t.test(unlist(gad.sum_score_base), unlist(gad.sum_score_retro))$p.value,
          t_value = t.test(unlist(gad.sum_score_base), unlist(gad.sum_score_retro))$statistic,
          df = t.test(unlist(gad.sum_score_base), unlist(gad.sum_score_retro))$parameter)
+
+## Means and standard deviations
+## over all
+
+vars <- alldat %>%
+  select(gad.sum_score_base,gad.sum_score_retro,gad.sum_score_prepan,
+         phq.sum_score_base,phq.sum_score_retro,phq.sum_score_prepan,
+         pcl.sum_score_base)
+
+
+apply(vars, 2, function(x) list(mean=mean(!is.na(x)), sd=sd(!is.na(x))))
+
+## By sample
+alldat %>%
+  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+                            Sample == "RAMP" ~ "RAMP",
+                            Sample == "NBR" ~ "NBR")) %>%
+  group_by(sample) %>%
+  summarize(m.gad.base = mean(gad.sum_score_base, na.rm = TRUE),
+            sd.gad.base = sd(gad.sum_score_base, na.rm = TRUE),
+            m.gad.prepan = mean(gad.sum_score_prepan, na.rm = TRUE),
+            sd.gad.prepan = sd(gad.sum_score_prepan, na.rm = TRUE),
+            m.gad.retro = mean(gad.sum_score_retro, na.rm = TRUE),
+            sd.gad.retro = sd(gad.sum_score_retro, na.rm = TRUE),
+            
+            m.phq.base = mean(phq.sum_score_base, na.rm = TRUE),
+            sd.phq.base = sd(phq.sum_score_base, na.rm = TRUE),
+            m.phq.prepan = mean(phq.sum_score_prepan, na.rm = TRUE),
+            sd.phq.prepan = sd(phq.sum_score_prepan, na.rm = TRUE),
+            m.phq.retro = mean(phq.sum_score_retro, na.rm = TRUE),
+            sd.phq.retro = sd(phq.sum_score_retro, na.rm = TRUE),
+            
+            m.pcl.base = mean(pcl.sum_score_base, na.rm = TRUE),
+            sd.pcl.base = sd(pcl.sum_score_base, na.rm = TRUE)
+            )
+
+
+
+apply(varssamp, 2, function(x) list(mean=mean(!is.na(x)), sd=sd(!is.na(x))))
+
+DT[, sapply(.SD, function(x) list(mean=mean(x), sd=sd(x))), by=ID]
+
