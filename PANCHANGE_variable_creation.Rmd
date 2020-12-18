@@ -742,6 +742,13 @@ dat <- dat %>%
 
 ```
 
+## create facor comparing prefer not to say to controls
+
+```{r prefer not to say to controls}
+
+
+```
+
 ##Export data
 ```{r Save four cohorts as rds file}
 saveRDS(object = dat, file = paste0(data_path, "/four_cohorts_variables.rds"))

@@ -8135,7 +8135,6 @@ lmoutput_format <- function(lmobject, explan_var, group, dfname){
                              "Autism spectrum disorder",
                              "Attention deficit hyperactivity disorder",
                              "Personality disorders",
-                             "Did not report or did not know",
                              "Female",
                              "Non-binary/Self-defined",
                              "16-18",
@@ -8157,7 +8156,6 @@ lmoutput_format <- function(lmobject, explan_var, group, dfname){
                              "Time between lockdown and baseline")
   ## categories to facet on  
   categories <- c("Intercept",
-                  "Pre-existing mental health (Reference controls)",
                   "Pre-existing mental health (Reference controls)",
                   "Pre-existing mental health (Reference controls)",
                   "Pre-existing mental health (Reference controls)",
@@ -8193,7 +8191,6 @@ lmoutput_format <- function(lmobject, explan_var, group, dfname){
   
   ## Disorder dimension  
   groups <- c(group,
-              group,
               group,
               group,
               group,
@@ -8272,7 +8269,6 @@ model1b.lm.form <- function(outcome, explan_var) {
                              "autism_spectrum_disorder",
                              "mhd.attention_deficit_hyperactivity_disorder",
                              "mhd.personality_disorder",
-                             "DidNotRespondMHD",
                              "Gender_collapsed",
                              "age_category_collapsed_reordered",
                              "Ethnicity_collapsed",

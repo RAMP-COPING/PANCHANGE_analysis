@@ -296,6 +296,7 @@ nrow(dat.raw)-nrow(dat)
 
 ```{r freq table gad perceived change}
 dat %>%
+  group_by(Sample) %>%
   freq(gad.pandemic_felt_feelings)
 
 ```
@@ -304,6 +305,7 @@ dat %>%
 ```{r freq table phq perceived change}
 
 dat %>%
+  group_by(Sample) %>%
   freq(phq.pandemic_felt_feelings)
 
 ```
@@ -311,50 +313,59 @@ dat %>%
 ### Ethnicity
 ```{r freq table ethnicity}
 dat %>%
+  group_by(Sample) %>%
   freq(Ethnicity_collapsed) 
 ```
 ### Gender
 ```{r freq table gender}
 dat %>%
+  group_by(Sample) %>%
   freq(Gender_collapsed) 
 ```
 ### age categorical
 ```{r freq table age collapsed}
 dat %>%
+  group_by(Sample) %>%
   freq(age_category_collapsed) 
 ```
 ### Employment
 
 ```{r freq table employment collapsed}
 dat %>%
+  group_by(Sample) %>%
   freq(employment_prior_covid) 
 ```
 
 ### anxiety disorders
 ```{r freq table diagnosis anxiety}
 dat %>%
+  group_by(Sample) %>%
   freq(anxiety_disorders) 
 ```
 
 ### Depressive disorders
 ```{r freq table diagnosis depression}
 dat %>%
+  group_by(Sample) %>%
   freq(depressive_disorders) 
 ```
 ### Depression and anxiety
 ```{r freq table diagnosis depression and anxiety}
 dat %>%
+  group_by(Sample) %>%
   freq(depression_and_anxiety) 
 ```
 ### Eating disorders
 ```{r freq table diagnosis eating disorder}
 dat %>%
+  group_by(Sample) %>%
   freq(eating_disorders) 
 
 ```
 ### OCD
 ```{r freq table diagnosis obsessive compulsive disorders}
 dat %>%
+  group_by(Sample) %>%
   freq(obsessive_compulsive_disorders) 
 
 ```
@@ -362,6 +373,7 @@ dat %>%
 ### Psychosis
 ```{r freq table diagnosis psychotic disorders}
 dat %>%
+  group_by(Sample) %>%
   freq(psychotic_disorders) 
 
 ```
@@ -369,6 +381,7 @@ dat %>%
 ### Bipolar
 ```{r freq table diagnosis bipolar}
 dat %>%
+  group_by(Sample) %>%
   freq(mhd.mania_hypomania_bipolar_or_manicdepression) 
 
 ```
@@ -376,6 +389,7 @@ dat %>%
 ### PTSD
 ```{r freq table diagnosis PTSD}
 dat %>%
+  group_by(Sample) %>%
   freq(mhd.posttraumatic_stress_disorder_ptsd) 
 
 ```
@@ -384,6 +398,7 @@ dat %>%
 
 ```{r freq table diagnosis ASD}
 dat %>%
+  group_by(Sample) %>%
   freq(autism_spectrum_disorder) 
 
 ```
@@ -391,6 +406,7 @@ dat %>%
 ### ADHD
 ```{r freq table diagnosis ADHD}
 dat %>%
+  group_by(Sample) %>%
   freq(mhd.attention_deficit_hyperactivity_disorder) 
 
 ```
@@ -398,6 +414,7 @@ dat %>%
 ### Personality disorders
 ```{r freq table diagnosis personality disorder}
 dat %>%
+  group_by(Sample) %>%
   freq(mhd.personality_disorder) 
 
 ```
@@ -405,12 +422,14 @@ dat %>%
 ### Controls 
 ```{r freq table diagnosis control}
 dat %>%
+  group_by(Sample) %>%
   freq(control) 
 ```
 
 ### Dont know or prefer not to say
 ```{r freq table diagnosis prefer not to say}
 dat %>%
+  group_by(Sample) %>%
   freq(DidNotRespondMHD) 
 ```
 
