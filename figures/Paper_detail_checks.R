@@ -70,7 +70,7 @@ vars <- alldat %>%
          pcl.sum_score_base)
 
 
-apply(vars, 2, function(x) list(mean=mean(!is.na(x)), sd=sd(!is.na(x))))
+apply(vars, 2, function(x) list(describe(x)))
 
 ## By sample
 alldat %>%
@@ -93,5 +93,7 @@ alldat %>%
             sd.phq.retro = sd(phq.sum_score_retro, na.rm = TRUE),
             
             m.pcl.base = mean(pcl.sum_score_base, na.rm = TRUE),
-            sd.pcl.base = sd(pcl.sum_score_base, na.rm = TRUE)
+            sd.pcl.base = sd(pcl.sum_score_base, na.rm = TRUE),
+            m.pcl.prepan = mean(pcl.sum_score_prepan, na.rm = TRUE),
+            sd.pcl.prepan = sd(pcl.sum_score_prepan, na.rm = TRUE),
             )
