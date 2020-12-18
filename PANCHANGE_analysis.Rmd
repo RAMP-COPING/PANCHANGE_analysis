@@ -2238,13 +2238,13 @@ dat.long.pcl.sum %>%
     axis.text.y = element_blank()
   ) +
   scale_fill_manual(
-    values = COPINGpalette3,
+    values = c("#78D9C5","#EEB6E9"),
     breaks = c("Prepandemic", "Baseline")
   ) +
   scale_alpha(guide = 'none') +
   scale_size(guide = 'none') +
   scale_color_manual(
-    values = COPINGpalette3,
+    values = c("#78D9C5","#EEB6E9"),
     breaks = c("Prepandemic", "Baseline"),
     guide = "none") +
     facet_wrap(facets = vars(sample),

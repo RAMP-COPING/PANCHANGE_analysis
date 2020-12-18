@@ -97,3 +97,10 @@ alldat %>%
             m.pcl.prepan = mean(pcl.sum_score_prepan, na.rm = TRUE),
             sd.pcl.prepan = sd(pcl.sum_score_prepan, na.rm = TRUE),
             )
+
+## Explore odd bumpy NBR data (retrospective PHQ 9, baseline GAD-7, )
+
+alldat %>% 
+  group_by(Sample) %>% 
+  do(h = hist(.$phq.sum_score_retro))
+
