@@ -1,0 +1,351 @@
+---
+title: "Final paper detail checks and analyses"
+
+author: "Kirstin L Purves"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: false
+    number_sections: false
+    highlight: monochrome
+    theme: cerulean
+code_folding: show
+
+html_notebook:
+  theme: cerulean
+toc: yes
+---
+
+The final analyses, comparisons and checks for ***Predicting anxiety, depression and trauma symptoms during the COVID-19 pandemic in the UK***
+
+Note that when GLAD, we always mean GLAD & EDGI 
+
+# Set up 
+ 
+```{r read in data } 
+# Read in data
+library(tidyverse)
+library(data.table)
+library(lubridate)
+library(psych)
+
+
+# get file info
+source("/Users/kirstin/Dropbox/SGDP/RAMP/Projects/PANCHANGE/PANCHANGE_raw_path.R")
+
+
+alldat <-  readRDS(file = paste0(data_path, "/four_cohorts_variables_exclusion.rds"))
+
+```
+
+
+# Impute and subset data
+
+Impute retrospective scores if no change reported
+
+```{r impute retro}
+
+# impute retro for those who did not change
+
+alldat$gad.sum_score_retro <- ifelse(alldat$gad.pandemic_felt_feelings == "No different", alldat$gad.sum_score_base,alldat$gad.sum_score_retro)
+alldat$phq.sum_score_retro <- ifelse(alldat$phq.pandemic_felt_feelings == "No different", alldat$phq.sum_score_base,alldat$phq.sum_score_retro)
+```
+
+
+subsample for retro-baseline analysis
+exclude those who do not have complete responses for both baseline and retrospective
+in addition to those already excluded for NA in age, gender and MH diagnosis.
+
+RETROSPECTIVE
+```{r subset retrospective data }
+dat.retro <- alldat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+        data_group_gad == "All prepandemic, baseline and retrospective data") |
+       (data_group_phq == "Baseline and retrospective data" |
+          data_group_phq == "All prepandemic, baseline and retrospective data") |
+       (data_group_pcl == "Baseline and retrospective data" |
+          data_group_pcl == "All prepandemic, baseline and retrospective data"))
+  )
+
+dim(dat.retro)
+```
+
+subsample for prepan-baseline analysis
+exclude those who do not have complete responses for both baseline and prepandemic
+in addition to those already excluded for NA in age, gender and MH diagnosis.
+
+PREPANDEMIC
+```{r subset prepandemic}
+
+dat.prepan <- alldat %>%
+  filter(
+    ((data_group_gad == "Prepandemic and baseline data" |
+        data_group_gad == "All prepandemic, baseline and retrospective data") |
+       (data_group_phq == "Prepandemic and baseline data" |
+          data_group_phq == "All prepandemic, baseline and retrospective data") |
+       (data_group_pcl == "Prepandemic and baseline data" |
+          data_group_pcl == "All prepandemic, baseline and retrospective data") ) &
+      prepandemic_march_1_numeric == 1 # Exclude participants that signed up after the 1. March
+  )
+
+dim(dat.prepan)
+
+```
+
+
+Subset by study
+
+```{r subset by study}
+
+## Subset samples by study
+
+GLAD.prepan <- dat.prepan %>%
+  filter(Sample == "GLAD" | 
+           Sample == "EDGI")
+
+NBR.prepan <- dat.prepan %>%
+  filter(Sample == "NBR")
+
+RAMP.prepan <- dat.prepan %>%
+  filter(Sample == "RAMP")
+
+### retro
+GLAD.retro <- dat.retro %>%
+  filter(Sample == "GLAD" | 
+           Sample == "EDGI")
+
+NBR.retro <- dat.retro %>%
+  filter(Sample == "NBR")
+
+RAMP.retro <- dat.retro %>%
+  filter(Sample == "RAMP")
+
+```
+
+# Analytic checks and last pass
+
+## Most recent sign up per sample
+
+```{r most recent sign up}
+
+max(RAMP.prepan$startDate.coping)
+max(GLAD.prepan$startDate.coping)
+max(NBR.prepan$startDate.coping)
+
+```
+
+## Means, SD and n
+
+
+### overall
+
+Retrospective
+```{r means etc overall retro}
+
+vars <- dat.retro %>%
+  select(gad.sum_score_base,gad.sum_score_retro,
+         phq.sum_score_base,phq.sum_score_retro,
+         pcl.sum_score_base)
+
+
+apply(vars, 2, function(x) list(describe(x)))
+
+```
+
+
+Prepandemic
+```{r means etc overall prepan}
+
+vars <- dat.prepan %>%
+  select(gad.sum_score_base,gad.sum_score_prepan,
+         phq.sum_score_base,phq.sum_score_prepan,
+         pcl.sum_score_base,  pcl.sum_score_prepan)
+
+
+apply(vars, 2, function(x) list(describe(x)))
+
+```
+
+### By sample
+
+retrospective
+```{r means etc by sample retro}
+dat.retro %>%
+  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+                            Sample == "RAMP" ~ "RAMP",
+                            Sample == "NBR" ~ "NBR")) %>%
+  group_by(sample) %>%
+  summarize(m.gad.base = mean(gad.sum_score_base, na.rm = TRUE),
+            sd.gad.base = sd(gad.sum_score_base, na.rm = TRUE),
+            n.gad.base = sum(!is.na(gad.sum_score_base)),
+            m.gad.retro = mean(gad.sum_score_retro, na.rm = TRUE),
+            sd.gad.retro = sd(gad.sum_score_retro, na.rm = TRUE),
+            n.gad.retro = sum(!is.na(gad.sum_score_retro)),
+            
+            m.phq.base = mean(phq.sum_score_base, na.rm = TRUE),
+            sd.phq.base = sd(phq.sum_score_base, na.rm = TRUE),
+            n.phq.base = sum(!is.na(phq.sum_score_base)),
+            m.phq.retro = mean(phq.sum_score_retro, na.rm = TRUE),
+            sd.phq.retro = sd(phq.sum_score_retro, na.rm = TRUE),
+            n.phq.retro = sum(!is.na(phq.sum_score_retro)),
+            
+            m.pcl.base = mean(pcl.sum_score_base, na.rm = TRUE),
+            sd.pcl.base = sd(pcl.sum_score_base, na.rm = TRUE),
+            n.pcl.base = sum(!is.na(pcl.sum_score_base)),
+
+            )
+```
+
+prepandemic
+```{r means etc by sample prepan}
+dat.prepan %>%
+  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+                            Sample == "RAMP" ~ "RAMP",
+                            Sample == "NBR" ~ "NBR")) %>%
+  group_by(sample) %>%
+  summarize(m.gad.base = mean(gad.sum_score_base, na.rm = TRUE),
+            sd.gad.base = sd(gad.sum_score_base, na.rm = TRUE),
+            n.gad.base = sum(!is.na(gad.sum_score_base)),
+            m.gad.prepan = mean(gad.sum_score_prepan, na.rm = TRUE),
+            sd.gad.prepan = sd(gad.sum_score_prepan, na.rm = TRUE),
+            n.gad.prepan = sum(!is.na(gad.sum_score_prepan)),
+            
+            m.phq.base = mean(phq.sum_score_base, na.rm = TRUE),
+            sd.phq.base = sd(phq.sum_score_base, na.rm = TRUE),
+            n.phq.base = sum(!is.na(phq.sum_score_base)),
+            m.phq.prepan = mean(phq.sum_score_prepan, na.rm = TRUE),
+            sd.phq.prepan = sd(phq.sum_score_prepan, na.rm = TRUE),
+            n.phq.prepan = sum(!is.na(phq.sum_score_prepan)),
+            
+            m.pcl.base = mean(pcl.sum_score_base, na.rm = TRUE),
+            sd.pcl.base = sd(pcl.sum_score_base, na.rm = TRUE),
+            n.pcl.base = sum(!is.na(pcl.sum_score_base)),
+            m.pcl.prepan = mean(pcl.sum_score_prepan, na.rm = TRUE),
+            sd.pcl.prepan = sd(pcl.sum_score_prepan, na.rm = TRUE),
+            n.pcl.prepan = sum(!is.na(pcl.sum_score_prepan)),
+            
+  )
+```
+
+
+
+## T tests 
+
+All are Welch's (assuming non equal variances) paired t-tests
+
+### Average scores
+Prepandemic
+```{r ttest for average scores prepandemic}
+
+t.test(dat.prepan$gad.sum_score_base,dat.prepan$gad.sum_score_prepan, paired = T)
+t.test(dat.prepan$phq.sum_score_base,dat.prepan$phq.sum_score_prepan, paired = T)
+t.test(dat.prepan$pcl.sum_score_base,dat.prepan$pcl.sum_score_prepan, paired = T)
+
+```
+
+Retrospective
+(no retrospective ratings for PCL)
+```{r ttest for average scores retrosective}
+t.test(dat.retro$gad.sum_score_base,dat.retro$gad.sum_score_retro, paired = T)
+t.test(dat.retro$phq.sum_score_base,dat.retro$phq.sum_score_retro, paired = T)
+```
+
+### Average scores by sample
+
+Retrospective GAD
+```{r ttest average by sample retro gad}
+
+dat.retro %>%
+  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+                            Sample == "RAMP" ~ "RAMP",
+                            Sample == "NBR" ~ "NBR")) %>%
+  select(gad.sum_score_base,gad.sum_score_retro, sample) %>%
+  gather(key = variable, value = value, -sample) %>% 
+  group_by(sample,variable) %>% 
+  summarise(value = list(value)) %>%
+  spread(variable,value) %>%
+  group_by(sample) %>% 
+  mutate(p_value = t.test(unlist(gad.sum_score_base), unlist(gad.sum_score_retro))$p.value,
+         t_value = t.test(unlist(gad.sum_score_base), unlist(gad.sum_score_retro))$statistic,
+         df = t.test(unlist(gad.sum_score_base), unlist(gad.sum_score_retro))$parameter)
+
+```
+
+
+Retrospective PHQ
+```{r ttest average by sample retro phq}
+dat.retro %>%
+  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+                            Sample == "RAMP" ~ "RAMP",
+                            Sample == "NBR" ~ "NBR")) %>%
+  select(phq.sum_score_base,phq.sum_score_retro, sample) %>%
+  gather(key = variable, value = value, -sample) %>% 
+  group_by(sample,variable) %>% 
+  summarise(value = list(value)) %>%
+  spread(variable,value) %>%
+  group_by(sample) %>% 
+  mutate(p_value = t.test(unlist(phq.sum_score_base), unlist(phq.sum_score_retro))$p.value,
+         t_value = t.test(unlist(phq.sum_score_base), unlist(phq.sum_score_retro))$statistic,
+         df = t.test(unlist(phq.sum_score_base), unlist(phq.sum_score_retro))$parameter)
+
+```
+
+Prepandemic GAD
+```{r ttest average by sample prepan gad}
+dat.prepan %>%
+  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+                            Sample == "RAMP" ~ "RAMP",
+                            Sample == "NBR" ~ "NBR")) %>%
+  select(gad.sum_score_base,gad.sum_score_prepan, sample) %>%
+  gather(key = variable, value = value, -sample) %>% 
+  group_by(sample,variable) %>% 
+  summarise(value = list(value)) %>%
+  spread(variable,value) %>%
+  group_by(sample) %>% 
+  mutate(p_value = t.test(unlist(gad.sum_score_base), unlist(gad.sum_score_prepan))$p.value,
+         t_value = t.test(unlist(gad.sum_score_base), unlist(gad.sum_score_prepan))$statistic,
+         df = t.test(unlist(gad.sum_score_base), unlist(gad.sum_score_prepan))$parameter)
+
+```
+
+Prepandemic PHQ
+```{r ttest average by sample prepan phq}
+dat.prepan %>%
+  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+                            Sample == "RAMP" ~ "RAMP",
+                            Sample == "NBR" ~ "NBR")) %>%
+  select(phq.sum_score_base,phq.sum_score_prepan, sample) %>%
+  gather(key = variable, value = value, -sample) %>% 
+  group_by(sample,variable) %>% 
+  summarise(value = list(value)) %>%
+  spread(variable,value) %>%
+  group_by(sample) %>% 
+  mutate(p_value = t.test(unlist(phq.sum_score_base), unlist(phq.sum_score_prepan))$p.value,
+         t_value = t.test(unlist(phq.sum_score_base), unlist(phq.sum_score_prepan))$statistic,
+         df = t.test(unlist(phq.sum_score_base), unlist(phq.sum_score_prepan))$parameter)
+```
+
+Prepandemic PCL
+```{r ttest average by sample prepan pcl}
+
+dat.prepan %>%
+  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+                            Sample == "RAMP" ~ "RAMP",
+                            Sample == "NBR" ~ "NBR")) %>%
+  select(pcl.sum_score_base,pcl.sum_score_prepan, sample) %>%
+  gather(key = variable, value = value, -sample) %>% 
+  group_by(sample,variable) %>% 
+  summarise(value = list(value)) %>%
+  spread(variable,value) %>%
+  group_by(sample) %>% 
+  mutate(p_value = t.test(unlist(pcl.sum_score_base), unlist(pcl.sum_score_prepan))$p.value,
+         t_value = t.test(unlist(pcl.sum_score_base), unlist(pcl.sum_score_prepan))$statistic,
+         df = t.test(unlist(pcl.sum_score_base), unlist(pcl.sum_score_prepan))$parameter)
+
+
+```
