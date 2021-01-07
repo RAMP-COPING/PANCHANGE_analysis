@@ -28,10 +28,15 @@ Note that when GLAD, we always mean GLAD & EDGI
  
 ```{r read in data } 
 # Read in data
-library(tidyverse)
-library(data.table)
-library(lubridate)
+library(knitr)
+library(summarytools)
 library(psych)
+library(polycor)
+library(corrplot)
+library(patchwork)
+library(broom)
+library(tidyverse)
+library(ggpubr)
 
 
 # get file info
@@ -132,16 +137,162 @@ RAMP.retro <- dat.retro %>%
 ## Most recent sign up per sample
 
 ```{r most recent sign up}
-
-max(RAMP.prepan$startDate.coping)
-max(GLAD.prepan$startDate.coping)
-max(NBR.prepan$startDate.coping)
+print("RAMP")
+max(RAMP.retro$startDate.coping)
+print("GLAD")
+max(GLAD.retro$startDate.coping)
+print("NBR")
+max(NBR.retro$startDate.coping)
 
 ```
 
+## Sample sizes
+
+## frequencies (retrodemic dataset)
+
+### pandemic change gad
+
+```{r retro freq table gad perceived change}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(gad.pandemic_felt_feelings)
+
+```
+### pandemic change phq
+
+```{r retro freq table phq perceived change}
+
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(phq.pandemic_felt_feelings)
+
+```
+
+### Ethnicity
+```{r retro freq table ethnicity}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(Ethnicity_collapsed) 
+```
+### Gender
+```{r retro freq table gender}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(Gender_collapsed) 
+```
+### age categorical
+```{r retro freq table age collapsed}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(age_category_collapsed) 
+```
+### Employment
+
+```{r retro freq table employment collapsed}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(employment_prior_covid) 
+```
+
+### anxiety disorders
+```{r retro freq table diagnosis anxiety}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(anxiety_disorders) 
+```
+
+### Depressive disorders
+```{r retro freq table diagnosis depression}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(depressive_disorders) 
+```
+### Depression and anxiety
+```{r retro freq table diagnosis depression and anxiety}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(depression_and_anxiety) 
+```
+### Eating disorders
+```{r retro freq table diagnosis eating disorder}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(eating_disorders) 
+
+```
+### OCD
+```{r retro freq table diagnosis obsessive compulsive disorders}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(obsessive_compulsive_disorders) 
+
+```
+
+### Psychosis
+```{r retro freq table diagnosis psychotic disorders}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(psychotic_disorders) 
+
+```
+
+### Bipolar
+```{r retro freq table diagnosis bipolar}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(mhd.mania_hypomania_bipolar_or_manicdepression) 
+
+```
+
+### PTSD
+```{r retro freq table diagnosis PTSD}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(mhd.posttraumatic_stress_disorder_ptsd) 
+
+```
+
+### ASD
+
+```{r retro freq table diagnosis ASD}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(autism_spectrum_disorder) 
+
+```
+
+### ADHD
+```{r retro freq table diagnosis ADHD}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(mhd.attention_deficit_hyperactivity_disorder) 
+
+```
+
+### Personality disorders
+```{r retro freq table diagnosis personality disorder}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(mhd.personality_disorder) 
+
+```
+
+### Controls 
+```{r retro freq table diagnosis control}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(control) 
+```
+
+### Dont know or prefer not to say
+```{r retro freq table diagnosis prefer not to say}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(DidNotRespondMHD) 
+```
+
+
 ## Means, SD and n
-
-
 ### overall
 
 Retrospective

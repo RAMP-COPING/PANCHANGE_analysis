@@ -2929,133 +2929,1063 @@ div.tocify {
 <div id="set-up" class="section level1">
 <h1>Set up</h1>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Read in data</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(knitr)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(summarytools)</span></code></pre></div>
+<pre><code>## Registered S3 method overwritten by &#39;pryr&#39;:
+##   method      from
+##   print.bytes Rcpp</code></pre>
+<pre><code>## For best results, restart R session and update pander using devtools:: or remotes::install_github(&#39;rapporter/pander&#39;)</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">library</span>(psych)</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">library</span>(polycor)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;polycor&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:psych&#39;:
+## 
+##     polyserial</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">library</span>(corrplot)</span></code></pre></div>
+<pre><code>## corrplot 0.84 loaded</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">library</span>(patchwork)</span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="kw">library</span>(broom)</span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
 <pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
 <pre><code>## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
 ## ✓ tibble  3.0.4     ✓ dplyr   1.0.2
 ## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
 ## ✓ readr   1.3.1     ✓ forcats 0.5.0</code></pre>
 <pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">library</span>(data.table)</span></code></pre></div>
-<pre><code>## 
-## Attaching package: &#39;data.table&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
-## 
-##     between, first, last</code></pre>
-<pre><code>## The following object is masked from &#39;package:purrr&#39;:
-## 
-##     transpose</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">library</span>(lubridate)</span></code></pre></div>
-<pre><code>## 
-## Attaching package: &#39;lubridate&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:data.table&#39;:
-## 
-##     hour, isoweek, mday, minute, month, quarter, second, wday, week,
-##     yday, year</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     date, intersect, setdiff, union</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">library</span>(psych)</span></code></pre></div>
-<pre><code>## 
-## Attaching package: &#39;psych&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:ggplot2&#39;:
-## 
-##     %+%, alpha</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># get file info</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="kw">source</span>(<span class="st">&quot;/Users/kirstin/Dropbox/SGDP/RAMP/Projects/PANCHANGE/PANCHANGE_raw_path.R&quot;</span>)</span>
-<span id="cb16-3"><a href="#cb16-3"></a></span>
-<span id="cb16-4"><a href="#cb16-4"></a></span>
-<span id="cb16-5"><a href="#cb16-5"></a>alldat &lt;-<span class="st">  </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="kw">paste0</span>(data_path, <span class="st">&quot;/four_cohorts_variables_exclusion.rds&quot;</span>))</span></code></pre></div>
+## x ggplot2::%+%()   masks psych::%+%()
+## x ggplot2::alpha() masks psych::alpha()
+## x dplyr::filter()  masks stats::filter()
+## x dplyr::lag()     masks stats::lag()
+## x tibble::view()   masks summarytools::view()</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">library</span>(ggpubr)</span>
+<span id="cb13-2"><a href="#cb13-2"></a></span>
+<span id="cb13-3"><a href="#cb13-3"></a></span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="co"># get file info</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="kw">source</span>(<span class="st">&quot;/Users/kirstin/Dropbox/SGDP/RAMP/Projects/PANCHANGE/PANCHANGE_raw_path.R&quot;</span>)</span>
+<span id="cb13-6"><a href="#cb13-6"></a></span>
+<span id="cb13-7"><a href="#cb13-7"></a></span>
+<span id="cb13-8"><a href="#cb13-8"></a>alldat &lt;-<span class="st">  </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="kw">paste0</span>(data_path, <span class="st">&quot;/four_cohorts_variables_exclusion.rds&quot;</span>))</span></code></pre></div>
 </div>
 <div id="impute-and-subset-data" class="section level1">
 <h1>Impute and subset data</h1>
 <p>Impute retrospective scores if no change reported</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># impute retro for those who did not change</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a></span>
-<span id="cb17-3"><a href="#cb17-3"></a>alldat<span class="op">$</span>gad.sum_score_retro &lt;-<span class="st"> </span><span class="kw">ifelse</span>(alldat<span class="op">$</span>gad.pandemic_felt_feelings <span class="op">==</span><span class="st"> &quot;No different&quot;</span>, alldat<span class="op">$</span>gad.sum_score_base,alldat<span class="op">$</span>gad.sum_score_retro)</span>
-<span id="cb17-4"><a href="#cb17-4"></a>alldat<span class="op">$</span>phq.sum_score_retro &lt;-<span class="st"> </span><span class="kw">ifelse</span>(alldat<span class="op">$</span>phq.pandemic_felt_feelings <span class="op">==</span><span class="st"> &quot;No different&quot;</span>, alldat<span class="op">$</span>phq.sum_score_base,alldat<span class="op">$</span>phq.sum_score_retro)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># impute retro for those who did not change</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a></span>
+<span id="cb14-3"><a href="#cb14-3"></a>alldat<span class="op">$</span>gad.sum_score_retro &lt;-<span class="st"> </span><span class="kw">ifelse</span>(alldat<span class="op">$</span>gad.pandemic_felt_feelings <span class="op">==</span><span class="st"> &quot;No different&quot;</span>, alldat<span class="op">$</span>gad.sum_score_base,alldat<span class="op">$</span>gad.sum_score_retro)</span>
+<span id="cb14-4"><a href="#cb14-4"></a>alldat<span class="op">$</span>phq.sum_score_retro &lt;-<span class="st"> </span><span class="kw">ifelse</span>(alldat<span class="op">$</span>phq.pandemic_felt_feelings <span class="op">==</span><span class="st"> &quot;No different&quot;</span>, alldat<span class="op">$</span>phq.sum_score_base,alldat<span class="op">$</span>phq.sum_score_retro)</span></code></pre></div>
 <p>subsample for retro-baseline analysis exclude those who do not have complete responses for both baseline and retrospective in addition to those already excluded for NA in age, gender and MH diagnosis.</p>
 <p>RETROSPECTIVE</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>dat.retro &lt;-<span class="st"> </span>alldat <span class="op">%&gt;%</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a><span class="st">  </span><span class="kw">filter</span>(</span>
-<span id="cb18-3"><a href="#cb18-3"></a>    ((data_group_gad <span class="op">==</span><span class="st"> &quot;Baseline and retrospective data&quot;</span> <span class="op">|</span></span>
-<span id="cb18-4"><a href="#cb18-4"></a><span class="st">        </span>data_group_gad <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>) <span class="op">|</span></span>
-<span id="cb18-5"><a href="#cb18-5"></a><span class="st">       </span>(data_group_phq <span class="op">==</span><span class="st"> &quot;Baseline and retrospective data&quot;</span> <span class="op">|</span></span>
-<span id="cb18-6"><a href="#cb18-6"></a><span class="st">          </span>data_group_phq <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>) <span class="op">|</span></span>
-<span id="cb18-7"><a href="#cb18-7"></a><span class="st">       </span>(data_group_pcl <span class="op">==</span><span class="st"> &quot;Baseline and retrospective data&quot;</span> <span class="op">|</span></span>
-<span id="cb18-8"><a href="#cb18-8"></a><span class="st">          </span>data_group_pcl <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>))</span>
-<span id="cb18-9"><a href="#cb18-9"></a>  )</span>
-<span id="cb18-10"><a href="#cb18-10"></a></span>
-<span id="cb18-11"><a href="#cb18-11"></a><span class="kw">dim</span>(dat.retro)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>dat.retro &lt;-<span class="st"> </span>alldat <span class="op">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="st">  </span><span class="kw">filter</span>(</span>
+<span id="cb15-3"><a href="#cb15-3"></a>    ((data_group_gad <span class="op">==</span><span class="st"> &quot;Baseline and retrospective data&quot;</span> <span class="op">|</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="st">        </span>data_group_gad <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>) <span class="op">|</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="st">       </span>(data_group_phq <span class="op">==</span><span class="st"> &quot;Baseline and retrospective data&quot;</span> <span class="op">|</span></span>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="st">          </span>data_group_phq <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>) <span class="op">|</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="st">       </span>(data_group_pcl <span class="op">==</span><span class="st"> &quot;Baseline and retrospective data&quot;</span> <span class="op">|</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a><span class="st">          </span>data_group_pcl <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>))</span>
+<span id="cb15-9"><a href="#cb15-9"></a>  )</span>
+<span id="cb15-10"><a href="#cb15-10"></a></span>
+<span id="cb15-11"><a href="#cb15-11"></a><span class="kw">dim</span>(dat.retro)</span></code></pre></div>
 <pre><code>## [1] 25689   643</code></pre>
 <p>subsample for prepan-baseline analysis exclude those who do not have complete responses for both baseline and prepandemic in addition to those already excluded for NA in age, gender and MH diagnosis.</p>
 <p>PREPANDEMIC</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>dat.prepan &lt;-<span class="st"> </span>alldat <span class="op">%&gt;%</span></span>
-<span id="cb20-2"><a href="#cb20-2"></a><span class="st">  </span><span class="kw">filter</span>(</span>
-<span id="cb20-3"><a href="#cb20-3"></a>    ((data_group_gad <span class="op">==</span><span class="st"> &quot;Prepandemic and baseline data&quot;</span> <span class="op">|</span></span>
-<span id="cb20-4"><a href="#cb20-4"></a><span class="st">        </span>data_group_gad <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>) <span class="op">|</span></span>
-<span id="cb20-5"><a href="#cb20-5"></a><span class="st">       </span>(data_group_phq <span class="op">==</span><span class="st"> &quot;Prepandemic and baseline data&quot;</span> <span class="op">|</span></span>
-<span id="cb20-6"><a href="#cb20-6"></a><span class="st">          </span>data_group_phq <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>) <span class="op">|</span></span>
-<span id="cb20-7"><a href="#cb20-7"></a><span class="st">       </span>(data_group_pcl <span class="op">==</span><span class="st"> &quot;Prepandemic and baseline data&quot;</span> <span class="op">|</span></span>
-<span id="cb20-8"><a href="#cb20-8"></a><span class="st">          </span>data_group_pcl <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>) ) <span class="op">&amp;</span></span>
-<span id="cb20-9"><a href="#cb20-9"></a><span class="st">      </span>prepandemic_march_<span class="dv">1</span>_numeric <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="co"># Exclude participants that signed up after the 1. March</span></span>
-<span id="cb20-10"><a href="#cb20-10"></a>  )</span>
-<span id="cb20-11"><a href="#cb20-11"></a></span>
-<span id="cb20-12"><a href="#cb20-12"></a><span class="kw">dim</span>(dat.prepan)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>dat.prepan &lt;-<span class="st"> </span>alldat <span class="op">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="st">  </span><span class="kw">filter</span>(</span>
+<span id="cb17-3"><a href="#cb17-3"></a>    ((data_group_gad <span class="op">==</span><span class="st"> &quot;Prepandemic and baseline data&quot;</span> <span class="op">|</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="st">        </span>data_group_gad <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>) <span class="op">|</span></span>
+<span id="cb17-5"><a href="#cb17-5"></a><span class="st">       </span>(data_group_phq <span class="op">==</span><span class="st"> &quot;Prepandemic and baseline data&quot;</span> <span class="op">|</span></span>
+<span id="cb17-6"><a href="#cb17-6"></a><span class="st">          </span>data_group_phq <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>) <span class="op">|</span></span>
+<span id="cb17-7"><a href="#cb17-7"></a><span class="st">       </span>(data_group_pcl <span class="op">==</span><span class="st"> &quot;Prepandemic and baseline data&quot;</span> <span class="op">|</span></span>
+<span id="cb17-8"><a href="#cb17-8"></a><span class="st">          </span>data_group_pcl <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>) ) <span class="op">&amp;</span></span>
+<span id="cb17-9"><a href="#cb17-9"></a><span class="st">      </span>prepandemic_march_<span class="dv">1</span>_numeric <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="co"># Exclude participants that signed up after the 1. March</span></span>
+<span id="cb17-10"><a href="#cb17-10"></a>  )</span>
+<span id="cb17-11"><a href="#cb17-11"></a></span>
+<span id="cb17-12"><a href="#cb17-12"></a><span class="kw">dim</span>(dat.prepan)</span></code></pre></div>
 <pre><code>## [1] 12157   643</code></pre>
 <p>Subset by study</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co">## Subset samples by study</span></span>
-<span id="cb22-2"><a href="#cb22-2"></a></span>
-<span id="cb22-3"><a href="#cb22-3"></a>GLAD.prepan &lt;-<span class="st"> </span>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb22-4"><a href="#cb22-4"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span></span>
-<span id="cb22-5"><a href="#cb22-5"></a><span class="st">           </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span>)</span>
-<span id="cb22-6"><a href="#cb22-6"></a></span>
-<span id="cb22-7"><a href="#cb22-7"></a>NBR.prepan &lt;-<span class="st"> </span>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb22-8"><a href="#cb22-8"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span>)</span>
-<span id="cb22-9"><a href="#cb22-9"></a></span>
-<span id="cb22-10"><a href="#cb22-10"></a>RAMP.prepan &lt;-<span class="st"> </span>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb22-11"><a href="#cb22-11"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span>)</span>
-<span id="cb22-12"><a href="#cb22-12"></a></span>
-<span id="cb22-13"><a href="#cb22-13"></a><span class="co">### retro</span></span>
-<span id="cb22-14"><a href="#cb22-14"></a>GLAD.retro &lt;-<span class="st"> </span>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb22-15"><a href="#cb22-15"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span></span>
-<span id="cb22-16"><a href="#cb22-16"></a><span class="st">           </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span>)</span>
-<span id="cb22-17"><a href="#cb22-17"></a></span>
-<span id="cb22-18"><a href="#cb22-18"></a>NBR.retro &lt;-<span class="st"> </span>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb22-19"><a href="#cb22-19"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span>)</span>
-<span id="cb22-20"><a href="#cb22-20"></a></span>
-<span id="cb22-21"><a href="#cb22-21"></a>RAMP.retro &lt;-<span class="st"> </span>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb22-22"><a href="#cb22-22"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co">## Subset samples by study</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a></span>
+<span id="cb19-3"><a href="#cb19-3"></a>GLAD.prepan &lt;-<span class="st"> </span>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span></span>
+<span id="cb19-5"><a href="#cb19-5"></a><span class="st">           </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span>)</span>
+<span id="cb19-6"><a href="#cb19-6"></a></span>
+<span id="cb19-7"><a href="#cb19-7"></a>NBR.prepan &lt;-<span class="st"> </span>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb19-8"><a href="#cb19-8"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span>)</span>
+<span id="cb19-9"><a href="#cb19-9"></a></span>
+<span id="cb19-10"><a href="#cb19-10"></a>RAMP.prepan &lt;-<span class="st"> </span>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb19-11"><a href="#cb19-11"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span>)</span>
+<span id="cb19-12"><a href="#cb19-12"></a></span>
+<span id="cb19-13"><a href="#cb19-13"></a><span class="co">### retro</span></span>
+<span id="cb19-14"><a href="#cb19-14"></a>GLAD.retro &lt;-<span class="st"> </span>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb19-15"><a href="#cb19-15"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span></span>
+<span id="cb19-16"><a href="#cb19-16"></a><span class="st">           </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span>)</span>
+<span id="cb19-17"><a href="#cb19-17"></a></span>
+<span id="cb19-18"><a href="#cb19-18"></a>NBR.retro &lt;-<span class="st"> </span>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb19-19"><a href="#cb19-19"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span>)</span>
+<span id="cb19-20"><a href="#cb19-20"></a></span>
+<span id="cb19-21"><a href="#cb19-21"></a>RAMP.retro &lt;-<span class="st"> </span>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb19-22"><a href="#cb19-22"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span>)</span></code></pre></div>
 </div>
 <div id="analytic-checks-and-last-pass" class="section level1">
 <h1>Analytic checks and last pass</h1>
 <div id="most-recent-sign-up-per-sample" class="section level2">
 <h2>Most recent sign up per sample</h2>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">max</span>(RAMP.prepan<span class="op">$</span>startDate.coping)</span></code></pre></div>
-<pre><code>## Warning in max.default(structure(numeric(0), tzone = &quot;UTC&quot;, class =
-## c(&quot;POSIXct&quot;, : no non-missing arguments to max; returning -Inf</code></pre>
-<pre><code>## [1] NA</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">max</span>(GLAD.prepan<span class="op">$</span>startDate.coping)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">print</span>(<span class="st">&quot;RAMP&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;RAMP&quot;</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">max</span>(RAMP.retro<span class="op">$</span>startDate.coping)</span></code></pre></div>
+<pre><code>## [1] &quot;2020-09-30 09:46:06 UTC&quot;</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="kw">print</span>(<span class="st">&quot;GLAD&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;GLAD&quot;</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">max</span>(GLAD.retro<span class="op">$</span>startDate.coping)</span></code></pre></div>
 <pre><code>## [1] &quot;2020-09-13 20:04:12 UTC&quot;</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="kw">max</span>(NBR.prepan<span class="op">$</span>startDate.coping)</span></code></pre></div>
-<pre><code>## Warning in max.default(structure(numeric(0), tzone = &quot;UTC&quot;, class =
-## c(&quot;POSIXct&quot;, : no non-missing arguments to max; returning -Inf</code></pre>
-<pre><code>## [1] NA</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="kw">print</span>(<span class="st">&quot;NBR&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;NBR&quot;</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">max</span>(NBR.retro<span class="op">$</span>startDate.coping)</span></code></pre></div>
+<pre><code>## [1] &quot;2020-07-14 08:28:41 UTC&quot;</code></pre>
+</div>
+<div id="sample-sizes" class="section level2">
+<h2>Sample sizes</h2>
+</div>
+<div id="frequencies-retrodemic-dataset" class="section level2">
+<h2>frequencies (retrodemic dataset)</h2>
+<div id="pandemic-change-gad" class="section level3">
+<h3>pandemic change gad</h3>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3"></a><span class="st">  </span><span class="kw">freq</span>(gad.pandemic_felt_feelings)</span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$gad.pandemic_felt_feelings  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                         Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------- ------ --------- -------------- --------- --------------
+##            Much worse     10     17.86          17.86     17.86          17.86
+##        A little worse     32     57.14          75.00     57.14          75.00
+##          No different      7     12.50          87.50     12.50          87.50
+##       A little better      5      8.93          96.43      8.93          96.43
+##           Much better      2      3.57         100.00      3.57         100.00
+##                  &lt;NA&gt;      0                               0.00         100.00
+##                 Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------- ------- --------- -------------- --------- --------------
+##            Much worse    2472     22.61          22.61     22.60          22.60
+##        A little worse    5321     48.68          71.29     48.66          71.26
+##          No different    1887     17.26          88.56     17.25          88.51
+##       A little better     854      7.81          96.37      7.81          96.32
+##           Much better     397      3.63         100.00      3.63          99.95
+##                  &lt;NA&gt;       5                               0.05         100.00
+##                 Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                         Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------- ------ --------- -------------- --------- --------------
+##            Much worse    878     12.86          12.86     12.85          12.85
+##        A little worse   3849     56.37          69.23     56.34          69.19
+##          No different   1648     24.14          93.37     24.12          93.31
+##       A little better    336      4.92          98.29      4.92          98.23
+##           Much better    117      1.71         100.00      1.71          99.94
+##                  &lt;NA&gt;      4                               0.06         100.00
+##                 Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                         Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------- ------ --------- -------------- --------- --------------
+##            Much worse   2357     30.07          30.07     29.97          29.97
+##        A little worse   3566     45.50          75.57     45.34          75.31
+##          No different   1351     17.24          92.80     17.18          92.49
+##       A little better    363      4.63          97.44      4.62          97.10
+##           Much better    201      2.56         100.00      2.56          99.66
+##                  &lt;NA&gt;     27                               0.34         100.00
+##                 Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="pandemic-change-phq" class="section level3">
+<h3>pandemic change phq</h3>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb34-3"><a href="#cb34-3"></a><span class="st">  </span><span class="kw">freq</span>(phq.pandemic_felt_feelings)</span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$phq.pandemic_felt_feelings  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                         Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------- ------ --------- -------------- --------- --------------
+##            Much worse     12     21.43          21.43     21.43          21.43
+##        A little worse     27     48.21          69.64     48.21          69.64
+##          No different      8     14.29          83.93     14.29          83.93
+##       A little better      6     10.71          94.64     10.71          94.64
+##           Much better      3      5.36         100.00      5.36         100.00
+##                  &lt;NA&gt;      0                               0.00         100.00
+##                 Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------- ------- --------- -------------- --------- --------------
+##            Much worse    2279     20.89          20.89     20.84          20.84
+##        A little worse    5644     51.73          72.61     51.61          72.45
+##          No different    1517     13.90          86.52     13.87          86.32
+##       A little better    1034      9.48          95.99      9.46          95.78
+##           Much better     437      4.01         100.00      4.00          99.77
+##                  &lt;NA&gt;      25                               0.23         100.00
+##                 Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                         Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------- ------ --------- -------------- --------- --------------
+##            Much worse    898     13.18          13.18     13.14          13.14
+##        A little worse   4297     63.06          76.24     62.90          76.04
+##          No different   1146     16.82          93.06     16.77          92.81
+##       A little better    338      4.96          98.02      4.95          97.76
+##           Much better    135      1.98         100.00      1.98          99.74
+##                  &lt;NA&gt;     18                               0.26         100.00
+##                 Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                         Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------- ------ --------- -------------- --------- --------------
+##            Much worse   2288     29.25          29.25     29.09          29.09
+##        A little worse   3766     48.15          77.41     47.88          76.97
+##          No different   1113     14.23          91.64     14.15          91.13
+##       A little better    419      5.36          97.00      5.33          96.45
+##           Much better    235      3.00         100.00      2.99          99.44
+##                  &lt;NA&gt;     44                               0.56         100.00
+##                 Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="ethnicity" class="section level3">
+<h3>Ethnicity</h3>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb36-2"><a href="#cb36-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb36-3"><a href="#cb36-3"></a><span class="st">  </span><span class="kw">freq</span>(Ethnicity_collapsed) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$Ethnicity_collapsed  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## -------------------------------------- ------ --------- -------------- --------- --------------
+##                               European     51     91.07          91.07     91.07          91.07
+##       Mixed or multiple ethnic origins      3      5.36          96.43      5.36          96.43
+##                 Asian or Asian British      1      1.79          98.21      1.79          98.21
+##             African or African British      0      0.00          98.21      0.00          98.21
+##                                  Other      1      1.79         100.00      1.79         100.00
+##                                   &lt;NA&gt;      0                               0.00         100.00
+##                                  Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## -------------------------------------- ------- --------- -------------- --------- --------------
+##                               European   10438     95.64          95.64     95.45          95.45
+##       Mixed or multiple ethnic origins     249      2.28          97.92      2.28          97.72
+##                 Asian or Asian British      87      0.80          98.72      0.80          98.52
+##             African or African British      32      0.29          99.01      0.29          98.81
+##                                  Other     108      0.99         100.00      0.99          99.80
+##                                   &lt;NA&gt;      22                               0.20         100.00
+##                                  Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## -------------------------------------- ------ --------- -------------- --------- --------------
+##                               European   5151     96.79          96.79     75.40          75.40
+##       Mixed or multiple ethnic origins     74      1.39          98.18      1.08          76.48
+##                 Asian or Asian British     75      1.41          99.59      1.10          77.58
+##             African or African British     22      0.41         100.00      0.32          77.90
+##                                  Other      0      0.00         100.00      0.00          77.90
+##                                   &lt;NA&gt;   1510                              22.10         100.00
+##                                  Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## -------------------------------------- ------ --------- -------------- --------- --------------
+##                               European   7376     94.20          94.20     93.78          93.78
+##       Mixed or multiple ethnic origins    165      2.11          96.31      2.10          95.88
+##                 Asian or Asian British    154      1.97          98.28      1.96          97.84
+##             African or African British     70      0.89          99.17      0.89          98.73
+##                                  Other     65      0.83         100.00      0.83          99.55
+##                                   &lt;NA&gt;     35                               0.45         100.00
+##                                  Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="gender" class="section level3">
+<h3>Gender</h3>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb38-2"><a href="#cb38-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb38-3"><a href="#cb38-3"></a><span class="st">  </span><span class="kw">freq</span>(Gender_collapsed) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$Gender_collapsed  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                                 Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------------------------- ------ --------- -------------- --------- --------------
+##                          Male      1      1.79           1.79      1.79           1.79
+##                        Female     53     94.64          96.43     94.64          96.43
+##       Non-binary/Self-defined      2      3.57         100.00      3.57         100.00
+##                          &lt;NA&gt;      0                               0.00         100.00
+##                         Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                                  Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------------------------- ------- --------- -------------- --------- --------------
+##                          Male    1837     16.80          16.80     16.80          16.80
+##                        Female    8870     81.11          97.91     81.11          97.91
+##       Non-binary/Self-defined     229      2.09         100.00      2.09         100.00
+##                          &lt;NA&gt;       0                               0.00         100.00
+##                         Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                                 Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------------------------- ------ --------- -------------- --------- --------------
+##                          Male   2323     34.00          34.00     34.00          34.00
+##                        Female   4482     65.60          99.60     65.60          99.60
+##       Non-binary/Self-defined     27      0.40         100.00      0.40         100.00
+##                          &lt;NA&gt;      0                               0.00         100.00
+##                         Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                                 Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------------------------- ------ --------- -------------- --------- --------------
+##                          Male   1523     19.36          19.36     19.36          19.36
+##                        Female   6254     79.52          98.88     79.52          98.88
+##       Non-binary/Self-defined     88      1.12         100.00      1.12         100.00
+##                          &lt;NA&gt;      0                               0.00         100.00
+##                         Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="age-categorical" class="section level3">
+<h3>age categorical</h3>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb40-2"><a href="#cb40-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb40-3"><a href="#cb40-3"></a><span class="st">  </span><span class="kw">freq</span>(age_category_collapsed) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$age_category_collapsed  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##               Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------- ------ --------- -------------- --------- --------------
+##       16-18      7     12.50          12.50     12.50          12.50
+##       19-25     15     26.79          39.29     26.79          39.29
+##       26-35     18     32.14          71.43     32.14          71.43
+##       36-45      6     10.71          82.14     10.71          82.14
+##       46-55      3      5.36          87.50      5.36          87.50
+##       56-65      4      7.14          94.64      7.14          94.64
+##       66-70      3      5.36         100.00      5.36         100.00
+##       71-75      0      0.00         100.00      0.00         100.00
+##         76+      0      0.00         100.00      0.00         100.00
+##        &lt;NA&gt;      0                               0.00         100.00
+##       Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------- ------- --------- -------------- --------- --------------
+##       16-18     325      2.97           2.97      2.97           2.97
+##       19-25    1460     13.35          16.32     13.35          16.32
+##       26-35    2589     23.67          40.00     23.67          40.00
+##       36-45    2167     19.82          59.81     19.82          59.81
+##       46-55    2363     21.61          81.42     21.61          81.42
+##       56-65    1509     13.80          95.22     13.80          95.22
+##       66-70     312      2.85          98.07      2.85          98.07
+##       71-75     164      1.50          99.57      1.50          99.57
+##         76+      47      0.43         100.00      0.43         100.00
+##        &lt;NA&gt;       0                               0.00         100.00
+##       Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##               Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------- ------ --------- -------------- --------- --------------
+##       16-18      9      0.13           0.13      0.13           0.13
+##       19-25    244      3.57           3.70      3.57           3.70
+##       26-35    894     13.09          16.79     13.09          16.79
+##       36-45    996     14.58          31.37     14.58          31.37
+##       46-55   1520     22.25          53.62     22.25          53.62
+##       56-65   1861     27.24          80.85     27.24          80.85
+##       66-70    759     11.11          91.96     11.11          91.96
+##       71-75    431      6.31          98.27      6.31          98.27
+##         76+    118      1.73         100.00      1.73         100.00
+##        &lt;NA&gt;      0                               0.00         100.00
+##       Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##               Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------- ------ --------- -------------- --------- --------------
+##       16-18    671      8.53           8.53      8.53           8.53
+##       19-25    749      9.52          18.05      9.52          18.05
+##       26-35   1029     13.08          31.14     13.08          31.14
+##       36-45    820     10.43          41.56     10.43          41.56
+##       46-55   1406     17.88          59.44     17.88          59.44
+##       56-65   1957     24.88          84.32     24.88          84.32
+##       66-70    651      8.28          92.60      8.28          92.60
+##       71-75    427      5.43          98.03      5.43          98.03
+##         76+    155      1.97         100.00      1.97         100.00
+##        &lt;NA&gt;      0                               0.00         100.00
+##       Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="employment" class="section level3">
+<h3>Employment</h3>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb42-2"><a href="#cb42-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb42-3"><a href="#cb42-3"></a><span class="st">  </span><span class="kw">freq</span>(employment_prior_covid) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$employment_prior_covid  
+## Type: Character  
+## Group: Sample = EDGI  
+## 
+##                    Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ---------------- ------ --------- -------------- --------- --------------
+##         Employed     15     27.27          27.27     26.79          26.79
+##       Key worker     17     30.91          58.18     30.36          57.14
+##          Retired      4      7.27          65.45      7.14          64.29
+##          Student      8     14.55          80.00     14.29          78.57
+##       Unemployed     11     20.00         100.00     19.64          98.21
+##             &lt;NA&gt;      1                               1.79         100.00
+##            Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                     Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ---------------- ------- --------- -------------- --------- --------------
+##         Employed    2844     28.10          28.10     26.01          26.01
+##       Key worker    4604     45.49          73.58     42.10          68.11
+##          Retired    1054     10.41          84.00      9.64          77.74
+##          Student     630      6.22          90.22      5.76          83.50
+##       Unemployed     990      9.78         100.00      9.05          92.56
+##             &lt;NA&gt;     814                               7.44         100.00
+##            Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                    Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ---------------- ------ --------- -------------- --------- --------------
+##         Employed   2027     30.42          30.42     29.67          29.67
+##       Key worker   2594     38.93          69.35     37.97          67.64
+##          Retired   1786     26.80          96.16     26.14          93.78
+##          Student     88      1.32          97.48      1.29          95.07
+##       Unemployed    168      2.52         100.00      2.46          97.53
+##             &lt;NA&gt;    169                               2.47         100.00
+##            Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                    Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ---------------- ------ --------- -------------- --------- --------------
+##         Employed   2171     28.99          28.99     27.60          27.60
+##       Key worker   2558     34.16          63.15     32.52          60.13
+##          Retired   1608     21.47          84.62     20.45          80.57
+##          Student    688      9.19          93.80      8.75          89.32
+##       Unemployed    464      6.20         100.00      5.90          95.22
+##             &lt;NA&gt;    376                               4.78         100.00
+##            Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="anxiety-disorders" class="section level3">
+<h3>anxiety disorders</h3>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3"></a><span class="st">  </span><span class="kw">freq</span>(anxiety_disorders) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$anxiety_disorders  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                             Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------- ------ --------- -------------- --------- --------------
+##       No anxiety disorder     21     37.50          37.50     37.50          37.50
+##          Anxiety disorder     35     62.50         100.00     62.50         100.00
+##                      &lt;NA&gt;      0                               0.00         100.00
+##                     Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                              Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------- ------- --------- -------------- --------- --------------
+##       No anxiety disorder    1352     13.26          13.26     12.36          12.36
+##          Anxiety disorder    8847     86.74         100.00     80.90          93.26
+##                      &lt;NA&gt;     737                               6.74         100.00
+##                     Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                             Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------- ------ --------- -------------- --------- --------------
+##       No anxiety disorder   5510     80.82          80.82     80.65          80.65
+##          Anxiety disorder   1308     19.18         100.00     19.15          99.80
+##                      &lt;NA&gt;     14                               0.20         100.00
+##                     Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                             Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------- ------ --------- -------------- --------- --------------
+##       No anxiety disorder   3688     53.57          53.57     46.89          46.89
+##          Anxiety disorder   3196     46.43         100.00     40.64          87.53
+##                      &lt;NA&gt;    981                              12.47         100.00
+##                     Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="depressive-disorders" class="section level3">
+<h3>Depressive disorders</h3>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb46-2"><a href="#cb46-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb46-3"><a href="#cb46-3"></a><span class="st">  </span><span class="kw">freq</span>(depressive_disorders) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$depressive_disorders  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ---------------------------- ------ --------- -------------- --------- --------------
+##       No depressive disorder     15     26.79          26.79     26.79          26.79
+##          Depressive disorder     41     73.21         100.00     73.21         100.00
+##                         &lt;NA&gt;      0                               0.00         100.00
+##                        Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                                 Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ---------------------------- ------- --------- -------------- --------- --------------
+##       No depressive disorder    1015      9.28           9.28      9.28           9.28
+##          Depressive disorder    9920     90.72         100.00     90.71          99.99
+##                         &lt;NA&gt;       1                               0.01         100.00
+##                        Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ---------------------------- ------ --------- -------------- --------- --------------
+##       No depressive disorder   4873     71.47          71.47     71.33          71.33
+##          Depressive disorder   1945     28.53         100.00     28.47          99.80
+##                         &lt;NA&gt;     14                               0.20         100.00
+##                        Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ---------------------------- ------ --------- -------------- --------- --------------
+##       No depressive disorder   3263     47.40          47.40     41.49          41.49
+##          Depressive disorder   3621     52.60         100.00     46.04          87.53
+##                         &lt;NA&gt;    981                              12.47         100.00
+##                        Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="depression-and-anxiety" class="section level3">
+<h3>Depression and anxiety</h3>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb48-2"><a href="#cb48-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb48-3"><a href="#cb48-3"></a><span class="st">  </span><span class="kw">freq</span>(depression_and_anxiety) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$depression_and_anxiety  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------------------------- ------ --------- -------------- --------- --------------
+##       No depressive or anxiety disorder     13     23.21          23.21     23.21          23.21
+##         Depressive and anxiety disorder     33     58.93          82.14     58.93          82.14
+##                Only depressive disorder      8     14.29          96.43     14.29          96.43
+##                   Only anxiety disorder      2      3.57         100.00      3.57         100.00
+##                                    &lt;NA&gt;      0                               0.00         100.00
+##                                   Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                                            Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------------------------- ------- --------- -------------- --------- --------------
+##       No depressive or anxiety disorder     238      2.33           2.33      2.18           2.18
+##         Depressive and anxiety disorder    8134     79.75          82.09     74.38          76.55
+##                Only depressive disorder    1114     10.92          93.01     10.19          86.74
+##                   Only anxiety disorder     713      6.99         100.00      6.52          93.26
+##                                    &lt;NA&gt;     737                               6.74         100.00
+##                                   Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------------------------- ------ --------- -------------- --------- --------------
+##       No depressive or anxiety disorder   4457     65.37          65.37     65.24          65.24
+##         Depressive and anxiety disorder    892     13.08          78.45     13.06          78.29
+##                Only depressive disorder   1053     15.44          93.90     15.41          93.71
+##                   Only anxiety disorder    416      6.10         100.00      6.09          99.80
+##                                    &lt;NA&gt;     14                               0.20         100.00
+##                                   Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------------------------- ------ --------- -------------- --------- --------------
+##       No depressive or anxiety disorder   2523     36.65          36.65     32.08          32.08
+##         Depressive and anxiety disorder   2456     35.68          72.33     31.23          63.31
+##                Only depressive disorder   1165     16.92          89.25     14.81          78.12
+##                   Only anxiety disorder    740     10.75         100.00      9.41          87.53
+##                                    &lt;NA&gt;    981                              12.47         100.00
+##                                   Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="eating-disorders" class="section level3">
+<h3>Eating disorders</h3>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb50-2"><a href="#cb50-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb50-3"><a href="#cb50-3"></a><span class="st">  </span><span class="kw">freq</span>(eating_disorders) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$eating_disorders  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                            Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------ ------ --------- -------------- --------- --------------
+##       No eating disorder      4      7.14           7.14      7.14           7.14
+##          Eating disorder     52     92.86         100.00     92.86         100.00
+##                     &lt;NA&gt;      0                               0.00         100.00
+##                    Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                             Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------ ------- --------- -------------- --------- --------------
+##       No eating disorder    9678     88.60          88.60     88.50          88.50
+##          Eating disorder    1245     11.40         100.00     11.38          99.88
+##                     &lt;NA&gt;      13                               0.12         100.00
+##                    Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                            Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------ ------ --------- -------------- --------- --------------
+##       No eating disorder   6667     97.63          97.63     97.58          97.58
+##          Eating disorder    162      2.37         100.00      2.37          99.96
+##                     &lt;NA&gt;      3                               0.04         100.00
+##                    Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                            Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------ ------ --------- -------------- --------- --------------
+##       No eating disorder   5963     92.78          92.78     75.82          75.82
+##          Eating disorder    464      7.22         100.00      5.90          81.72
+##                     &lt;NA&gt;   1438                              18.28         100.00
+##                    Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="ocd" class="section level3">
+<h3>OCD</h3>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb52-2"><a href="#cb52-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb52-3"><a href="#cb52-3"></a><span class="st">  </span><span class="kw">freq</span>(obsessive_compulsive_disorders) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$obsessive_compulsive_disorders  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## -------------------------------------- ------ --------- -------------- --------- --------------
+##       No obsessive compulsive disorder     41     73.21          73.21     73.21          73.21
+##          Obsessive compulsive disorder     15     26.79         100.00     26.79         100.00
+##                                   &lt;NA&gt;      0                               0.00         100.00
+##                                  Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## -------------------------------------- ------- --------- -------------- --------- --------------
+##       No obsessive compulsive disorder    9463     86.54          86.54     86.53          86.53
+##          Obsessive compulsive disorder    1472     13.46         100.00     13.46          99.99
+##                                   &lt;NA&gt;       1                               0.01         100.00
+##                                  Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## -------------------------------------- ------ --------- -------------- --------- --------------
+##       No obsessive compulsive disorder   6701     98.28          98.28     98.08          98.08
+##          Obsessive compulsive disorder    117      1.72         100.00      1.71          99.80
+##                                   &lt;NA&gt;     14                               0.20         100.00
+##                                  Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## -------------------------------------- ------ --------- -------------- --------- --------------
+##       No obsessive compulsive disorder   6299     91.50          91.50     80.09          80.09
+##          Obsessive compulsive disorder    585      8.50         100.00      7.44          87.53
+##                                   &lt;NA&gt;    981                              12.47         100.00
+##                                  Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="psychosis" class="section level3">
+<h3>Psychosis</h3>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb54-2"><a href="#cb54-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb54-3"><a href="#cb54-3"></a><span class="st">  </span><span class="kw">freq</span>(psychotic_disorders) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$psychotic_disorders  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                               Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------------- ------ --------- -------------- --------- --------------
+##       No psychotic disorder     56    100.00         100.00    100.00         100.00
+##          Psychotic disorder      0      0.00         100.00      0.00         100.00
+##                        &lt;NA&gt;      0                               0.00         100.00
+##                       Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------------- ------- --------- -------------- --------- --------------
+##       No psychotic disorder   10579     96.85          96.85     96.74          96.74
+##          Psychotic disorder     344      3.15         100.00      3.15          99.88
+##                        &lt;NA&gt;      13                               0.12         100.00
+##                       Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                               Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------------- ------ --------- -------------- --------- --------------
+##       No psychotic disorder   6774     99.57          99.57     99.15          99.15
+##          Psychotic disorder     29      0.43         100.00      0.42          99.58
+##                        &lt;NA&gt;     29                               0.42         100.00
+##                       Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                               Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------------- ------ --------- -------------- --------- --------------
+##       No psychotic disorder   6284     97.78          97.78     79.90          79.90
+##          Psychotic disorder    143      2.22         100.00      1.82          81.72
+##                        &lt;NA&gt;   1438                              18.28         100.00
+##                       Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="bipolar" class="section level3">
+<h3>Bipolar</h3>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb56-2"><a href="#cb56-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb56-3"><a href="#cb56-3"></a><span class="st">  </span><span class="kw">freq</span>(mhd.mania_hypomania_bipolar_or_manicdepression) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$mhd.mania_hypomania_bipolar_or_manicdepression  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------------------------------------- ------ --------- -------------- --------- --------------
+##       Not Mania, hypomania, bipolar or manic-depression     54     96.43          96.43     96.43          96.43
+##           Mania, hypomania, bipolar or manic-depression      2      3.57         100.00      3.57         100.00
+##                                                    &lt;NA&gt;      0                               0.00         100.00
+##                                                   Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                                                            Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------------------------------------- ------- --------- -------------- --------- --------------
+##       Not Mania, hypomania, bipolar or manic-depression   10186     93.15          93.15     93.14          93.14
+##           Mania, hypomania, bipolar or manic-depression     749      6.85         100.00      6.85          99.99
+##                                                    &lt;NA&gt;       1                               0.01         100.00
+##                                                   Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------------------------------------- ------ --------- -------------- --------- --------------
+##       Not Mania, hypomania, bipolar or manic-depression   6766     99.24          99.24     99.03          99.03
+##           Mania, hypomania, bipolar or manic-depression     52      0.76         100.00      0.76          99.80
+##                                                    &lt;NA&gt;     14                               0.20         100.00
+##                                                   Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------------------------------------- ------ --------- -------------- --------- --------------
+##       Not Mania, hypomania, bipolar or manic-depression   6654     96.66          96.66     84.60          84.60
+##           Mania, hypomania, bipolar or manic-depression    230      3.34         100.00      2.92          87.53
+##                                                    &lt;NA&gt;    981                              12.47         100.00
+##                                                   Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="ptsd" class="section level3">
+<h3>PTSD</h3>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb58-2"><a href="#cb58-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb58-3"><a href="#cb58-3"></a><span class="st">  </span><span class="kw">freq</span>(mhd.posttraumatic_stress_disorder_ptsd) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$mhd.posttraumatic_stress_disorder_ptsd  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                                                   Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------------------------------------------- ------ --------- -------------- --------- --------------
+##       Not Post-traumatic stress disorder (PTSD)     50     89.29          89.29     89.29          89.29
+##           Post-traumatic stress disorder (PTSD)      6     10.71         100.00     10.71         100.00
+##                                            &lt;NA&gt;      0                               0.00         100.00
+##                                           Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                                                    Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------------------------------------------- ------- --------- -------------- --------- --------------
+##       Not Post-traumatic stress disorder (PTSD)    9263     84.71          84.71     84.70          84.70
+##           Post-traumatic stress disorder (PTSD)    1672     15.29         100.00     15.29          99.99
+##                                            &lt;NA&gt;       1                               0.01         100.00
+##                                           Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                                                   Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------------------------------------------- ------ --------- -------------- --------- --------------
+##       Not Post-traumatic stress disorder (PTSD)   6641     97.40          97.40     97.20          97.20
+##           Post-traumatic stress disorder (PTSD)    177      2.60         100.00      2.59          99.80
+##                                            &lt;NA&gt;     14                               0.20         100.00
+##                                           Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                                                   Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------------------------------------------- ------ --------- -------------- --------- --------------
+##       Not Post-traumatic stress disorder (PTSD)   6210     90.21          90.21     78.96          78.96
+##           Post-traumatic stress disorder (PTSD)    674      9.79         100.00      8.57          87.53
+##                                            &lt;NA&gt;    981                              12.47         100.00
+##                                           Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="asd" class="section level3">
+<h3>ASD</h3>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb60-2"><a href="#cb60-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb60-3"><a href="#cb60-3"></a><span class="st">  </span><span class="kw">freq</span>(autism_spectrum_disorder) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$autism_spectrum_disorder  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                                     Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------------------- ------ --------- -------------- --------- --------------
+##       No autism spectrum disorder     50     89.29          89.29     89.29          89.29
+##          Autism spectrum disorder      6     10.71         100.00     10.71         100.00
+##                              &lt;NA&gt;      0                               0.00         100.00
+##                             Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                                      Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------------------- ------- --------- -------------- --------- --------------
+##       No autism spectrum disorder   10584     96.90          96.90     96.78          96.78
+##          Autism spectrum disorder     339      3.10         100.00      3.10          99.88
+##                              &lt;NA&gt;      13                               0.12         100.00
+##                             Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                                     Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------------------- ------ --------- -------------- --------- --------------
+##       No autism spectrum disorder   6767     99.47          99.47     99.05          99.05
+##          Autism spectrum disorder     36      0.53         100.00      0.53          99.58
+##                              &lt;NA&gt;     29                               0.42         100.00
+##                             Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                                     Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## --------------------------------- ------ --------- -------------- --------- --------------
+##       No autism spectrum disorder   6241     97.11          97.11     79.35          79.35
+##          Autism spectrum disorder    186      2.89         100.00      2.36          81.72
+##                              &lt;NA&gt;   1438                              18.28         100.00
+##                             Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="adhd" class="section level3">
+<h3>ADHD</h3>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb62-2"><a href="#cb62-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb62-3"><a href="#cb62-3"></a><span class="st">  </span><span class="kw">freq</span>(mhd.attention_deficit_hyperactivity_disorder) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$mhd.attention_deficit_hyperactivity_disorder  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                                                                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## -------------------------------------------------------------------------------------- ------ --------- -------------- --------- --------------
+##       Not Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)     54     96.43          96.43     96.43          96.43
+##           Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)      2      3.57         100.00      3.57         100.00
+##                                                                                   &lt;NA&gt;      0                               0.00         100.00
+##                                                                                  Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                                                                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## -------------------------------------------------------------------------------------- ------- --------- -------------- --------- --------------
+##       Not Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)   10745     98.37          98.37     98.25          98.25
+##           Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)     178      1.63         100.00      1.63          99.88
+##                                                                                   &lt;NA&gt;      13                               0.12         100.00
+##                                                                                  Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                                                                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## -------------------------------------------------------------------------------------- ------ --------- -------------- --------- --------------
+##       Not Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)   6775     99.59          99.59     99.17          99.17
+##           Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)     28      0.41         100.00      0.41          99.58
+##                                                                                   &lt;NA&gt;     29                               0.42         100.00
+##                                                                                  Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                                                                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## -------------------------------------------------------------------------------------- ------ --------- -------------- --------- --------------
+##       Not Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)   6319     98.32          98.32     80.34          80.34
+##           Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)    108      1.68         100.00      1.37          81.72
+##                                                                                   &lt;NA&gt;   1438                              18.28         100.00
+##                                                                                  Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="personality-disorders" class="section level3">
+<h3>Personality disorders</h3>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb64-2"><a href="#cb64-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb64-3"><a href="#cb64-3"></a><span class="st">  </span><span class="kw">freq</span>(mhd.personality_disorder) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$mhd.personality_disorder  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                                  Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------------ ------ --------- -------------- --------- --------------
+##       Not Personality disorder     52     92.86          92.86     92.86          92.86
+##           Personality disorder      4      7.14         100.00      7.14         100.00
+##                           &lt;NA&gt;      0                               0.00         100.00
+##                          Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                                   Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------------ ------- --------- -------------- --------- --------------
+##       Not Personality disorder   10055     92.05          92.05     91.94          91.94
+##           Personality disorder     868      7.95         100.00      7.94          99.88
+##                           &lt;NA&gt;      13                               0.12         100.00
+##                          Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                                  Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------------ ------ --------- -------------- --------- --------------
+##       Not Personality disorder   6735     99.00          99.00     98.58          98.58
+##           Personality disorder     68      1.00         100.00      1.00          99.58
+##                           &lt;NA&gt;     29                               0.42         100.00
+##                          Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                                  Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ------------------------------ ------ --------- -------------- --------- --------------
+##       Not Personality disorder   6143     95.58          95.58     78.11          78.11
+##           Personality disorder    284      4.42         100.00      3.61          81.72
+##                           &lt;NA&gt;   1438                              18.28         100.00
+##                          Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="controls" class="section level3">
+<h3>Controls</h3>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb66-2"><a href="#cb66-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb66-3"><a href="#cb66-3"></a><span class="st">  </span><span class="kw">freq</span>(control) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$control  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                    Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ---------------- ------ --------- -------------- --------- --------------
+##       No control     55     98.21          98.21     98.21          98.21
+##          Control      1      1.79         100.00      1.79         100.00
+##             &lt;NA&gt;      0                               0.00         100.00
+##            Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                     Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ---------------- ------- --------- -------------- --------- --------------
+##       No control   10790     98.91          98.91     98.66          98.66
+##          Control     119      1.09         100.00      1.09          99.75
+##             &lt;NA&gt;      27                               0.25         100.00
+##            Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                    Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ---------------- ------ --------- -------------- --------- --------------
+##       No control   2632     38.63          38.63     38.52          38.52
+##          Control   4181     61.37         100.00     61.20          99.72
+##             &lt;NA&gt;     19                               0.28         100.00
+##            Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                    Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ---------------- ------ --------- -------------- --------- --------------
+##       No control   4701     68.60          68.60     59.77          59.77
+##          Control   2152     31.40         100.00     27.36          87.13
+##             &lt;NA&gt;   1012                              12.87         100.00
+##            Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
+<div id="dont-know-or-prefer-not-to-say" class="section level3">
+<h3>Dont know or prefer not to say</h3>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb68-2"><a href="#cb68-2"></a><span class="st">  </span><span class="kw">group_by</span>(Sample) <span class="op">%&gt;%</span></span>
+<span id="cb68-3"><a href="#cb68-3"></a><span class="st">  </span><span class="kw">freq</span>(DidNotRespondMHD) </span></code></pre></div>
+<pre><code>## Frequencies  
+## dat.retro$DidNotRespondMHD  
+## Type: Factor  
+## Group: Sample = EDGI  
+## 
+##                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------------------- ------ --------- -------------- --------- --------------
+##       Prefer not to say      0      0.00           0.00      0.00           0.00
+##        Responded to MHD     56    100.00         100.00    100.00         100.00
+##                    &lt;NA&gt;      0                               0.00         100.00
+##                   Total     56    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = GLAD  
+## 
+##                            Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------------------- ------- --------- -------------- --------- --------------
+##       Prefer not to say       1      0.01           0.01      0.01           0.01
+##        Responded to MHD   10935     99.99         100.00     99.99         100.00
+##                    &lt;NA&gt;       0                               0.00         100.00
+##                   Total   10936    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = NBR  
+## 
+##                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------------------- ------ --------- -------------- --------- --------------
+##       Prefer not to say      0      0.00           0.00      0.00           0.00
+##        Responded to MHD   6832    100.00         100.00    100.00         100.00
+##                    &lt;NA&gt;      0                               0.00         100.00
+##                   Total   6832    100.00         100.00    100.00         100.00
+## 
+## Group: Sample = RAMP  
+## 
+##                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
+## ----------------------- ------ --------- -------------- --------- --------------
+##       Prefer not to say    977     12.42          12.42     12.42          12.42
+##        Responded to MHD   6888     87.58         100.00     87.58         100.00
+##                    &lt;NA&gt;      0                               0.00         100.00
+##                   Total   7865    100.00         100.00    100.00         100.00</code></pre>
+</div>
 </div>
 <div id="means-sd-and-n" class="section level2">
 <h2>Means, SD and n</h2>
 <div id="overall" class="section level3">
 <h3>overall</h3>
 <p>Retrospective</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>vars &lt;-<span class="st"> </span>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb31-2"><a href="#cb31-2"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_retro,</span>
-<span id="cb31-3"><a href="#cb31-3"></a>         phq.sum_score_base,phq.sum_score_retro,</span>
-<span id="cb31-4"><a href="#cb31-4"></a>         pcl.sum_score_base)</span>
-<span id="cb31-5"><a href="#cb31-5"></a></span>
-<span id="cb31-6"><a href="#cb31-6"></a></span>
-<span id="cb31-7"><a href="#cb31-7"></a><span class="kw">apply</span>(vars, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="kw">list</span>(<span class="kw">describe</span>(x)))</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1"></a>vars &lt;-<span class="st"> </span>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb70-2"><a href="#cb70-2"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_retro,</span>
+<span id="cb70-3"><a href="#cb70-3"></a>         phq.sum_score_base,phq.sum_score_retro,</span>
+<span id="cb70-4"><a href="#cb70-4"></a>         pcl.sum_score_base)</span>
+<span id="cb70-5"><a href="#cb70-5"></a></span>
+<span id="cb70-6"><a href="#cb70-6"></a></span>
+<span id="cb70-7"><a href="#cb70-7"></a><span class="kw">apply</span>(vars, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="kw">list</span>(<span class="kw">describe</span>(x)))</span></code></pre></div>
 <pre><code>## $gad.sum_score_base
 ## $gad.sum_score_base[[1]]
 ##    vars     n mean   sd median trimmed  mad min max range skew kurtosis   se
@@ -3085,13 +4015,13 @@ div.tocify {
 ##    vars     n  mean   sd median trimmed  mad min max range skew kurtosis   se
 ## X1    1 25586 14.01 6.05     13   13.48 5.93   6  30    24 0.65    -0.45 0.04</code></pre>
 <p>Prepandemic</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>vars &lt;-<span class="st"> </span>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb33-2"><a href="#cb33-2"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_prepan,</span>
-<span id="cb33-3"><a href="#cb33-3"></a>         phq.sum_score_base,phq.sum_score_prepan,</span>
-<span id="cb33-4"><a href="#cb33-4"></a>         pcl.sum_score_base,  pcl.sum_score_prepan)</span>
-<span id="cb33-5"><a href="#cb33-5"></a></span>
-<span id="cb33-6"><a href="#cb33-6"></a></span>
-<span id="cb33-7"><a href="#cb33-7"></a><span class="kw">apply</span>(vars, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="kw">list</span>(<span class="kw">describe</span>(x)))</span></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1"></a>vars &lt;-<span class="st"> </span>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb72-2"><a href="#cb72-2"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_prepan,</span>
+<span id="cb72-3"><a href="#cb72-3"></a>         phq.sum_score_base,phq.sum_score_prepan,</span>
+<span id="cb72-4"><a href="#cb72-4"></a>         pcl.sum_score_base,  pcl.sum_score_prepan)</span>
+<span id="cb72-5"><a href="#cb72-5"></a></span>
+<span id="cb72-6"><a href="#cb72-6"></a></span>
+<span id="cb72-7"><a href="#cb72-7"></a><span class="kw">apply</span>(vars, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="kw">list</span>(<span class="kw">describe</span>(x)))</span></code></pre></div>
 <pre><code>## $gad.sum_score_base
 ## $gad.sum_score_base[[1]]
 ##    vars     n mean   sd median trimmed  mad min max range skew kurtosis   se
@@ -3130,30 +4060,30 @@ div.tocify {
 <div id="by-sample" class="section level3">
 <h3>By sample</h3>
 <p>retrospective</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb35-2"><a href="#cb35-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
-<span id="cb35-3"><a href="#cb35-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb35-4"><a href="#cb35-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb35-5"><a href="#cb35-5"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span></span>
-<span id="cb35-6"><a href="#cb35-6"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">m.gad.base =</span> <span class="kw">mean</span>(gad.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb35-7"><a href="#cb35-7"></a>            <span class="dt">sd.gad.base =</span> <span class="kw">sd</span>(gad.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb35-8"><a href="#cb35-8"></a>            <span class="dt">n.gad.base =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(gad.sum_score_base)),</span>
-<span id="cb35-9"><a href="#cb35-9"></a>            <span class="dt">m.gad.retro =</span> <span class="kw">mean</span>(gad.sum_score_retro, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb35-10"><a href="#cb35-10"></a>            <span class="dt">sd.gad.retro =</span> <span class="kw">sd</span>(gad.sum_score_retro, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb35-11"><a href="#cb35-11"></a>            <span class="dt">n.gad.retro =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(gad.sum_score_retro)),</span>
-<span id="cb35-12"><a href="#cb35-12"></a>            </span>
-<span id="cb35-13"><a href="#cb35-13"></a>            <span class="dt">m.phq.base =</span> <span class="kw">mean</span>(phq.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb35-14"><a href="#cb35-14"></a>            <span class="dt">sd.phq.base =</span> <span class="kw">sd</span>(phq.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb35-15"><a href="#cb35-15"></a>            <span class="dt">n.phq.base =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(phq.sum_score_base)),</span>
-<span id="cb35-16"><a href="#cb35-16"></a>            <span class="dt">m.phq.retro =</span> <span class="kw">mean</span>(phq.sum_score_retro, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb35-17"><a href="#cb35-17"></a>            <span class="dt">sd.phq.retro =</span> <span class="kw">sd</span>(phq.sum_score_retro, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb35-18"><a href="#cb35-18"></a>            <span class="dt">n.phq.retro =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(phq.sum_score_retro)),</span>
-<span id="cb35-19"><a href="#cb35-19"></a>            </span>
-<span id="cb35-20"><a href="#cb35-20"></a>            <span class="dt">m.pcl.base =</span> <span class="kw">mean</span>(pcl.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb35-21"><a href="#cb35-21"></a>            <span class="dt">sd.pcl.base =</span> <span class="kw">sd</span>(pcl.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb35-22"><a href="#cb35-22"></a>            <span class="dt">n.pcl.base =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(pcl.sum_score_base)),</span>
-<span id="cb35-23"><a href="#cb35-23"></a></span>
-<span id="cb35-24"><a href="#cb35-24"></a>            )</span></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb74-2"><a href="#cb74-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb74-3"><a href="#cb74-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
+<span id="cb74-4"><a href="#cb74-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb74-5"><a href="#cb74-5"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span></span>
+<span id="cb74-6"><a href="#cb74-6"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">m.gad.base =</span> <span class="kw">mean</span>(gad.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb74-7"><a href="#cb74-7"></a>            <span class="dt">sd.gad.base =</span> <span class="kw">sd</span>(gad.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb74-8"><a href="#cb74-8"></a>            <span class="dt">n.gad.base =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(gad.sum_score_base)),</span>
+<span id="cb74-9"><a href="#cb74-9"></a>            <span class="dt">m.gad.retro =</span> <span class="kw">mean</span>(gad.sum_score_retro, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb74-10"><a href="#cb74-10"></a>            <span class="dt">sd.gad.retro =</span> <span class="kw">sd</span>(gad.sum_score_retro, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb74-11"><a href="#cb74-11"></a>            <span class="dt">n.gad.retro =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(gad.sum_score_retro)),</span>
+<span id="cb74-12"><a href="#cb74-12"></a>            </span>
+<span id="cb74-13"><a href="#cb74-13"></a>            <span class="dt">m.phq.base =</span> <span class="kw">mean</span>(phq.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb74-14"><a href="#cb74-14"></a>            <span class="dt">sd.phq.base =</span> <span class="kw">sd</span>(phq.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb74-15"><a href="#cb74-15"></a>            <span class="dt">n.phq.base =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(phq.sum_score_base)),</span>
+<span id="cb74-16"><a href="#cb74-16"></a>            <span class="dt">m.phq.retro =</span> <span class="kw">mean</span>(phq.sum_score_retro, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb74-17"><a href="#cb74-17"></a>            <span class="dt">sd.phq.retro =</span> <span class="kw">sd</span>(phq.sum_score_retro, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb74-18"><a href="#cb74-18"></a>            <span class="dt">n.phq.retro =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(phq.sum_score_retro)),</span>
+<span id="cb74-19"><a href="#cb74-19"></a>            </span>
+<span id="cb74-20"><a href="#cb74-20"></a>            <span class="dt">m.pcl.base =</span> <span class="kw">mean</span>(pcl.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb74-21"><a href="#cb74-21"></a>            <span class="dt">sd.pcl.base =</span> <span class="kw">sd</span>(pcl.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb74-22"><a href="#cb74-22"></a>            <span class="dt">n.pcl.base =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(pcl.sum_score_base)),</span>
+<span id="cb74-23"><a href="#cb74-23"></a></span>
+<span id="cb74-24"><a href="#cb74-24"></a>            )</span></code></pre></div>
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -3161,33 +4091,33 @@ div.tocify {
   </script>
 </div>
 <p>prepandemic</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb37-2"><a href="#cb37-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
-<span id="cb37-3"><a href="#cb37-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb37-4"><a href="#cb37-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb37-5"><a href="#cb37-5"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span></span>
-<span id="cb37-6"><a href="#cb37-6"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">m.gad.base =</span> <span class="kw">mean</span>(gad.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb37-7"><a href="#cb37-7"></a>            <span class="dt">sd.gad.base =</span> <span class="kw">sd</span>(gad.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb37-8"><a href="#cb37-8"></a>            <span class="dt">n.gad.base =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(gad.sum_score_base)),</span>
-<span id="cb37-9"><a href="#cb37-9"></a>            <span class="dt">m.gad.prepan =</span> <span class="kw">mean</span>(gad.sum_score_prepan, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb37-10"><a href="#cb37-10"></a>            <span class="dt">sd.gad.prepan =</span> <span class="kw">sd</span>(gad.sum_score_prepan, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb37-11"><a href="#cb37-11"></a>            <span class="dt">n.gad.prepan =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(gad.sum_score_prepan)),</span>
-<span id="cb37-12"><a href="#cb37-12"></a>            </span>
-<span id="cb37-13"><a href="#cb37-13"></a>            <span class="dt">m.phq.base =</span> <span class="kw">mean</span>(phq.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb37-14"><a href="#cb37-14"></a>            <span class="dt">sd.phq.base =</span> <span class="kw">sd</span>(phq.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb37-15"><a href="#cb37-15"></a>            <span class="dt">n.phq.base =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(phq.sum_score_base)),</span>
-<span id="cb37-16"><a href="#cb37-16"></a>            <span class="dt">m.phq.prepan =</span> <span class="kw">mean</span>(phq.sum_score_prepan, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb37-17"><a href="#cb37-17"></a>            <span class="dt">sd.phq.prepan =</span> <span class="kw">sd</span>(phq.sum_score_prepan, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb37-18"><a href="#cb37-18"></a>            <span class="dt">n.phq.prepan =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(phq.sum_score_prepan)),</span>
-<span id="cb37-19"><a href="#cb37-19"></a>            </span>
-<span id="cb37-20"><a href="#cb37-20"></a>            <span class="dt">m.pcl.base =</span> <span class="kw">mean</span>(pcl.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb37-21"><a href="#cb37-21"></a>            <span class="dt">sd.pcl.base =</span> <span class="kw">sd</span>(pcl.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb37-22"><a href="#cb37-22"></a>            <span class="dt">n.pcl.base =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(pcl.sum_score_base)),</span>
-<span id="cb37-23"><a href="#cb37-23"></a>            <span class="dt">m.pcl.prepan =</span> <span class="kw">mean</span>(pcl.sum_score_prepan, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb37-24"><a href="#cb37-24"></a>            <span class="dt">sd.pcl.prepan =</span> <span class="kw">sd</span>(pcl.sum_score_prepan, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
-<span id="cb37-25"><a href="#cb37-25"></a>            <span class="dt">n.pcl.prepan =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(pcl.sum_score_prepan)),</span>
-<span id="cb37-26"><a href="#cb37-26"></a>            </span>
-<span id="cb37-27"><a href="#cb37-27"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb76-2"><a href="#cb76-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb76-3"><a href="#cb76-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
+<span id="cb76-4"><a href="#cb76-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb76-5"><a href="#cb76-5"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span></span>
+<span id="cb76-6"><a href="#cb76-6"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">m.gad.base =</span> <span class="kw">mean</span>(gad.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb76-7"><a href="#cb76-7"></a>            <span class="dt">sd.gad.base =</span> <span class="kw">sd</span>(gad.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb76-8"><a href="#cb76-8"></a>            <span class="dt">n.gad.base =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(gad.sum_score_base)),</span>
+<span id="cb76-9"><a href="#cb76-9"></a>            <span class="dt">m.gad.prepan =</span> <span class="kw">mean</span>(gad.sum_score_prepan, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb76-10"><a href="#cb76-10"></a>            <span class="dt">sd.gad.prepan =</span> <span class="kw">sd</span>(gad.sum_score_prepan, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb76-11"><a href="#cb76-11"></a>            <span class="dt">n.gad.prepan =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(gad.sum_score_prepan)),</span>
+<span id="cb76-12"><a href="#cb76-12"></a>            </span>
+<span id="cb76-13"><a href="#cb76-13"></a>            <span class="dt">m.phq.base =</span> <span class="kw">mean</span>(phq.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb76-14"><a href="#cb76-14"></a>            <span class="dt">sd.phq.base =</span> <span class="kw">sd</span>(phq.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb76-15"><a href="#cb76-15"></a>            <span class="dt">n.phq.base =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(phq.sum_score_base)),</span>
+<span id="cb76-16"><a href="#cb76-16"></a>            <span class="dt">m.phq.prepan =</span> <span class="kw">mean</span>(phq.sum_score_prepan, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb76-17"><a href="#cb76-17"></a>            <span class="dt">sd.phq.prepan =</span> <span class="kw">sd</span>(phq.sum_score_prepan, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb76-18"><a href="#cb76-18"></a>            <span class="dt">n.phq.prepan =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(phq.sum_score_prepan)),</span>
+<span id="cb76-19"><a href="#cb76-19"></a>            </span>
+<span id="cb76-20"><a href="#cb76-20"></a>            <span class="dt">m.pcl.base =</span> <span class="kw">mean</span>(pcl.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb76-21"><a href="#cb76-21"></a>            <span class="dt">sd.pcl.base =</span> <span class="kw">sd</span>(pcl.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb76-22"><a href="#cb76-22"></a>            <span class="dt">n.pcl.base =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(pcl.sum_score_base)),</span>
+<span id="cb76-23"><a href="#cb76-23"></a>            <span class="dt">m.pcl.prepan =</span> <span class="kw">mean</span>(pcl.sum_score_prepan, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb76-24"><a href="#cb76-24"></a>            <span class="dt">sd.pcl.prepan =</span> <span class="kw">sd</span>(pcl.sum_score_prepan, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb76-25"><a href="#cb76-25"></a>            <span class="dt">n.pcl.prepan =</span> <span class="kw">sum</span>(<span class="op">!</span><span class="kw">is.na</span>(pcl.sum_score_prepan)),</span>
+<span id="cb76-26"><a href="#cb76-26"></a>            </span>
+<span id="cb76-27"><a href="#cb76-27"></a>  )</span></code></pre></div>
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -3202,7 +4132,7 @@ div.tocify {
 <div id="average-scores" class="section level3">
 <h3>Average scores</h3>
 <p>Prepandemic</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>gad.sum_score_base,dat.prepan<span class="op">$</span>gad.sum_score_prepan, <span class="dt">paired =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>gad.sum_score_base,dat.prepan<span class="op">$</span>gad.sum_score_prepan, <span class="dt">paired =</span> T)</span></code></pre></div>
 <pre><code>## 
 ##  Paired t-test
 ## 
@@ -3214,7 +4144,7 @@ div.tocify {
 ## sample estimates:
 ## mean of the differences 
 ##              -0.3318489</code></pre>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>phq.sum_score_base,dat.prepan<span class="op">$</span>phq.sum_score_prepan, <span class="dt">paired =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>phq.sum_score_base,dat.prepan<span class="op">$</span>phq.sum_score_prepan, <span class="dt">paired =</span> T)</span></code></pre></div>
 <pre><code>## 
 ##  Paired t-test
 ## 
@@ -3226,7 +4156,7 @@ div.tocify {
 ## sample estimates:
 ## mean of the differences 
 ##               -0.428536</code></pre>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>pcl.sum_score_base,dat.prepan<span class="op">$</span>pcl.sum_score_prepan, <span class="dt">paired =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>pcl.sum_score_base,dat.prepan<span class="op">$</span>pcl.sum_score_prepan, <span class="dt">paired =</span> T)</span></code></pre></div>
 <pre><code>## 
 ##  Paired t-test
 ## 
@@ -3239,7 +4169,7 @@ div.tocify {
 ## mean of the differences 
 ##               0.2234176</code></pre>
 <p>Retrospective (no retrospective ratings for PCL)</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="kw">t.test</span>(dat.retro<span class="op">$</span>gad.sum_score_base,dat.retro<span class="op">$</span>gad.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1"></a><span class="kw">t.test</span>(dat.retro<span class="op">$</span>gad.sum_score_base,dat.retro<span class="op">$</span>gad.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
 <pre><code>## 
 ##  Paired t-test
 ## 
@@ -3251,7 +4181,7 @@ div.tocify {
 ## sample estimates:
 ## mean of the differences 
 ##                2.643557</code></pre>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="kw">t.test</span>(dat.retro<span class="op">$</span>phq.sum_score_base,dat.retro<span class="op">$</span>phq.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1"></a><span class="kw">t.test</span>(dat.retro<span class="op">$</span>phq.sum_score_base,dat.retro<span class="op">$</span>phq.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
 <pre><code>## 
 ##  Paired t-test
 ## 
@@ -3267,19 +4197,19 @@ div.tocify {
 <div id="average-scores-by-sample" class="section level3">
 <h3>Average scores by sample</h3>
 <p>Retrospective GAD</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb49-2"><a href="#cb49-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
-<span id="cb49-3"><a href="#cb49-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb49-4"><a href="#cb49-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb49-5"><a href="#cb49-5"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_retro, sample) <span class="op">%&gt;%</span></span>
-<span id="cb49-6"><a href="#cb49-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb49-7"><a href="#cb49-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb49-8"><a href="#cb49-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
-<span id="cb49-9"><a href="#cb49-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
-<span id="cb49-10"><a href="#cb49-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb49-11"><a href="#cb49-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>p.value,</span>
-<span id="cb49-12"><a href="#cb49-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>statistic,</span>
-<span id="cb49-13"><a href="#cb49-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>parameter)</span></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb88-2"><a href="#cb88-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb88-3"><a href="#cb88-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
+<span id="cb88-4"><a href="#cb88-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb88-5"><a href="#cb88-5"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_retro, sample) <span class="op">%&gt;%</span></span>
+<span id="cb88-6"><a href="#cb88-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb88-7"><a href="#cb88-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb88-8"><a href="#cb88-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb88-9"><a href="#cb88-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
+<span id="cb88-10"><a href="#cb88-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb88-11"><a href="#cb88-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>p.value,</span>
+<span id="cb88-12"><a href="#cb88-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>statistic,</span>
+<span id="cb88-13"><a href="#cb88-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>parameter)</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -3287,19 +4217,19 @@ div.tocify {
   </script>
 </div>
 <p>Retrospective PHQ</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb51-2"><a href="#cb51-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
-<span id="cb51-3"><a href="#cb51-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb51-4"><a href="#cb51-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb51-5"><a href="#cb51-5"></a><span class="st">  </span><span class="kw">select</span>(phq.sum_score_base,phq.sum_score_retro, sample) <span class="op">%&gt;%</span></span>
-<span id="cb51-6"><a href="#cb51-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb51-7"><a href="#cb51-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb51-8"><a href="#cb51-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
-<span id="cb51-9"><a href="#cb51-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
-<span id="cb51-10"><a href="#cb51-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb51-11"><a href="#cb51-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>p.value,</span>
-<span id="cb51-12"><a href="#cb51-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>statistic,</span>
-<span id="cb51-13"><a href="#cb51-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>parameter)</span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb90-2"><a href="#cb90-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb90-3"><a href="#cb90-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
+<span id="cb90-4"><a href="#cb90-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb90-5"><a href="#cb90-5"></a><span class="st">  </span><span class="kw">select</span>(phq.sum_score_base,phq.sum_score_retro, sample) <span class="op">%&gt;%</span></span>
+<span id="cb90-6"><a href="#cb90-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb90-7"><a href="#cb90-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb90-8"><a href="#cb90-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb90-9"><a href="#cb90-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
+<span id="cb90-10"><a href="#cb90-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb90-11"><a href="#cb90-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>p.value,</span>
+<span id="cb90-12"><a href="#cb90-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>statistic,</span>
+<span id="cb90-13"><a href="#cb90-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>parameter)</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -3307,19 +4237,19 @@ div.tocify {
   </script>
 </div>
 <p>Prepandemic GAD</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb53-2"><a href="#cb53-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
-<span id="cb53-3"><a href="#cb53-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb53-4"><a href="#cb53-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb53-5"><a href="#cb53-5"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
-<span id="cb53-6"><a href="#cb53-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb53-7"><a href="#cb53-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb53-8"><a href="#cb53-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
-<span id="cb53-9"><a href="#cb53-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
-<span id="cb53-10"><a href="#cb53-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb53-11"><a href="#cb53-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>p.value,</span>
-<span id="cb53-12"><a href="#cb53-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>statistic,</span>
-<span id="cb53-13"><a href="#cb53-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb92-2"><a href="#cb92-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb92-3"><a href="#cb92-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
+<span id="cb92-4"><a href="#cb92-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb92-5"><a href="#cb92-5"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
+<span id="cb92-6"><a href="#cb92-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb92-7"><a href="#cb92-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb92-8"><a href="#cb92-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb92-9"><a href="#cb92-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
+<span id="cb92-10"><a href="#cb92-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb92-11"><a href="#cb92-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>p.value,</span>
+<span id="cb92-12"><a href="#cb92-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>statistic,</span>
+<span id="cb92-13"><a href="#cb92-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -3327,19 +4257,19 @@ div.tocify {
   </script>
 </div>
 <p>Prepandemic PHQ</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb55-2"><a href="#cb55-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
-<span id="cb55-3"><a href="#cb55-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb55-4"><a href="#cb55-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb55-5"><a href="#cb55-5"></a><span class="st">  </span><span class="kw">select</span>(phq.sum_score_base,phq.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
-<span id="cb55-6"><a href="#cb55-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-7"><a href="#cb55-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-8"><a href="#cb55-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
-<span id="cb55-9"><a href="#cb55-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
-<span id="cb55-10"><a href="#cb55-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-11"><a href="#cb55-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>p.value,</span>
-<span id="cb55-12"><a href="#cb55-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>statistic,</span>
-<span id="cb55-13"><a href="#cb55-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb94-2"><a href="#cb94-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb94-3"><a href="#cb94-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
+<span id="cb94-4"><a href="#cb94-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb94-5"><a href="#cb94-5"></a><span class="st">  </span><span class="kw">select</span>(phq.sum_score_base,phq.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
+<span id="cb94-6"><a href="#cb94-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb94-7"><a href="#cb94-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb94-8"><a href="#cb94-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb94-9"><a href="#cb94-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
+<span id="cb94-10"><a href="#cb94-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb94-11"><a href="#cb94-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>p.value,</span>
+<span id="cb94-12"><a href="#cb94-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>statistic,</span>
+<span id="cb94-13"><a href="#cb94-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -3347,19 +4277,19 @@ div.tocify {
   </script>
 </div>
 <p>Prepandemic PCL</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb57-2"><a href="#cb57-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
-<span id="cb57-3"><a href="#cb57-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb57-4"><a href="#cb57-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb57-5"><a href="#cb57-5"></a><span class="st">  </span><span class="kw">select</span>(pcl.sum_score_base,pcl.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
-<span id="cb57-6"><a href="#cb57-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb57-7"><a href="#cb57-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb57-8"><a href="#cb57-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
-<span id="cb57-9"><a href="#cb57-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
-<span id="cb57-10"><a href="#cb57-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb57-11"><a href="#cb57-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>p.value,</span>
-<span id="cb57-12"><a href="#cb57-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>statistic,</span>
-<span id="cb57-13"><a href="#cb57-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb96-2"><a href="#cb96-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb96-3"><a href="#cb96-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
+<span id="cb96-4"><a href="#cb96-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb96-5"><a href="#cb96-5"></a><span class="st">  </span><span class="kw">select</span>(pcl.sum_score_base,pcl.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
+<span id="cb96-6"><a href="#cb96-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb96-7"><a href="#cb96-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb96-8"><a href="#cb96-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb96-9"><a href="#cb96-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
+<span id="cb96-10"><a href="#cb96-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb96-11"><a href="#cb96-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>p.value,</span>
+<span id="cb96-12"><a href="#cb96-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>statistic,</span>
+<span id="cb96-13"><a href="#cb96-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
