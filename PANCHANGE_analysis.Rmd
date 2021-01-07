@@ -2282,9 +2282,7 @@ dat.retro <- dat %>%
       (data_group_phq == "Baseline and retrospective data" |
       data_group_phq == "All prepandemic, baseline and retrospective data") |
       (data_group_pcl == "Baseline and retrospective data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data") |
-      (data_group_ocir == "Baseline and retrospective data" |
-      data_group_ocir == "All prepandemic, baseline and retrospective data"))
+      data_group_pcl == "All prepandemic, baseline and retrospective data"))
   )
 
 dim(dat.retro)
@@ -2296,18 +2294,12 @@ Exclude individuals with NA for MHD, age, gender; exclude if prepan data collect
 ```{r subsample for prepan-baseline analysis}
 dat.prepan <- dat %>%
   filter(
-    ((data_group_gad == "Baseline and retrospective data" |
-      data_group_gad == "Prepandemic and baseline data" |
+    ((data_group_gad == "Prepandemic and baseline data" |
       data_group_gad == "All prepandemic, baseline and retrospective data") |
-      (data_group_phq == "Baseline and retrospective data" |
-      data_group_phq == "Prepandemic and baseline data" |
+      (data_group_phq == "Prepandemic and baseline data" |
       data_group_phq == "All prepandemic, baseline and retrospective data") |
-      (data_group_pcl == "Baseline and retrospective data" |
-      data_group_pcl == "Prepandemic and baseline data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data") |
-      (data_group_ocir == "Baseline and retrospective data" |
-      data_group_ocir == "Prepandemic and baseline data" |
-      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      (data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") ) &
       prepandemic_march_1_numeric == 1 # Exclude participants that signed up after the 1. March
   )
 
@@ -8604,5 +8596,203 @@ lm.forest(plot.dat.sample.gad ,"Predictors of anxiety controlling for retrospect
 ```{r forest plot by sample retro only phq, fig.height=30, fig.width=50, dpi=120}
 
 lm.forest(plot.dat.sample.phq ,"Predictors of depression controlling for retrospective symptoms across samples")
+
+```
+
+
+# frequencies and descriptives in exclusion data
+
+after excluding for age, gender, or MHD being NA (as in skipped or missed. Prefer not to answer was categories as it's own option), and if they did not complete all measurement points.
+
+
+### sample size counts by cohort for each measurement point
+
+```{r freq table overall by sample}
+
+dat %>% 
+  group_by(Sample) %>%
+  (count)
+
+```
+
+```{r freq table prepandemic by sample}
+
+dat.prepan %>% 
+  group_by(Sample) %>%
+  (count)
+
+```
+
+
+```{r freq table retrospective by sample}
+
+dat.retro %>% 
+  group_by(Sample) %>%
+  (count)
+
+```
+
+
+### pandemic change gad
+
+```{r freq table gad perceived change}
+dat %>%
+  group_by(Sample) %>%
+  freq(gad.pandemic_felt_feelings)
+
+```
+### pandemic change phq
+
+```{r freq table phq perceived change}
+
+dat %>%
+  group_by(Sample) %>%
+  freq(phq.pandemic_felt_feelings)
+
+```
+
+### Ethnicity
+```{r freq table ethnicity}
+dat %>%
+  group_by(Sample) %>%
+  freq(Ethnicity_collapsed) 
+```
+
+### Gender
+```{r freq table gender}
+dat %>%
+  group_by(Sample) %>%
+  freq(Gender_collapsed) 
+```
+### age categorical
+```{r freq table age collapsed}
+dat %>%
+  group_by(Sample) %>%
+  freq(age_category_collapsed) 
+```
+### Employment
+
+```{r freq table employment collapsed}
+dat %>%
+  group_by(Sample) %>%
+  freq(employment_prior_covid) 
+```
+
+### anxiety disorders
+```{r freq table diagnosis anxiety}
+dat %>%
+  group_by(Sample) %>%
+  freq(anxiety_disorders) 
+```
+
+### Depressive disorders
+```{r freq table diagnosis depression}
+dat %>%
+  group_by(Sample) %>%
+  freq(depressive_disorders) 
+```
+### Depression and anxiety
+```{r freq table diagnosis depression and anxiety}
+dat %>%
+  group_by(Sample) %>%
+  freq(depression_and_anxiety) 
+```
+### Eating disorders
+```{r freq table diagnosis eating disorder}
+dat %>%
+  group_by(Sample) %>%
+  freq(eating_disorders) 
+
+```
+### OCD
+```{r freq table diagnosis obsessive compulsive disorders}
+dat %>%
+  group_by(Sample) %>%
+  freq(obsessive_compulsive_disorders) 
+
+```
+
+### Psychosis
+```{r freq table diagnosis psychotic disorders}
+dat %>%
+  group_by(Sample) %>%
+  freq(psychotic_disorders) 
+
+```
+
+### Bipolar
+```{r freq table diagnosis bipolar}
+dat %>%
+  group_by(Sample) %>%
+  freq(mhd.mania_hypomania_bipolar_or_manicdepression) 
+
+```
+
+### PTSD
+```{r freq table diagnosis PTSD}
+dat %>%
+  group_by(Sample) %>%
+  freq(mhd.posttraumatic_stress_disorder_ptsd) 
+
+```
+
+### ASD
+
+```{r freq table diagnosis ASD}
+dat %>%
+  group_by(Sample) %>%
+  freq(autism_spectrum_disorder) 
+
+```
+
+### ADHD
+```{r freq table diagnosis ADHD}
+dat %>%
+  group_by(Sample) %>%
+  freq(mhd.attention_deficit_hyperactivity_disorder) 
+
+```
+
+### Personality disorders
+```{r freq table diagnosis personality disorder}
+dat %>%
+  group_by(Sample) %>%
+  freq(mhd.personality_disorder) 
+
+```
+
+### Controls 
+```{r freq table diagnosis control}
+dat %>%
+  group_by(Sample) %>%
+  freq(control) 
+```
+
+### Dont know or prefer not to say
+```{r freq table diagnosis prefer not to say}
+dat %>%
+  group_by(Sample) %>%
+  freq(DidNotRespondMHD) 
+```
+
+
+## T tests
+
+retrospective OPHQ 9 vs baseline.
+
+Notes: We use the default (Welch's) t-test (to account for non equal variance)
+```{r t tests }
+
+datgladedgi <- dat.retro %>%
+  filter(Sample == "GLAD" |
+           Sample == "EDGI") 
+
+t.test(datgladedgi$phq.sum_score_base,
+       datgladedgi$phq.sum_score_retro,
+       paired=T)
+
+t.test(datgladedgi$gad.sum_score_base,
+       datgladedgi$gad.sum_score_retro,
+       paired=T)
 
 ```
