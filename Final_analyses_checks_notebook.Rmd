@@ -152,8 +152,6 @@ max(NBR.retro$startDate.coping)
 
 ```{r full data n}
 
-table()
-
 ```
 
 ### retrospective data
