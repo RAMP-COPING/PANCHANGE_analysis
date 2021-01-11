@@ -273,6 +273,147 @@ ocir.diff_score_cols <- dat %>%
 ocir.diff_score_cols
 ```
 
+# Create subsets of data for analyses
+Filter data frame to create 2 additional datasets. Additional exclusion criteria (beyond those listed above) are specified below:
+
+  1. Retrospective - baseline change anlyses
+        i. Exclude individuals missing retrospective and/or baseline data
+  2. Prepandemic - baseline change analyses
+          i. Exclude individuals missing pandemic and/or baseline data
+          ii. Exclude individuals with prepandemic data collected after 1st March.
+
+Retro-baseline analyses
+
+Note: make sure we impute retrospective data for those who did not change their feelings
+
+```{r impute retro for those who did not change}
+
+dat$gad.sum_score_retro <- ifelse(dat$gad.pandemic_felt_feelings == "No different", dat$gad.sum_score_base,dat$gad.sum_score_retro)
+dat$phq.sum_score_retro <- ifelse(dat$phq.pandemic_felt_feelings == "No different", dat$phq.sum_score_base,dat$phq.sum_score_retro)
+
+```
+
+```{r subsample for retro-baseline analysis}
+dat.retro <- dat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data"))
+  )
+
+dim(dat.retro)
+```
+
+Prepan-baseline analyses
+Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March
+
+```{r subsample for prepan-baseline analysis}
+dat.prepan <- dat %>%
+  filter(
+    ((data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Prepandemic and baseline data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") ) &
+      prepandemic_march_1_numeric == 1 # Exclude participants that signed up after the 1. March
+  )
+
+dim(dat.prepan)
+```
+
+Prepan-baseline analyses
+Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March (to ensure comparability with prepan analyses)
+
+```{r subsample for retro sensitivity analysis}
+dat.retro_sensitivity <- dat %>%
+  filter(
+    ((data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      prepandemic_march_1_numeric == 1 # Exclude participants that signed up after the 1. March
+  )
+
+dim(dat.retro_sensitivity)
+```
+age^2 sensitivity
+Exclude individuals with NA for continuous Age variable
+```{r}
+dat_age_sensitivity <- dat %>%
+  filter(!is.na(Age))
+dim(dat_age_sensitivity)
+
+dat.retro_age_sensitivity <- dat.retro %>%
+  filter(!is.na(Age))
+dim(dat.retro_age_sensitivity)
+
+dat.prepan_age_sensitivity <- dat.prepan %>%
+  filter(!is.na(Age))
+dim(dat.prepan_age_sensitivity)
+```
+
+Sensitivity analysis for individuals who signed up to GLAD (prepan) either 3, 6 or 9 months before the pendemic began.
+```{r subsample for pre-pan sensitivity analysis}
+# Participants who signed up in the three months before the pandemic began
+dat.prepan_sensitivity_3months <- dat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "Prepandemic and baseline data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "Prepandemic and baseline data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      prepandemic_3_months_numeric == 1 # Only participants who signed up between December 1st 2019 and March 1st 2020
+  )
+
+# Participants who signed up in the three months before the pandemic began
+dat.prepan_sensitivity_6months <- dat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "Prepandemic and baseline data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "Prepandemic and baseline data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      prepandemic_6_months_numeric == 1 # Only participants who signed up between September 1st 2019 and March 1st 2020
+  )
+
+# Participants who signed up in the three months before the pandemic began
+dat.prepan_sensitivity_9months <- dat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+      data_group_gad == "Prepandemic and baseline data" |
+      data_group_gad == "All prepandemic, baseline and retrospective data") |
+      (data_group_phq == "Baseline and retrospective data" |
+      data_group_phq == "Prepandemic and baseline data" |
+      data_group_phq == "All prepandemic, baseline and retrospective data") |
+      (data_group_pcl == "Baseline and retrospective data" |
+      data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data") |
+      (data_group_ocir == "Baseline and retrospective data" |
+      data_group_ocir == "Prepandemic and baseline data" |
+      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      prepandemic_9_months_numeric == 1 # Only participants who signed up between June 1st 2019 and March 1st 2020
+  )
+
+```
+
 #ANALYSIS PLAN
 1. Calculate mean change per disorder group
     i. Disorders (9)
@@ -2253,147 +2394,6 @@ dat.long.pcl.sum %>%
   coord_flip()
 ```
 
-
-# Create subsets of data for analyses
-Filter data frame to create 2 additional datasets. Additional exclusion criteria (beyond those listed above) are specified below:
-
-  1. Retrospective - baseline change anlyses
-        i. Exclude individuals missing retrospective and/or baseline data
-  2. Prepandemic - baseline change analyses
-          i. Exclude individuals missing pandemic and/or baseline data
-          ii. Exclude individuals with prepandemic data collected after 1st March.
-
-Retro-baseline analyses
-
-Note: make sure we impute retrospective data for those who did not change their feelings
-
-```{r impute retro for those who did not change}
-
-dat$gad.sum_score_retro <- ifelse(dat$gad.pandemic_felt_feelings == "No different", dat$gad.sum_score_base,dat$gad.sum_score_retro)
-dat$phq.sum_score_retro <- ifelse(dat$phq.pandemic_felt_feelings == "No different", dat$phq.sum_score_base,dat$phq.sum_score_retro)
-
-```
-
-```{r subsample for retro-baseline analysis}
-dat.retro <- dat %>%
-  filter(
-    ((data_group_gad == "Baseline and retrospective data" |
-      data_group_gad == "All prepandemic, baseline and retrospective data") |
-      (data_group_phq == "Baseline and retrospective data" |
-      data_group_phq == "All prepandemic, baseline and retrospective data") |
-      (data_group_pcl == "Baseline and retrospective data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data"))
-  )
-
-dim(dat.retro)
-```
-
-Prepan-baseline analyses
-Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March
-
-```{r subsample for prepan-baseline analysis}
-dat.prepan <- dat %>%
-  filter(
-    ((data_group_gad == "Prepandemic and baseline data" |
-      data_group_gad == "All prepandemic, baseline and retrospective data") |
-      (data_group_phq == "Prepandemic and baseline data" |
-      data_group_phq == "All prepandemic, baseline and retrospective data") |
-      (data_group_pcl == "Prepandemic and baseline data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data") ) &
-      prepandemic_march_1_numeric == 1 # Exclude participants that signed up after the 1. March
-  )
-
-dim(dat.prepan)
-```
-
-Prepan-baseline analyses
-Exclude individuals with NA for MHD, age, gender; exclude if prepan data collected after 1 March (to ensure comparability with prepan analyses)
-
-```{r subsample for retro sensitivity analysis}
-dat.retro_sensitivity <- dat %>%
-  filter(
-    ((data_group_gad == "All prepandemic, baseline and retrospective data") |
-      (data_group_phq == "All prepandemic, baseline and retrospective data") |
-      (data_group_pcl == "All prepandemic, baseline and retrospective data") |
-      (data_group_ocir == "All prepandemic, baseline and retrospective data")) &
-      prepandemic_march_1_numeric == 1 # Exclude participants that signed up after the 1. March
-  )
-
-dim(dat.retro_sensitivity)
-```
-age^2 sensitivity
-Exclude individuals with NA for continuous Age variable
-```{r}
-dat_age_sensitivity <- dat %>%
-  filter(!is.na(Age))
-dim(dat_age_sensitivity)
-
-dat.retro_age_sensitivity <- dat.retro %>%
-  filter(!is.na(Age))
-dim(dat.retro_age_sensitivity)
-
-dat.prepan_age_sensitivity <- dat.prepan %>%
-  filter(!is.na(Age))
-dim(dat.prepan_age_sensitivity)
-```
-
-Sensitivity analysis for individuals who signed up to GLAD (prepan) either 3, 6 or 9 months before the pendemic began.
-```{r subsample for pre-pan sensitivity analysis}
-# Participants who signed up in the three months before the pandemic began
-dat.prepan_sensitivity_3months <- dat %>%
-  filter(
-    ((data_group_gad == "Baseline and retrospective data" |
-      data_group_gad == "Prepandemic and baseline data" |
-      data_group_gad == "All prepandemic, baseline and retrospective data") |
-      (data_group_phq == "Baseline and retrospective data" |
-      data_group_phq == "Prepandemic and baseline data" |
-      data_group_phq == "All prepandemic, baseline and retrospective data") |
-      (data_group_pcl == "Baseline and retrospective data" |
-      data_group_pcl == "Prepandemic and baseline data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data") |
-      (data_group_ocir == "Baseline and retrospective data" |
-      data_group_ocir == "Prepandemic and baseline data" |
-      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
-      prepandemic_3_months_numeric == 1 # Only participants who signed up between December 1st 2019 and March 1st 2020
-  )
-
-# Participants who signed up in the three months before the pandemic began
-dat.prepan_sensitivity_6months <- dat %>%
-  filter(
-    ((data_group_gad == "Baseline and retrospective data" |
-      data_group_gad == "Prepandemic and baseline data" |
-      data_group_gad == "All prepandemic, baseline and retrospective data") |
-      (data_group_phq == "Baseline and retrospective data" |
-      data_group_phq == "Prepandemic and baseline data" |
-      data_group_phq == "All prepandemic, baseline and retrospective data") |
-      (data_group_pcl == "Baseline and retrospective data" |
-      data_group_pcl == "Prepandemic and baseline data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data") |
-      (data_group_ocir == "Baseline and retrospective data" |
-      data_group_ocir == "Prepandemic and baseline data" |
-      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
-      prepandemic_6_months_numeric == 1 # Only participants who signed up between September 1st 2019 and March 1st 2020
-  )
-
-# Participants who signed up in the three months before the pandemic began
-dat.prepan_sensitivity_9months <- dat %>%
-  filter(
-    ((data_group_gad == "Baseline and retrospective data" |
-      data_group_gad == "Prepandemic and baseline data" |
-      data_group_gad == "All prepandemic, baseline and retrospective data") |
-      (data_group_phq == "Baseline and retrospective data" |
-      data_group_phq == "Prepandemic and baseline data" |
-      data_group_phq == "All prepandemic, baseline and retrospective data") |
-      (data_group_pcl == "Baseline and retrospective data" |
-      data_group_pcl == "Prepandemic and baseline data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data") |
-      (data_group_ocir == "Baseline and retrospective data" |
-      data_group_ocir == "Prepandemic and baseline data" |
-      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
-      prepandemic_9_months_numeric == 1 # Only participants who signed up between June 1st 2019 and March 1st 2020
-  )
-
-```
 
 2. Regression models (Regress covariates out of the change? Which?)
     i. Model 0: Disorders
@@ -6564,7 +6564,7 @@ model1b.estimates <- function(outcome, data_set) {
                              "mhd.attention_deficit_hyperactivity_disorder",
                              "mhd.personality_disorder",
                              "Gender_collapsed",
-                             "age_category_collapsed",
+                             "age_category_collapsed_reordered",
                              "Ethnicity_collapsed",
                              "key_worker",
                              "time_diff_coping_lockdown_march_23",
@@ -6605,8 +6605,8 @@ model1b.estimates <- function(outcome, data_set) {
                "mhd.personality_disorderPersonality disorder" = "Personality disorder",
                "Gender_collapsedFemale" = "Female",
                "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+                "age_category_collapsed16-18" = "16-18 years",
                "age_category_collapsed19-25" = "19-25 years",
-               "age_category_collapsed26-35" = "26-35 years",
                "age_category_collapsed36-45" = "36-45 years",
                "age_category_collapsed46-55" = "46-55 years",
                "age_category_collapsed56-65" = "56-65 years",
@@ -6733,7 +6733,7 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
                              "mhd.attention_deficit_hyperactivity_disorder",
                              "mhd.personality_disorder",
                              "Gender_collapsed",
-                             "age_category_collapsed",
+                             "age_category_collapsed_reordered",
                              "Ethnicity_collapsed",
                              "key_worker",
                              "time_diff_coping_lockdown_march_23",
@@ -6774,8 +6774,8 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
                "mhd.personality_disorderPersonality disorder" = "Personality disorder",
                "Gender_collapsedFemale" = "Female",
                "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+                "age_category_collapsed16-18" = "16-18 years",
                "age_category_collapsed19-25" = "19-25 years",
-               "age_category_collapsed26-35" = "26-35 years",
                "age_category_collapsed36-45" = "36-45 years",
                "age_category_collapsed46-55" = "46-55 years",
                "age_category_collapsed56-65" = "56-65 years",
@@ -7274,7 +7274,7 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
                              "mhd.attention_deficit_hyperactivity_disorder",
                              "mhd.personality_disorder",
                              "Gender_collapsed",
-                             "age_category_collapsed",
+                             "age_category_collapsed_reordered",
                              "Ethnicity_collapsed",
                              "time_diff_coping_lockdown_march_23",
                              "employment_prior_covid"
@@ -7314,8 +7314,8 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
                "mhd.personality_disorderPersonality disorder" = "Personality disorder",
                "Gender_collapsedFemale" = "Female",
                "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+               "age_category_collapsed16-18" = "16-18 years",
                "age_category_collapsed19-25" = "19-25 years",
-               "age_category_collapsed26-35" = "26-35 years",
                "age_category_collapsed36-45" = "36-45 years",
                "age_category_collapsed46-55" = "46-55 years",
                "age_category_collapsed56-65" = "56-65 years",
@@ -7816,11 +7816,10 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
                              "mhd.attention_deficit_hyperactivity_disorder",
                              "mhd.personality_disorder",
                              "Gender_collapsed",
-                             "age_category_collapsed",
+                             "age_category_collapsed_reordered",
                              "Ethnicity_collapsed",
-                             "key_worker",
-                             "time_diff_coping_lockdown_march_23",
-                             "employment_change"
+                             "employment_prior_covid",
+                             "time_diff_coping_lockdown_march_23"
   )
   # create the formula
   glm.formula <- as.formula(paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ "))
@@ -7857,8 +7856,8 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
                "mhd.personality_disorderPersonality disorder" = "Personality disorder",
                "Gender_collapsedFemale" = "Female",
                "Gender_collapsedNon-binary/Self-defined" = "Non-binary/Self-defined",
+               "age_category_collapsed16-18" = "16-18 years",
                "age_category_collapsed19-25" = "19-25 years",
-               "age_category_collapsed26-35" = "26-35 years",
                "age_category_collapsed36-45" = "36-45 years",
                "age_category_collapsed46-55" = "46-55 years",
                "age_category_collapsed56-65" = "56-65 years",
@@ -7869,12 +7868,12 @@ model1b.explan.estimates <- function(outcome, explan_var, data_set) {
                "Ethnicity_collapsedAsian or Asian British" = "Asian or Asian British",
                "Ethnicity_collapsedAfrican or African British" = "African or African British",
                "Ethnicity_collapsedOther" = "Other ethnicity",
-               "key_workerKey worker" = "Key worker",
                "time_diff_coping_lockdown_march_23" = "Time difference: Lockdown to baseline",
-               "employment_changeDecreased employment" = "Decreased employment",
-               "employment_changeIncreased employment" = "Increased employment",
-               "employment_changeFurloughed" = "Furloughed",
-               "employment_chnageEmployment not changed" = "Employment not changed"
+               "employment_prior_covidKey worker" = "Key worker",
+               "employment_prior_covidEmployed" = "Employed",
+               "employment_prior_covidUnemployed" = "Unemployed",
+               "employment_prior_covidRetired" = "Retired",
+               "employment_prior_covidStudent" = "Student"
              ),
              "Estimate" = format(
                round(estimate,
@@ -7957,7 +7956,7 @@ model1b.explan.reg.stats <- function(outcome, explan_var, data_set) {
                p.value >= 0.01 ~ formatC(p.value, format = "f", digits = 2)
              )
            ) %>%
-           select(
+           select(model1b.estimates,
              "n",
              "R2",
              "adjust. R2",
@@ -7982,10 +7981,10 @@ kable(gad_baseline_model1b_estimates)
 gad_baseline_model1b_estimates
 
 # Regression diagnostic statistics
-gad_baseline_model1b_reg_stats <- model1b.reg.stats(outcome = "gad.sum_score_base",
-                                                 data_set = "dat")
-kable(gad_baseline_model1b_reg_stats)
-gad_baseline_model1b_reg_stats
+# gad_baseline_model1b_reg_stats <- model1b.reg.stats(outcome = "gad.sum_score_base",
+#                                                  data_set = "dat")
+# kable(gad_baseline_model1b_reg_stats)
+# gad_baseline_model1b_reg_stats
 ```
 
 # GAD retro
@@ -8000,11 +7999,11 @@ kable(gad_retro_model1b_explan_estimates)
 gad_retro_model1b_explan_estimates
 
 # Regression diagnostic statistics
-gad_retro_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "gad.sum_score_base",
-                                                               explan_var = "gad.sum_score_retro",
-                                                               data_set = "dat.retro")
-kable(gad_retro_model1b_explan_reg_stats)
-gad_retro_model1b_explan_reg_stats
+# gad_retro_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "gad.sum_score_base",
+#                                                                explan_var = "gad.sum_score_retro",
+#                                                                data_set = "dat.retro")
+# kable(gad_retro_model1b_explan_reg_stats)
+# gad_retro_model1b_explan_reg_stats
 ```
 
 # GAD prepan
@@ -8013,17 +8012,17 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 ```{r gad employment change sensitivity model1b sum_score prepan}
 # Regression coefficients
 gad_prepan_model1b_education_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
-                         explan_var = "pcl.sum_score_prepan",
+                         explan_var = "gad.sum_score_prepan",
                          data_set = "dat.prepan")
 kable(gad_prepan_model1b_education_estimates)
 gad_prepan_model1b_education_estimates
-
-# Regression diagnostic statistics
-gad_prepan_model1b_education_reg_stats <- model1b.explan.reg.stats(outcome = "gad.sum_score_base",
-                         explan_var = "pcl.sum_score_prepan",
-                         data_set = "dat.prepan")
-kable(gad_prepan_model1b_education_reg_stats)
-gad_prepan_model1b_education_reg_stats
+# 
+# # Regression diagnostic statistics
+# gad_prepan_model1b_education_reg_stats <- model1b.explan.reg.stats(outcome = "gad.sum_score_base",
+#                          explan_var = "gad.sum_score_prepan",
+#                          data_set = "dat.prepan")
+# kable(gad_prepan_model1b_education_reg_stats)
+# gad_prepan_model1b_education_reg_stats
 ```
 
 # PHQ baseline
@@ -8035,12 +8034,12 @@ phq_baseline_model1b_estimates <- model1b.estimates(outcome = "phq.sum_score_bas
                                                  data_set = "dat")
 kable(phq_baseline_model1b_estimates)
 phq_baseline_model1b_estimates
-
-# Regression diagnostic statistics
-phq_baseline_model1b_reg_stats <- model1b.reg.stats(outcome = "phq.sum_score_base",
-                                                 data_set = "dat")
-kable(phq_baseline_model1b_reg_stats)
-phq_baseline_model1b_reg_stats
+# 
+# # Regression diagnostic statistics
+# phq_baseline_model1b_reg_stats <- model1b.reg.stats(outcome = "phq.sum_score_base",
+#                                                  data_set = "dat")
+# kable(phq_baseline_model1b_reg_stats)
+# phq_baseline_model1b_reg_stats
 ```
 
 # PHQ retro
@@ -8055,11 +8054,11 @@ kable(phq_retro_model1b_explan_estimates)
 phq_retro_model1b_explan_estimates
 
 # Regression diagnostic statistics
-phq_retro_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
-                                                               explan_var = "phq.sum_score_retro",
-                                                               data_set = "dat.retro")
-kable(phq_retro_model1b_explan_reg_stats)
-phq_retro_model1b_explan_reg_stats
+# phq_retro_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
+#                                                                explan_var = "phq.sum_score_retro",
+#                                                                data_set = "dat.retro")
+# kable(phq_retro_model1b_explan_reg_stats)
+# phq_retro_model1b_explan_reg_stats
 ```
 
 # PHQ prepan
@@ -8068,17 +8067,17 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 ```{r phq employment change sensitivity model1b sum_score prepan}
 # Regression coefficients
 phq_prepan_model1b_education_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
-                         explan_var = "pcl.sum_score_prepan",
+                         explan_var = "phq.sum_score_prepan",
                          data_set = "dat.prepan")
 kable(phq_prepan_model1b_education_estimates)
 phq_prepan_model1b_education_estimates
 
 # Regression diagnostic statistics
-phq_prepan_model1b_education_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
-                         explan_var = "pcl.sum_score_prepan",
-                         data_set = "dat.prepan")
-kable(phq_prepan_model1b_education_reg_stats)
-phq_prepan_model1b_education_reg_stats
+# phq_prepan_model1b_education_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
+#                          explan_var = "phq.sum_score_prepan",
+#                          data_set = "dat.prepan")
+# kable(phq_prepan_model1b_education_reg_stats)
+# phq_prepan_model1b_education_reg_stats
 ```
 
 # OCIR baseline
@@ -8091,11 +8090,11 @@ ocir_baseline_model1b_estimates <- model1b.estimates(outcome = "ocir.sum_score_b
 kable(ocir_baseline_model1b_estimates)
 ocir_baseline_model1b_estimates
 
-# Regression diagnostic statistics
-ocir_baseline_model1b_reg_stats <- model1b.reg.stats(outcome = "ocir.sum_score_base",
-                                                 data_set = "dat")
-kable(ocir_baseline_model1b_reg_stats)
-ocir_baseline_model1b_reg_stats
+# # Regression diagnostic statistics
+# ocir_baseline_model1b_reg_stats <- model1b.reg.stats(outcome = "ocir.sum_score_base",
+#                                                  data_set = "dat")
+# kable(ocir_baseline_model1b_reg_stats)
+# ocir_baseline_model1b_reg_stats
 ```
 
 # OCIR retro
@@ -8109,12 +8108,12 @@ ocir_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "ocir.
 kable(ocir_retro_model1b_explan_estimates)
 ocir_retro_model1b_explan_estimates
 
-# Regression diagnostic statistics
-ocir_retro_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "ocir.sum_score_base",
-                                                               explan_var = "ocir.sum_score_retro",
-                                                               data_set = "dat.retro")
-kable(ocir_retro_model1b_explan_reg_stats)
-ocir_retro_model1b_explan_reg_stats
+# # Regression diagnostic statistics
+# ocir_retro_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "ocir.sum_score_base",
+#                                                                explan_var = "ocir.sum_score_retro",
+#                                                                data_set = "dat.retro")
+# kable(ocir_retro_model1b_explan_reg_stats)
+# ocir_retro_model1b_explan_reg_stats
 ```
 
 # OCIR prepan
@@ -8128,12 +8127,12 @@ ocir_prepan_model1b_education_estimates <- model1b.explan.estimates(outcome = "o
 kable(ocir_prepan_model1b_education_estimates)
 ocir_prepan_model1b_education_estimates
 
-# Regression diagnostic statistics
-ocir_prepan_model1b_education_reg_stats <- model1b.explan.reg.stats(outcome = "ocir.sum_score_base",
-                         explan_var = "pcl.sum_score_prepan",
-                         data_set = "dat.prepan")
-kable(ocir_prepan_model1b_education_reg_stats)
-ocir_prepan_model1b_education_reg_stats
+# # Regression diagnostic statistics
+# ocir_prepan_model1b_education_reg_stats <- model1b.explan.reg.stats(outcome = "ocir.sum_score_base",
+#                          explan_var = "pcl.sum_score_prepan",
+#                          data_set = "dat.prepan")
+# kable(ocir_prepan_model1b_education_reg_stats)
+# ocir_prepan_model1b_education_reg_stats
 ```
 
 # PCL baseline
@@ -8146,11 +8145,11 @@ pcl_baseline_model1b_estimates <- model1b.estimates(outcome = "pcl.sum_score_bas
 kable(pcl_baseline_model1b_estimates)
 pcl_baseline_model1b_estimates
 
-# Regression diagnostic statistics
-pcl_baseline_model1b_reg_stats <- model1b.reg.stats(outcome = "pcl.sum_score_base",
-                                                 data_set = "dat")
-kable(pcl_baseline_model1b_reg_stats)
-pcl_baseline_model1b_reg_stats
+# # Regression diagnostic statistics
+# pcl_baseline_model1b_reg_stats <- model1b.reg.stats(outcome = "pcl.sum_score_base",
+#                                                  data_set = "dat")
+# kable(pcl_baseline_model1b_reg_stats)
+# pcl_baseline_model1b_reg_stats
 ```
 
 #PCL prepan
@@ -8164,12 +8163,12 @@ pcl_prepan_model1b_education_estimates <- model1b.explan.estimates(outcome = "pc
 kable(pcl_prepan_model1b_education_estimates)
 pcl_prepan_model1b_education_estimates
 
-# Regression diagnostic statistics
-pcl_prepan_model1b_education_reg_stats <- model1b.explan.reg.stats(outcome = "pcl.sum_score_base",
-                         explan_var = "pcl.sum_score_prepan",
-                         data_set = "dat.prepan")
-kable(pcl_prepan_model1b_education_reg_stats)
-pcl_prepan_model1b_education_reg_stats
+# # Regression diagnostic statistics
+# pcl_prepan_model1b_education_reg_stats <- model1b.explan.reg.stats(outcome = "pcl.sum_score_base",
+#                          explan_var = "pcl.sum_score_prepan",
+#                          data_set = "dat.prepan")
+# kable(pcl_prepan_model1b_education_reg_stats)
+# pcl_prepan_model1b_education_reg_stats
 ```
 
 # Forest Plots
@@ -8347,6 +8346,172 @@ model1b.lm.form <- function(outcome, explan_var) {
 ```
 
 
+```{r functions required in book for globa assignments no explan var}
+lmoutput_format_noexplan <- function(lmobject,  group, dfname){
+  
+  ## Row labels
+  independent.variables <- c("intercept",
+                             "Comorbid depression and anxiety",
+                             "Depressive disorders",
+                             "Anxiety disorders",
+                             "Eating disorders",
+                             "Obsessive compulsive disorders",
+                             "Comorbid psychotic and bipolar disorders",
+                             "Psychotic disorders",
+                             "Bipolar disorder",
+                             "Post traumatic stress disorder",
+                             "Autism spectrum disorder",
+                             "Attention deficit hyperactivity disorder",
+                             "Personality disorders",
+                             "Female",
+                             "Non-binary/Self-defined",
+                             "16-18",
+                             "19-25",
+                             "36-45",
+                             "46-55",
+                             "56-65",
+                             "66-70",
+                             "71-75",
+                             "76+",
+                             "Mixed or multiple ethnicities",
+                             "Asian",
+                             "Black",
+                             "Other",
+                             "Key worker",
+                             "Unemployed",
+                             "Student",
+                             "Retired",
+                             "Time between lockdown and baseline")
+  ## categories to facet on  
+  categories <- c("Intercept",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Pre-existing mental health (Reference controls)",
+                  "Gender (Reference male)",
+                  "Gender (Reference male)",
+                  "Age (Reference 26-35)",
+                  "Age (Reference 26-35)",
+                  "Age (Reference 26-35)",
+                  "Age (Reference 26-35)",
+                  "Age (Reference 26-35)",
+                  "Age (Reference 26-35)",
+                  "Age (Reference 26-35)",
+                  "Age (Reference 26-35)",
+                  "Ethnicity (Reference White)",
+                  "Ethnicity (Reference White)",
+                  "Ethnicity (Reference White)",
+                  "Ethnicity (Reference White)",
+                  "Employment (Reference employed)",
+                  "Employment (Reference employed)",
+                  "Employment (Reference employed)",
+                  "Employment (Reference employed)",
+                  "Other")
+  
+  ## Disorder dimension  
+  groups <- c(group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group,
+              group)
+  
+  # create data frame
+  df <- as.data.frame(coef(summary(lmobject)),row.names=F)
+  
+  # add row labels
+  df$RowLabels <- independent.variables
+  
+  # Add category labels
+  df$Categories <- categories
+  
+  # Add group labels
+  df$Group <- groups
+  
+  # calculate upper and lower confidence intervals
+  df <- df %>%
+    mutate(LowerBound = Estimate - (1.96*`Std. Error`),
+           UpperBound = Estimate + (1.96*`Std. Error`))
+  
+  # drop intercept row
+  df <- df[(df$RowLabels != 'intercept'),]
+  
+  # order factors
+  df$RowLabels <- factor(df$RowLabels, levels = rev(independent.variables))   ## individual rows
+  df$Categories <- factor(df$Categories, levels = unique(categories))   ## categories
+  
+  
+  # assign dataframe to global environment
+  assign(dfname, df, envir = .GlobalEnv)
+  
+}
+
+
+model1b.lm.form.noexplan <- function(outcome) {
+  
+  # define the variable name of the dependent variable
+  dependent.variable <- outcome
+  # define the independent variables
+  independent.variables <- c("depression_and_anxiety",
+                             "eating_disorders",
+                             "obsessive_compulsive_disorders",
+                             "bipolar_and_schizophrenia",
+                             "mhd.posttraumatic_stress_disorder_ptsd",
+                             "autism_spectrum_disorder",
+                             "mhd.attention_deficit_hyperactivity_disorder",
+                             "mhd.personality_disorder",
+                             "Gender_collapsed",
+                             "age_category_collapsed_reordered",
+                             "Ethnicity_collapsed",
+                             "employment_prior_covid",
+                             "time_diff_coping_lockdown_march_23"
+  )
+  # create the formula
+  glm.formula <- paste(dependent.variable, paste(independent.variables, collapse=" + "), sep=" ~ ")
+  
+  # assign it globally with the right variable name.
+  assign(paste0(outcome,".",  "glmformula"),
+         glm.formula,
+         envir = .GlobalEnv
+         
+  )
+}
+```
+
 ## run regression models to get normal output
 
 
@@ -8414,6 +8579,32 @@ pcl.retro.lm <- lm(formula = pcl.sum_score_base.PCL.retrospective.glmformula,
   
 ```
 
+### no explan var
+
+
+```{r create formulas for forest models no explan}
+
+model1b.lm.form.noexplan("gad.sum_score_base")
+
+model1b.lm.form.noexplan("phq.sum_score_base")
+
+model1b.lm.form.noexplan("pcl.sum_score_base")
+
+```
+
+```{r run models for all forest plot items no explan}
+
+gad.lm.noexplan <-  lm(formula = gad.sum_score_base.glmformula,
+                            dat.prepan)
+
+phq.lm.noexplan <- lm(formula = phq.sum_score_base.glmformula,
+                            dat.retro)
+
+pcl.lm.noexplan <-  lm(formula = pcl.sum_score_base.glmformula,
+                            dat.prepan)
+
+```
+
 ###Subset retrospective data by samples
 
 ```{r subset data for forests into samples}
@@ -8439,8 +8630,7 @@ dat.retro.nbr$Ethnicity_collapsed[989] <- "Other"  #this person was an NA
 
 ```
 
-```{r run models for rero by sample forest plots}
-
+```{r run models for retro by sample forest plots}
 
 gad.retro.lm.glad <- lm(formula = gad.sum_score_base.GAD.retrospective.glmformula,
                             dat.retro.glad)
@@ -8459,7 +8649,6 @@ phq.retro.lm.ramp <- lm(formula = phq.sum_score_base.PHQ.retrospective.glmformul
 
   
 ```
-
 
 ## Create data frames and plots using functions and models generated above.
 
@@ -8497,6 +8686,31 @@ lmoutput_format(phq.retro.lm.ramp,"PHQ.retrospective","RAMP", "phq.retro.lm.for.
 
 
 ```
+
+### no explanatory variables
+```{r generate datasets for all plots no explan}
+
+# grouped by disorder measure
+lmoutput_format_noexplan(gad.lm.noexplan,"GAD-7", "gad.lm.for.plot")
+lmoutput_format_noexplan(phq.lm.noexplan,"PHQ-9", "phq.lm.for.plot")
+lmoutput_format_noexplan(pcl.lm.noexplan,"PCL", "pcl.lm.for.plot")
+
+
+# Grouped by sample
+lmoutput_format_noexplan(gad.lm.noexplan,"GLAD and EDGI", "gad.lm.for.plot.GLAD")
+lmoutput_format_noexplan(gad.lm.noexplan,"NBR", "gad.lm.for.plot.NBR")
+lmoutput_format_noexplan(gad.lm.noexplan,"RAMP", "gad.lm.for.plot.RAMP")
+
+lmoutput_format_noexplan(phq.lm.noexplan,"GLAD and EDGI", "phq.lm.for.plot.GLAD")
+lmoutput_format_noexplan(phq.lm.noexplan,"NBR", "phq.lm.for.plot.NBR")
+lmoutput_format_noexplan(phq.lm.noexplan,"RAMP", "phq.lm.for.plot.RAMP")
+
+lmoutput_format_noexplan(pcl.lm.noexplan,"GLAD and EDGI", "pcl.lm.for.plot.GLAD")
+lmoutput_format_noexplan(pcl.lm.noexplan,"NBR", "pcl.lm.for.plot.NBR")
+lmoutput_format_noexplan(pcl.lm.noexplan,"RAMP", "pcl.lm.for.plot.RAMP")
+
+```
+
 
 ```{r merge datasets for different combinations}
 # Disorder groups
@@ -8540,6 +8754,32 @@ plot.dat.sample.phq <- rbind(phq.retro.lm.for.plot.GLAD,
 
 ```
 
+With no control for retro or prepan (no explanatory variables)
+
+
+```{r merge datasets for different combinations no explan}
+# Disorder groups
+plot.dat.disorder <- rbind(gad.lm.for.plot,
+                                  phq.lm.for.plot,
+                                  pcl.lm.for.plot)
+
+# by sample
+
+plot.dat.noexplan.sample.gad <- rbind(gad.lm.for.plot.GLAD,
+                             gad.lm.for.plot.NBR,
+                             gad.lm.for.plot.RAMP)
+
+plot.dat.noexplan.sample.phq <- rbind(phq.lm.for.plot.GLAD,
+                             phq.lm.for.plot.NBR,
+                             phq.lm.for.plot.RAMP)
+
+plot.dat.noexplan.sample.pcl <- rbind(pcl.lm.for.plot.GLAD,
+                             pcl.lm.for.plot.NBR,
+                             pcl.lm.for.plot.RAMP)
+
+```
+
+
 ## Forest plots
 ### disorder
 ```{r forest plot by disorder prepan, fig.height=30, fig.width=50, dpi=120}
@@ -8551,6 +8791,13 @@ lm.forest(plot.dat.disorder.prepan,"Predictors of pandemic symptoms controlling 
 ```{r forest plot by disorder retro, fig.height=30, fig.width=50, dpi=120}
 
 lm.forest(plot.dat.disorder.retro,"Predictors of pandemic symptoms controlling for retrospective symptoms")
+
+```
+### disorder (no explan)
+
+```{r forest plot by disorder no explan, fig.height=30, fig.width=50, dpi=120}
+
+lm.forest(plot.dat.disorder,"Predictors of pandemic symptoms")
 
 ```
 
@@ -8596,6 +8843,28 @@ lm.forest(plot.dat.sample.gad ,"Predictors of anxiety controlling for retrospect
 ```{r forest plot by sample retro only phq, fig.height=30, fig.width=50, dpi=120}
 
 lm.forest(plot.dat.sample.phq ,"Predictors of depression controlling for retrospective symptoms across samples")
+
+```
+
+### Sample pandemic only, no explanatory variable)
+
+```{r forest plot by sample no explan gad, fig.height=30, fig.width=50, dpi=120}
+
+lm.forest(plot.dat.noexplan.sample.gad  ,"Predictors of anxiety across samples")
+
+```
+
+
+```{r forest plot by sample no explan phq, fig.height=30, fig.width=50, dpi=120}
+
+lm.forest(plot.dat.noexplan.sample.phq  ,"Predictors of depression across samples")
+
+```
+
+
+```{r forest plot by sample no explan pcl, fig.height=30, fig.width=50, dpi=120}
+
+lm.forest(plot.dat.noexplan.sample.pcl  ,"Predictors of symptoms of PTSD across samples")
 
 ```
 

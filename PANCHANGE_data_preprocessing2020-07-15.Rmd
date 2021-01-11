@@ -48,10 +48,10 @@ date = Sys.Date()
 # Specify cohort
 ```{r Specify cohort}
 GLAD = FALSE
-EDGI = TRUE
+EDGI = FALSE
 NBR = FALSE
 RAMP = FALSE
-GLAD_and_EDGI = FALSE
+GLAD_and_EDGI = TRUE
 ```
 
 
@@ -8009,6 +8009,15 @@ dat <- dat.no.sex.no.gender.no.age.no.ibd
 
 skimr::skim(dat)
 ```
+
+# IMPUTE RETROSPECTIE DATA for no change 
+
+```{r impute retro}
+# impute retro for those who did not change
+dat$gad.sum_score_retro <- ifelse(dat$gad.pandemic_felt_feelings == "No different", dat$gad.sum_score_base,dat$gad.sum_score_retro)
+dat$phq.sum_score_retro <- ifelse(dat$phq.pandemic_felt_feelings == "No different", dat$phq.sum_score_base,dat$phq.sum_score_retro)
+```
+
 
 ```{r Investigating RAMP NAs}
 if(RAMP == TRUE) {

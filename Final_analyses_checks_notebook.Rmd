@@ -148,6 +148,20 @@ max(NBR.retro$startDate.coping)
 
 ## Sample sizes
 
+### full data (only excluding for NA on age, gender, MHD)
+
+```{r full data n}
+
+table()
+
+```
+
+### retrospective data
+
+### prepandemic data
+
+
+
 ## frequencies (retrodemic dataset)
 
 ### pandemic change gad
