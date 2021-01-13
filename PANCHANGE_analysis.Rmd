@@ -7470,14 +7470,14 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 ```{r gad employment prior covid sensitivity model1b sum_score prepan}
 # Regression coefficients
 gad_prepan_model1b_education_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
-                         explan_var = "pcl.sum_score_prepan",
+                         explan_var = "gad.sum_score_prepan",
                          data_set = "dat.prepan")
 kable(gad_prepan_model1b_education_estimates)
 gad_prepan_model1b_education_estimates
 
 # Regression diagnostic statistics
 gad_prepan_model1b_education_reg_stats <- model1b.explan.reg.stats(outcome = "gad.sum_score_base",
-                         explan_var = "pcl.sum_score_prepan",
+                         explan_var = "gad.sum_score_prepan",
                          data_set = "dat.prepan")
 kable(gad_prepan_model1b_education_reg_stats)
 gad_prepan_model1b_education_reg_stats
@@ -7525,14 +7525,14 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 ```{r phq employment prior covid sensitivity model1b sum_score prepan}
 # Regression coefficients
 phq_prepan_model1b_education_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
-                         explan_var = "pcl.sum_score_prepan",
+                         explan_var = "phq.sum_score_prepan",
                          data_set = "dat.prepan")
 kable(phq_prepan_model1b_education_estimates)
 phq_prepan_model1b_education_estimates
 
 # Regression diagnostic statistics
 phq_prepan_model1b_education_reg_stats <- model1b.explan.reg.stats(outcome = "phq.sum_score_base",
-                         explan_var = "pcl.sum_score_prepan",
+                         explan_var = "phq.sum_score_prepan",
                          data_set = "dat.prepan")
 kable(phq_prepan_model1b_education_reg_stats)
 phq_prepan_model1b_education_reg_stats
@@ -7580,14 +7580,14 @@ Model 0a + Gender_collapsed + age_category_collapsed + Ethnicity_collapsed + Tim
 ```{r ocir employment prior covid sensitivity model1b sum_score prepan}
 # Regression coefficients
 ocir_prepan_model1b_education_estimates <- model1b.explan.estimates(outcome = "ocir.sum_score_base",
-                         explan_var = "pcl.sum_score_prepan",
+                         explan_var = "ocir.sum_score_prepan",
                          data_set = "dat.prepan")
 kable(ocir_prepan_model1b_education_estimates)
 ocir_prepan_model1b_education_estimates
 
 # Regression diagnostic statistics
 ocir_prepan_model1b_education_reg_stats <- model1b.explan.reg.stats(outcome = "ocir.sum_score_base",
-                         explan_var = "pcl.sum_score_prepan",
+                         explan_var = "ocir.sum_score_prepan",
                          data_set = "dat.prepan")
 kable(ocir_prepan_model1b_education_reg_stats)
 ocir_prepan_model1b_education_reg_stats
