@@ -73,8 +73,8 @@ dat.retro <- alldat %>%
         data_group_gad == "All prepandemic, baseline and retrospective data") |
        (data_group_phq == "Baseline and retrospective data" |
           data_group_phq == "All prepandemic, baseline and retrospective data") |
-       (data_group_pcl == "Baseline and retrospective data" |
-          data_group_pcl == "All prepandemic, baseline and retrospective data"))
+        (data_group_pcl == "Baseline data only" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data"))
   )
 
 dim(dat.retro)
@@ -152,11 +152,28 @@ max(NBR.retro$startDate.coping)
 
 ```{r full data n}
 
+alldat %>%
+  freq(alldat$Sample)
+
+```
+### retrospective data (excluding for NA on age, gender, MHD, or either retrospective or baseline data )
+with exception of PCL which has nor etrospective data
+
+```{r retro data n}
+
+dat.retro %>%
+  freq(Sample)
+
 ```
 
-### retrospective data
+### Prepandemic data (excluding for NA on age, gender, MHD, or either prepandemic or baseline data )
 
-### prepandemic data
+```{r prepan data n}
+
+dat.prepan %>%
+  freq(Sample)
+
+```
 
 
 

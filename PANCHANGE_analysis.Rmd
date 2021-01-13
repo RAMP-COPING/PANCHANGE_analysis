@@ -293,6 +293,7 @@ dat$phq.sum_score_retro <- ifelse(dat$phq.pandemic_felt_feelings == "No differen
 
 ```
 
+Important note::: PCL does not have retrospective data, so we allow Baseline only or All prepandemic, baseline and retrospective
 ```{r subsample for retro-baseline analysis}
 dat.retro <- dat %>%
   filter(
@@ -300,7 +301,7 @@ dat.retro <- dat %>%
       data_group_gad == "All prepandemic, baseline and retrospective data") |
       (data_group_phq == "Baseline and retrospective data" |
       data_group_phq == "All prepandemic, baseline and retrospective data") |
-      (data_group_pcl == "Baseline and retrospective data" |
+      (data_group_pcl == "Baseline data only" |
       data_group_pcl == "All prepandemic, baseline and retrospective data"))
   )
 
@@ -369,10 +370,8 @@ dat.prepan_sensitivity_3months <- dat %>%
       data_group_phq == "All prepandemic, baseline and retrospective data") |
       (data_group_pcl == "Baseline and retrospective data" |
       data_group_pcl == "Prepandemic and baseline data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data") |
-      (data_group_ocir == "Baseline and retrospective data" |
-      data_group_ocir == "Prepandemic and baseline data" |
-      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      data_group_pcl == "Baseline data only" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data"))  &
       prepandemic_3_months_numeric == 1 # Only participants who signed up between December 1st 2019 and March 1st 2020
   )
 
@@ -387,10 +386,8 @@ dat.prepan_sensitivity_6months <- dat %>%
       data_group_phq == "All prepandemic, baseline and retrospective data") |
       (data_group_pcl == "Baseline and retrospective data" |
       data_group_pcl == "Prepandemic and baseline data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data") |
-      (data_group_ocir == "Baseline and retrospective data" |
-      data_group_ocir == "Prepandemic and baseline data" |
-      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      data_group_pcl == "Baseline data only" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data")) &
       prepandemic_6_months_numeric == 1 # Only participants who signed up between September 1st 2019 and March 1st 2020
   )
 
@@ -405,10 +402,8 @@ dat.prepan_sensitivity_9months <- dat %>%
       data_group_phq == "All prepandemic, baseline and retrospective data") |
       (data_group_pcl == "Baseline and retrospective data" |
       data_group_pcl == "Prepandemic and baseline data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data") |
-      (data_group_ocir == "Baseline and retrospective data" |
-      data_group_ocir == "Prepandemic and baseline data" |
-      data_group_ocir == "All prepandemic, baseline and retrospective data")) &
+      data_group_pcl == "Baseline data only" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data"))  &
       prepandemic_9_months_numeric == 1 # Only participants who signed up between June 1st 2019 and March 1st 2020
   )
 
