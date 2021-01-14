@@ -2983,11 +2983,13 @@ div.tocify {
 <span id="cb15-5"><a href="#cb15-5"></a><span class="st">       </span>(data_group_phq <span class="op">==</span><span class="st"> &quot;Baseline and retrospective data&quot;</span> <span class="op">|</span></span>
 <span id="cb15-6"><a href="#cb15-6"></a><span class="st">          </span>data_group_phq <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>) <span class="op">|</span></span>
 <span id="cb15-7"><a href="#cb15-7"></a><span class="st">        </span>(data_group_pcl <span class="op">==</span><span class="st"> &quot;Baseline data only&quot;</span> <span class="op">|</span></span>
-<span id="cb15-8"><a href="#cb15-8"></a><span class="st">      </span>data_group_pcl <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>))</span>
-<span id="cb15-9"><a href="#cb15-9"></a>  )</span>
-<span id="cb15-10"><a href="#cb15-10"></a></span>
-<span id="cb15-11"><a href="#cb15-11"></a><span class="kw">dim</span>(dat.retro)</span></code></pre></div>
-<pre><code>## [1] 32005   643</code></pre>
+<span id="cb15-8"><a href="#cb15-8"></a><span class="st">           </span>data_group_pcl <span class="op">==</span><span class="st"> &quot;Baseline and retrospective data&quot;</span> <span class="op">|</span></span>
+<span id="cb15-9"><a href="#cb15-9"></a><span class="st">            </span>data_group_pcl <span class="op">==</span><span class="st"> &quot;Prepandemic and baseline data&quot;</span> <span class="op">|</span></span>
+<span id="cb15-10"><a href="#cb15-10"></a><span class="st">      </span>data_group_pcl <span class="op">==</span><span class="st"> &quot;All prepandemic, baseline and retrospective data&quot;</span>))</span>
+<span id="cb15-11"><a href="#cb15-11"></a>  )</span>
+<span id="cb15-12"><a href="#cb15-12"></a></span>
+<span id="cb15-13"><a href="#cb15-13"></a><span class="kw">dim</span>(dat.retro)</span></code></pre></div>
+<pre><code>## [1] 34426   643</code></pre>
 <p>subsample for prepan-baseline analysis exclude those who do not have complete responses for both baseline and prepandemic in addition to those already excluded for NA in age, gender and MH diagnosis.</p>
 <p>PREPANDEMIC</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>dat.prepan &lt;-<span class="st"> </span>alldat <span class="op">%&gt;%</span></span>
@@ -3034,7 +3036,7 @@ div.tocify {
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">print</span>(<span class="st">&quot;RAMP&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;RAMP&quot;</code></pre>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">max</span>(RAMP.retro<span class="op">$</span>startDate.coping)</span></code></pre></div>
-<pre><code>## [1] &quot;2020-09-27 12:36:17 UTC&quot;</code></pre>
+<pre><code>## [1] &quot;2020-09-30 09:46:06 UTC&quot;</code></pre>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="kw">print</span>(<span class="st">&quot;GLAD&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;GLAD&quot;</code></pre>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">max</span>(GLAD.retro<span class="op">$</span>startDate.coping)</span></code></pre></div>
@@ -3074,12 +3076,12 @@ div.tocify {
 ## 
 ##                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------- ------- --------- -------------- --------- --------------
-##        EDGI      56      0.17           0.17      0.17           0.17
-##        GLAD   10936     34.17          34.34     34.17          34.34
-##         NBR   12986     40.57          74.92     40.57          74.92
-##        RAMP    8027     25.08         100.00     25.08         100.00
+##        EDGI      65      0.19           0.19      0.19           0.19
+##        GLAD   12624     36.67          36.86     36.67          36.86
+##         NBR   13096     38.04          74.90     38.04          74.90
+##        RAMP    8641     25.10         100.00     25.10         100.00
 ##        &lt;NA&gt;       0                               0.00         100.00
-##       Total   32005    100.00         100.00    100.00         100.00</code></pre>
+##       Total   34426    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="prepandemic-data-excluding-for-na-on-age-gender-mhd-or-either-prepandemic-or-baseline-data" class="section level3">
 <h3>Prepandemic data (excluding for NA on age, gender, MHD, or either prepandemic or baseline data )</h3>
@@ -3111,49 +3113,49 @@ div.tocify {
 ## 
 ##                         Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------- ------ --------- -------------- --------- --------------
-##            Much worse     10     17.86          17.86     17.86          17.86
-##        A little worse     32     57.14          75.00     57.14          75.00
-##          No different      7     12.50          87.50     12.50          87.50
-##       A little better      5      8.93          96.43      8.93          96.43
-##           Much better      2      3.57         100.00      3.57         100.00
+##            Much worse     10     15.38          15.38     15.38          15.38
+##        A little worse     32     49.23          64.62     49.23          64.62
+##          No different     16     24.62          89.23     24.62          89.23
+##       A little better      5      7.69          96.92      7.69          96.92
+##           Much better      2      3.08         100.00      3.08         100.00
 ##                  &lt;NA&gt;      0                               0.00         100.00
-##                 Total     56    100.00         100.00    100.00         100.00
+##                 Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------- ------- --------- -------------- --------- --------------
-##            Much worse    2472     22.61          22.61     22.60          22.60
-##        A little worse    5321     48.68          71.29     48.66          71.26
-##          No different    1887     17.26          88.56     17.25          88.51
-##       A little better     854      7.81          96.37      7.81          96.32
-##           Much better     397      3.63         100.00      3.63          99.95
-##                  &lt;NA&gt;       5                               0.05         100.00
-##                 Total   10936    100.00         100.00    100.00         100.00
+##            Much worse    2474     19.61          19.61     19.60          19.60
+##        A little worse    5321     42.17          61.78     42.15          61.75
+##          No different    3571     28.30          90.08     28.29          90.03
+##       A little better     854      6.77          96.85      6.76          96.80
+##           Much better     397      3.15         100.00      3.14          99.94
+##                  &lt;NA&gt;       7                               0.06         100.00
+##                 Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------- ------- --------- -------------- --------- --------------
-##            Much worse     879      6.78           6.78      6.77           6.77
-##        A little worse    3853     29.70          36.48     29.67          36.44
-##          No different    7787     60.03          96.51     59.96          96.40
-##       A little better     336      2.59          99.10      2.59          98.99
-##           Much better     117      0.90         100.00      0.90          99.89
+##            Much worse     879      6.72           6.72      6.71           6.71
+##        A little worse    3853     29.45          36.17     29.42          36.13
+##          No different    7897     60.37          96.54     60.30          96.43
+##       A little better     336      2.57          99.11      2.57          99.00
+##           Much better     117      0.89         100.00      0.89          99.89
 ##                  &lt;NA&gt;      14                               0.11         100.00
-##                 Total   12986    100.00         100.00    100.00         100.00
+##                 Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                         Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------- ------ --------- -------------- --------- --------------
-##            Much worse   2356     29.45          29.45     29.35          29.35
-##        A little worse   3567     44.58          74.03     44.44          73.79
-##          No different   1514     18.92          92.95     18.86          92.65
-##       A little better    363      4.54          97.49      4.52          97.17
-##           Much better    201      2.51         100.00      2.50          99.68
-##                  &lt;NA&gt;     26                               0.32         100.00
-##                 Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##            Much worse   2357     27.38          27.38     27.28          27.28
+##        A little worse   3568     41.44          68.82     41.29          68.57
+##          No different   2120     24.63          93.45     24.53          93.10
+##       A little better    363      4.22          97.67      4.20          97.30
+##           Much better    201      2.33         100.00      2.33          99.63
+##                  &lt;NA&gt;     32                               0.37         100.00
+##                 Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="pandemic-change-phq" class="section level3">
 <h3>pandemic change phq</h3>
@@ -3167,49 +3169,49 @@ div.tocify {
 ## 
 ##                         Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------- ------ --------- -------------- --------- --------------
-##            Much worse     12     21.43          21.43     21.43          21.43
-##        A little worse     27     48.21          69.64     48.21          69.64
-##          No different      8     14.29          83.93     14.29          83.93
-##       A little better      6     10.71          94.64     10.71          94.64
-##           Much better      3      5.36         100.00      5.36         100.00
+##            Much worse     12     18.46          18.46     18.46          18.46
+##        A little worse     27     41.54          60.00     41.54          60.00
+##          No different     17     26.15          86.15     26.15          86.15
+##       A little better      6      9.23          95.38      9.23          95.38
+##           Much better      3      4.62         100.00      4.62         100.00
 ##                  &lt;NA&gt;      0                               0.00         100.00
-##                 Total     56    100.00         100.00    100.00         100.00
+##                 Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------- ------- --------- -------------- --------- --------------
-##            Much worse    2279     20.89          20.89     20.84          20.84
-##        A little worse    5644     51.73          72.61     51.61          72.45
-##          No different    1517     13.90          86.52     13.87          86.32
-##       A little better    1034      9.48          95.99      9.46          95.78
-##           Much better     437      4.01         100.00      4.00          99.77
-##                  &lt;NA&gt;      25                               0.23         100.00
-##                 Total   10936    100.00         100.00    100.00         100.00
+##            Much worse    2282     18.13          18.13     18.08          18.08
+##        A little worse    5645     44.85          62.98     44.72          62.79
+##          No different    3189     25.34          88.31     25.26          88.05
+##       A little better    1034      8.21          96.53      8.19          96.25
+##           Much better     437      3.47         100.00      3.46          99.71
+##                  &lt;NA&gt;      37                               0.29         100.00
+##                 Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------- ------- --------- -------------- --------- --------------
-##            Much worse     898      6.95           6.95      6.92           6.92
-##        A little worse    4305     33.32          40.27     33.15          40.07
-##          No different    7245     56.07          96.34     55.79          95.86
-##       A little better     338      2.62          98.96      2.60          98.46
-##           Much better     135      1.04         100.00      1.04          99.50
-##                  &lt;NA&gt;      65                               0.50         100.00
-##                 Total   12986    100.00         100.00    100.00         100.00
+##            Much worse     899      6.90           6.90      6.86           6.86
+##        A little worse    4305     33.04          39.94     32.87          39.74
+##          No different    7351     56.42          96.37     56.13          95.87
+##       A little better     338      2.59          98.96      2.58          98.45
+##           Much better     135      1.04         100.00      1.03          99.48
+##                  &lt;NA&gt;      68                               0.52         100.00
+##                 Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                         Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------- ------ --------- -------------- --------- --------------
-##            Much worse   2287     28.66          28.66     28.49          28.49
-##        A little worse   3763     47.15          75.81     46.88          75.37
-##          No different   1275     15.98          91.78     15.88          91.25
-##       A little better    421      5.28          97.06      5.24          96.50
-##           Much better    235      2.94         100.00      2.93          99.43
-##                  &lt;NA&gt;     46                               0.57         100.00
-##                 Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##            Much worse   2288     26.64          26.64     26.48          26.48
+##        A little worse   3768     43.87          70.51     43.61          70.08
+##          No different   1877     21.85          92.36     21.72          91.81
+##       A little better    421      4.90          97.26      4.87          96.68
+##           Much better    235      2.74         100.00      2.72          99.40
+##                  &lt;NA&gt;     52                               0.60         100.00
+##                 Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="ethnicity" class="section level3">
 <h3>Ethnicity</h3>
@@ -3223,49 +3225,49 @@ div.tocify {
 ## 
 ##                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## -------------------------------------- ------ --------- -------------- --------- --------------
-##                               European     51     91.07          91.07     91.07          91.07
-##       Mixed or multiple ethnic origins      3      5.36          96.43      5.36          96.43
-##                 Asian or Asian British      1      1.79          98.21      1.79          98.21
-##             African or African British      0      0.00          98.21      0.00          98.21
-##                                  Other      1      1.79         100.00      1.79         100.00
+##                               European     60     92.31          92.31     92.31          92.31
+##       Mixed or multiple ethnic origins      3      4.62          96.92      4.62          96.92
+##                 Asian or Asian British      1      1.54          98.46      1.54          98.46
+##             African or African British      0      0.00          98.46      0.00          98.46
+##                                  Other      1      1.54         100.00      1.54         100.00
 ##                                   &lt;NA&gt;      0                               0.00         100.00
-##                                  Total     56    100.00         100.00    100.00         100.00
+##                                  Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## -------------------------------------- ------- --------- -------------- --------- --------------
-##                               European   10437     95.63          95.63     95.44          95.44
-##       Mixed or multiple ethnic origins     249      2.28          97.91      2.28          97.71
-##                 Asian or Asian British      88      0.81          98.72      0.80          98.52
-##             African or African British      32      0.29          99.01      0.29          98.81
-##                                  Other     108      0.99         100.00      0.99          99.80
-##                                   &lt;NA&gt;      22                               0.20         100.00
-##                                  Total   10936    100.00         100.00    100.00         100.00
+##                               European   12062     95.78          95.78     95.55          95.55
+##       Mixed or multiple ethnic origins     275      2.18          97.96      2.18          97.73
+##                 Asian or Asian British      98      0.78          98.74      0.78          98.50
+##             African or African British      37      0.29          99.03      0.29          98.80
+##                                  Other     122      0.97         100.00      0.97          99.76
+##                                   &lt;NA&gt;      30                               0.24         100.00
+##                                  Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## -------------------------------------- ------- --------- -------------- --------- --------------
-##                               European    9853     97.28          97.28     75.87          75.87
-##       Mixed or multiple ethnic origins     112      1.11          98.38      0.86          76.74
-##                 Asian or Asian British     119      1.17          99.56      0.92          77.65
-##             African or African British      45      0.44         100.00      0.35          78.00
-##                                  Other       0      0.00         100.00      0.00          78.00
-##                                   &lt;NA&gt;    2857                              22.00         100.00
-##                                  Total   12986    100.00         100.00    100.00         100.00
+##                               European    9927     97.16          97.16     75.80          75.80
+##       Mixed or multiple ethnic origins     118      1.15          98.32      0.90          76.70
+##                 Asian or Asian British     126      1.23          99.55      0.96          77.66
+##             African or African British      46      0.45         100.00      0.35          78.02
+##                                  Other       0      0.00         100.00      0.00          78.02
+##                                   &lt;NA&gt;    2879                              21.98         100.00
+##                                  Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## -------------------------------------- ------ --------- -------------- --------- --------------
-##                               European   7540     94.33          94.33     93.93          93.93
-##       Mixed or multiple ethnic origins    169      2.11          96.45      2.11          96.04
-##                 Asian or Asian British    154      1.93          98.37      1.92          97.96
-##             African or African British     67      0.84          99.21      0.83          98.79
-##                                  Other     63      0.79         100.00      0.78          99.58
-##                                   &lt;NA&gt;     34                               0.42         100.00
-##                                  Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##                               European   8114     94.32          94.32     93.90          93.90
+##       Mixed or multiple ethnic origins    174      2.02          96.34      2.01          95.91
+##                 Asian or Asian British    169      1.96          98.30      1.96          97.87
+##             African or African British     76      0.88          99.19      0.88          98.75
+##                                  Other     70      0.81         100.00      0.81          99.56
+##                                   &lt;NA&gt;     38                               0.44         100.00
+##                                  Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="gender" class="section level3">
 <h3>Gender</h3>
@@ -3279,41 +3281,41 @@ div.tocify {
 ## 
 ##                                 Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------------------------- ------ --------- -------------- --------- --------------
-##                          Male      1      1.79           1.79      1.79           1.79
-##                        Female     53     94.64          96.43     94.64          96.43
-##       Non-binary/Self-defined      2      3.57         100.00      3.57         100.00
+##                          Male      1      1.54           1.54      1.54           1.54
+##                        Female     62     95.38          96.92     95.38          96.92
+##       Non-binary/Self-defined      2      3.08         100.00      3.08         100.00
 ##                          &lt;NA&gt;      0                               0.00         100.00
-##                         Total     56    100.00         100.00    100.00         100.00
+##                         Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                                  Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------------------------- ------- --------- -------------- --------- --------------
-##                          Male    1840     16.83          16.83     16.83          16.83
-##                        Female    8867     81.08          97.91     81.08          97.91
-##       Non-binary/Self-defined     229      2.09         100.00      2.09         100.00
+##                          Male    2271     17.99          17.99     17.99          17.99
+##                        Female   10106     80.05          98.04     80.05          98.04
+##       Non-binary/Self-defined     247      1.96         100.00      1.96         100.00
 ##                          &lt;NA&gt;       0                               0.00         100.00
-##                         Total   10936    100.00         100.00    100.00         100.00
+##                         Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                                  Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------------------------- ------- --------- -------------- --------- --------------
-##                          Male    5591     43.05          43.05     43.05          43.05
-##                        Female    7359     56.67          99.72     56.67          99.72
-##       Non-binary/Self-defined      36      0.28         100.00      0.28         100.00
+##                          Male    5641     43.07          43.07     43.07          43.07
+##                        Female    7416     56.63          99.70     56.63          99.70
+##       Non-binary/Self-defined      39      0.30         100.00      0.30         100.00
 ##                          &lt;NA&gt;       0                               0.00         100.00
-##                         Total   12986    100.00         100.00    100.00         100.00
+##                         Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                                 Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------------------------- ------ --------- -------------- --------- --------------
-##                          Male   1563     19.47          19.47     19.47          19.47
-##                        Female   6378     79.46          98.93     79.46          98.93
-##       Non-binary/Self-defined     86      1.07         100.00      1.07         100.00
+##                          Male   1771     20.50          20.50     20.50          20.50
+##                        Female   6778     78.44          98.94     78.44          98.94
+##       Non-binary/Self-defined     92      1.06         100.00      1.06         100.00
 ##                          &lt;NA&gt;      0                               0.00         100.00
-##                         Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##                         Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="age-categorical" class="section level3">
 <h3>age categorical</h3>
@@ -3327,65 +3329,65 @@ div.tocify {
 ## 
 ##               Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------- ------ --------- -------------- --------- --------------
-##       16-18      7     12.50          12.50     12.50          12.50
-##       19-25     15     26.79          39.29     26.79          39.29
-##       26-35     18     32.14          71.43     32.14          71.43
-##       36-45      6     10.71          82.14     10.71          82.14
-##       46-55      3      5.36          87.50      5.36          87.50
-##       56-65      4      7.14          94.64      7.14          94.64
-##       66-70      3      5.36         100.00      5.36         100.00
+##       16-18      7     10.77          10.77     10.77          10.77
+##       19-25     17     26.15          36.92     26.15          36.92
+##       26-35     21     32.31          69.23     32.31          69.23
+##       36-45      8     12.31          81.54     12.31          81.54
+##       46-55      4      6.15          87.69      6.15          87.69
+##       56-65      5      7.69          95.38      7.69          95.38
+##       66-70      3      4.62         100.00      4.62         100.00
 ##       71-75      0      0.00         100.00      0.00         100.00
 ##         76+      0      0.00         100.00      0.00         100.00
 ##        &lt;NA&gt;      0                               0.00         100.00
-##       Total     56    100.00         100.00    100.00         100.00
+##       Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------- ------- --------- -------------- --------- --------------
-##       16-18     324      2.96           2.96      2.96           2.96
-##       19-25    1460     13.35          16.31     13.35          16.31
-##       26-35    2589     23.67          39.99     23.67          39.99
-##       36-45    2166     19.81          59.79     19.81          59.79
-##       46-55    2363     21.61          81.40     21.61          81.40
-##       56-65    1511     13.82          95.22     13.82          95.22
-##       66-70     312      2.85          98.07      2.85          98.07
-##       71-75     164      1.50          99.57      1.50          99.57
-##         76+      47      0.43         100.00      0.43         100.00
+##       16-18     340      2.69           2.69      2.69           2.69
+##       19-25    1537     12.18          14.87     12.18          14.87
+##       26-35    2850     22.58          37.44     22.58          37.44
+##       36-45    2453     19.43          56.88     19.43          56.88
+##       46-55    2814     22.29          79.17     22.29          79.17
+##       56-65    1900     15.05          94.22     15.05          94.22
+##       66-70     428      3.39          97.61      3.39          97.61
+##       71-75     230      1.82          99.43      1.82          99.43
+##         76+      72      0.57         100.00      0.57         100.00
 ##        &lt;NA&gt;       0                               0.00         100.00
-##       Total   10936    100.00         100.00    100.00         100.00
+##       Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------- ------- --------- -------------- --------- --------------
-##       16-18       9      0.07           0.07      0.07           0.07
-##       19-25     287      2.21           2.28      2.21           2.28
-##       26-35    1149      8.85          11.13      8.85          11.13
-##       36-45    1420     10.93          22.06     10.93          22.06
-##       46-55    2623     20.20          42.26     20.20          42.26
-##       56-65    3868     29.79          72.05     29.79          72.05
-##       66-70    1959     15.09          87.13     15.09          87.13
-##       71-75    1261      9.71          96.84      9.71          96.84
-##         76+     410      3.16         100.00      3.16         100.00
+##       16-18      10      0.08           0.08      0.08           0.08
+##       19-25     291      2.22           2.30      2.22           2.30
+##       26-35    1165      8.90          11.19      8.90          11.19
+##       36-45    1440     11.00          22.19     11.00          22.19
+##       46-55    2644     20.19          42.38     20.19          42.38
+##       56-65    3901     29.79          72.17     29.79          72.17
+##       66-70    1967     15.02          87.19     15.02          87.19
+##       71-75    1265      9.66          96.85      9.66          96.85
+##         76+     413      3.15         100.00      3.15         100.00
 ##        &lt;NA&gt;       0                               0.00         100.00
-##       Total   12986    100.00         100.00    100.00         100.00
+##       Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##               Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------- ------ --------- -------------- --------- --------------
-##       16-18    669      8.33           8.33      8.33           8.33
-##       19-25    743      9.26          17.59      9.26          17.59
-##       26-35   1033     12.87          30.46     12.87          30.46
-##       36-45    833     10.38          40.84     10.38          40.84
-##       46-55   1416     17.64          58.48     17.64          58.48
-##       56-65   2032     25.31          83.79     25.31          83.79
-##       66-70    692      8.62          92.41      8.62          92.41
-##       71-75    432      5.38          97.79      5.38          97.79
-##         76+    177      2.21         100.00      2.21         100.00
+##       16-18    697      8.07           8.07      8.07           8.07
+##       19-25    772      8.93          17.00      8.93          17.00
+##       26-35   1076     12.45          29.45     12.45          29.45
+##       36-45    874     10.11          39.57     10.11          39.57
+##       46-55   1518     17.57          57.13     17.57          57.13
+##       56-65   2200     25.46          82.59     25.46          82.59
+##       66-70    784      9.07          91.67      9.07          91.67
+##       71-75    511      5.91          97.58      5.91          97.58
+##         76+    209      2.42         100.00      2.42         100.00
 ##        &lt;NA&gt;      0                               0.00         100.00
-##       Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##       Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="employment" class="section level3">
 <h3>Employment</h3>
@@ -3399,49 +3401,49 @@ div.tocify {
 ## 
 ##                    Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ---------------- ------ --------- -------------- --------- --------------
-##         Employed     15     27.27          27.27     26.79          26.79
-##       Key worker     17     30.91          58.18     30.36          57.14
-##          Retired      4      7.27          65.45      7.14          64.29
-##          Student      8     14.55          80.00     14.29          78.57
-##       Unemployed     11     20.00         100.00     19.64          98.21
-##             &lt;NA&gt;      1                               1.79         100.00
-##            Total     56    100.00         100.00    100.00         100.00
+##         Employed     16     25.40          25.40     24.62          24.62
+##       Key worker     23     36.51          61.90     35.38          60.00
+##          Retired      5      7.94          69.84      7.69          67.69
+##          Student      8     12.70          82.54     12.31          80.00
+##       Unemployed     11     17.46         100.00     16.92          96.92
+##             &lt;NA&gt;      2                               3.08         100.00
+##            Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                     Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ---------------- ------- --------- -------------- --------- --------------
-##         Employed    2843     28.08          28.08     26.00          26.00
-##       Key worker    4607     45.50          73.58     42.13          68.12
-##          Retired    1055     10.42          84.00      9.65          77.77
-##          Student     629      6.21          90.21      5.75          83.52
-##       Unemployed     991      9.79         100.00      9.06          92.58
-##             &lt;NA&gt;     811                               7.42         100.00
-##            Total   10936    100.00         100.00    100.00         100.00
+##         Employed    3157     26.97          26.97     25.01          25.01
+##       Key worker    5346     45.67          72.64     42.35          67.36
+##          Retired    1427     12.19          84.84     11.30          78.66
+##          Student     672      5.74          90.58      5.32          83.98
+##       Unemployed    1103      9.42         100.00      8.74          92.72
+##             &lt;NA&gt;     919                               7.28         100.00
+##            Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                     Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ---------------- ------- --------- -------------- --------- --------------
-##         Employed    3380     26.54          26.54     26.03          26.03
-##       Key worker    4362     34.25          60.79     33.59          59.62
-##          Retired    4657     36.57          97.36     35.86          95.48
-##          Student     103      0.81          98.17      0.79          96.27
-##       Unemployed     233      1.83         100.00      1.79          98.07
-##             &lt;NA&gt;     251                               1.93         100.00
-##            Total   12986    100.00         100.00    100.00         100.00
+##         Employed    3398     26.47          26.47     25.95          25.95
+##       Key worker    4414     34.38          60.85     33.70          59.65
+##          Retired    4681     36.46          97.31     35.74          95.40
+##          Student     106      0.83          98.14      0.81          96.20
+##       Unemployed     239      1.86         100.00      1.82          98.03
+##             &lt;NA&gt;     258                               1.97         100.00
+##            Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                    Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ---------------- ------ --------- -------------- --------- --------------
-##         Employed   2235     29.20          29.20     27.84          27.84
-##       Key worker   2599     33.96          63.16     32.38          60.22
-##          Retired   1665     21.76          84.92     20.74          80.96
-##          Student    692      9.04          93.96      8.62          89.59
-##       Unemployed    462      6.04         100.00      5.76          95.34
-##             &lt;NA&gt;    374                               4.66         100.00
-##            Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##         Employed   2345     28.47          28.47     27.14          27.14
+##       Key worker   2763     33.55          62.02     31.98          59.11
+##          Retired   1908     23.17          85.19     22.08          81.19
+##          Student    720      8.74          93.93      8.33          89.53
+##       Unemployed    500      6.07         100.00      5.79          95.31
+##             &lt;NA&gt;    405                               4.69         100.00
+##            Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="anxiety-disorders" class="section level3">
 <h3>anxiety disorders</h3>
@@ -3455,37 +3457,37 @@ div.tocify {
 ## 
 ##                             Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------- ------ --------- -------------- --------- --------------
-##       No anxiety disorder     21     37.50          37.50     37.50          37.50
-##          Anxiety disorder     35     62.50         100.00     62.50         100.00
+##       No anxiety disorder     27     41.54          41.54     41.54          41.54
+##          Anxiety disorder     38     58.46         100.00     58.46         100.00
 ##                      &lt;NA&gt;      0                               0.00         100.00
-##                     Total     56    100.00         100.00    100.00         100.00
+##                     Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                              Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------- ------- --------- -------------- --------- --------------
-##       No anxiety disorder    1352     13.26          13.26     12.36          12.36
-##          Anxiety disorder    8846     86.74         100.00     80.89          93.25
-##                      &lt;NA&gt;     738                               6.75         100.00
-##                     Total   10936    100.00         100.00    100.00         100.00
+##       No anxiety disorder    1632     13.94          13.94     12.93          12.93
+##          Anxiety disorder   10076     86.06         100.00     79.82          92.74
+##                      &lt;NA&gt;     916                               7.26         100.00
+##                     Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                              Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------- ------- --------- -------------- --------- --------------
-##       No anxiety disorder   11234     86.70          86.70     86.51          86.51
-##          Anxiety disorder    1724     13.30         100.00     13.28          99.78
-##                      &lt;NA&gt;      28                               0.22         100.00
-##                     Total   12986    100.00         100.00    100.00         100.00
+##       No anxiety disorder   11303     86.49          86.49     86.31          86.31
+##          Anxiety disorder    1765     13.51         100.00     13.48          99.79
+##                      &lt;NA&gt;      28                               0.21         100.00
+##                     Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                             Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------- ------ --------- -------------- --------- --------------
-##       No anxiety disorder   3883     55.09          55.09     48.37          48.37
-##          Anxiety disorder   3166     44.91         100.00     39.44          87.82
-##                      &lt;NA&gt;    978                              12.18         100.00
-##                     Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##       No anxiety disorder   4203     55.65          55.65     48.64          48.64
+##          Anxiety disorder   3349     44.35         100.00     38.76          87.40
+##                      &lt;NA&gt;   1089                              12.60         100.00
+##                     Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="depressive-disorders" class="section level3">
 <h3>Depressive disorders</h3>
@@ -3499,37 +3501,37 @@ div.tocify {
 ## 
 ##                                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ---------------------------- ------ --------- -------------- --------- --------------
-##       No depressive disorder     15     26.79          26.79     26.79          26.79
-##          Depressive disorder     41     73.21         100.00     73.21         100.00
+##       No depressive disorder     18     27.69          27.69     27.69          27.69
+##          Depressive disorder     47     72.31         100.00     72.31         100.00
 ##                         &lt;NA&gt;      0                               0.00         100.00
-##                        Total     56    100.00         100.00    100.00         100.00
+##                        Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                                 Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ---------------------------- ------- --------- -------------- --------- --------------
-##       No depressive disorder    1016      9.29           9.29      9.29           9.29
-##          Depressive disorder    9919     90.71         100.00     90.70          99.99
+##       No depressive disorder    1193      9.45           9.45      9.45           9.45
+##          Depressive disorder   11430     90.55         100.00     90.54          99.99
 ##                         &lt;NA&gt;       1                               0.01         100.00
-##                        Total   10936    100.00         100.00    100.00         100.00
+##                        Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                                 Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ---------------------------- ------- --------- -------------- --------- --------------
-##       No depressive disorder   10262     79.19          79.19     79.02          79.02
-##          Depressive disorder    2696     20.81         100.00     20.76          99.78
-##                         &lt;NA&gt;      28                               0.22         100.00
-##                        Total   12986    100.00         100.00    100.00         100.00
+##       No depressive disorder   10312     78.91          78.91     78.74          78.74
+##          Depressive disorder    2756     21.09         100.00     21.04          99.79
+##                         &lt;NA&gt;      28                               0.21         100.00
+##                        Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ---------------------------- ------ --------- -------------- --------- --------------
-##       No depressive disorder   3470     49.23          49.23     43.23          43.23
-##          Depressive disorder   3579     50.77         100.00     44.59          87.82
-##                         &lt;NA&gt;    978                              12.18         100.00
-##                        Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##       No depressive disorder   3729     49.38          49.38     43.15          43.15
+##          Depressive disorder   3823     50.62         100.00     44.24          87.40
+##                         &lt;NA&gt;   1089                              12.60         100.00
+##                        Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="depression-and-anxiety" class="section level3">
 <h3>Depression and anxiety</h3>
@@ -3543,45 +3545,45 @@ div.tocify {
 ## 
 ##                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------------------------- ------ --------- -------------- --------- --------------
-##       No depressive or anxiety disorder     13     23.21          23.21     23.21          23.21
-##         Depressive and anxiety disorder     33     58.93          82.14     58.93          82.14
-##                Only depressive disorder      8     14.29          96.43     14.29          96.43
-##                   Only anxiety disorder      2      3.57         100.00      3.57         100.00
+##       No depressive or anxiety disorder     16     24.62          24.62     24.62          24.62
+##         Depressive and anxiety disorder     36     55.38          80.00     55.38          80.00
+##                Only depressive disorder     11     16.92          96.92     16.92          96.92
+##                   Only anxiety disorder      2      3.08         100.00      3.08         100.00
 ##                                    &lt;NA&gt;      0                               0.00         100.00
-##                                   Total     56    100.00         100.00    100.00         100.00
+##                                   Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                                            Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------------------------- ------- --------- -------------- --------- --------------
-##       No depressive or anxiety disorder     238      2.33           2.33      2.18           2.18
-##         Depressive and anxiety disorder    8132     79.74          82.07     74.36          76.54
-##                Only depressive disorder    1114     10.92          93.00     10.19          86.72
-##                   Only anxiety disorder     714      7.00         100.00      6.53          93.25
-##                                    &lt;NA&gt;     738                               6.75         100.00
-##                                   Total   10936    100.00         100.00    100.00         100.00
+##       No depressive or anxiety disorder     273      2.33           2.33      2.16           2.16
+##         Depressive and anxiety disorder    9236     78.89          81.22     73.16          75.32
+##                Only depressive disorder    1359     11.61          92.83     10.77          86.09
+##                   Only anxiety disorder     840      7.17         100.00      6.65          92.74
+##                                    &lt;NA&gt;     916                               7.26         100.00
+##                                   Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                                            Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------------------------- ------- --------- -------------- --------- --------------
-##       No depressive or anxiety disorder    9620     74.24          74.24     74.08          74.08
-##         Depressive and anxiety disorder    1082      8.35          82.59      8.33          82.41
-##                Only depressive disorder    1614     12.46          95.05     12.43          94.84
-##                   Only anxiety disorder     642      4.95         100.00      4.94          99.78
-##                                    &lt;NA&gt;      28                               0.22         100.00
-##                                   Total   12986    100.00         100.00    100.00         100.00
+##       No depressive or anxiety disorder    9666     73.97          73.97     73.81          73.81
+##         Depressive and anxiety disorder    1119      8.56          82.53      8.54          82.35
+##                Only depressive disorder    1637     12.53          95.06     12.50          94.85
+##                   Only anxiety disorder     646      4.94         100.00      4.93          99.79
+##                                    &lt;NA&gt;      28                               0.21         100.00
+##                                   Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------------------------- ------ --------- -------------- --------- --------------
-##       No depressive or anxiety disorder   2710     38.45          38.45     33.76          33.76
-##         Depressive and anxiety disorder   2406     34.13          72.58     29.97          63.73
-##                Only depressive disorder   1173     16.64          89.22     14.61          78.35
-##                   Only anxiety disorder    760     10.78         100.00      9.47          87.82
-##                                    &lt;NA&gt;    978                              12.18         100.00
-##                                   Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##       No depressive or anxiety disorder   2931     38.81          38.81     33.92          33.92
+##         Depressive and anxiety disorder   2551     33.78          72.59     29.52          63.44
+##                Only depressive disorder   1272     16.84          89.43     14.72          78.16
+##                   Only anxiety disorder    798     10.57         100.00      9.24          87.40
+##                                    &lt;NA&gt;   1089                              12.60         100.00
+##                                   Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="eating-disorders" class="section level3">
 <h3>Eating disorders</h3>
@@ -3595,37 +3597,37 @@ div.tocify {
 ## 
 ##                            Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------ ------ --------- -------------- --------- --------------
-##       No eating disorder      4      7.14           7.14      7.14           7.14
-##          Eating disorder     52     92.86         100.00     92.86         100.00
+##       No eating disorder      4      6.15           6.15      6.15           6.15
+##          Eating disorder     61     93.85         100.00     93.85         100.00
 ##                     &lt;NA&gt;      0                               0.00         100.00
-##                    Total     56    100.00         100.00    100.00         100.00
+##                    Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                             Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------ ------- --------- -------------- --------- --------------
-##       No eating disorder    9681     88.63          88.63     88.52          88.52
-##          Eating disorder    1242     11.37         100.00     11.36          99.88
-##                     &lt;NA&gt;      13                               0.12         100.00
-##                    Total   10936    100.00         100.00    100.00         100.00
+##       No eating disorder   11230     89.06          89.06     88.96          88.96
+##          Eating disorder    1380     10.94         100.00     10.93          99.89
+##                     &lt;NA&gt;      14                               0.11         100.00
+##                    Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                             Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------ ------- --------- -------------- --------- --------------
-##       No eating disorder   12799     98.58          98.58     98.56          98.56
-##          Eating disorder     184      1.42         100.00      1.42          99.98
-##                     &lt;NA&gt;       3                               0.02         100.00
-##                    Total   12986    100.00         100.00    100.00         100.00
+##       No eating disorder   12897     98.51          98.51     98.48          98.48
+##          Eating disorder     195      1.49         100.00      1.49          99.97
+##                     &lt;NA&gt;       4                               0.03         100.00
+##                    Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                            Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------ ------ --------- -------------- --------- --------------
-##       No eating disorder   6125     93.00          93.00     76.30          76.30
-##          Eating disorder    461      7.00         100.00      5.74          82.05
-##                     &lt;NA&gt;   1441                              17.95         100.00
-##                    Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##       No eating disorder   6585     93.18          93.18     76.21          76.21
+##          Eating disorder    482      6.82         100.00      5.58          81.78
+##                     &lt;NA&gt;   1574                              18.22         100.00
+##                    Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="ocd" class="section level3">
 <h3>OCD</h3>
@@ -3639,37 +3641,37 @@ div.tocify {
 ## 
 ##                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## -------------------------------------- ------ --------- -------------- --------- --------------
-##       No obsessive compulsive disorder     41     73.21          73.21     73.21          73.21
-##          Obsessive compulsive disorder     15     26.79         100.00     26.79         100.00
+##       No obsessive compulsive disorder     47     72.31          72.31     72.31          72.31
+##          Obsessive compulsive disorder     18     27.69         100.00     27.69         100.00
 ##                                   &lt;NA&gt;      0                               0.00         100.00
-##                                  Total     56    100.00         100.00    100.00         100.00
+##                                  Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## -------------------------------------- ------- --------- -------------- --------- --------------
-##       No obsessive compulsive disorder    9464     86.55          86.55     86.54          86.54
-##          Obsessive compulsive disorder    1471     13.45         100.00     13.45          99.99
+##       No obsessive compulsive disorder   10998     87.13          87.13     87.12          87.12
+##          Obsessive compulsive disorder    1625     12.87         100.00     12.87          99.99
 ##                                   &lt;NA&gt;       1                               0.01         100.00
-##                                  Total   10936    100.00         100.00    100.00         100.00
+##                                  Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## -------------------------------------- ------- --------- -------------- --------- --------------
-##       No obsessive compulsive disorder   12815     98.90          98.90     98.68          98.68
-##          Obsessive compulsive disorder     143      1.10         100.00      1.10          99.78
-##                                   &lt;NA&gt;      28                               0.22         100.00
-##                                  Total   12986    100.00         100.00    100.00         100.00
+##       No obsessive compulsive disorder   12923     98.89          98.89     98.68          98.68
+##          Obsessive compulsive disorder     145      1.11         100.00      1.11          99.79
+##                                   &lt;NA&gt;      28                               0.21         100.00
+##                                  Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## -------------------------------------- ------ --------- -------------- --------- --------------
-##       No obsessive compulsive disorder   6475     91.86          91.86     80.67          80.67
-##          Obsessive compulsive disorder    574      8.14         100.00      7.15          87.82
-##                                   &lt;NA&gt;    978                              12.18         100.00
-##                                  Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##       No obsessive compulsive disorder   6945     91.96          91.96     80.37          80.37
+##          Obsessive compulsive disorder    607      8.04         100.00      7.02          87.40
+##                                   &lt;NA&gt;   1089                              12.60         100.00
+##                                  Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="psychosis" class="section level3">
 <h3>Psychosis</h3>
@@ -3683,37 +3685,37 @@ div.tocify {
 ## 
 ##                               Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------------- ------ --------- -------------- --------- --------------
-##       No psychotic disorder     56    100.00         100.00    100.00         100.00
+##       No psychotic disorder     65    100.00         100.00    100.00         100.00
 ##          Psychotic disorder      0      0.00         100.00      0.00         100.00
 ##                        &lt;NA&gt;      0                               0.00         100.00
-##                       Total     56    100.00         100.00    100.00         100.00
+##                       Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------------- ------- --------- -------------- --------- --------------
-##       No psychotic disorder   10579     96.85          96.85     96.74          96.74
-##          Psychotic disorder     344      3.15         100.00      3.15          99.88
-##                        &lt;NA&gt;      13                               0.12         100.00
-##                       Total   10936    100.00         100.00    100.00         100.00
+##       No psychotic disorder   12210     96.83          96.83     96.72          96.72
+##          Psychotic disorder     400      3.17         100.00      3.17          99.89
+##                        &lt;NA&gt;      14                               0.11         100.00
+##                       Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                                Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------------- ------- --------- -------------- --------- --------------
-##       No psychotic disorder   12907     99.73          99.73     99.39          99.39
-##          Psychotic disorder      35      0.27         100.00      0.27          99.66
-##                        &lt;NA&gt;      44                               0.34         100.00
-##                       Total   12986    100.00         100.00    100.00         100.00
+##       No psychotic disorder   13014     99.72          99.72     99.37          99.37
+##          Psychotic disorder      37      0.28         100.00      0.28          99.66
+##                        &lt;NA&gt;      45                               0.34         100.00
+##                       Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                               Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------------- ------ --------- -------------- --------- --------------
-##       No psychotic disorder   6448     97.90          97.90     80.33          80.33
-##          Psychotic disorder    138      2.10         100.00      1.72          82.05
-##                        &lt;NA&gt;   1441                              17.95         100.00
-##                       Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##       No psychotic disorder   6915     97.85          97.85     80.03          80.03
+##          Psychotic disorder    152      2.15         100.00      1.76          81.78
+##                        &lt;NA&gt;   1574                              18.22         100.00
+##                       Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="bipolar" class="section level3">
 <h3>Bipolar</h3>
@@ -3727,37 +3729,37 @@ div.tocify {
 ## 
 ##                                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------------------------------------- ------ --------- -------------- --------- --------------
-##       Not Mania, hypomania, bipolar or manic-depression     54     96.43          96.43     96.43          96.43
-##           Mania, hypomania, bipolar or manic-depression      2      3.57         100.00      3.57         100.00
+##       Not Mania, hypomania, bipolar or manic-depression     62     95.38          95.38     95.38          95.38
+##           Mania, hypomania, bipolar or manic-depression      3      4.62         100.00      4.62         100.00
 ##                                                    &lt;NA&gt;      0                               0.00         100.00
-##                                                   Total     56    100.00         100.00    100.00         100.00
+##                                                   Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                                                            Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------------------------------------- ------- --------- -------------- --------- --------------
-##       Not Mania, hypomania, bipolar or manic-depression   10185     93.14          93.14     93.13          93.13
-##           Mania, hypomania, bipolar or manic-depression     750      6.86         100.00      6.86          99.99
+##       Not Mania, hypomania, bipolar or manic-depression   11752     93.10          93.10     93.09          93.09
+##           Mania, hypomania, bipolar or manic-depression     871      6.90         100.00      6.90          99.99
 ##                                                    &lt;NA&gt;       1                               0.01         100.00
-##                                                   Total   10936    100.00         100.00    100.00         100.00
+##                                                   Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                                                            Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------------------------------------- ------- --------- -------------- --------- --------------
-##       Not Mania, hypomania, bipolar or manic-depression   12891     99.48          99.48     99.27          99.27
-##           Mania, hypomania, bipolar or manic-depression      67      0.52         100.00      0.52          99.78
-##                                                    &lt;NA&gt;      28                               0.22         100.00
-##                                                   Total   12986    100.00         100.00    100.00         100.00
+##       Not Mania, hypomania, bipolar or manic-depression   12996     99.45          99.45     99.24          99.24
+##           Mania, hypomania, bipolar or manic-depression      72      0.55         100.00      0.55          99.79
+##                                                    &lt;NA&gt;      28                               0.21         100.00
+##                                                   Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------------------------------------- ------ --------- -------------- --------- --------------
-##       Not Mania, hypomania, bipolar or manic-depression   6825     96.82          96.82     85.03          85.03
-##           Mania, hypomania, bipolar or manic-depression    224      3.18         100.00      2.79          87.82
-##                                                    &lt;NA&gt;    978                              12.18         100.00
-##                                                   Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##       Not Mania, hypomania, bipolar or manic-depression   7312     96.82          96.82     84.62          84.62
+##           Mania, hypomania, bipolar or manic-depression    240      3.18         100.00      2.78          87.40
+##                                                    &lt;NA&gt;   1089                              12.60         100.00
+##                                                   Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="ptsd" class="section level3">
 <h3>PTSD</h3>
@@ -3771,37 +3773,37 @@ div.tocify {
 ## 
 ##                                                   Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------------------------------------------- ------ --------- -------------- --------- --------------
-##       Not Post-traumatic stress disorder (PTSD)     50     89.29          89.29     89.29          89.29
-##           Post-traumatic stress disorder (PTSD)      6     10.71         100.00     10.71         100.00
+##       Not Post-traumatic stress disorder (PTSD)     59     90.77          90.77     90.77          90.77
+##           Post-traumatic stress disorder (PTSD)      6      9.23         100.00      9.23         100.00
 ##                                            &lt;NA&gt;      0                               0.00         100.00
-##                                           Total     56    100.00         100.00    100.00         100.00
+##                                           Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                                                    Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------------------------------------------- ------- --------- -------------- --------- --------------
-##       Not Post-traumatic stress disorder (PTSD)    9262     84.70          84.70     84.69          84.69
-##           Post-traumatic stress disorder (PTSD)    1673     15.30         100.00     15.30          99.99
+##       Not Post-traumatic stress disorder (PTSD)   10777     85.38          85.38     85.37          85.37
+##           Post-traumatic stress disorder (PTSD)    1846     14.62         100.00     14.62          99.99
 ##                                            &lt;NA&gt;       1                               0.01         100.00
-##                                           Total   10936    100.00         100.00    100.00         100.00
+##                                           Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                                                    Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------------------------------------------- ------- --------- -------------- --------- --------------
-##       Not Post-traumatic stress disorder (PTSD)   12742     98.33          98.33     98.12          98.12
-##           Post-traumatic stress disorder (PTSD)     216      1.67         100.00      1.66          99.78
-##                                            &lt;NA&gt;      28                               0.22         100.00
-##                                           Total   12986    100.00         100.00    100.00         100.00
+##       Not Post-traumatic stress disorder (PTSD)   12837     98.23          98.23     98.02          98.02
+##           Post-traumatic stress disorder (PTSD)     231      1.77         100.00      1.76          99.79
+##                                            &lt;NA&gt;      28                               0.21         100.00
+##                                           Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                                                   Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------------------------------------------- ------ --------- -------------- --------- --------------
-##       Not Post-traumatic stress disorder (PTSD)   6397     90.75          90.75     79.69          79.69
-##           Post-traumatic stress disorder (PTSD)    652      9.25         100.00      8.12          87.82
-##                                            &lt;NA&gt;    978                              12.18         100.00
-##                                           Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##       Not Post-traumatic stress disorder (PTSD)   6852     90.73          90.73     79.30          79.30
+##           Post-traumatic stress disorder (PTSD)    700      9.27         100.00      8.10          87.40
+##                                            &lt;NA&gt;   1089                              12.60         100.00
+##                                           Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="asd" class="section level3">
 <h3>ASD</h3>
@@ -3815,37 +3817,37 @@ div.tocify {
 ## 
 ##                                     Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------------------- ------ --------- -------------- --------- --------------
-##       No autism spectrum disorder     50     89.29          89.29     89.29          89.29
-##          Autism spectrum disorder      6     10.71         100.00     10.71         100.00
+##       No autism spectrum disorder     59     90.77          90.77     90.77          90.77
+##          Autism spectrum disorder      6      9.23         100.00      9.23         100.00
 ##                              &lt;NA&gt;      0                               0.00         100.00
-##                             Total     56    100.00         100.00    100.00         100.00
+##                             Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                                      Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------------------- ------- --------- -------------- --------- --------------
-##       No autism spectrum disorder   10585     96.91          96.91     96.79          96.79
-##          Autism spectrum disorder     338      3.09         100.00      3.09          99.88
-##                              &lt;NA&gt;      13                               0.12         100.00
-##                             Total   10936    100.00         100.00    100.00         100.00
+##       No autism spectrum disorder   12227     96.96          96.96     96.86          96.86
+##          Autism spectrum disorder     383      3.04         100.00      3.03          99.89
+##                              &lt;NA&gt;      14                               0.11         100.00
+##                             Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                                      Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------------------- ------- --------- -------------- --------- --------------
-##       No autism spectrum disorder   12899     99.67          99.67     99.33          99.33
-##          Autism spectrum disorder      43      0.33         100.00      0.33          99.66
-##                              &lt;NA&gt;      44                               0.34         100.00
-##                             Total   12986    100.00         100.00    100.00         100.00
+##       No autism spectrum disorder   13005     99.65          99.65     99.31          99.31
+##          Autism spectrum disorder      46      0.35         100.00      0.35          99.66
+##                              &lt;NA&gt;      45                               0.34         100.00
+##                             Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                                     Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## --------------------------------- ------ --------- -------------- --------- --------------
-##       No autism spectrum disorder   6401     97.19          97.19     79.74          79.74
-##          Autism spectrum disorder    185      2.81         100.00      2.30          82.05
-##                              &lt;NA&gt;   1441                              17.95         100.00
-##                             Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##       No autism spectrum disorder   6876     97.30          97.30     79.57          79.57
+##          Autism spectrum disorder    191      2.70         100.00      2.21          81.78
+##                              &lt;NA&gt;   1574                              18.22         100.00
+##                             Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="adhd" class="section level3">
 <h3>ADHD</h3>
@@ -3859,37 +3861,37 @@ div.tocify {
 ## 
 ##                                                                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## -------------------------------------------------------------------------------------- ------ --------- -------------- --------- --------------
-##       Not Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)     54     96.43          96.43     96.43          96.43
-##           Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)      2      3.57         100.00      3.57         100.00
+##       Not Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)     63     96.92          96.92     96.92          96.92
+##           Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)      2      3.08         100.00      3.08         100.00
 ##                                                                                   &lt;NA&gt;      0                               0.00         100.00
-##                                                                                  Total     56    100.00         100.00    100.00         100.00
+##                                                                                  Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                                                                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## -------------------------------------------------------------------------------------- ------- --------- -------------- --------- --------------
-##       Not Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)   10745     98.37          98.37     98.25          98.25
-##           Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)     178      1.63         100.00      1.63          99.88
-##                                                                                   &lt;NA&gt;      13                               0.12         100.00
-##                                                                                  Total   10936    100.00         100.00    100.00         100.00
+##       Not Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)   12409     98.41          98.41     98.30          98.30
+##           Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)     201      1.59         100.00      1.59          99.89
+##                                                                                   &lt;NA&gt;      14                               0.11         100.00
+##                                                                                  Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                                                                                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## -------------------------------------------------------------------------------------- ------- --------- -------------- --------- --------------
-##       Not Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)   12911     99.76          99.76     99.42          99.42
-##           Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)      31      0.24         100.00      0.24          99.66
-##                                                                                   &lt;NA&gt;      44                               0.34         100.00
-##                                                                                  Total   12986    100.00         100.00    100.00         100.00
+##       Not Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)   13019     99.75          99.75     99.41          99.41
+##           Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)      32      0.25         100.00      0.24          99.66
+##                                                                                   &lt;NA&gt;      45                               0.34         100.00
+##                                                                                  Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                                                                                          Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## -------------------------------------------------------------------------------------- ------ --------- -------------- --------- --------------
-##       Not Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)   6476     98.33          98.33     80.68          80.68
-##           Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)    110      1.67         100.00      1.37          82.05
-##                                                                                   &lt;NA&gt;   1441                              17.95         100.00
-##                                                                                  Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##       Not Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)   6953     98.39          98.39     80.47          80.47
+##           Attention deficit or attention deficit and hyperactivity disorder (ADD/ADHD)    114      1.61         100.00      1.32          81.78
+##                                                                                   &lt;NA&gt;   1574                              18.22         100.00
+##                                                                                  Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="personality-disorders" class="section level3">
 <h3>Personality disorders</h3>
@@ -3903,37 +3905,37 @@ div.tocify {
 ## 
 ##                                  Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------------ ------ --------- -------------- --------- --------------
-##       Not Personality disorder     52     92.86          92.86     92.86          92.86
-##           Personality disorder      4      7.14         100.00      7.14         100.00
+##       Not Personality disorder     59     90.77          90.77     90.77          90.77
+##           Personality disorder      6      9.23         100.00      9.23         100.00
 ##                           &lt;NA&gt;      0                               0.00         100.00
-##                          Total     56    100.00         100.00    100.00         100.00
+##                          Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                                   Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------------ ------- --------- -------------- --------- --------------
-##       Not Personality disorder   10056     92.06          92.06     91.95          91.95
-##           Personality disorder     867      7.94         100.00      7.93          99.88
-##                           &lt;NA&gt;      13                               0.12         100.00
-##                          Total   10936    100.00         100.00    100.00         100.00
+##       Not Personality disorder   11660     92.47          92.47     92.36          92.36
+##           Personality disorder     950      7.53         100.00      7.53          99.89
+##                           &lt;NA&gt;      14                               0.11         100.00
+##                          Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                                   Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------------ ------- --------- -------------- --------- --------------
-##       Not Personality disorder   12873     99.47          99.47     99.13          99.13
-##           Personality disorder      69      0.53         100.00      0.53          99.66
-##                           &lt;NA&gt;      44                               0.34         100.00
-##                          Total   12986    100.00         100.00    100.00         100.00
+##       Not Personality disorder   12975     99.42          99.42     99.08          99.08
+##           Personality disorder      76      0.58         100.00      0.58          99.66
+##                           &lt;NA&gt;      45                               0.34         100.00
+##                          Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                                  Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ------------------------------ ------ --------- -------------- --------- --------------
-##       Not Personality disorder   6307     95.76          95.76     78.57          78.57
-##           Personality disorder    279      4.24         100.00      3.48          82.05
-##                           &lt;NA&gt;   1441                              17.95         100.00
-##                          Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##       Not Personality disorder   6772     95.83          95.83     78.37          78.37
+##           Personality disorder    295      4.17         100.00      3.41          81.78
+##                           &lt;NA&gt;   1574                              18.22         100.00
+##                          Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="controls" class="section level3">
 <h3>Controls</h3>
@@ -3947,37 +3949,37 @@ div.tocify {
 ## 
 ##                    Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ---------------- ------ --------- -------------- --------- --------------
-##       No control     55     98.21          98.21     98.21          98.21
-##          Control      1      1.79         100.00      1.79         100.00
+##       No control     64     98.46          98.46     98.46          98.46
+##          Control      1      1.54         100.00      1.54         100.00
 ##             &lt;NA&gt;      0                               0.00         100.00
-##            Total     56    100.00         100.00    100.00         100.00
+##            Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                     Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ---------------- ------- --------- -------------- --------- --------------
-##       No control   10790     98.91          98.91     98.66          98.66
-##          Control     119      1.09         100.00      1.09          99.75
-##             &lt;NA&gt;      27                               0.25         100.00
-##            Total   10936    100.00         100.00    100.00         100.00
+##       No control   12458     98.91          98.91     98.69          98.69
+##          Control     137      1.09         100.00      1.09          99.77
+##             &lt;NA&gt;      29                               0.23         100.00
+##            Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                     Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ---------------- ------- --------- -------------- --------- --------------
-##       No control    3738     28.87          28.87     28.78          28.78
-##          Control    9211     71.13         100.00     70.93          99.72
+##       No control    3812     29.19          29.19     29.11          29.11
+##          Control    9247     70.81         100.00     70.61          99.72
 ##             &lt;NA&gt;      37                               0.28         100.00
-##            Total   12986    100.00         100.00    100.00         100.00
+##            Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                    Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ---------------- ------ --------- -------------- --------- --------------
-##       No control   4675     66.64          66.64     58.24          58.24
-##          Control   2340     33.36         100.00     29.15          87.39
-##             &lt;NA&gt;   1012                              12.61         100.00
-##            Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##       No control   4982     66.28          66.28     57.66          57.66
+##          Control   2535     33.72         100.00     29.34          86.99
+##             &lt;NA&gt;   1124                              13.01         100.00
+##            Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 <div id="dont-know-or-prefer-not-to-say" class="section level3">
 <h3>Dont know or prefer not to say</h3>
@@ -3992,36 +3994,36 @@ div.tocify {
 ##                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------------------- ------ --------- -------------- --------- --------------
 ##       Prefer not to say      0      0.00           0.00      0.00           0.00
-##        Responded to MHD     56    100.00         100.00    100.00         100.00
+##        Responded to MHD     65    100.00         100.00    100.00         100.00
 ##                    &lt;NA&gt;      0                               0.00         100.00
-##                   Total     56    100.00         100.00    100.00         100.00
+##                   Total     65    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = GLAD  
 ## 
 ##                            Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------------------- ------- --------- -------------- --------- --------------
 ##       Prefer not to say       1      0.01           0.01      0.01           0.01
-##        Responded to MHD   10935     99.99         100.00     99.99         100.00
+##        Responded to MHD   12623     99.99         100.00     99.99         100.00
 ##                    &lt;NA&gt;       0                               0.00         100.00
-##                   Total   10936    100.00         100.00    100.00         100.00
+##                   Total   12624    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = NBR  
 ## 
 ##                            Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------------------- ------- --------- -------------- --------- --------------
 ##       Prefer not to say       0      0.00           0.00      0.00           0.00
-##        Responded to MHD   12986    100.00         100.00    100.00         100.00
+##        Responded to MHD   13096    100.00         100.00    100.00         100.00
 ##                    &lt;NA&gt;       0                               0.00         100.00
-##                   Total   12986    100.00         100.00    100.00         100.00
+##                   Total   13096    100.00         100.00    100.00         100.00
 ## 
 ## Group: Sample = RAMP  
 ## 
 ##                           Freq   % Valid   % Valid Cum.   % Total   % Total Cum.
 ## ----------------------- ------ --------- -------------- --------- --------------
-##       Prefer not to say    973     12.12          12.12     12.12          12.12
-##        Responded to MHD   7054     87.88         100.00     87.88         100.00
+##       Prefer not to say   1083     12.53          12.53     12.53          12.53
+##        Responded to MHD   7558     87.47         100.00     87.47         100.00
 ##                    &lt;NA&gt;      0                               0.00         100.00
-##                   Total   8027    100.00         100.00    100.00         100.00</code></pre>
+##                   Total   8641    100.00         100.00    100.00         100.00</code></pre>
 </div>
 </div>
 <div id="means-sd-and-n" class="section level2">
@@ -4038,32 +4040,32 @@ div.tocify {
 <span id="cb76-7"><a href="#cb76-7"></a><span class="kw">apply</span>(vars, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="kw">list</span>(<span class="kw">describe</span>(x)))</span></code></pre></div>
 <pre><code>## $gad.sum_score_base
 ## $gad.sum_score_base[[1]]
-##    vars     n mean sd median trimmed  mad min max range skew kurtosis   se
-## X1    1 31989 6.26  6      5    5.51 5.93   0  21    21 0.83    -0.37 0.03
+##    vars     n mean   sd median trimmed  mad min max range skew kurtosis   se
+## X1    1 34405 6.11 5.94      4    5.33 5.93   0  21    21 0.88    -0.28 0.03
 ## 
 ## 
 ## $gad.sum_score_retro
 ## $gad.sum_score_retro[[1]]
 ##    vars     n mean   sd median trimmed  mad min max range skew kurtosis   se
-## X1    1 31929 4.14 4.67      3     3.3 4.45   0  21    21 1.46     1.85 0.03
+## X1    1 34334 4.14 4.67      3     3.3 4.45   0  21    21 1.47     1.87 0.03
 ## 
 ## 
 ## $phq.sum_score_base
 ## $phq.sum_score_base[[1]]
 ##    vars     n mean   sd median trimmed  mad min max range skew kurtosis   se
-## X1    1 31973 7.88 6.95      6    7.08 7.41   0  27    27 0.81    -0.26 0.04
+## X1    1 34386 7.79 6.91      6    6.98 7.41   0  27    27 0.84     -0.2 0.04
 ## 
 ## 
 ## $phq.sum_score_retro
 ## $phq.sum_score_retro[[1]]
 ##    vars     n mean   sd median trimmed  mad min max range skew kurtosis   se
-## X1    1 31839 5.31 5.67      3    4.32 4.45   0  27    27 1.48     1.88 0.03
+## X1    1 34223 5.39 5.71      4    4.41 4.45   0  27    27 1.46      1.8 0.03
 ## 
 ## 
 ## $pcl.sum_score_base
 ## $pcl.sum_score_base[[1]]
 ##    vars     n  mean   sd median trimmed  mad min max range skew kurtosis   se
-## X1    1 31902 12.55 6.11     11   11.78 5.93   6  30    24 0.88    -0.15 0.03</code></pre>
+## X1    1 34323 12.46 6.04     11   11.69 5.93   6  30    24  0.9    -0.07 0.03</code></pre>
 <p>Prepandemic</p>
 <div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1"></a>vars &lt;-<span class="st"> </span>dat.prepan <span class="op">%&gt;%</span></span>
 <span id="cb78-2"><a href="#cb78-2"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_prepan,</span>
@@ -4137,7 +4139,7 @@ div.tocify {
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["m.gad.base"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sd.gad.base"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["n.gad.base"],"name":[4],"type":["int"],"align":["right"]},{"label":["m.gad.retro"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["sd.gad.retro"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["n.gad.retro"],"name":[7],"type":["int"],"align":["right"]},{"label":["m.phq.base"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["sd.phq.base"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["n.phq.base"],"name":[10],"type":["int"],"align":["right"]},{"label":["m.phq.retro"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["sd.phq.retro"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["n.phq.retro"],"name":[13],"type":["int"],"align":["right"]},{"label":["m.pcl.base"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["sd.pcl.base"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["n.pcl.base"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"GLAD","2":"9.198161","3":"5.718026","4":"10986","5":"6.497312","6":"5.028421","7":"10973","8":"11.48589","9":"6.552249","10":"10984","11":"8.354853","12":"6.191739","13":"10951","14":"16.490151","15":"6.050061","16":"10915"},{"1":"NBR","2":"2.369309","3":"3.562814","4":"12981","5":"1.582009","6":"2.685583","7":"12962","8":"3.22934","9":"4.015550","10":"12972","11":"2.206411","12":"3.095208","13":"12916","14":"8.422917","15":"3.331803","16":"12986"},{"1":"RAMP","2":"8.544752","3":"6.060056","4":"8022","5":"5.058544","6":"4.632802","7":"7994","8":"10.48360","9":"6.950891","10":"8017","11":"6.143879","12":"5.571717","13":"7972","14":"13.858018","15":"5.496143","16":"8001"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["m.gad.base"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sd.gad.base"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["n.gad.base"],"name":[4],"type":["int"],"align":["right"]},{"label":["m.gad.retro"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["sd.gad.retro"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["n.gad.retro"],"name":[7],"type":["int"],"align":["right"]},{"label":["m.phq.base"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["sd.phq.base"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["n.phq.base"],"name":[10],"type":["int"],"align":["right"]},{"label":["m.phq.retro"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["sd.phq.retro"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["n.phq.retro"],"name":[13],"type":["int"],"align":["right"]},{"label":["m.pcl.base"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["sd.pcl.base"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["n.pcl.base"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"GLAD","2":"8.487143","3":"5.833004","4":"12678","5":"6.146027","6":"5.011455","7":"12662","8":"10.793103","9":"6.681408","10":"12673","11":"8.079671","12":"6.163976","13":"12627","14":"15.703853","15":"6.158049","16":"12612"},{"1":"NBR","2":"2.402108","3":"3.604230","4":"13091","5":"1.621481","6":"2.759022","7":"13072","8":"3.271747","9":"4.071723","10":"13082","11":"2.254108","12":"3.183242","13":"13022","14":"8.503436","15":"3.459269","16":"13096"},{"1":"RAMP","2":"8.255790","3":"6.115071","4":"8636","5":"5.015000","6":"4.706270","7":"8600","8":"10.240876","9":"7.024227","10":"8631","11":"6.204922","12":"5.704870","13":"8574","14":"13.719327","15":"5.540104","16":"8615"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>prepandemic</p>
@@ -4224,25 +4226,25 @@ div.tocify {
 ##  Paired t-test
 ## 
 ## data:  dat.retro$gad.sum_score_base and dat.retro$gad.sum_score_retro
-## t = 87.019, df = 31918, p-value &lt; 2.2e-16
+## t = 86.305, df = 34323, p-value &lt; 2.2e-16
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  2.073832 2.169408
+##  1.928156 2.017771
 ## sample estimates:
 ## mean of the differences 
-##                 2.12162</code></pre>
+##                1.972964</code></pre>
 <div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1"></a><span class="kw">t.test</span>(dat.retro<span class="op">$</span>phq.sum_score_base,dat.retro<span class="op">$</span>phq.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
 <pre><code>## 
 ##  Paired t-test
 ## 
 ## data:  dat.retro$phq.sum_score_base and dat.retro$phq.sum_score_retro
-## t = 96.841, df = 31814, p-value &lt; 2.2e-16
+## t = 95.861, df = 34198, p-value &lt; 2.2e-16
 ## alternative hypothesis: true difference in means is not equal to 0
 ## 95 percent confidence interval:
-##  2.531055 2.635628
+##  2.354119 2.452396
 ## sample estimates:
 ## mean of the differences 
-##                2.583341</code></pre>
+##                2.403257</code></pre>
 </div>
 <div id="average-scores-by-sample" class="section level3">
 <h3>Average scores by sample</h3>
@@ -4263,7 +4265,7 @@ div.tocify {
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["gad.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["gad.sum_score_retro"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [10,992]>","3":"<dbl [10,992]>","4":"3.691891e-293","5":"37.16771","6":"21610.42"},{"1":"NBR","2":"<dbl [12,986]>","3":"<dbl [12,986]>","4":"3.995246e-89","5":"20.09958","6":"24130.08"},{"1":"RAMP","2":"<dbl [8,027]>","3":"<dbl [8,027]>","4":"0.000000e+00","5":"40.90730","6":"15007.99"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["gad.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["gad.sum_score_retro"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [12,689]>","3":"<dbl [12,689]>","4":"1.697661e-251","5":"34.26858","6":"24784.78"},{"1":"NBR","2":"<dbl [13,096]>","3":"<dbl [13,096]>","4":"1.707595e-85","5":"19.67215","6":"24508.74"},{"1":"RAMP","2":"<dbl [8,641]>","3":"<dbl [8,641]>","4":"4.550009e-318","5":"38.99902","6":"16204.97"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>Retrospective PHQ</p>
@@ -4283,7 +4285,7 @@ div.tocify {
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["phq.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["phq.sum_score_retro"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [10,992]>","3":"<dbl [10,992]>","4":"2.524726e-281","5":"36.37439","6":"21870.34"},{"1":"NBR","2":"<dbl [12,986]>","3":"<dbl [12,986]>","4":"1.926431e-115","5":"22.96097","6":"24358.62"},{"1":"RAMP","2":"<dbl [8,027]>","3":"<dbl [8,027]>","4":"0.000000e+00","5":"43.57032","6":"15298.56"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["phq.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["phq.sum_score_retro"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [12,689]>","3":"<dbl [12,689]>","4":"8.546078e-242","5":"33.57463","6":"25149.63"},{"1":"NBR","2":"<dbl [13,096]>","3":"<dbl [13,096]>","4":"5.310669e-111","5":"22.50084","6":"24715.54"},{"1":"RAMP","2":"<dbl [8,641]>","3":"<dbl [8,641]>","4":"0.000000e+00","5":"41.38098","6":"16550.19"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>Prepandemic GAD</p>

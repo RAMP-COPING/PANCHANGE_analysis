@@ -82,20 +82,6 @@ dat.retro <- alldat %>%
 dim(dat.retro)
 ```
 
-```{r subset retrospective data }
-dat.retro <- alldat %>%
-  filter(
-    ((data_group_gad == "Baseline and retrospective data" |
-        data_group_gad == "All prepandemic, baseline and retrospective data") |
-       (data_group_phq == "Baseline and retrospective data" |
-          data_group_phq == "All prepandemic, baseline and retrospective data") |
-        (data_group_pcl == "Baseline data only" |
-           data_group_pcl == "Baseline and retrospective data" |
-      data_group_pcl == "All prepandemic, baseline and retrospective data"))
-  )
-
-dim(dat.retro)
-```
 
 subsample for prepan-baseline analysis
 exclude those who do not have complete responses for both baseline and prepandemic
