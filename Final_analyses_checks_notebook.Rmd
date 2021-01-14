@@ -74,6 +74,23 @@ dat.retro <- alldat %>%
        (data_group_phq == "Baseline and retrospective data" |
           data_group_phq == "All prepandemic, baseline and retrospective data") |
         (data_group_pcl == "Baseline data only" |
+           data_group_pcl == "Baseline and retrospective data" |
+            data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data"))
+  )
+
+dim(dat.retro)
+```
+
+```{r subset retrospective data }
+dat.retro <- alldat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+        data_group_gad == "All prepandemic, baseline and retrospective data") |
+       (data_group_phq == "Baseline and retrospective data" |
+          data_group_phq == "All prepandemic, baseline and retrospective data") |
+        (data_group_pcl == "Baseline data only" |
+           data_group_pcl == "Baseline and retrospective data" |
       data_group_pcl == "All prepandemic, baseline and retrospective data"))
   )
 
