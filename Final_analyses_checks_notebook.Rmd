@@ -438,6 +438,14 @@ t.test(dat.retro$gad.sum_score_base,dat.retro$gad.sum_score_retro, paired = T)
 t.test(dat.retro$phq.sum_score_base,dat.retro$phq.sum_score_retro, paired = T)
 ```
 
+
+Prepandemic compared to retrospective
+(no retrospective ratings for PCL)
+```{r ttest for average scores retro compred to prepan}
+t.test(dat.prepan$gad.sum_score_prepan,dat.prepan$gad.sum_score_retro, paired = T)
+t.test(dat.prepan$phq.sum_score_prepan,dat.prepan$phq.sum_score_retro, paired = T)
+```
+
 ### Average scores by sample
 
 Retrospective GAD

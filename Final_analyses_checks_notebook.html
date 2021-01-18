@@ -2919,7 +2919,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Final paper detail checks and analyses</h1>
 <h4 class="author">Kirstin L Purves</h4>
-<h4 class="date">14 January, 2021</h4>
+<h4 class="date">18 January, 2021</h4>
 
 </div>
 
@@ -4245,23 +4245,48 @@ div.tocify {
 ## sample estimates:
 ## mean of the differences 
 ##                2.403257</code></pre>
+<p>Prepandemic compared to retrospective (no retrospective ratings for PCL)</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>gad.sum_score_prepan,dat.prepan<span class="op">$</span>gad.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
+<pre><code>## 
+##  Paired t-test
+## 
+## data:  dat.prepan$gad.sum_score_prepan and dat.prepan$gad.sum_score_retro
+## t = 57.16, df = 12110, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  2.600337 2.785015
+## sample estimates:
+## mean of the differences 
+##                2.692676</code></pre>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>phq.sum_score_prepan,dat.prepan<span class="op">$</span>phq.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
+<pre><code>## 
+##  Paired t-test
+## 
+## data:  dat.prepan$phq.sum_score_prepan and dat.prepan$phq.sum_score_retro
+## t = 61.172, df = 12066, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  3.069033 3.272228
+## sample estimates:
+## mean of the differences 
+##                3.170631</code></pre>
 </div>
 <div id="average-scores-by-sample" class="section level3">
 <h3>Average scores by sample</h3>
 <p>Retrospective GAD</p>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1"></a>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb94-2"><a href="#cb94-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
-<span id="cb94-3"><a href="#cb94-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb94-4"><a href="#cb94-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb94-5"><a href="#cb94-5"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_retro, sample) <span class="op">%&gt;%</span></span>
-<span id="cb94-6"><a href="#cb94-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb94-7"><a href="#cb94-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb94-8"><a href="#cb94-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
-<span id="cb94-9"><a href="#cb94-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
-<span id="cb94-10"><a href="#cb94-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb94-11"><a href="#cb94-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>p.value,</span>
-<span id="cb94-12"><a href="#cb94-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>statistic,</span>
-<span id="cb94-13"><a href="#cb94-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>parameter)</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb98-2"><a href="#cb98-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb98-3"><a href="#cb98-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
+<span id="cb98-4"><a href="#cb98-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb98-5"><a href="#cb98-5"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_retro, sample) <span class="op">%&gt;%</span></span>
+<span id="cb98-6"><a href="#cb98-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb98-7"><a href="#cb98-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb98-8"><a href="#cb98-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb98-9"><a href="#cb98-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
+<span id="cb98-10"><a href="#cb98-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb98-11"><a href="#cb98-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>p.value,</span>
+<span id="cb98-12"><a href="#cb98-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>statistic,</span>
+<span id="cb98-13"><a href="#cb98-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>parameter)</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -4269,19 +4294,19 @@ div.tocify {
   </script>
 </div>
 <p>Retrospective PHQ</p>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1"></a>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb96-2"><a href="#cb96-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
-<span id="cb96-3"><a href="#cb96-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb96-4"><a href="#cb96-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb96-5"><a href="#cb96-5"></a><span class="st">  </span><span class="kw">select</span>(phq.sum_score_base,phq.sum_score_retro, sample) <span class="op">%&gt;%</span></span>
-<span id="cb96-6"><a href="#cb96-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb96-7"><a href="#cb96-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb96-8"><a href="#cb96-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
-<span id="cb96-9"><a href="#cb96-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
-<span id="cb96-10"><a href="#cb96-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb96-11"><a href="#cb96-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>p.value,</span>
-<span id="cb96-12"><a href="#cb96-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>statistic,</span>
-<span id="cb96-13"><a href="#cb96-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>parameter)</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb100-2"><a href="#cb100-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb100-3"><a href="#cb100-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
+<span id="cb100-4"><a href="#cb100-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb100-5"><a href="#cb100-5"></a><span class="st">  </span><span class="kw">select</span>(phq.sum_score_base,phq.sum_score_retro, sample) <span class="op">%&gt;%</span></span>
+<span id="cb100-6"><a href="#cb100-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb100-7"><a href="#cb100-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb100-8"><a href="#cb100-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb100-9"><a href="#cb100-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
+<span id="cb100-10"><a href="#cb100-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb100-11"><a href="#cb100-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>p.value,</span>
+<span id="cb100-12"><a href="#cb100-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>statistic,</span>
+<span id="cb100-13"><a href="#cb100-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>parameter)</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -4289,19 +4314,19 @@ div.tocify {
   </script>
 </div>
 <p>Prepandemic GAD</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb98-2"><a href="#cb98-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
-<span id="cb98-3"><a href="#cb98-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb98-4"><a href="#cb98-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb98-5"><a href="#cb98-5"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
-<span id="cb98-6"><a href="#cb98-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb98-7"><a href="#cb98-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb98-8"><a href="#cb98-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
-<span id="cb98-9"><a href="#cb98-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
-<span id="cb98-10"><a href="#cb98-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb98-11"><a href="#cb98-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>p.value,</span>
-<span id="cb98-12"><a href="#cb98-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>statistic,</span>
-<span id="cb98-13"><a href="#cb98-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb102-2"><a href="#cb102-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb102-3"><a href="#cb102-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
+<span id="cb102-4"><a href="#cb102-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb102-5"><a href="#cb102-5"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
+<span id="cb102-6"><a href="#cb102-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb102-7"><a href="#cb102-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb102-8"><a href="#cb102-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb102-9"><a href="#cb102-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
+<span id="cb102-10"><a href="#cb102-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb102-11"><a href="#cb102-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>p.value,</span>
+<span id="cb102-12"><a href="#cb102-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>statistic,</span>
+<span id="cb102-13"><a href="#cb102-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -4309,19 +4334,19 @@ div.tocify {
   </script>
 </div>
 <p>Prepandemic PHQ</p>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb100-2"><a href="#cb100-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
-<span id="cb100-3"><a href="#cb100-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb100-4"><a href="#cb100-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb100-5"><a href="#cb100-5"></a><span class="st">  </span><span class="kw">select</span>(phq.sum_score_base,phq.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
-<span id="cb100-6"><a href="#cb100-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb100-7"><a href="#cb100-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb100-8"><a href="#cb100-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
-<span id="cb100-9"><a href="#cb100-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
-<span id="cb100-10"><a href="#cb100-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb100-11"><a href="#cb100-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>p.value,</span>
-<span id="cb100-12"><a href="#cb100-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>statistic,</span>
-<span id="cb100-13"><a href="#cb100-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb104-2"><a href="#cb104-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb104-3"><a href="#cb104-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
+<span id="cb104-4"><a href="#cb104-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb104-5"><a href="#cb104-5"></a><span class="st">  </span><span class="kw">select</span>(phq.sum_score_base,phq.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
+<span id="cb104-6"><a href="#cb104-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb104-7"><a href="#cb104-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb104-8"><a href="#cb104-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb104-9"><a href="#cb104-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
+<span id="cb104-10"><a href="#cb104-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb104-11"><a href="#cb104-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>p.value,</span>
+<span id="cb104-12"><a href="#cb104-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>statistic,</span>
+<span id="cb104-13"><a href="#cb104-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -4329,19 +4354,19 @@ div.tocify {
   </script>
 </div>
 <p>Prepandemic PCL</p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb102-2"><a href="#cb102-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
-<span id="cb102-3"><a href="#cb102-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb102-4"><a href="#cb102-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb102-5"><a href="#cb102-5"></a><span class="st">  </span><span class="kw">select</span>(pcl.sum_score_base,pcl.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
-<span id="cb102-6"><a href="#cb102-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb102-7"><a href="#cb102-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb102-8"><a href="#cb102-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
-<span id="cb102-9"><a href="#cb102-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
-<span id="cb102-10"><a href="#cb102-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb102-11"><a href="#cb102-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>p.value,</span>
-<span id="cb102-12"><a href="#cb102-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>statistic,</span>
-<span id="cb102-13"><a href="#cb102-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb106-2"><a href="#cb106-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb106-3"><a href="#cb106-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
+<span id="cb106-4"><a href="#cb106-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb106-5"><a href="#cb106-5"></a><span class="st">  </span><span class="kw">select</span>(pcl.sum_score_base,pcl.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
+<span id="cb106-6"><a href="#cb106-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb106-7"><a href="#cb106-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb106-8"><a href="#cb106-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb106-9"><a href="#cb106-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
+<span id="cb106-10"><a href="#cb106-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb106-11"><a href="#cb106-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>p.value,</span>
+<span id="cb106-12"><a href="#cb106-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>statistic,</span>
+<span id="cb106-13"><a href="#cb106-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
