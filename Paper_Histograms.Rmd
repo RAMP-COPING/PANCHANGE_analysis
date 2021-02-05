@@ -210,7 +210,7 @@ GLAD.prepan %>%
 
 ###Retrospective
 
-```{r NBR gender prepan}
+```{r GLAD/EDGI gender retro}
 
 GLAD.retro %>%
   ggplot(aes(x = Gender)) +
@@ -225,7 +225,18 @@ GLAD.retro %>%
 
 ```
 
-```{r}
+```{r NBR gender retro}
+
+NBR.retro %>%
+  ggplot(aes(x = Gender)) +
+  geom_bar(fill = COPINGpalette4) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "Gender distribution of the NBR retro cohort",
+       subtitle = paste("N =", dim(NBR.retro)[1]),
+       x = "",
+       y = "N participants")
 
 ```
 
