@@ -9,3 +9,114 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Set up 
+ 
+```{r read in data } 
+
+# Read in data
+library(knitr)
+library(summarytools)
+library(psych)
+library(polycor)
+library(corrplot)
+library(patchwork)
+library(broom)
+library(tidyverse)
+library(ggpubr)
+
+
+# get file info
+source("../PANCHANGE_raw_path.R")
+
+
+alldat <-  readRDS(file = paste0(data_path, "/four_cohorts_variables_exclusion.rds"))
+
+```
+
+
+# Impute and subset data
+
+Impute retrospective scores if no change reported
+
+```{r impute retro}
+
+# impute retro for those who did not change
+
+alldat$gad.sum_score_retro <- ifelse(alldat$gad.pandemic_felt_feelings == "No different", alldat$gad.sum_score_base,alldat$gad.sum_score_retro)
+alldat$phq.sum_score_retro <- ifelse(alldat$phq.pandemic_felt_feelings == "No different", alldat$phq.sum_score_base,alldat$phq.sum_score_retro)
+```
+
+
+subsample for retro-baseline analysis
+exclude those who do not have complete responses for both baseline and retrospective
+in addition to those already excluded for NA in age, gender and MH diagnosis.
+
+RETROSPECTIVE
+```{r subset retrospective data }
+dat.retro <- alldat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+        data_group_gad == "All prepandemic, baseline and retrospective data") |
+       (data_group_phq == "Baseline and retrospective data" |
+          data_group_phq == "All prepandemic, baseline and retrospective data") |
+        (data_group_pcl == "Baseline data only" |
+           data_group_pcl == "Baseline and retrospective data" |
+            data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data"))
+  )
+
+dim(dat.retro)
+```
+
+
+subsample for prepan-baseline analysis
+exclude those who do not have complete responses for both baseline and prepandemic
+in addition to those already excluded for NA in age, gender and MH diagnosis.
+
+PREPANDEMIC
+```{r subset prepandemic}
+
+dat.prepan <- alldat %>%
+  filter(
+    ((data_group_gad == "Prepandemic and baseline data" |
+        data_group_gad == "All prepandemic, baseline and retrospective data") |
+       (data_group_phq == "Prepandemic and baseline data" |
+          data_group_phq == "All prepandemic, baseline and retrospective data") |
+       (data_group_pcl == "Prepandemic and baseline data" |
+          data_group_pcl == "All prepandemic, baseline and retrospective data") ) &
+      prepandemic_march_1_numeric == 1 # Exclude participants that signed up after the 1. March
+  )
+
+dim(dat.prepan)
+
+```
+
+
+Subset by study
+
+```{r subset by study}
+
+## Subset samples by study
+
+GLAD.prepan <- dat.prepan %>%
+  filter(Sample == "GLAD" | 
+           Sample == "EDGI")
+
+NBR.prepan <- dat.prepan %>%
+  filter(Sample == "NBR")
+
+RAMP.prepan <- dat.prepan %>%
+  filter(Sample == "RAMP")
+
+### retro
+GLAD.retro <- dat.retro %>%
+  filter(Sample == "GLAD" | 
+           Sample == "EDGI")
+
+NBR.retro <- dat.retro %>%
+  filter(Sample == "NBR")
+
+RAMP.retro <- dat.retro %>%
+  filter(Sample == "RAMP")
+
+```
