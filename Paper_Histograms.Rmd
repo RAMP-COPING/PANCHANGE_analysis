@@ -200,6 +200,27 @@ RAMP.retro <- dat.retro %>%
 
 #Histograms
 
+```{r Merge GLAD/EDGI samples together for plot}
+
+#Merge GLAD and EDGI Samples into one sample
+
+dat.retro <- dat.retro %>% 
+  mutate(Sample_plot = 
+           case_when(
+             dat.retro$Sample == "GLAD" ~ "GLAD/EDGI",
+             dat.retro$Sample == "EDGI" ~ "GLAD/EDGI",
+             dat.retro$Sample == "NBR" ~ "NBR",
+             dat.retro$Sample == "RAMP" ~ "RAMP"
+           ))
+
+#Check that it worked
+
+dat.retro %>% 
+  group_by(Sample_plot) %>% 
+  summarise(N = n())
+
+```
+
 ##Gender
 ###Prepan
 
@@ -285,34 +306,12 @@ GLAD.prepan %>%
 
 ###Retro
 
-```{r Merge GLAD/EDGI samples together for plot}
-
-#Merge GLAD and EDGI Samples into one sample
-
-dat.retro <- dat.retro %>% 
-  mutate(Sample_plot = 
-           case_when(
-             dat.retro$Sample == "GLAD" ~ "GLAD/EDGI",
-             dat.retro$Sample == "EDGI" ~ "GLAD/EDGI",
-             dat.retro$Sample == "NBR" ~ "NBR",
-             dat.retro$Sample == "RAMP" ~ "RAMP"
-           ))
-
-#Check that it worked
-
-dat.retro %>% 
-  group_by(Sample_plot) %>% 
-  summarise(N = n())
-
-```
-
-
 ```{r GLAD/EDGI, NBR and RAMP age}
 
 dat.retro %>% 
   ggplot(aes(x = age_category_collapsed, fill = Sample_plot)) +
   geom_bar(position = "dodge") +
-  scale_fill_manual(values = COPINGpalette4) +
+  scale_fill_manual(values = COPINGpalette3) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
@@ -321,7 +320,6 @@ dat.retro %>%
        x = "Age (years)",
        y = "") +
   theme(legend.position = "bottom")
-
 
 ```
 
