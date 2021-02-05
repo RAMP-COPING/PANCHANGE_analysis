@@ -76,6 +76,16 @@ COPINGpalette7 <- c("#78D9C5",
                     "#BFD2EB", 
                     "#808080")
 
+COPINGpalette9 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73", 
+                    "#FFED98",
+                    "#BFD2EB", 
+                    "#808080",
+                    "#cccccc",
+                    "3B47DA")
+
 COPINGpaletteGRAD <- c("#F5BE5E",
                        "#FFD284",
                        "#FFEED1",
@@ -262,7 +272,7 @@ RAMP.retro %>%
 
 GLAD.prepan %>% 
   ggplot(aes(x = age_category_collapsed)) +
-  geom_bar() +
+  geom_bar(fill = COPINGpalette9) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
