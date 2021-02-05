@@ -418,9 +418,24 @@ dat.retro %>%
        subtitle = paste("N =", dim(dat.retro)[1]),
        x = "",
        y = "") +
-  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   theme(legend.position = "bottom") + 
   theme(legend.title = element_blank())
+
+```
+
+##Diagnoses
+
+```{r Get data frame of positive diagnoses}
+
+dat.retro_diagnosis_sums <- data.frame(apply(dat.retro[c("depressive_disorders_numeric", "anxiety_disorders_numeric", "eating_disorders_numeric", "obsessive_compulsive_disorders_numeric", "psychotic_disorders_numeric", "autism_spectrum_disorder_numeric", "mhd.attention_deficit_hyperactivity_disorder_numeric", "personality_cluster_a_numeric", "personality_cluster_b_numeric", "personality_cluster_c_numeric", "mhd.mania_hypomania_bipolar_or_manicdepression_numeric", "mhd.posttraumatic_stress_disorder_ptsd_numeric", "control_numeric")],2,table))
+
+dat.retro_diagnosis_variables <- data.frame(c("depressive disorders", "anxiety disorders", "eating disorders", "obsessive compulsive disorders", "psychotic disorders", "autism spectrum disorder", "attention deficit hyperactivity disorder", "personality cluster a", "personality cluster b", "personality cluster c", "mania hypomania bipolar or manicdepression", "posttraumatic stress disorder ptsd", "control"))
+
+dat.retro_positive_diagnosis <- data.frame(t(dat.retro_diagnosis_sums[2,]))
+
+dat.retro_diagnosis_type <- cbind(dat.retro_diagnosis_variables, dat.retro_positive_diagnosis)
+
+names(dat.retro_diagnosis_type) <- c("diagnosis", "count")
 
 ```
 
