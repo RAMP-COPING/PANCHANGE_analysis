@@ -344,3 +344,22 @@ dat.retro %>%
 
 ```
 
+##Ethinicity
+###Prepan
+
+```{r GLAD/EDGI ethnicity prepan}
+
+GLAD.prepan %>% 
+  ggplot(aes(x = Ethnicity_collapsed)) +
+  geom_bar(fill = COPINGpalette6) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "Ethnic distribution of the GLAD/EDGI prepan cohort",
+       subtitle = paste("N =", dim(GLAD.prepan)[1]),
+       x = "",
+       y = "N participants") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2))
+
+```
+
