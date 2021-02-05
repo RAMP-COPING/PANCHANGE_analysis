@@ -9,6 +9,13 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r Clean environment}
+
+remove(list = ls())
+
+```
+
+
 # Set up 
  
 ```{r read in data } 
@@ -43,7 +50,9 @@ Impute retrospective scores if no change reported
 # impute retro for those who did not change
 
 alldat$gad.sum_score_retro <- ifelse(alldat$gad.pandemic_felt_feelings == "No different", alldat$gad.sum_score_base,alldat$gad.sum_score_retro)
+
 alldat$phq.sum_score_retro <- ifelse(alldat$phq.pandemic_felt_feelings == "No different", alldat$phq.sum_score_base,alldat$phq.sum_score_retro)
+
 ```
 
 
@@ -53,6 +62,7 @@ in addition to those already excluded for NA in age, gender and MH diagnosis.
 
 RETROSPECTIVE
 ```{r subset retrospective data }
+
 dat.retro <- alldat %>%
   filter(
     ((data_group_gad == "Baseline and retrospective data" |
@@ -66,6 +76,7 @@ dat.retro <- alldat %>%
   )
 
 dim(dat.retro)
+
 ```
 
 
@@ -120,3 +131,24 @@ RAMP.retro <- dat.retro %>%
   filter(Sample == "RAMP")
 
 ```
+
+#Histograms
+
+##Gender
+###Prepan
+
+```{r GLAD/EDGI gender prepan histogram}
+
+GLAD.prepan %>%
+  ggplot(aes(x = Gender)) +
+  geom_bar(fill = "black") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "Gender distribution of the GLAD/EDGI Cohort",
+       subtitle = paste("N =", dim(GLAD.prepan)[1]),
+       x = "",
+       y = "N participants")
+  
+```
+
