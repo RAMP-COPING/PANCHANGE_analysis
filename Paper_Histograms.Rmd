@@ -193,7 +193,7 @@ RAMP.retro <- dat.retro %>%
 ##Gender
 ###Prepan
 
-```{r GLAD/EDGI gender prepan histogram}
+```{r GLAD/EDGI gender prepan}
 
 GLAD.prepan %>%
   ggplot(aes(x = Gender)) +
@@ -201,10 +201,31 @@ GLAD.prepan %>%
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
-  labs(title = "Gender distribution of the GLAD/EDGI Cohort",
+  labs(title = "Gender distribution of the GLAD/EDGI prepan cohort",
        subtitle = paste("N =", dim(GLAD.prepan)[1]),
        x = "",
        y = "N participants")
   
+```
+
+###Retrospective
+
+```{r NBR gender prepan}
+
+GLAD.retro %>%
+  ggplot(aes(x = Gender)) +
+  geom_bar(fill = COPINGpalette4) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "Gender distribution of the GLAD/EDGI retro cohort",
+       subtitle = paste("N =", dim(GLAD.retro)[1]),
+       x = "",
+       y = "N participants")
+
+```
+
+```{r}
+
 ```
 
