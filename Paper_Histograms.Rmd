@@ -286,6 +286,26 @@ RAMP.retro %>%
 
 ```
 
+
+```{r Retro gender together}
+
+dat.retro %>% 
+  ggplot(aes(x = Gender, fill = Sample_plot)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = COPINGpalette4) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "Gender distribution of the retro cohorts",
+       subtitle = paste("N =", dim(dat.retro)[1]),
+       x = "",
+       y = "") +
+  theme(legend.position = "bottom") + 
+  theme(legend.title = element_blank())
+
+```
+
+
 ##Age
 ###Prepan
 
@@ -319,7 +339,8 @@ dat.retro %>%
        subtitle = paste("N =", dim(dat.retro)[1]),
        x = "Age (years)",
        y = "") +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") + 
+  theme(legend.title = element_blank())
 
 ```
 
