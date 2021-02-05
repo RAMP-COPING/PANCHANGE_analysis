@@ -240,3 +240,18 @@ NBR.retro %>%
 
 ```
 
+```{r RAMP gender retro}
+
+RAMP.retro %>%
+  ggplot(aes(x = Gender)) +
+  geom_bar(fill = COPINGpalette4) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "Gender distribution of the RAMP retro cohort",
+       subtitle = paste("N =", dim(RAMP.retro)[1]),
+       x = "",
+       y = "N participants")
+
+```
+
