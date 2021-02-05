@@ -197,7 +197,7 @@ RAMP.retro <- dat.retro %>%
 
 GLAD.prepan %>%
   ggplot(aes(x = Gender)) +
-  geom_bar(fill = "black") +
+  geom_bar(fill = COPINGpalette4) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
