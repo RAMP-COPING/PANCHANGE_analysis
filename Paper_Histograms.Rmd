@@ -581,6 +581,19 @@ dat.retro_PTSD_by_sample <- dat.retro_PTSD_by_sample %>%
 ```
 
 
+```{r Get control positive by sample}
+
+dat.retro_control_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(control_numeric) %>% 
+  filter(control_numeric == 1)
+  
+dat.retro_control_by_sample <- dat.retro_control_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("No diagnosis" = n())
+
+```
+
 
 ```{r Merge the positive sample/diagnosis tibbles}
 
