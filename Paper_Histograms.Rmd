@@ -493,6 +493,17 @@ GLAD.prepan_psychosis_positive <- GLAD.prepan_psychosis_positive %>%
 
 ```
 
+```{r Get ASD positive for GLAD/EDGI}
+
+GLAD.prepan_ASD_positive <- GLAD.prepan %>%
+  select(autism_spectrum_disorder_numeric) %>% 
+  filter(autism_spectrum_disorder_numeric == 1)
+  
+GLAD.prepan_ASD_positive <- GLAD.prepan_ASD_positive %>% 
+  summarise("ASD" = n())
+
+```
+
 
 
 ###Retro
