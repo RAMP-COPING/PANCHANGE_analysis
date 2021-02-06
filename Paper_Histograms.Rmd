@@ -436,6 +436,24 @@ head(dat.retro$personality_cluster_c_numeric, 10)
 head(dat.retro$personality_disorder_numeric, 10)
 
 ```
+###Prepan
+
+```{r Get anxiety positive for GLAD/EDGI}
+
+GLAD.prepan_mdd_positive <- GLAD.prepan %>%
+  group_by(Sample) %>% 
+  select(depressive_disorders_numeric) %>% 
+  filter(depressive_disorders_numeric == 1)
+  
+GLAD.prepan_mdd_positive <- GLAD.prepan_mdd_positive %>% 
+  group_by(Sample) %>% 
+  summarise("Depressive disorders" = n())
+
+```
+
+
+
+###Retro
 
 ```{r Get MDD positive by sample}
 
@@ -646,8 +664,7 @@ head(dat.retro_positive_diagnosis_by_sample, 9)
 
 ```
 
-###Retro
-####Style 1
+#### Plot Style 1
 
 ```{r GLAD/EDGI NBR and RAMP retro diagnosis}
 
@@ -667,7 +684,7 @@ dat.retro_positive_diagnosis_by_sample %>%
 
 ```
 
-####Style 2
+####Plot Style 2
 
 ```{r GLAD/EDGI NBR and RAMP retro diagnosis}
 
