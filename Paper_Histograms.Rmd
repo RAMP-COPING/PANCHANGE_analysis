@@ -410,7 +410,7 @@ GLAD.prepan %>%
 dat.retro %>% 
   ggplot(aes(x = employment_prior_covid, fill = Sample_plot)) +
   geom_bar(position = "dodge") +
-  scale_fill_manual(values = COPINGpalette6) +
+  scale_fill_manual(values = COPINGpalette3) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
@@ -451,7 +451,7 @@ dat.retro_mdd_by_sample <- dat.retro %>%
   
 dat.retro_mdd_by_sample <- dat.retro_mdd_by_sample %>% 
   group_by(Sample_plot) %>% 
-  summarise(mdd_total = n())
+  summarise(depressive_disorders = n())
 
 ```
 
@@ -465,7 +465,7 @@ dat.retro_anxi_by_sample <- dat.retro %>%
   
 dat.retro_anxi_by_sample <- dat.retro_anxi_by_sample %>% 
   group_by(Sample_plot) %>% 
-  summarise(anxi_total = n())
+  summarise(anxiety_disorders = n())
 
 ```
 
@@ -482,8 +482,27 @@ head(dat.retro_positive_diagnosis_by_sample)
 
 ```{r Re-organise the positive diagnosis by sample tib}
 
+dat.retro_positive_diagnosis_by_sample <- dat.retro_positive_diagnosis_by_sample %>% 
+  gather('depressive_disorders', 'anxiety_disorders', key = "Diagnosis", value = positive_n)
+
+```
+
+
+```{r GLAD/EDGI NBR and RAMP retro diagnosis}
+
 dat.retro_positive_diagnosis_by_sample %>% 
-  gather('mdd_total', 'anxi_total', key = "Diagnosis", value = positive_n)
+  ggplot(aes(x = reorder(Diagnosis, -positive_n), y = positive_n, fill = Sample_plot)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "Retro Diagnoses of the GLAD/EDGI, NBR and RAMP cohorts",
+       x = "",
+       y = "") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme(legend.position = "bottom") + 
+  theme(legend.title = element_blank())
 
 ```
 
