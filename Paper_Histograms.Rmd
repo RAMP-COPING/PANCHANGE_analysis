@@ -554,6 +554,19 @@ GLAD.prepan_BD_positive <- GLAD.prepan_BD_positive %>%
 
 ```
 
+```{r Get PTSD positive for GLAD/EDGI}
+
+GLAD.prepan_PTSD_positive <- GLAD.prepan %>%
+  select(mhd.posttraumatic_stress_disorder_ptsd_numeric) %>% 
+  filter(mhd.posttraumatic_stress_disorder_ptsd_numeric == 1)
+  
+GLAD.prepan_PTSD_positive <- GLAD.prepan_PTSD_positive %>% 
+  summarise("PTSD" = n())
+
+```
+
+
+
 ###Retro
 
 ```{r Get MDD positive by sample}
