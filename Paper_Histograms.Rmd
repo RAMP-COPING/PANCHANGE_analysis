@@ -539,6 +539,20 @@ dat.retro_ADHD_by_sample <- dat.retro_ADHD_by_sample %>%
 ```
 
 
+```{r Get personality disorders positive by sample}
+
+dat.retro_PD_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(personality_disorder_numeric) %>% 
+  filter(personality_disorder_numeric == 1)
+  
+dat.retro_PD_by_sample <- dat.retro_PD_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("Personality disorders" = n())
+
+```
+
+
 
 
 ```{r Merge the positive sample/diagnosis tibbles}
