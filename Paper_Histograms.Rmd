@@ -532,7 +532,7 @@ GLAD.prepan_ADHD_positive <- GLAD.prepan_ADHD_positive %>%
 
 ```
 
-```{r Get PD positive for GLAD/EDGI}
+```{r Get Personality Disorders positive for GLAD/EDGI}
 
 GLAD.prepan_PD_positive <- GLAD.prepan %>%
   select(personality_disorder_numeric) %>% 
@@ -543,7 +543,16 @@ GLAD.prepan_PD_positive <- GLAD.prepan_PD_positive %>%
 
 ```
 
+```{r Get Bipolar Disorders positive for GLAD/EDGI}
 
+GLAD.prepan_BD_positive <- GLAD.prepan %>%
+  select(mhd.mania_hypomania_bipolar_or_manicdepression_numeric) %>% 
+  filter(mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1)
+  
+GLAD.prepan_BD_positive <- GLAD.prepan_BD_positive %>% 
+  summarise("Bipolar disorders" = n())
+
+```
 
 ###Retro
 
