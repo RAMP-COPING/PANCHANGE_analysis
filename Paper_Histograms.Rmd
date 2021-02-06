@@ -483,6 +483,20 @@ dat.retro_ED_by_sample <- dat.retro_ED_by_sample %>%
 ```
 
 
+```{r Get OCDs positive by sample}
+
+dat.retro_OCD_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(obsessive_compulsive_disorders_numeric) %>% 
+  filter(obsessive_compulsive_disorders_numeric == 1)
+  
+dat.retro_OCD_by_sample <- dat.retro_OCD_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("OCDs" = n())
+
+```
+
+
 ```{r Merge the positive sample/diagnosis tibbles}
 
 dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_mdd_by_sample,
