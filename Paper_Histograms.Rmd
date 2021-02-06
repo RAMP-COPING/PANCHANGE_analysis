@@ -651,8 +651,28 @@ head(dat.retro_positive_diagnosis_by_sample, 9)
 
 ```
 
-
 ###Retro
+####Style 1
+
+```{r GLAD/EDGI NBR and RAMP retro diagnosis}
+
+dat.retro_positive_diagnosis_by_sample %>% 
+  ggplot(aes(x = reorder(Diagnosis, -positive_n), y = positive_n, fill = Sample_plot)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "Retro Diagnoses of the GLAD/EDGI, NBR and RAMP cohorts",
+       x = "",
+       y = "") +
+  theme(axis.text.x = element_text(angle = 70, vjust = 0.5)) +
+  theme(legend.position = "top") + 
+  theme(legend.title = element_blank())
+
+```
+
+####Style 2
 
 ```{r GLAD/EDGI NBR and RAMP retro diagnosis}
 
@@ -667,8 +687,7 @@ dat.retro_positive_diagnosis_by_sample %>%
        x = "",
        y = "") +
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
-  theme(legend.position = "bottom") + 
+  theme(legend.position = "top") + 
   theme(legend.title = element_blank())
 
 ```
-
