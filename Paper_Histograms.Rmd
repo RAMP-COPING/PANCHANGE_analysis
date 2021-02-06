@@ -567,6 +567,18 @@ dat.retro_BD_by_sample <- dat.retro_BD_by_sample %>%
 ```
 
 
+```{r Get PTSD positive by sample}
+
+dat.retro_PTSD_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(mhd.posttraumatic_stress_disorder_ptsd_numeric) %>% 
+  filter(mhd.posttraumatic_stress_disorder_ptsd_numeric == 1)
+  
+dat.retro_PTSD_by_sample <- dat.retro_PTSD_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("PTSD" = n())
+
+```
 
 
 
