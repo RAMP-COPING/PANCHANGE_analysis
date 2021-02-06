@@ -576,6 +576,17 @@ GLAD.prepan_control_positive <- GLAD.prepan_control_positive %>%
 
 ```
 
+```{r}
+
+GLAD.prepan_positive_diagnosis_GLADEDGI <- GLAD.prepan_mdd_positive %>% 
+  cbind(GLAD.prepan_anxi_positive)
+
+head(GLAD.prepan_positive_diagnosis_GLADEDGI)
+
+```
+
+
+
 ###Retro
 
 ```{r Get MDD positive by sample}
