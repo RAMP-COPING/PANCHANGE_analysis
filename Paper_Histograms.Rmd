@@ -438,20 +438,27 @@ head(dat.retro$personality_disorder_numeric, 10)
 ```
 ###Prepan
 
-```{r Get anxiety positive for GLAD/EDGI}
+```{r Get depression positive for GLAD/EDGI}
 
 GLAD.prepan_mdd_positive <- GLAD.prepan %>%
-  group_by(Sample) %>% 
   select(depressive_disorders_numeric) %>% 
   filter(depressive_disorders_numeric == 1)
   
 GLAD.prepan_mdd_positive <- GLAD.prepan_mdd_positive %>% 
-  group_by(Sample) %>% 
   summarise("Depressive disorders" = n())
 
 ```
 
+```{r Get anxiety positive for GLAD/EDGI}
 
+GLAD.prepan_anxi_positive <- GLAD.prepan %>%
+  select(anxiety_disorders_numeric) %>% 
+  filter(anxiety_disorders_numeric == 1)
+  
+GLAD.prepan_anxi_positive <- GLAD.prepan_anxi_positive %>% 
+  summarise("Anxiety disorders" = n())
+
+```
 
 ###Retro
 
