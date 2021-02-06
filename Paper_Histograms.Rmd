@@ -316,6 +316,8 @@ dat.retro %>%
 
 ```
 
+####Gender retro pie chart
+
 ```{r Prep gender retro pie chart}
 
 dat.retro_gender_pie <- dat.retro %>% 
@@ -419,6 +421,19 @@ dat.retro %>%
   theme(legend.title = element_blank())
 
 ```
+
+####Ethnicity retro pie chart
+
+```{r Prep ethnicity retro pie chart}
+
+dat.retro_ethnicity_pie <- dat.retro %>% 
+  group_by(Sample_plot, Ethnicity_collapsed) %>% 
+  summarise(n = n()) %>% 
+  mutate(percent = 
+           round(n / sum(n) *  100, 1))
+
+```
+
 
 ##Employment
 ###Prepan
