@@ -660,6 +660,7 @@ dat.retro_positive_diagnosis_by_sample %>%
         plot.subtitle = element_text(hjust = 0.5)) +
   labs(x = "",
        y = "") +
+  ylim(0, 20000) +
   theme(axis.text.x = element_text(angle = 70, vjust = 0.5)) +
   theme(legend.position = "top") + 
   theme(legend.title = element_blank())
