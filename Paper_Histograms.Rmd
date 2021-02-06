@@ -429,8 +429,26 @@ dat.retro %>%
 dat.retro_ethnicity_pie <- dat.retro %>% 
   group_by(Sample_plot, Ethnicity_collapsed) %>% 
   summarise(n = n()) %>% 
+  drop_na() %>% 
   mutate(percent = 
            round(n / sum(n) *  100, 1))
+
+```
+
+```{r Gender retro pie chart by sample}
+
+dat.retro_ethnicity_pie %>% 
+  ggplot(aes(x = "", y = percent, fill = Ethnicity_collapsed)) +
+  geom_col(stat = "identity") +
+  coord_polar("y",start=0) +
+  theme_void() +
+  scale_fill_manual(values =  COPINGpalette5) +
+  facet_wrap(~ Sample_plot, nrow = 1) +
+  theme(legend.position = "top",
+        legend.title = element_blank()) +
+  ggrepel::geom_label_repel(aes(label = paste0(percent, "%")),
+            position = position_stack(vjust = 0.5),
+            show.legend = FALSE)
 
 ```
 
