@@ -480,6 +480,13 @@ head(dat.retro_positive_diagnosis_by_sample)
 ```
 
 
+```{r Re-organise the positive diagnosis by sample tib}
+
+dat.retro_positive_diagnosis_by_sample %>% 
+  gather('mdd_total', 'anxi_total', key = "Diagnosis", value = positive_n)
+
+```
+
 
 ```{r Get data frame of positive diagnoses}
 
