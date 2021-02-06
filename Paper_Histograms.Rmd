@@ -471,6 +471,17 @@ GLAD.prepan_ED_positive <- GLAD.prepan_ED_positive %>%
 
 ```
 
+```{r Get anxiety positive for GLAD/EDGI}
+
+GLAD.prepan_OCD_positive <- GLAD.prepan %>%
+  select(obsessive_compulsive_disorders_numeric) %>% 
+  filter(obsessive_compulsive_disorders_numeric == 1)
+  
+GLAD.prepan_OCD_positive <- GLAD.prepan_OCD_positive %>% 
+  summarise("OCDs" = n())
+
+```
+
 ###Retro
 
 ```{r Get MDD positive by sample}
