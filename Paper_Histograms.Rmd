@@ -579,7 +579,16 @@ GLAD.prepan_control_positive <- GLAD.prepan_control_positive %>%
 ```{r}
 
 GLAD.prepan_positive_diagnosis_GLADEDGI <- GLAD.prepan_mdd_positive %>% 
-  cbind(GLAD.prepan_anxi_positive)
+  cbind(GLAD.prepan_anxi_positive,
+        GLAD.prepan_ED_positive,
+        GLAD.prepan_OCD_positive,
+        GLAD.prepan_psychosis_positive,
+        GLAD.prepan_ASD_positive,
+        GLAD.prepan_ADHD_positive,
+        GLAD.prepan_PD_positive,
+        GLAD.prepan_BD_positive,
+        GLAD.prepan_PTSD_positive,
+        GLAD.prepan_control_positive)
 
 head(GLAD.prepan_positive_diagnosis_GLADEDGI)
 
