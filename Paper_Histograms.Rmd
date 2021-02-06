@@ -316,6 +316,17 @@ dat.retro %>%
 
 ```
 
+```{r Gender pie charts}
+
+dat.retro_gender_pie <- dat.retro %>% 
+  group_by(Sample_plot, Gender_collapsed) %>% 
+  summarise(n = n()) %>% 
+  mutate(percent = 
+           round(n / sum(n) *  100, 2))
+
+```
+
+
 
 ##Age
 ###Prepan
