@@ -239,8 +239,8 @@ dat.retro %>%
 ```{r GLAD/EDGI gender prepan}
 
 GLAD.prepan %>%
-  ggplot(aes(x = Gender)) +
-  geom_bar(fill = COPINGpalette4) +
+  ggplot(aes(x = Gender_collapsed)) +
+  geom_bar(fill = COPINGpalette3) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
@@ -256,8 +256,8 @@ GLAD.prepan %>%
 ```{r GLAD/EDGI gender retro}
 
 GLAD.retro %>%
-  ggplot(aes(x = Gender)) +
-  geom_bar(fill = COPINGpalette4) +
+  ggplot(aes(x = Gender_collapsed)) +
+  geom_bar(fill = COPINGpalette3) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
@@ -271,8 +271,8 @@ GLAD.retro %>%
 ```{r NBR gender retro}
 
 NBR.retro %>%
-  ggplot(aes(x = Gender)) +
-  geom_bar(fill = COPINGpalette4) +
+  ggplot(aes(x = Gender_collapsed)) +
+  geom_bar(fill = COPINGpalette3) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
@@ -286,8 +286,8 @@ NBR.retro %>%
 ```{r RAMP gender retro}
 
 RAMP.retro %>%
-  ggplot(aes(x = Gender)) +
-  geom_bar(fill = COPINGpalette4) +
+  ggplot(aes(x = Gender_collapsed)) +
+  geom_bar(fill = COPINGpalette3) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
@@ -302,9 +302,9 @@ RAMP.retro %>%
 ```{r Retro gender together}
 
 dat.retro %>% 
-  ggplot(aes(x = Gender, fill = Sample_plot)) +
+  ggplot(aes(x = Gender_collapsed, fill = Sample_plot)) +
   geom_bar(position = "dodge") +
-  scale_fill_manual(values = COPINGpalette4) +
+  scale_fill_manual(values = COPINGpalette3) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
