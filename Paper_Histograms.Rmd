@@ -86,6 +86,18 @@ COPINGpalette9 <- c("#78D9C5",
                     "#cccccc",
                     "3B47DA")
 
+COPINGpalette11 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73", 
+                    "#FFED98",
+                    "#BFD2EB", 
+                    "#808080",
+                    "#cccccc",
+                    "3B47DA",
+                    "#b7dee8",
+                    "#F567F3")
+
 COPINGpaletteGRAD <- c("#F5BE5E",
                        "#FFD284",
                        "#FFEED1",
@@ -606,7 +618,30 @@ head(GLAD.prepan_positive_diagnosis_GLADEDGI, 9)
 
 ```
 
+#####Plot positive diagnosis prepan
+
+```{r Plot GLAD/EDGI prepan positive diagnosis}
+
+GLAD.prepan_positive_diagnosis_GLADEDGI %>% 
+  ggplot(aes(x = reorder(Diagnosis, -positive_n), y = positive_n)) +
+  geom_bar(stat = "identity", fill = COPINGpalette11) + 
+  scale_fill_manual(values = COPINGpalette11) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "Mental health diagnoses of the GLAD/EDGI prepan cohort",
+       subtitle = paste("N =", dim(GLAD.retro)[1]),
+         x = "",
+       y = "") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme(legend.position = "top") + 
+  theme(legend.title = element_blank())
+
+```
+
+
 ###Retro
+####Get positive diagnoses
 
 ```{r Get MDD positive by sample}
 
@@ -759,7 +794,7 @@ dat.retro_control_by_sample <- dat.retro_control_by_sample %>%
   summarise("No diagnosis" = n())
 
 ```
-
+####Merge and clean the data
 
 ```{r Merge the positive sample/diagnosis tibbles}
 
@@ -817,7 +852,7 @@ head(dat.retro_positive_diagnosis_by_sample, 9)
 
 ```
 
-#### Plot Style 1
+#####Plot Style 1
 
 ```{r GLAD/EDGI NBR and RAMP retro diagnosis}
 
@@ -837,7 +872,7 @@ dat.retro_positive_diagnosis_by_sample %>%
 
 ```
 
-####Plot Style 2
+#####Plot Style 2
 
 ```{r GLAD/EDGI NBR and RAMP retro diagnosis}
 
