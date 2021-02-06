@@ -601,6 +601,42 @@ dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_mdd_by_sample,
                                                     dat.retro_anxi_by_sample,
                                                     by = "Sample_plot")
 
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_ED_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_OCD_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_psychosis_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_ASD_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_ADHD_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_PD_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_BD_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_PTSD_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_control_by_sample,
+                                                    by = "Sample_plot")
+
 head(dat.retro_positive_diagnosis_by_sample)
 
 ```
