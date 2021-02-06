@@ -525,6 +525,20 @@ dat.retro_ASD_by_sample <- dat.retro_ASD_by_sample %>%
 ```
 
 
+```{r Get ADHD positive by sample}
+
+dat.retro_ADHD_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(mhd.attention_deficit_hyperactivity_disorder_numeric) %>% 
+  filter(mhd.attention_deficit_hyperactivity_disorder_numeric == 1)
+  
+dat.retro_ADHD_by_sample <- dat.retro_ADHD_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("ADHD" = n())
+
+```
+
+
 
 
 ```{r Merge the positive sample/diagnosis tibbles}
