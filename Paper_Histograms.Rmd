@@ -645,7 +645,9 @@ head(dat.retro_positive_diagnosis_by_sample)
 ```{r Re-organise the positive diagnosis by sample tib}
 
 dat.retro_positive_diagnosis_by_sample <- dat.retro_positive_diagnosis_by_sample %>% 
-  gather('depressive_disorders', 'anxiety_disorders', key = "Diagnosis", value = positive_n)
+  gather('Depressive disorders', 'Anxiety disorders', 'Eating disorders', 'OCDs', 'Psychotic disorders', 'ASD', 'ADHD', 'Personality disorders', 'Bipolar disorders', 'PTSD', 'No diagnosis', key = "Diagnosis", value = positive_n)
+
+head(dat.retro_positive_diagnosis_by_sample, 9)
 
 ```
 
