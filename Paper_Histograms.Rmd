@@ -565,7 +565,16 @@ GLAD.prepan_PTSD_positive <- GLAD.prepan_PTSD_positive %>%
 
 ```
 
+```{r Get control positive for GLAD/EDGI}
 
+GLAD.prepan_control_positive <- GLAD.prepan %>%
+  select(control_numeric) %>% 
+  filter(control_numeric == 1)
+  
+GLAD.prepan_control_positive <- GLAD.prepan_control_positive %>% 
+  summarise("No diagnosis" = n())
+
+```
 
 ###Retro
 
