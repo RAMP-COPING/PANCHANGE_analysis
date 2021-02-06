@@ -553,6 +553,21 @@ dat.retro_PD_by_sample <- dat.retro_PD_by_sample %>%
 ```
 
 
+```{r Get Bipolar disorders positive by sample}
+
+dat.retro_BD_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(mhd.mania_hypomania_bipolar_or_manicdepression_numeric) %>% 
+  filter(mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1)
+  
+dat.retro_BD_by_sample <- dat.retro_BD_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("Bipolar disorders" = n())
+
+```
+
+
+
 
 
 ```{r Merge the positive sample/diagnosis tibbles}
