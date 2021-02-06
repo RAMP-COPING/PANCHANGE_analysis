@@ -497,6 +497,20 @@ dat.retro_OCD_by_sample <- dat.retro_OCD_by_sample %>%
 ```
 
 
+```{r Get psychotic disorder positive by sample}
+
+dat.retro_psychosis_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(psychotic_disorders_numeric) %>% 
+  filter(psychotic_disorders_numeric == 1)
+  
+dat.retro_psychosis_by_sample <- dat.retro_psychosis_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("Psychotic disorders" = n())
+
+```
+
+
 ```{r Merge the positive sample/diagnosis tibbles}
 
 dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_mdd_by_sample,
