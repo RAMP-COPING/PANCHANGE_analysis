@@ -454,6 +454,7 @@ head(dat.retro$personality_disorder_numeric, 15)
 
 ```
 ###Prepan
+####Get positive diagnoses
 
 ```{r Get depression positive for GLAD/EDGI}
 
@@ -576,7 +577,9 @@ GLAD.prepan_control_positive <- GLAD.prepan_control_positive %>%
 
 ```
 
-```{r}
+####Merge and clean the data
+
+```{r Combine the positive diagnoses for GLAD/EDGI prepan}
 
 GLAD.prepan_positive_diagnosis_GLADEDGI <- GLAD.prepan_mdd_positive %>% 
   cbind(GLAD.prepan_anxi_positive,
@@ -594,7 +597,14 @@ head(GLAD.prepan_positive_diagnosis_GLADEDGI)
 
 ```
 
+```{r Re-organise the positive diagnosis GLAD/EDGI prepan}
 
+GLAD.prepan_positive_diagnosis_GLADEDGI <- GLAD.prepan_positive_diagnosis_GLADEDGI %>% 
+  gather('Depressive disorders', 'Anxiety disorders', 'Eating disorders', 'OCDs', 'Psychotic disorders', 'ASD', 'ADHD', 'Personality disorders', 'Bipolar disorders', 'PTSD', 'No diagnosis', key = "Diagnosis", value = positive_n)
+
+head(GLAD.prepan_positive_diagnosis_GLADEDGI, 9)
+
+```
 
 ###Retro
 
