@@ -471,7 +471,7 @@ GLAD.prepan_ED_positive <- GLAD.prepan_ED_positive %>%
 
 ```
 
-```{r Get anxiety positive for GLAD/EDGI}
+```{r Get OCDs positive for GLAD/EDGI}
 
 GLAD.prepan_OCD_positive <- GLAD.prepan %>%
   select(obsessive_compulsive_disorders_numeric) %>% 
@@ -481,6 +481,19 @@ GLAD.prepan_OCD_positive <- GLAD.prepan_OCD_positive %>%
   summarise("OCDs" = n())
 
 ```
+
+```{r Get psychosis positive for GLAD/EDGI}
+
+GLAD.prepan_psychosis_positive <- GLAD.prepan %>%
+  select(psychotic_disorders_numeric) %>% 
+  filter(psychotic_disorders_numeric == 1)
+  
+GLAD.prepan_psychosis_positive <- GLAD.prepan_psychosis_positive %>% 
+  summarise("Psychotic disorders" = n())
+
+```
+
+
 
 ###Retro
 
