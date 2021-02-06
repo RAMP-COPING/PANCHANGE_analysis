@@ -420,7 +420,24 @@ dat.retro %>%
 
 ##Diagnoses
 
-```{r Collapse personality disorder clusters}
+```{r Collapse personality disorder clusters for prepan data}
+
+GLAD.prepan <- GLAD.prepan %>% 
+  mutate(personality_disorder_numeric =
+           case_when(
+             personality_cluster_a_numeric == 1 | personality_cluster_b_numeric == 1 | personality_cluster_c_numeric == 1 ~ 1,
+             personality_cluster_a_numeric == 0 & personality_cluster_b_numeric == 0 & personality_cluster_c_numeric == 0 ~ 0
+           ))
+
+#Check that it worked
+head(GLAD.prepan$personality_cluster_a_numeric, 15)
+head(GLAD.prepan$personality_cluster_b_numeric, 15)
+head(GLAD.prepan$personality_cluster_c_numeric, 15)
+head(GLAD.prepan$personality_disorder_numeric, 15)
+
+```
+
+```{r Collapse personality disorder clusters for retro data}
 
 dat.retro <- dat.retro %>% 
   mutate(personality_disorder_numeric =
@@ -430,10 +447,10 @@ dat.retro <- dat.retro %>%
            ))
 
 #Check that it worked
-head(dat.retro$personality_cluster_a_numeric, 10)
-head(dat.retro$personality_cluster_b_numeric, 10)
-head(dat.retro$personality_cluster_c_numeric, 10)
-head(dat.retro$personality_disorder_numeric, 10)
+head(dat.retro$personality_cluster_a_numeric, 15)
+head(dat.retro$personality_cluster_b_numeric, 15)
+head(dat.retro$personality_cluster_c_numeric, 15)
+head(dat.retro$personality_disorder_numeric, 15)
 
 ```
 ###Prepan
@@ -515,7 +532,16 @@ GLAD.prepan_ADHD_positive <- GLAD.prepan_ADHD_positive %>%
 
 ```
 
+```{r Get PD positive for GLAD/EDGI}
 
+GLAD.prepan_PD_positive <- GLAD.prepan %>%
+  select(personality) %>% 
+  filter(psychotic_disorders_numeric == 1)
+  
+GLAD.prepan_psychosis_positive <- GLAD.prepan_psychosis_positive %>% 
+  summarise("Psychotic disorders" = n())
+
+```
 
 ###Retro
 
