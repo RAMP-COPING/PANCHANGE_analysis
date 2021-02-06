@@ -316,16 +316,32 @@ dat.retro %>%
 
 ```
 
-```{r Gender pie charts}
+```{r Prep gender retro pie chart}
 
 dat.retro_gender_pie <- dat.retro %>% 
   group_by(Sample_plot, Gender_collapsed) %>% 
   summarise(n = n()) %>% 
   mutate(percent = 
-           round(n / sum(n) *  100, 2))
+           round(n / sum(n) *  100, 1))
 
 ```
 
+```{r Gender retro pie chart by sample}
+
+dat.retro_gender_pie %>% 
+  ggplot(aes(x = "", y = percent, fill = Gender_collapsed)) +
+  geom_col(stat = "identity") +
+  coord_polar("y",start=0) +
+  theme_void() +
+  scale_fill_manual(values =  COPINGpalette3) +
+  facet_wrap(~ Sample_plot, nrow = 1) +
+  theme(legend.position = "top",
+        legend.title = element_blank()) +
+  ggrepel::geom_label_repel(aes(label = paste0(percent, "%")),
+            position = position_stack(vjust = 0.6),
+            show.legend = FALSE)
+
+```
 
 
 ##Age
