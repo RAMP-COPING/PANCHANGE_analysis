@@ -506,33 +506,3 @@ dat.retro_positive_diagnosis_by_sample %>%
 
 ```
 
-
-```{r Get data frame of positive diagnoses}
-
-#dat.retro_diagnosis_sums <- data.frame(apply(dat.retro[c("depressive_disorders_numeric", "anxiety_disorders_numeric", "eating_disorders_numeric", "obsessive_compulsive_disorders_numeric", "psychotic_disorders_numeric", "autism_spectrum_disorder_numeric", "mhd.attention_deficit_hyperactivity_disorder_numeric", "personality_disorder_numeric", "mhd.mania_hypomania_bipolar_or_manicdepression_numeric", "mhd.posttraumatic_stress_disorder_ptsd_numeric", "control_numeric")],2,table))
-
-#dat.retro_diagnosis_variables <- data.frame(c("depressive disorders", "anxiety disorders", "eating disorders", "OCDs", "psychotic disorders", "ASD", "ADHD", "personality disorders", "bipolar disorder", "PTSD", "control"))
-
-#dat.retro_positive_diagnosis <- data.frame(t(dat.retro_diagnosis_sums[2,]))
-
-#dat.retro_diagnosis_type <- cbind(dat.retro_diagnosis_variables, dat.retro_positive_diagnosis)
-
-#names(dat.retro_diagnosis_type) <- c("diagnosis", "count")
-
-```
-
-```{r GLAD/EDGI NBR and RAMP diagnosis retro}
-
-dat.retro_diagnosis_type %>% 
-  mutate(diagnosis_plot = fct_reorder(diagnosis, -count)) %>% 
-  ggplot(aes(x = diagnosis_plot, y = count)) +
-  geom_bar(stat = "identity") +
-  scale_x_discrete(guide = guide_axis(n.dodge = 3)) +
-  theme_minimal() +
-  labs(x = "",
-       y = "")
-
-head(diamonds)
-
-```
-
