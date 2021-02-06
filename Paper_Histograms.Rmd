@@ -490,6 +490,20 @@ dat.retro %>%
 
 ```
 
+####Employment retro pie charts
+
+```{r Prep ethnicity retro pie chart}
+
+dat.retro_employ_pie <- dat.retro %>% 
+  group_by(Sample_plot, employment_prior_covid) %>% 
+  summarise(n = n()) %>% 
+  drop_na() %>% 
+  mutate(percent = 
+           round(n / sum(n) *  100, 1))
+
+```
+
+
 ##Diagnoses
 
 ```{r Collapse personality disorder clusters for prepan data}
