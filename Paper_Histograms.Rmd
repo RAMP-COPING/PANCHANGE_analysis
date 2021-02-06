@@ -442,7 +442,7 @@ head(dat.retro$personality_disorder_numeric, 10)
 
 ```
 
-```{r Get MDD positive total}
+```{r Get MDD positive by sample}
 
 dat.retro_mdd_by_sample <- dat.retro %>%
   group_by(Sample_plot) %>% 
@@ -451,12 +451,12 @@ dat.retro_mdd_by_sample <- dat.retro %>%
   
 dat.retro_mdd_by_sample <- dat.retro_mdd_by_sample %>% 
   group_by(Sample_plot) %>% 
-  summarise(depressive_disorders = n())
+  summarise("Depressive disorders" = n())
 
 ```
 
 
-```{r Get anxiety positive total}
+```{r Get anxiety positive by sample}
 
 dat.retro_anxi_by_sample <- dat.retro %>%
   group_by(Sample_plot) %>% 
@@ -465,9 +465,23 @@ dat.retro_anxi_by_sample <- dat.retro %>%
   
 dat.retro_anxi_by_sample <- dat.retro_anxi_by_sample %>% 
   group_by(Sample_plot) %>% 
-  summarise(anxiety_disorders = n())
+  summarise("Anxiety disorders" = n())
 
 ```
+
+```{r Get eating disorder positive by sample}
+
+dat.retro_ED_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(eating_disorders_numeric) %>% 
+  filter(eating_disorders_numeric == 1)
+  
+dat.retro_ED_by_sample <- dat.retro_ED_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("Eating disorders" = n())
+
+```
+
 
 ```{r Merge the positive sample/diagnosis tibbles}
 
@@ -487,6 +501,8 @@ dat.retro_positive_diagnosis_by_sample <- dat.retro_positive_diagnosis_by_sample
 
 ```
 
+
+###Retro
 
 ```{r GLAD/EDGI NBR and RAMP retro diagnosis}
 
