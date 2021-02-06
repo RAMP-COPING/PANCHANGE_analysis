@@ -535,13 +535,15 @@ GLAD.prepan_ADHD_positive <- GLAD.prepan_ADHD_positive %>%
 ```{r Get PD positive for GLAD/EDGI}
 
 GLAD.prepan_PD_positive <- GLAD.prepan %>%
-  select(personality) %>% 
-  filter(psychotic_disorders_numeric == 1)
+  select(personality_disorder_numeric) %>% 
+  filter(personality_disorder_numeric == 1)
   
-GLAD.prepan_psychosis_positive <- GLAD.prepan_psychosis_positive %>% 
-  summarise("Psychotic disorders" = n())
+GLAD.prepan_PD_positive <- GLAD.prepan_PD_positive %>% 
+  summarise("Personality disorders" = n())
 
 ```
+
+
 
 ###Retro
 
