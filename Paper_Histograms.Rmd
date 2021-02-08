@@ -477,7 +477,9 @@ retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>%
   labs(title = "",
        x = "Ethnic origin",
        y = "N participants") +
-theme(axis.text.x = element_text(angle = 70, vjust = 0.5)) +
+theme(axis.text.x = element_text(angle = 70, 
+                                 vjust = 0.5,
+                                 size = 8)) +
   theme(legend.position = "bottom") + 
   theme(legend.title = element_blank()) +
   geom_text(aes(label = n),
@@ -1054,15 +1056,14 @@ This will plot the stacked bar charts of the gender, age, employment, ethnicity 
 
 ```{r Plot histograms together}
 
-#figure1 <- multi_panel_figure(columns = 3, rows = 3, panel_label_type = "none")
-#figure1
+#Adding any more makes it look awful
+ggarrange(retro_age_plot, retro_gender_plot, retro_employ_plot,
+          labels = c("", "", ""),
+          ncol = 2, nrow = 2)
 
-#figure1 %>% 
-#  fill_panel(retro_age_plot, column = 1, row = 1) %>% 
-#  fill_panel(retro_gender_plot, column = 2, row = 1) %>% 
-#  fill_panel(retro_employ_plot, column = 3, row = 1) %>% 
-#  fill_panel(retro_ethnicity_plot, column = 1:3, row = 2) %>% 
-#  fill_panel(retro_diagnosis_plot, column = 1:3, row = 3)
+ggarrange(retro_diagnosis_plot, retro_ethnicity_plot,
+         labels = c(""),
+         ncol = 2, nrow = 1)
 
 ```
 
