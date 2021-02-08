@@ -371,12 +371,11 @@ dat.retro %>%
   ggplot(aes(x = age_category_collapsed, fill = Sample_plot)) +
   geom_bar(position = "dodge") +
   scale_fill_manual(values = COPINGpalette3) +
-  theme_minimal() +
+  theme_classic() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
-  labs(title = "Age distribution of the retro cohorts",
-       x = "",
-       y = "") +
+  labs(x = "Age (years)",
+       y = "N participants") +
   theme(legend.position = "bottom") + 
   theme(legend.title = element_blank())
 
