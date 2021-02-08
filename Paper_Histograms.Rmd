@@ -386,32 +386,63 @@ dat.retro %>%
 
 ```{r GLAD/EDGI ethnicity prepan}
 
-ethnicity_levels <- c("White", "Asian or Asian British", "Black or Black British",
-                      "Mixed or multiple ethnic origin", "Other")
+GLAD.prepan_ethnicity_plot <- dat.retro %>% 
+  mutate(Ethnicity_collapsed = 
+           fct_recode(Ethnicity_collapsed,
+             "White" = "European",
+             "Asian or Asian British" = "Asian or Asian British",
+             "Black or Black British" = "African or African British",
+             "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+             "Other" = "Other"
+           ))
 
-GLAD.prepan %>% 
+GLAD.prepan_ethnicity_plot %>% 
   ggplot(aes(x = Ethnicity_collapsed)) +
   geom_bar(fill = COPINGpalette6) +
-  theme_void() +
+  theme_classic() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
   labs(title = "Ethnic distribution of the GLAD/EDGI prepan cohort",
        subtitle = paste("N =", dim(GLAD.prepan)[1]),
        x = "",
        y = "N participants") +
-  scale_x_discrete(guide = guide_axis(n.dodge = 2),
-                   labels = ethnicity_levels)
+  scale_x_discrete(guide = guide_axis(n.dodge = 2))
 
 ```
 
 ###Retro
 
-```{r GLAD/EDGI NBR and RAMP ethnicity}
+```{r Recode ethnicity levels and filter data}
 
 dat.retro_ethnicity_plot <- dat.retro %>% 
+  mutate(Ethnicity_collapsed = 
+           fct_recode(Ethnicity_collapsed,
+             "White" = "European",
+             "Asian or Asian British" = "Asian or Asian British",
+             "Black or Black British" = "African or African British",
+             "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+             "Other" = "Other"
+           ))
+
+#Filter White participants per sample
+
+dat.retro_ethnicity_white <- dat.retro_ethnicity_plot %>% 
   group_by(Sample_plot, Ethnicity_collapsed) %>% 
   summarise(n = n()) %>% 
-  drop_na()
+  drop_na() %>% 
+  filter(Ethnicity_collapsed == "White")
+
+#Filter non-white participants per study
+
+dat.retro_ethnicity_non_white <- dat.retro_ethnicity_plot %>% 
+  group_by(Sample_plot, Ethnicity_collapsed) %>% 
+  summarise(n = n()) %>% 
+  drop_na() %>% 
+  filter(Ethnicity_collapsed != "White")
+
+```
+
+```{r Plot GLAD/EDGI NBR and RAMP ethnicity retro}
 
 dat.retro_ethnicity_plot %>% 
   ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
@@ -432,6 +463,7 @@ dat.retro_ethnicity_plot %>%
             vjust=-0.25)
 
 ```
+
 
 ####Ethnicity retro pie chart
 
