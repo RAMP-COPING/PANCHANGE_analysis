@@ -488,7 +488,7 @@ theme(axis.text.x = element_text(angle = 70,
             vjust=-0.25) +
      scale_y_continuous(expand = expansion(mult = c(0.1, 0.2)))
 
-retro_ethnicity_plot <- plot_grid(retro_ethnicity_white, retro_ethnicity_non_white, labels = "AUTO")
+retro_ethnicity_plot <- plot_grid(retro_ethnicity_white, retro_ethnicity_non_white, labels = "")
 
 ```
 
@@ -1029,7 +1029,7 @@ head(dat.retro_positive_diagnosis_by_sample, 9)
 
 ```
 
-#####Plot Style 1
+####Plot diagnosis
 
 ```{r GLAD/EDGI NBR and RAMP retro diagnosis}
 
@@ -1050,6 +1050,8 @@ retro_diagnosis_plot <- dat.retro_positive_diagnosis_by_sample %>%
 ```
 
 #Plot Graphs together
+
+Note: I'm modifying the original retro plots to make them easier to merge together
 
 ```{r Plot age gender and employ histograms together}
 
@@ -1072,9 +1074,53 @@ ggarrange(retro_age_plot,
 
 ```{r Plot retro diagnosis and ethnicity together}
 
-ggarrange(retro_diagnosis_plot, retro_ethnicity_plot,
-         labels = c(""),
-         ncol = 2, nrow = 1)
+#Note: Adding the data labels makes the graph look messy
+
+arranged_retro_ethnicity_white <- dat.retro_ethnicity_white %>% 
+  ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "",
+       x = "Ethnic origin",
+       y = "N participants") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme(legend.position = "none") + 
+  theme(legend.title = element_blank())# +
+#  geom_text(aes(label = n),
+#            size = 3,
+#            position = position_dodge(width=0.9), 
+#            vjust=-0.25)
+
+#Graph 2
+arranged_retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>% 
+  ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "",
+       x = "Ethnic origin",
+       y = "N participants") +
+theme(axis.text.x = element_text(angle = 70, 
+                                 vjust = 0.5,
+                                 size = 8)) +
+  theme(legend.position = "none") + 
+  #theme(legend.title = element_blank()) +
+  #geom_text(aes(label = n),
+  #          size = 3,
+  #          position = position_dodge(width=0.9), 
+  #          vjust=-0.25) +
+     scale_y_continuous(expand = expansion(mult = c(0.1, 0.2)))
+  
+arranged_retro_ethnicity_plot <- plot_grid(arranged_retro_ethnicity_white, arranged_retro_ethnicity_non_white, labels = "")
+
+
+ggarrange(retro_diagnosis_plot, arranged_retro_ethnicity_plot,
+          common.legend = TRUE)
 
 ```
 
