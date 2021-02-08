@@ -412,7 +412,7 @@ GLAD.prepan_ethnicity_plot %>%
 
 ###Retro
 
-```{r Recode ethnicity levels and filter data}
+```{r GLAD/EDGI NBR and RAMP ethnicity}
 
 dat.retro_ethnicity_plot <- dat.retro %>% 
   mutate(Ethnicity_collapsed = 
@@ -424,25 +424,10 @@ dat.retro_ethnicity_plot <- dat.retro %>%
              "Other" = "Other"
            ))
 
-#Filter White participants per sample
-
-dat.retro_ethnicity_white <- dat.retro_ethnicity_plot %>% 
+dat.retro_ethnicity_plot <- dat.retro %>% 
   group_by(Sample_plot, Ethnicity_collapsed) %>% 
   summarise(n = n()) %>% 
-  drop_na() %>% 
-  filter(Ethnicity_collapsed == "White")
-
-#Filter non-white participants per study
-
-dat.retro_ethnicity_non_white <- dat.retro_ethnicity_plot %>% 
-  group_by(Sample_plot, Ethnicity_collapsed) %>% 
-  summarise(n = n()) %>% 
-  drop_na() %>% 
-  filter(Ethnicity_collapsed != "White")
-
-```
-
-```{r Plot GLAD/EDGI NBR and RAMP ethnicity retro}
+  drop_na()
 
 dat.retro_ethnicity_plot %>% 
   ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
@@ -454,8 +439,7 @@ dat.retro_ethnicity_plot %>%
   labs(title = "",
        x = "Ethnic origin",
        y = "N participants") +
-  scale_x_discrete(guide = guide_axis(n.dodge = 2),
-                   labels = ethnicity_levels) +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   theme(legend.position = "bottom") + 
   theme(legend.title = element_blank()) +
   geom_text(aes(label = n), 
@@ -463,7 +447,6 @@ dat.retro_ethnicity_plot %>%
             vjust=-0.25)
 
 ```
-
 
 ####Ethnicity retro pie chart
 
