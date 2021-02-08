@@ -977,11 +977,11 @@ dat.retro_positive_diagnosis_by_sample %>%
   ggplot(aes(x = reorder(Diagnosis, -positive_n), y = positive_n, fill = Sample_plot)) +
   geom_bar(stat = "identity") +
   scale_fill_manual(values = COPINGpalette3) +
-  theme_minimal() +
+  theme_classic() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
-  labs(x = "",
-       y = "") +
+  labs(x = "Mental health diagnosis",
+       y = "N participants") +
   ylim(0, 20000) +
   theme(axis.text.x = element_text(angle = 70, vjust = 0.5)) +
   theme(legend.position = "top") + 
