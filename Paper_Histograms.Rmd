@@ -412,7 +412,7 @@ GLAD.prepan_ethnicity_plot %>%
 
 ###Retro
 
-```{r GLAD/EDGI NBR and RAMP ethnicity}
+```{r GLAD/EDGI NBR and RAMP ethnicity data prep}
 
 dat.retro_ethnicity_plot <- dat.retro %>% 
   mutate(Ethnicity_collapsed = 
@@ -439,9 +439,9 @@ dat.retro_ethnicity_non_white <- dat.retro_ethnicity_plot %>%
 ```
 
 
-```{r Plot graphs then merge}
+```{r Plot ethnicity graphs then merge}
 
-a <- dat.retro_ethnicity_white %>% 
+retro_ethnicity_white <- dat.retro_ethnicity_white %>% 
   ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
   geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = COPINGpalette3) +
@@ -459,7 +459,7 @@ a <- dat.retro_ethnicity_white %>%
             vjust=-0.25)
 
 #Graph 2
-b <- dat.retro_ethnicity_non_white %>% 
+retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>% 
   ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
   geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = COPINGpalette3) +
@@ -477,7 +477,7 @@ b <- dat.retro_ethnicity_non_white %>%
             position = position_dodge(width=0.9), 
             vjust=-0.25)
 
-plot_grid(a, b, labels = "AUTO")
+plot_grid(retro_ethnicity_white, retro_ethnicity_non_white, labels = "AUTO")
 
 ```
 
