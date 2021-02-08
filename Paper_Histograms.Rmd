@@ -394,7 +394,7 @@ ethnicity_levels <- c("White", "Asian or Asian British", "Black or Black British
 GLAD.prepan %>% 
   ggplot(aes(x = Ethnicity_collapsed)) +
   geom_bar(fill = COPINGpalette6) +
-  theme_minimal() +
+  theme_void() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
   labs(title = "Ethnic distribution of the GLAD/EDGI prepan cohort",
@@ -410,20 +410,28 @@ GLAD.prepan %>%
 
 ```{r GLAD/EDGI NBR and RAMP ethnicity}
 
-dat.retro %>% 
-  ggplot(aes(x = Ethnicity_collapsed, fill = Sample_plot)) +
-  geom_bar(position = "dodge") +
+dat.retro_ethnicity_plot <- dat.retro %>% 
+  group_by(Sample_plot, Ethnicity_collapsed) %>% 
+  summarise(n = n()) %>% 
+  drop_na()
+
+dat.retro_ethnicity_plot %>% 
+  ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = COPINGpalette3) +
-  theme_minimal() +
+  theme_classic() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
-  labs(title = "Ethnic distribution of the retro cohorts",
-       x = "",
-       y = "") +
+  labs(title = "",
+       x = "Ethnic origin",
+       y = "N participants") +
   scale_x_discrete(guide = guide_axis(n.dodge = 2),
                    labels = ethnicity_levels) +
   theme(legend.position = "bottom") + 
-  theme(legend.title = element_blank())
+  theme(legend.title = element_blank()) +
+  geom_text(aes(label = n), 
+            position = position_dodge(width=0.9), 
+            vjust=-0.25)
 
 ```
 
