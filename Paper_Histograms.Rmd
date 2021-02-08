@@ -420,7 +420,8 @@ dat.retro %>%
   labs(title = "Ethnic distribution of the retro cohorts",
        x = "",
        y = "") +
-  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2),
+                   labels = ethnicity_levels) +
   theme(legend.position = "bottom") + 
   theme(legend.title = element_blank())
 
@@ -440,6 +441,16 @@ dat.retro_ethnicity_pie <- dat.retro %>%
 ```
 
 ```{r Gender retro pie chart by sample}
+
+dat.retro_ethnicity_pie <- dat.retro_ethnicity_pie %>% 
+  mutate(Ethnicity_collapsed = 
+           fct_recode(Ethnicity_collapsed,
+             "White" = "European",
+             "Asian or Asian British" = "Asian or Asian British",
+             "Black or Black British" = "African or African British",
+             "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+             "Other" = "Other"
+           ))
 
 dat.retro_ethnicity_pie %>% 
   ggplot(aes(x = "", y = percent, fill = Ethnicity_collapsed)) +
