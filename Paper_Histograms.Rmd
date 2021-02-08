@@ -1051,15 +1051,26 @@ retro_diagnosis_plot <- dat.retro_positive_diagnosis_by_sample %>%
 
 #Plot Graphs together
 
-This will plot the stacked bar charts of the gender, age, employment, ethnicity and diagnosis variables together.
+```{r Plot age gender and employ histograms together}
 
+arranged_gender_plot <- retro_gender_plot +
+  theme(legend.position = "none") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2),
+                   expand = expansion(mult = c(0.3, 0.4)))
 
-```{r Plot histograms together}
+arranged_employ_plot <- retro_employ_plot +
+  theme(legend.position = "none") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2))
 
-#Adding any more makes it look awful
-ggarrange(retro_age_plot, retro_gender_plot, retro_employ_plot,
-          labels = c("", "", ""),
-          ncol = 2, nrow = 2)
+#Combine retro age, gender and employ together
+ggarrange(retro_age_plot, 
+          ggarrange(arranged_gender_plot, arranged_employ_plot, ncol = 2), 
+          nrow = 2,
+          common.legend = TRUE)
+
+```
+
+```{r Plot retro diagnosis and ethnicity together}
 
 ggarrange(retro_diagnosis_plot, retro_ethnicity_plot,
          labels = c(""),
