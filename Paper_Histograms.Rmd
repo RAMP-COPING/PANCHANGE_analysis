@@ -30,7 +30,7 @@ library(patchwork)
 library(broom)
 library(tidyverse)
 library(ggpubr)
-
+library(cowplot)
 
 # get file info
 source("../PANCHANGE_raw_path.R")
@@ -424,12 +424,24 @@ dat.retro_ethnicity_plot <- dat.retro %>%
              "Other" = "Other"
            ))
 
-dat.retro_ethnicity_plot <- dat.retro %>% 
+dat.retro_ethnicity_white <- dat.retro_ethnicity_plot %>% 
   group_by(Sample_plot, Ethnicity_collapsed) %>% 
   summarise(n = n()) %>% 
-  drop_na()
+  drop_na() %>% 
+  filter(Ethnicity_collapsed == "White")
 
-dat.retro_ethnicity_plot %>% 
+dat.retro_ethnicity_non_white <- dat.retro_ethnicity_plot %>% 
+  group_by(Sample_plot, Ethnicity_collapsed) %>% 
+  summarise(n = n()) %>% 
+  drop_na() %>% 
+  filter(Ethnicity_collapsed != "White")
+
+```
+
+
+```{r Plot graphs then merge}
+
+a <- dat.retro_ethnicity_white %>% 
   ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
   geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = COPINGpalette3) +
@@ -446,7 +458,29 @@ dat.retro_ethnicity_plot %>%
             position = position_dodge(width=0.9), 
             vjust=-0.25)
 
+#Graph 2
+b <- dat.retro_ethnicity_non_white %>% 
+  ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "",
+       x = "Ethnic origin",
+       y = "N participants") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 3)) +
+  theme(legend.position = "bottom") + 
+  theme(legend.title = element_blank()) +
+  geom_text(aes(label = n),
+            size = 3,
+            position = position_dodge(width=0.9), 
+            vjust=-0.25)
+
+plot_grid(a, b, labels = "AUTO")
+
 ```
+
 
 ####Ethnicity retro pie chart
 
