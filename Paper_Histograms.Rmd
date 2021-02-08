@@ -301,7 +301,7 @@ RAMP.retro %>%
 
 ```{r Retro gender together}
 
-dat.retro %>% 
+retro_gender_plot <- dat.retro %>% 
   ggplot(aes(x = Gender_collapsed, fill = Sample_plot)) +
   geom_bar(position = "dodge") +
   scale_fill_manual(values = COPINGpalette3) +
@@ -367,7 +367,7 @@ GLAD.prepan %>%
 
 ```{r GLAD/EDGI NBR and RAMP age}
 
-dat.retro %>% 
+retro_age_plot <- dat.retro %>% 
   ggplot(aes(x = age_category_collapsed, fill = Sample_plot)) +
   geom_bar(position = "dodge") +
   scale_fill_manual(values = COPINGpalette3) +
@@ -477,7 +477,7 @@ theme(axis.text.x = element_text(angle = 70, vjust = 0.5)) +
             position = position_dodge(width=0.9), 
             vjust=-0.25)
 
-plot_grid(retro_ethnicity_white, retro_ethnicity_non_white, labels = "AUTO")
+retro_ethnicity_plot <- plot_grid(retro_ethnicity_white, retro_ethnicity_non_white, labels = "AUTO")
 
 ```
 
@@ -550,7 +550,7 @@ dat.retro_employment_plot <- dat.retro %>%
   summarise(n = n()) %>% 
   drop_na()
 
-dat.retro_employment_plot %>% 
+retro_employ_plot <- dat.retro_employment_plot %>% 
   ggplot(aes(x = employment_prior_covid, y = n, fill = Sample_plot)) +
   geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = COPINGpalette3) +
@@ -1022,7 +1022,7 @@ head(dat.retro_positive_diagnosis_by_sample, 9)
 
 ```{r GLAD/EDGI NBR and RAMP retro diagnosis}
 
-dat.retro_positive_diagnosis_by_sample %>% 
+retro_diagnosis_plot <- dat.retro_positive_diagnosis_by_sample %>% 
   ggplot(aes(x = reorder(Diagnosis, -positive_n), y = positive_n, fill = Sample_plot)) +
   geom_bar(stat = "identity") +
   scale_fill_manual(values = COPINGpalette3) +
@@ -1035,6 +1035,17 @@ dat.retro_positive_diagnosis_by_sample %>%
   theme(axis.text.x = element_text(angle = 70, vjust = 0.5)) +
   theme(legend.position = "top") + 
   theme(legend.title = element_blank())
+
+```
+
+#Plot Graphs together
+
+This will plot the stacked bar charts of the gender, age, employment, ethnicity and diagnosis variables together.
+
+
+```{r Plot histograms together}
+
+
 
 ```
 
