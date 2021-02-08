@@ -469,7 +469,7 @@ retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>%
   labs(title = "",
        x = "Ethnic origin",
        y = "N participants") +
-theme(axis.text.x = element_text(angle = 35, vjust = 0.5)) +
+theme(axis.text.x = element_text(angle = 70, vjust = 0.5)) +
   theme(legend.position = "bottom") + 
   theme(legend.title = element_blank()) +
   geom_text(aes(label = n),
@@ -1038,22 +1038,3 @@ dat.retro_positive_diagnosis_by_sample %>%
 
 ```
 
-#####Plot Style 2
-
-```{r GLAD/EDGI NBR and RAMP retro diagnosis}
-
-dat.retro_positive_diagnosis_by_sample %>% 
-  ggplot(aes(x = reorder(Diagnosis, -positive_n), y = positive_n, fill = Sample_plot)) +
-  geom_bar(stat = "identity") +
-  scale_fill_manual(values = COPINGpalette3) +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5),
-        plot.subtitle = element_text(hjust = 0.5)) +
-  labs(x = "",
-       y = "") +
-  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
-  theme(legend.position = "top") + 
-  theme(legend.title = element_blank()) +
-  ylim(0, 20000)
-
-```
