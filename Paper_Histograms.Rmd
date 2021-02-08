@@ -498,18 +498,23 @@ GLAD.prepan %>%
 
 ```{r GLAD/EDGI NBR and RAMP retro employment}
 
-dat.retro %>% 
-  ggplot(aes(x = employment_prior_covid, fill = Sample_plot)) +
-  geom_bar(position = "dodge") +
+dat.retro_employment_plot <- dat.retro %>% 
+  group_by(Sample_plot, employment_prior_covid) %>% 
+  summarise(n = n()) %>% 
+  drop_na()
+
+dat.retro_employment_plot %>% 
+  ggplot(aes(x = employment_prior_covid, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = COPINGpalette3) +
-  theme_minimal() +
+  theme_classic() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
-  labs(title = "Employment distribution of the retro cohorts",
-       x = "",
-       y = "") +
+  labs(x = "Employment status",
+       y = "N participants") +
   theme(legend.position = "bottom") + 
-  theme(legend.title = element_blank())
+  theme(legend.title = element_blank()) +
+  scale_y_continuous(breaks = seq(0, 6000, by = 1000))
 
 ```
 
