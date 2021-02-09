@@ -1057,6 +1057,8 @@ retro_diagnosis_plot <- dat.retro_positive_diagnosis_by_sample %>%
 
 Note: I'm modifying the original retro plots to make them easier to merge together
 
+##Age gender and employ
+
 ```{r Plot age gender and employ histograms together}
 
 arranged_gender_plot <- retro_gender_plot +
@@ -1075,6 +1077,8 @@ ggarrange(retro_age_plot,
           common.legend = TRUE)
 
 ```
+
+##Age gender and employ with gender labelled
 
 ```{r Add labels to gender retro and plot with gender and employ}
 
@@ -1108,6 +1112,8 @@ ggarrange(retro_age_plot,
           common.legend = TRUE)
 
 ```
+
+##Age gender employ and ethnicity
 
 ```{r Tidy the ethnicity graphs}
 
@@ -1154,6 +1160,24 @@ arranged_retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>%
 ```
 
 
+```{r Tidy the age gender and employ graphs}
+
+arranged_retro_age_plot <- dat.retro %>% 
+  ggplot(aes(x = age_category_collapsed, fill = Sample_plot)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "Age (years)",
+       y = "N participants") +
+  theme(legend.position = "none") + 
+  theme(legend.title = element_blank()) +
+  theme(axis.text.x = element_text(angle = 70, vjust = 0.5))
+
+```
+
+
 ```{r Plot age gender employ and ethnicity together}
 
 #Two columns approach
@@ -1167,7 +1191,7 @@ arranged_retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>%
 
 retro_matrix <- matrix(c(1, 2, 3, 4, 5, 5), nrow = 2, byrow = TRUE)
 
-gridExtra::grid.arrange(retro_age_plot, arranged_gender_plot, arranged_employ_plot,
+gridExtra::grid.arrange(arranged_gender_plot, arranged_retro_age_plot, arranged_employ_plot,
           arranged_retro_ethnicity_white, arranged_retro_ethnicity_non_white,
           layout_matrix = retro_matrix, nrow = 2)
 
