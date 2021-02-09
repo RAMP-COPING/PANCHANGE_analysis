@@ -1156,24 +1156,34 @@ arranged_retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>%
 
 ```{r Plot age gender employ and ethnicity together}
 
-ggarrange(arranged_retro_ethnicity_non_white,
-          ggarrange(arranged_retro_ethnicity_white, retro_employ_plot, ncol = 2),
-          ggarrange(retro_age_plot, arranged_gender_plot, ncol = 2),
-          nrow = 3,
-          common.legend =  TRUE)
+#Two columns approach
 
-ggarrange(retro_age_plot, arranged_gender_plot, arranged_employ_plot,
+#ggarrange(arranged_retro_ethnicity_non_white,
+#          ggarrange(arranged_retro_ethnicity_white, retro_employ_plot, ncol = 2),
+#          ggarrange(retro_age_plot, arranged_gender_plot, ncol = 2),
+#          nrow = 3,
+#          common.legend =  TRUE)
+
+
+retro_matrix <- matrix(c(1, 2, 3, 4, 5, 5), nrow = 2, byrow = TRUE)
+
+gridExtra::grid.arrange(retro_age_plot, arranged_gender_plot, arranged_employ_plot,
           arranged_retro_ethnicity_white, arranged_retro_ethnicity_non_white,
-          common.legend = TRUE,
-          ncol = 3,
-          nrow = 2)
+          layout_matrix = retro_matrix, nrow = 2)
+
+#Three columns approach
+#ggarrange(retro_age_plot, arranged_gender_plot, arranged_employ_plot,
+#          arranged_retro_ethnicity_white, arranged_retro_ethnicity_non_white,
+#          common.legend = TRUE,
+#          ncol = 3,
+#          nrow = 2)
 
 ```
 
 
 ```{r Plot retro diagnosis and ethnicity together}
 
-#Note: Adding the data labels makes the graph look messy
+#Note: Adding the data labels for ethnicity or diagnosis looks messy
 
 arranged_retro_ethnicity_white <- dat.retro_ethnicity_white %>% 
   ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
