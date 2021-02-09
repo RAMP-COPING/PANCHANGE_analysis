@@ -1175,6 +1175,36 @@ arranged_retro_age_plot <- dat.retro %>%
   theme(legend.title = element_blank()) +
   theme(axis.text.x = element_text(angle = 70, vjust = 0.5))
 
+dat.retro_gender_male_female <- dat.retro_gender_distribution %>% 
+  filter(Gender_collapsed != "Non-binary/Self-defined")
+
+arranged_collapsed_gender_plot <- dat.retro_gender_male_female %>% 
+  ggplot(aes(x = Gender_collapsed, y = n, fill = Sample_plot)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "Participant Gender",
+       y = "N participants") +
+  theme(legend.position = "none") + 
+  theme(legend.title = element_blank())
+
+arranged_employ_plot <- dat.retro_employment_plot %>% 
+  ggplot(aes(x = employment_prior_covid, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "Employment status",
+       y = "N participants") +
+  theme(legend.position = "none") + 
+  theme(legend.title = element_blank()) +
+  scale_y_continuous(breaks = seq(0, 6000, by = 1000)) +
+  scale_x_discrete(guide = guide_axis(n.dodge = 3),
+                   expand = expansion(mult = c(0.2, 0.3)))
+
 ```
 
 
@@ -1191,7 +1221,7 @@ arranged_retro_age_plot <- dat.retro %>%
 
 retro_matrix <- matrix(c(1, 2, 3, 4, 5, 5), nrow = 2, byrow = TRUE)
 
-gridExtra::grid.arrange(arranged_gender_plot, arranged_retro_age_plot, arranged_employ_plot,
+gridExtra::grid.arrange(arranged_collapsed_gender_plot, arranged_retro_age_plot, arranged_employ_plot,
           arranged_retro_ethnicity_white, arranged_retro_ethnicity_non_white,
           layout_matrix = retro_matrix, nrow = 2)
 
