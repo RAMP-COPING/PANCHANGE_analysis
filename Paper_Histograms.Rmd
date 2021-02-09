@@ -1072,6 +1072,40 @@ ggarrange(retro_age_plot,
 
 ```
 
+```{r Plot age gender employ and ethnicity retro together}
+
+dat.retro_gender_distribution <- dat.retro %>% 
+  group_by(Gender_collapsed, Sample_plot) %>% 
+  summarise(n = n())
+
+labelled_arranged_gender_plot <- dat.retro_gender_distribution %>% 
+  ggplot(aes(x = Gender_collapsed, y = n, fill = Sample_plot)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "Participant Gender",
+       y = "N participants") +
+  theme(legend.position = "none") + 
+  theme(legend.title = element_blank()) +
+  geom_text(aes(label = n),
+            size = 3,
+            position = position_dodge(width=0.9), 
+            vjust=-0.25) +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2),
+                   expand = expansion(mult = c(0.3, 0.4))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1)))
+
+#Combine retro age, gender and employ together
+ggarrange(retro_age_plot, 
+          ggarrange(labelled_arranged_gender_plot, arranged_employ_plot, ncol = 2), 
+          nrow = 2,
+          common.legend = TRUE)
+
+```
+
+
 ```{r Plot retro diagnosis and ethnicity together}
 
 #Note: Adding the data labels makes the graph look messy
