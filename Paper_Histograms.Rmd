@@ -1034,7 +1034,7 @@ head(dat.retro_positive_diagnosis_by_sample, 9)
 ```{r GLAD/EDGI NBR and RAMP retro diagnosis}
 
 retro_diagnosis_plot <- dat.retro_positive_diagnosis_by_sample %>% 
-  ggplot(aes(x = reorder(Diagnosis, -positive_n), y = positive_n, fill = Sample_plot)) +
+  ggplot(aes(x = reorder(Diagnosis, -positive_n, sum), y = positive_n, fill = Sample_plot)) +
   geom_bar(stat = "identity") +
   scale_fill_manual(values = COPINGpalette3) +
   theme_classic() +
@@ -1045,7 +1045,11 @@ retro_diagnosis_plot <- dat.retro_positive_diagnosis_by_sample %>%
   ylim(0, 20000) +
   theme(axis.text.x = element_text(angle = 70, vjust = 0.5)) +
   theme(legend.position = "top") + 
-  theme(legend.title = element_blank())
+  theme(legend.title = element_blank()) +
+  geom_text(aes(label = stat(y), group = Diagnosis),
+            stat = "summary",
+            fun = sum,
+            vjust = -1)
 
 ```
 
