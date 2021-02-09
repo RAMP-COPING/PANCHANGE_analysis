@@ -1149,10 +1149,10 @@ arranged_retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>%
   theme(legend.position = "bottom") +
   theme(legend.title = element_blank()) +
   #theme(legend.title = element_blank()) +
-  #geom_text(aes(label = n),
-  #          size = 3,
-  #          position = position_dodge(width=0.9), 
-  #          vjust=-0.25) +
+  geom_text(aes(label = n),
+            size = 3,
+            position = position_dodge(width=0.9), 
+            vjust=-0.25) +
      scale_y_continuous(expand = expansion(mult = c(0.1, 0.2))) +
   scale_x_discrete(guide = guide_axis(n.dodge = 2))
 
@@ -1187,7 +1187,9 @@ arranged_collapsed_gender_plot <- dat.retro_gender_male_female %>%
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
   labs(x = "Participant Gender",
-       y = "N participants") +
+       y = "N participants",
+       caption = "Non-binary/Self-defined
+         GLAD/EDGI (243); NBR (39); RAMP (92)") +
   theme(legend.position = "none") + 
   theme(legend.title = element_blank())
 
