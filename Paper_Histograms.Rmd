@@ -1049,7 +1049,10 @@ retro_diagnosis_plot <- dat.retro_positive_diagnosis_by_sample %>%
   geom_text(aes(label = stat(y), group = Diagnosis),
             stat = "summary",
             fun = sum,
-            vjust = -1)
+            vjust = -1,
+            colour = "black") +
+  theme(axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black"))
 
 ```
 
