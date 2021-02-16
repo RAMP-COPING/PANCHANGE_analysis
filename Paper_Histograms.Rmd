@@ -344,6 +344,27 @@ dat.retro_sign_up <- dat.retro_sign_up %>%
 ```
 
 
+```{r Plot sign up per month by sample}
+
+dat.retro_sign_up %>% 
+  ggplot(aes(x = month, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  labs(x = "Month of sign up",
+       y = "N participants") +
+  theme(legend.position = "top",
+        legend.title = element_blank(),
+        axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black")) +
+  geom_text(aes(label = n),
+            size = 3,
+            position = position_dodge(width=0.9), 
+            vjust=-0.25)
+
+```
+
+
 ##Gender
 ###Prepan
 
