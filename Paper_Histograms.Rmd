@@ -279,19 +279,6 @@ dat.retro_september_sign_up <- dat.retro[str_detect(dat.retro$startDate.coping, 
   group_by(Sample_plot) %>% 
   summarise(September = n())
 
-#Merge results into one tibble
-
-dat.retro_sign_up <- dat.retro_april_sign_up %>% 
-  cbind(dat.retro_may_sign_up,
-        dat.retro_june_sign_up,
-        dat.retro_july_sign_up,
-        dat.retro_august_sign_up,
-        dat.retro_september_sign_up)
-
-#Gather the variables
-dat.retro_sign_up <- dat.retro_sign_up %>% 
-  gather(key = "month", value = "n")
-
 ```
 
 
@@ -320,6 +307,39 @@ dat.retro_august_sign_up <- dat.retro_august_sign_up %>%
 
 dat.retro_september_sign_up <- dat.retro_september_sign_up %>% 
   rbind(sign_up_NBR_empty_row_September)
+
+```
+
+
+```{r Left_join sign-up per month by sampple tibs and tidy}
+
+#Merge results into one tibble
+
+dat.retro_sign_up <- dat.retro_april_sign_up %>% 
+  left_join(dat.retro_may_sign_up,
+            by = "Sample_plot")
+
+dat.retro_sign_up <- dat.retro_sign_up %>% 
+  left_join(dat.retro_june_sign_up,
+            by = "Sample_plot")
+
+dat.retro_sign_up <- dat.retro_sign_up %>% 
+  left_join(dat.retro_july_sign_up,
+            by = "Sample_plot")
+
+dat.retro_sign_up <- dat.retro_sign_up %>% 
+  left_join(dat.retro_august_sign_up,
+            by = "Sample_plot")
+
+dat.retro_sign_up <- dat.retro_sign_up %>% 
+  left_join(dat.retro_september_sign_up,
+            by = "Sample_plot")
+
+#Gather the variables
+dat.retro_sign_up <- dat.retro_sign_up %>% 
+  gather(key = "month",
+         value = "n",
+         c(-Sample_plot))
 
 ```
 
