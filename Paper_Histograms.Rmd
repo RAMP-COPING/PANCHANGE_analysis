@@ -43,8 +43,7 @@ library(gridExtra)
 # get file info
 source("../PANCHANGE_raw_path.R")
 
-
-alldat <-  readRDS(file = paste0(data_path, "/four_cohorts_variables_exclusion.rds"))
+alldat <- readRDS(file = paste0(data_path, "/four_cohorts_variables_exclusion.rds"))
 
 ```
 
@@ -238,6 +237,56 @@ dat.retro <- dat.retro %>%
 dat.retro %>% 
   group_by(Sample_plot) %>% 
   summarise(N = n())
+
+```
+
+##Sign-up histogram
+
+```{r Get GLAD/EDGI participant sign-up data}
+
+#Visualise some dates when participants completed the questionnaire
+head(GLAD.retro$startDate.coping, 10)
+
+#Divide the data by sign up per month and summarise the amount of pt's completing the survey that month
+names(GLAD.retro)
+GLAD.retro_april_sign_up <- GLAD.retro[str_detect(GLAD.retro$startDate.coping, "-04-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(April = n())
+
+GLAD.retro_may_sign_up <- GLAD.retro[str_detect(GLAD.retro$startDate.coping, "-05-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(May = n())
+
+GLAD.retro_june_sign_up <- GLAD.retro[str_detect(GLAD.retro$startDate.coping, "-06-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(June = n())
+
+GLAD.retro_july_sign_up <- GLAD.retro[str_detect(GLAD.retro$startDate.coping, "-07-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(July = n())
+
+GLAD.retro_august_sign_up <- GLAD.retro[str_detect(GLAD.retro$startDate.coping, "-08-"), ] %>%
+  select(startDate.coping) %>% 
+  summarise(August = n())
+
+GLAD.retro_september_sign_up <- GLAD.retro[str_detect(GLAD.retro$startDate.coping, "-09-"), ] %>% 
+  select(startDate.coping) %>% 
+  summarise(September = n())
+
+#Merge results into one tibble
+
+GLAD.retro_sign_up <- GLAD.retro_april_sign_up %>% 
+  cbind(GLAD.retro_may_sign_up,
+        GLAD.retro_june_sign_up,
+        GLAD.retro_july_sign_up,
+        GLAD.retro_august_sign_up,
+        GLAD.retro_september_sign_up)
+
+#Gather the variables
+GLAD.retro_sign_up <- GLAD.retro_sign_up %>% 
+  gather(key = "month", value = "n")
+
+head(GLAD.retro_sign_up, 10)
 
 ```
 
