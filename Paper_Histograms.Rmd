@@ -341,6 +341,10 @@ dat.retro_sign_up <- dat.retro_sign_up %>%
          value = "n",
          c(-Sample_plot))
 
+dat.retro_sign_up$month <- factor(dat.retro_sign_up$month,
+                                  levels = c("April", "May", "June", "July", "August",
+                                             "September"))
+
 ```
 
 
