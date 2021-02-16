@@ -245,45 +245,51 @@ dat.retro %>%
 ```{r Get GLAD/EDGI participant sign-up data}
 
 #Visualise some dates when participants completed the questionnaire
-head(GLAD.retro$startDate.coping, 10)
+head(dat.retro$startDate.coping, 10)
 
 #Divide the data by sign up per month and summarise the amount of pt's completing the survey that month
-names(GLAD.retro)
-GLAD.retro_april_sign_up <- GLAD.retro[str_detect(GLAD.retro$startDate.coping, "-04-"), ] %>% 
-  select(startDate.coping) %>% 
+
+dat.retro_april_sign_up <- dat.retro[str_detect(dat.retro$startDate.coping, "-04-"), ] %>% 
+  select(Sample_plot, startDate.coping) %>%
+  group_by(Sample_plot) %>% 
   summarise(April = n())
 
-GLAD.retro_may_sign_up <- GLAD.retro[str_detect(GLAD.retro$startDate.coping, "-05-"), ] %>% 
-  select(startDate.coping) %>% 
+dat.retro_may_sign_up <- dat.retro[str_detect(dat.retro$startDate.coping, "-05-"), ] %>% 
+  select(Sample_plot, startDate.coping) %>% 
+  group_by(Sample_plot) %>% 
   summarise(May = n())
 
-GLAD.retro_june_sign_up <- GLAD.retro[str_detect(GLAD.retro$startDate.coping, "-06-"), ] %>% 
-  select(startDate.coping) %>% 
+dat.retro_june_sign_up <- dat.retro[str_detect(dat.retro$startDate.coping, "-06-"), ] %>% 
+  select(Sample_plot, startDate.coping) %>% 
+  group_by(Sample_plot) %>% 
   summarise(June = n())
 
-GLAD.retro_july_sign_up <- GLAD.retro[str_detect(GLAD.retro$startDate.coping, "-07-"), ] %>% 
-  select(startDate.coping) %>% 
+dat.retro_july_sign_up <- dat.retro[str_detect(dat.retro$startDate.coping, "-07-"), ] %>% 
+  select(Sample_plot, startDate.coping) %>% 
+  group_by(Sample_plot) %>% 
   summarise(July = n())
 
-GLAD.retro_august_sign_up <- GLAD.retro[str_detect(GLAD.retro$startDate.coping, "-08-"), ] %>%
-  select(startDate.coping) %>% 
+dat.retro_august_sign_up <- dat.retro[str_detect(dat.retro$startDate.coping, "-08-"), ] %>%
+  select(Sample_plot, startDate.coping) %>% 
+  group_by(Sample_plot) %>% 
   summarise(August = n())
 
-GLAD.retro_september_sign_up <- GLAD.retro[str_detect(GLAD.retro$startDate.coping, "-09-"), ] %>% 
-  select(startDate.coping) %>% 
+dat.retro_september_sign_up <- dat.retro[str_detect(dat.retro$startDate.coping, "-09-"), ] %>% 
+  select(Sample_plot, startDate.coping) %>% 
+  group_by(Sample_plot) %>% 
   summarise(September = n())
 
 #Merge results into one tibble
 
-GLAD.retro_sign_up <- GLAD.retro_april_sign_up %>% 
-  cbind(GLAD.retro_may_sign_up,
-        GLAD.retro_june_sign_up,
-        GLAD.retro_july_sign_up,
-        GLAD.retro_august_sign_up,
-        GLAD.retro_september_sign_up)
+dat.retro_sign_up <- dat.retro_april_sign_up %>% 
+  cbind(dat.retro_may_sign_up,
+        dat.retro_june_sign_up,
+        dat.retro_july_sign_up,
+        dat.retro_august_sign_up,
+        dat.retro_september_sign_up)
 
 #Gather the variables
-GLAD.retro_sign_up <- GLAD.retro_sign_up %>% 
+dat.retro_sign_up <- dat.retro_sign_up %>% 
   gather(key = "month", value = "n")
 
 head(GLAD.retro_sign_up, 10)
