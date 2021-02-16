@@ -292,9 +292,37 @@ dat.retro_sign_up <- dat.retro_april_sign_up %>%
 dat.retro_sign_up <- dat.retro_sign_up %>% 
   gather(key = "month", value = "n")
 
-head(GLAD.retro_sign_up, 10)
+```
+
+
+```{r Add extra rows to sign_up tibbles with only two samples}
+
+sign_up_NBR_empty_row_April <- tibble(
+  Sample_plot = "NBR",
+  April = 0
+)
+
+sign_up_NBR_empty_row_August <- tibble(
+  Sample_plot = "NBR",
+  August = 0
+)
+
+sign_up_NBR_empty_row_September <- tibble(
+  Sample_plot = "NBR",
+  September = 0
+)
+
+dat.retro_april_sign_up <- dat.retro_april_sign_up %>% 
+  rbind(sign_up_NBR_empty_row_April)
+
+dat.retro_august_sign_up <- dat.retro_august_sign_up %>% 
+  rbind(sign_up_NBR_empty_row_August)
+
+dat.retro_september_sign_up <- dat.retro_september_sign_up %>% 
+  rbind(sign_up_NBR_empty_row_September)
 
 ```
+
 
 ##Gender
 ###Prepan
