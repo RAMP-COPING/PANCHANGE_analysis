@@ -18,27 +18,26 @@ remove(list = ls())
 
 ```{r Install packages}
 
-#install.packages("multipanelfigure")
+#install.packages("knitr")
+#install.packages("tidyverse")
+#install.packages("ggpubr")
+#install.packages("cowplot")
+#install.packages("gridExtra")
+#install.packages("grid")
 
 ```
 
-
 # Set up 
  
-```{r read in data } 
+```{r read in data} 
 
 # Read in data
 library(knitr)
-library(summarytools)
-library(psych)
-library(polycor)
-library(corrplot)
-library(patchwork)
-library(broom)
 library(tidyverse)
 library(ggpubr)
 library(cowplot)
 library(gridExtra)
+library(grid)
 
 # get file info
 source("../PANCHANGE_raw_path.R")
