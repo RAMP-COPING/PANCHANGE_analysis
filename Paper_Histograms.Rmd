@@ -1425,7 +1425,6 @@ arranged_retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>%
        y = "N participants") +
   theme(legend.position = "bottom") +
   theme(legend.title = element_blank()) +
-  #theme(legend.title = element_blank()) +
   geom_text(aes(label = n),
             size = 3,
             position = position_dodge(width=0.9), 
@@ -1433,7 +1432,12 @@ arranged_retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>%
      scale_y_continuous(expand = expansion(mult = c(0.1, 0.2))) +
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   theme(axis.text.x = element_text(colour = "black"),
-        axis.text.y = element_text(colour = "black"))
+        axis.text.y = element_text(colour = "black")) +
+  theme(legend.justification=c(1,0), legend.position=c(1, 0.95)) +
+  guides(fill = guide_legend(
+    nrow = 1,
+    override.aes = list(size = 4)
+  ))
 
 ```
 
@@ -1444,7 +1448,7 @@ grid.arrange(arranged_collapsed_gender_plot, arranged_retro_age_plot, arranged_e
           arranged_retro_ethnicity_white, arranged_retro_ethnicity_non_white,
           layout_matrix = retro_matrix, 
           nrow = 2,
-          heights=c(1, 1.2),
+          #heights=c(1, 1.2),
           bottom = textGrob("Non-binary/Self-defined: GLAD/EDGI (243); NBR (39); RAMP (92)", x = 1,
                             hjust = 1,
                             gp = gpar(fontface = 3L, fontsize = 9)))
