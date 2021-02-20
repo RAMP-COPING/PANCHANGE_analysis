@@ -320,7 +320,7 @@ dat.retro_july_sep_sign_up <- dat.retro_july_sep_sign_up %>%
   left_join(dat.retro_september_sign_up,
             by = "Sample_plot")
 
-dat.retro_july_sep_sign_up %>% 
+dat.retro_july_sep_sign_up <- dat.retro_july_sep_sign_up %>% 
   group_by(Sample_plot) %>% 
   mutate("July-September" = 
            July + August + September) %>% 
@@ -342,15 +342,7 @@ dat.retro_sign_up <- dat.retro_sign_up %>%
             by = "Sample_plot")
 
 dat.retro_sign_up <- dat.retro_sign_up %>% 
-  left_join(dat.retro_july_sign_up,
-            by = "Sample_plot")
-
-dat.retro_sign_up <- dat.retro_sign_up %>% 
-  left_join(dat.retro_august_sign_up,
-            by = "Sample_plot")
-
-dat.retro_sign_up <- dat.retro_sign_up %>% 
-  left_join(dat.retro_september_sign_up,
+  left_join(dat.retro_july_sep_sign_up,
             by = "Sample_plot")
 
 #Gather the variables
@@ -360,8 +352,7 @@ dat.retro_sign_up <- dat.retro_sign_up %>%
          c(-Sample_plot))
 
 dat.retro_sign_up$month <- factor(dat.retro_sign_up$month,
-                                  levels = c("April", "May", "June", "July", "August",
-                                             "September"))
+                                  levels = c("April", "May", "June", "July-September"))
 
 ```
 
