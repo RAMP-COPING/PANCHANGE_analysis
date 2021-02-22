@@ -1440,6 +1440,16 @@ arranged_retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>%
 ```
 
 
+```{r See non-binary/self-defined pt's by sample for caption}
+
+dat.retro %>% 
+  group_by(Sample_plot, Gender_collapsed) %>% 
+  summarise(n = n())
+
+```
+
+
+
 ```{r plot age gender ethnicity and employ with plot caption}
 
 grid.arrange(arranged_collapsed_gender_plot, arranged_retro_age_plot, arranged_employ_plot,
@@ -1447,7 +1457,7 @@ grid.arrange(arranged_collapsed_gender_plot, arranged_retro_age_plot, arranged_e
           layout_matrix = retro_matrix, 
           nrow = 2,
           #heights=c(1, 1.2),
-          bottom = textGrob("Non-binary/Self-defined: GLAD/EDGI (243); NBR (39); RAMP (92)", x = 1,
+          bottom = textGrob("Non-binary/Self-defined: GLAD (247); NBR/EDGI (41); RAMP (92)", x = 1,
                             hjust = 1,
                             gp = gpar(fontface = 3L, fontsize = 9)))
 
