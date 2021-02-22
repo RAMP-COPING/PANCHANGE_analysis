@@ -390,15 +390,13 @@ dat.retro_sign_up %>%
 
 ```{r GLAD/EDGI gender prepan}
 
-GLAD.prepan %>%
+GLAD.prepan_with_EDGI %>%
   ggplot(aes(x = Gender_collapsed)) +
   geom_bar(fill = COPINGpalette3) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
-  labs(title = "Gender distribution of the GLAD/EDGI prepan cohort",
-       subtitle = paste("N =", dim(GLAD.prepan)[1]),
-       x = "",
+  labs(x = "",
        y = "N participants")
   
 ```
@@ -504,15 +502,13 @@ dat.retro_gender_pie %>%
 
 ```{r GLAD/EDGI age prepan}
 
-GLAD.prepan %>% 
+GLAD.prepan_with_EDGI %>% 
   ggplot(aes(x = age_category_collapsed)) +
   geom_bar(fill = COPINGpalette9) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
-  labs(title = "Age distribution of the GLAD/EDGI prepan cohort",
-       subtitle = paste("N =", dim(GLAD.prepan)[1]),
-       x = "",
+  labs(x = "",
        y = "")
 
 ```
@@ -542,7 +538,7 @@ retro_age_plot <- dat.retro %>%
 
 ```{r GLAD/EDGI ethnicity prepan}
 
-GLAD.prepan_ethnicity_plot <- dat.retro %>% 
+GLAD.prepan_ethnicity_plot <- GLAD.prepan_with_EDGI %>% 
   mutate(Ethnicity_collapsed = 
            fct_recode(Ethnicity_collapsed,
              "White" = "European",
@@ -558,9 +554,7 @@ GLAD.prepan_ethnicity_plot %>%
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
-  labs(title = "Ethnic distribution of the GLAD/EDGI prepan cohort",
-       subtitle = paste("N =", dim(GLAD.prepan)[1]),
-       x = "",
+  labs(x = "",
        y = "N participants") +
   scale_x_discrete(guide = guide_axis(n.dodge = 2))
 
@@ -691,15 +685,13 @@ dat.retro_ethnicity_pie %>%
 
 ```{r GLAD/EDGI employment prepan}
 
-GLAD.prepan %>% 
+GLAD.prepan_with_EDGI %>% 
   ggplot(aes(x = employment_prior_covid)) +
   geom_bar(fill = COPINGpalette6) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5)) +
-  labs(title = "Employment of the GLAD/EDGI prepan cohort",
-       subtitle = paste("N =", dim(GLAD.prepan)[1]),
-       x = "",
+  labs(x = "",
        y = "")
 
 ```
@@ -765,7 +757,7 @@ dat.retro_employ_pie %>%
 
 ```{r Collapse personality disorder clusters for prepan data}
 
-GLAD.prepan <- GLAD.prepan %>% 
+GLAD.prepan_with_EDGI <- GLAD.prepan_with_EDGI %>% 
   mutate(personality_disorder_numeric =
            case_when(
              personality_cluster_a_numeric == 1 | personality_cluster_b_numeric == 1 | personality_cluster_c_numeric == 1 ~ 1,
@@ -801,7 +793,7 @@ head(dat.retro$personality_disorder_numeric, 15)
 
 ```{r Get depression positive for GLAD/EDGI}
 
-GLAD.prepan_mdd_positive <- GLAD.prepan %>%
+GLAD.prepan_mdd_positive <- GLAD.prepan_with_EDGI %>%
   select(depressive_disorders_numeric) %>% 
   filter(depressive_disorders_numeric == 1)
   
@@ -812,7 +804,7 @@ GLAD.prepan_mdd_positive <- GLAD.prepan_mdd_positive %>%
 
 ```{r Get anxiety positive for GLAD/EDGI}
 
-GLAD.prepan_anxi_positive <- GLAD.prepan %>%
+GLAD.prepan_anxi_positive <- GLAD.prepan_with_EDGI %>%
   select(anxiety_disorders_numeric) %>% 
   filter(anxiety_disorders_numeric == 1)
   
@@ -823,7 +815,7 @@ GLAD.prepan_anxi_positive <- GLAD.prepan_anxi_positive %>%
 
 ```{r Get eating disorders positive for GLAD/EDGI}
 
-GLAD.prepan_ED_positive <- GLAD.prepan %>%
+GLAD.prepan_ED_positive <- GLAD.prepan_with_EDGI %>%
   select(eating_disorders_numeric) %>% 
   filter(eating_disorders_numeric == 1)
   
@@ -834,7 +826,7 @@ GLAD.prepan_ED_positive <- GLAD.prepan_ED_positive %>%
 
 ```{r Get OCDs positive for GLAD/EDGI}
 
-GLAD.prepan_OCD_positive <- GLAD.prepan %>%
+GLAD.prepan_OCD_positive <- GLAD.prepan_with_EDGI %>%
   select(obsessive_compulsive_disorders_numeric) %>% 
   filter(obsessive_compulsive_disorders_numeric == 1)
   
@@ -845,7 +837,7 @@ GLAD.prepan_OCD_positive <- GLAD.prepan_OCD_positive %>%
 
 ```{r Get psychosis positive for GLAD/EDGI}
 
-GLAD.prepan_psychosis_positive <- GLAD.prepan %>%
+GLAD.prepan_psychosis_positive <- GLAD.prepan_with_EDGI %>%
   select(psychotic_disorders_numeric) %>% 
   filter(psychotic_disorders_numeric == 1)
   
@@ -856,7 +848,7 @@ GLAD.prepan_psychosis_positive <- GLAD.prepan_psychosis_positive %>%
 
 ```{r Get ASD positive for GLAD/EDGI}
 
-GLAD.prepan_ASD_positive <- GLAD.prepan %>%
+GLAD.prepan_ASD_positive <- GLAD.prepan_with_EDGI %>%
   select(autism_spectrum_disorder_numeric) %>% 
   filter(autism_spectrum_disorder_numeric == 1)
   
@@ -867,7 +859,7 @@ GLAD.prepan_ASD_positive <- GLAD.prepan_ASD_positive %>%
 
 ```{r Get ADHD positive for GLAD/EDGI}
 
-GLAD.prepan_ADHD_positive <- GLAD.prepan %>%
+GLAD.prepan_ADHD_positive <- GLAD.prepan_with_EDGI %>%
   select(mhd.attention_deficit_hyperactivity_disorder_numeric) %>% 
   filter(mhd.attention_deficit_hyperactivity_disorder_numeric == 1)
   
@@ -878,7 +870,7 @@ GLAD.prepan_ADHD_positive <- GLAD.prepan_ADHD_positive %>%
 
 ```{r Get Personality Disorders positive for GLAD/EDGI}
 
-GLAD.prepan_PD_positive <- GLAD.prepan %>%
+GLAD.prepan_PD_positive <- GLAD.prepan_with_EDGI %>%
   select(personality_disorder_numeric) %>% 
   filter(personality_disorder_numeric == 1)
   
@@ -889,7 +881,7 @@ GLAD.prepan_PD_positive <- GLAD.prepan_PD_positive %>%
 
 ```{r Get Bipolar Disorders positive for GLAD/EDGI}
 
-GLAD.prepan_BD_positive <- GLAD.prepan %>%
+GLAD.prepan_BD_positive <- GLAD.prepan_with_EDGI %>%
   select(mhd.mania_hypomania_bipolar_or_manicdepression_numeric) %>% 
   filter(mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1)
   
@@ -900,7 +892,7 @@ GLAD.prepan_BD_positive <- GLAD.prepan_BD_positive %>%
 
 ```{r Get PTSD positive for GLAD/EDGI}
 
-GLAD.prepan_PTSD_positive <- GLAD.prepan %>%
+GLAD.prepan_PTSD_positive <- GLAD.prepan_with_EDGI %>%
   select(mhd.posttraumatic_stress_disorder_ptsd_numeric) %>% 
   filter(mhd.posttraumatic_stress_disorder_ptsd_numeric == 1)
   
@@ -911,7 +903,7 @@ GLAD.prepan_PTSD_positive <- GLAD.prepan_PTSD_positive %>%
 
 ```{r Get control positive for GLAD/EDGI}
 
-GLAD.prepan_control_positive <- GLAD.prepan %>%
+GLAD.prepan_control_positive <- GLAD.prepan_with_EDGI %>%
   select(control_numeric) %>% 
   filter(control_numeric == 1)
   
