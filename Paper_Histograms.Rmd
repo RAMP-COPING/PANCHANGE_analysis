@@ -218,7 +218,21 @@ RAMP.retro <- dat.retro %>%
 
 #Histograms
 
-```{r Merge GLAD/EDGI samples together for plot}
+```{r Create GLAD/EDGI prepan subset for prepan plots}
+
+GLAD.prepan_with_EDGI <- dat.prepan %>% 
+  filter(Sample == "GLAD" |
+           Sample == "EDGI")
+
+#Check that it worked
+
+GLAD.prepan_with_EDGI %>% 
+  group_by(Sample) %>% 
+  summarise(N = n())
+
+```
+
+```{r Create NBR/EDGI labelled sample variable for retro plots}
 
 #Merge GLAD and EDGI Samples into one sample
 
