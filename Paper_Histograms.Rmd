@@ -194,22 +194,22 @@ Subset by study
 ## Subset samples by study
 
 GLAD.prepan <- dat.prepan %>%
-  filter(Sample == "GLAD" | 
-           Sample == "EDGI")
+  filter(Sample == "GLAD")
 
 NBR.prepan <- dat.prepan %>%
-  filter(Sample == "NBR")
+  filter(Sample == "NBR" | 
+           Sample == "EDGI")
 
 RAMP.prepan <- dat.prepan %>%
   filter(Sample == "RAMP")
 
 ### retro
 GLAD.retro <- dat.retro %>%
-  filter(Sample == "GLAD" | 
-           Sample == "EDGI")
+  filter(Sample == "GLAD")
 
 NBR.retro <- dat.retro %>%
-  filter(Sample == "NBR")
+  filter(Sample == "NBR" | 
+           Sample == "EDGI")
 
 RAMP.retro <- dat.retro %>%
   filter(Sample == "RAMP")
@@ -226,7 +226,7 @@ dat.retro <- dat.retro %>%
   mutate(Sample_plot = 
            case_when(
              dat.retro$Sample == "GLAD" ~ "GLAD/EDGI",
-             dat.retro$Sample == "EDGI" ~ "GLAD/EDGI",
+             dat.retro$Sample == "EDGI" ~ "NBR",
              dat.retro$Sample == "NBR" ~ "NBR",
              dat.retro$Sample == "RAMP" ~ "RAMP"
            ))
