@@ -467,36 +467,6 @@ retro_gender_plot <- dat.retro %>%
 
 ```
 
-####Gender retro pie chart
-
-```{r Prep gender retro pie chart}
-
-dat.retro_gender_pie <- dat.retro %>% 
-  group_by(Sample_plot, Gender_collapsed) %>% 
-  summarise(n = n()) %>% 
-  mutate(percent = 
-           round(n / sum(n) *  100, 1))
-
-```
-
-```{r Gender retro pie chart by sample}
-
-dat.retro_gender_pie %>% 
-  ggplot(aes(x = "", y = percent, fill = Gender_collapsed)) +
-  geom_col(stat = "identity") +
-  coord_polar("y",start=0) +
-  theme_void() +
-  scale_fill_manual(values =  COPINGpalette3) +
-  facet_wrap(~ Sample_plot, nrow = 1) +
-  theme(legend.position = "top",
-        legend.title = element_blank()) +
-  ggrepel::geom_label_repel(aes(label = paste0(percent, "%")),
-            position = position_stack(vjust = 0.6),
-            show.legend = FALSE)
-
-```
-
-
 ##Age
 ###Prepan
 
@@ -638,48 +608,6 @@ retro_ethnicity_plot <- plot_grid(retro_ethnicity_white, retro_ethnicity_non_whi
 
 ```
 
-
-####Ethnicity retro pie chart
-
-```{r Prep ethnicity retro pie chart}
-
-dat.retro_ethnicity_pie <- dat.retro %>% 
-  group_by(Sample_plot, Ethnicity_collapsed) %>% 
-  summarise(n = n()) %>% 
-  drop_na() %>% 
-  mutate(percent = 
-           round(n / sum(n) *  100, 1))
-
-```
-
-```{r Ethnicity retro pie chart by sample}
-
-dat.retro_ethnicity_pie <- dat.retro_ethnicity_pie %>% 
-  mutate(Ethnicity_collapsed = 
-           fct_recode(Ethnicity_collapsed,
-             "White" = "European",
-             "Asian or Asian British" = "Asian or Asian British",
-             "Black or Black British" = "African or African British",
-             "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
-             "Other" = "Other"
-           ))
-
-dat.retro_ethnicity_pie %>% 
-  ggplot(aes(x = "", y = percent, fill = Ethnicity_collapsed)) +
-  geom_col(stat = "identity") +
-  coord_polar("y",start=0) +
-  theme_void() +
-  scale_fill_manual(values =  COPINGpalette5) +
-  facet_wrap(~ Sample_plot, nrow = 1) +
-  theme(legend.position = "top",
-        legend.title = element_blank()) +
-  ggrepel::geom_label_repel(aes(label = paste0(percent, "%")),
-            position = position_stack(vjust = 0.5),
-            show.legend = FALSE)
-
-```
-
-
 ##Employment
 ###Prepan
 
@@ -719,37 +647,6 @@ retro_employ_plot <- dat.retro_employment_plot %>%
   scale_y_continuous(breaks = seq(0, 6000, by = 1000)) +
   theme(axis.text.x = element_text(colour = "black"),
         axis.text.y = element_text(colour = "black"))
-
-```
-
-####Employment retro pie charts
-
-```{r Prep ethnicity retro pie chart}
-
-dat.retro_employ_pie <- dat.retro %>% 
-  group_by(Sample_plot, employment_prior_covid) %>% 
-  summarise(n = n()) %>% 
-  drop_na() %>% 
-  mutate(percent = 
-           round(n / sum(n) *  100, 1))
-
-```
-
-
-```{r Employment retro pie chart by sample}
-
-dat.retro_employ_pie %>% 
-  ggplot(aes(x = "", y = percent, fill = employment_prior_covid)) +
-  geom_col(stat = "identity") +
-  coord_polar("y",start=0) +
-  theme_void() +
-  scale_fill_manual(values =  COPINGpalette5) +
-  facet_wrap(~ Sample_plot, nrow = 1) +
-  theme(legend.position = "top",
-        legend.title = element_blank()) +
-  ggrepel::geom_label_repel(aes(label = paste0(percent, "%")),
-            position = position_stack(vjust = 0.6),
-            show.legend = FALSE)
 
 ```
 
@@ -1020,7 +917,6 @@ dat.retro_OCD_by_sample <- dat.retro_OCD_by_sample %>%
 
 ```
 
-
 ```{r Get psychotic disorder positive by sample}
 
 dat.retro_psychosis_by_sample <- dat.retro %>%
@@ -1033,7 +929,6 @@ dat.retro_psychosis_by_sample <- dat.retro_psychosis_by_sample %>%
   summarise("Psychotic disorders" = n())
 
 ```
-
 
 ```{r Get ASD positive by sample}
 
@@ -1048,7 +943,6 @@ dat.retro_ASD_by_sample <- dat.retro_ASD_by_sample %>%
 
 ```
 
-
 ```{r Get ADHD positive by sample}
 
 dat.retro_ADHD_by_sample <- dat.retro %>%
@@ -1061,7 +955,6 @@ dat.retro_ADHD_by_sample <- dat.retro_ADHD_by_sample %>%
   summarise("ADHD" = n())
 
 ```
-
 
 ```{r Get personality disorders positive by sample}
 
@@ -1076,7 +969,6 @@ dat.retro_PD_by_sample <- dat.retro_PD_by_sample %>%
 
 ```
 
-
 ```{r Get Bipolar disorders positive by sample}
 
 dat.retro_BD_by_sample <- dat.retro %>%
@@ -1090,7 +982,6 @@ dat.retro_BD_by_sample <- dat.retro_BD_by_sample %>%
 
 ```
 
-
 ```{r Get PTSD positive by sample}
 
 dat.retro_PTSD_by_sample <- dat.retro %>%
@@ -1103,7 +994,6 @@ dat.retro_PTSD_by_sample <- dat.retro_PTSD_by_sample %>%
   summarise("PTSD" = n())
 
 ```
-
 
 ```{r Get control positive by sample}
 
