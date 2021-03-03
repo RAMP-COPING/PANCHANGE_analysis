@@ -8235,47 +8235,47 @@ lmoutput_format <- function(lmobject, explan_var, group, dfname){
                              "71-75",
                              "76+",
                              "Mixed or multiple ethnicities",
-                             "Asian",
-                             "Black",
+                             "Asian or Asian British",
+                             "Black or Black British",
                              "Other",
                              "Key worker",
                              "Unemployed",
                              "Student",
                              "Retired",
-                             "Time between lockdown and baseline")
+                             "Time")
   ## categories to facet on  
   categories <- c("Intercept",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Gender (Reference male)",
-                  "Gender (Reference male)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Ethnicity (Reference White)",
-                  "Ethnicity (Reference White)",
-                  "Ethnicity (Reference White)",
-                  "Ethnicity (Reference White)",
-                  "Employment (Reference employed)",
-                  "Employment (Reference employed)",
-                  "Employment (Reference employed)",
-                  "Employment (Reference employed)",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Gender",
+                  "Gender",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Employment",
+                  "Employment",
+                  "Employment",
+                  "Employment",
                   "Other")
   
   ## Disorder dimension  
@@ -8813,65 +8813,65 @@ plot.dat.noexplan.sample.pcl <- rbind(pcl.lm.for.plot.GLAD,
 
 ## Forest plots
 ### disorder
-```{r forest plot by disorder prepan, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by disorder prepan, fig.height=40, fig.width=60, dpi=120}
 
 lm.forest(plot.dat.disorder.prepan,"Predictors of pandemic symptoms controlling for prepandemic symptoms")
 
 ```
 
-```{r forest plot by disorder retro, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by disorder retro, fig.height=40, fig.width=60, dpi=120}
 
 lm.forest(plot.dat.disorder.retro,"Predictors of pandemic symptoms controlling for retrospective symptoms")
 
 ```
 ### disorder (no explan)
 
-```{r forest plot by disorder no explan, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by disorder no explan, fig.height=40, fig.width=60, dpi=120}
 
 lm.forest(plot.dat.disorder,"Predictors of pandemic symptoms")
 
 ```
 
 ### disorder (no PCL)
-```{r forest plot by disorder prepan no pcl, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by disorder prepan no pcl, fig.height=40, fig.width=60, dpi=120}
 
 lm.forest(plot.dat.disorder.prepan.gadphq,"Predictors of pandemic symptoms controlling for prepandemic symptoms")
 
 ```
 
-```{r forest plot by disorder retro no pcl, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by disorder retro no pcl, fig.height=40, fig.width=60, dpi=120}
 
 lm.forest(plot.dat.disorder.retro.gadphq,"Predictors of pandemic symptoms controlling for retrospective symptoms")
 
 ```
 
 ### time point 
-```{r forest plot by time point gad, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by time point gad, fig.height=40, fig.width=60, dpi=120}
 
 lm.forest(plot.dat.time.gad,"Predictors of anxiety during pandemic controlling for retrospective or prepandemic symptoms")
 
 ```
 
-```{r forest plot by time point phq, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by time point phq, fig.height=40, fig.width=60, dpi=120}
 
 lm.forest(plot.dat.time.phq,"Predictors of depression during pandemic controlling for retrospective or prepandemic symptoms")
 
 ```
 
-```{r forest plot by time point pcl, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by time point pcl, fig.height=40, fig.width=60, dpi=120}
 
 lm.forest(plot.dat.time.phq,"Predictors of PTSD during pandemic controlling for retrospective or prepandemic symptoms")
 
 ```
 ### Sample (retrospective only)
 
-```{r forest plot by sample retro only gad, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by sample retro only gad, fig.height=40, fig.width=60, dpi=120}
 
 lm.forest(plot.dat.sample.gad ,"Predictors of anxiety controlling for retrospective symptoms across samples")
 
 ```
 
-```{r forest plot by sample retro only phq, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by sample retro only phq, fig.height=40, fig.width=60, dpi=120}
 
 lm.forest(plot.dat.sample.phq ,"Predictors of depression controlling for retrospective symptoms across samples")
 
@@ -8879,21 +8879,21 @@ lm.forest(plot.dat.sample.phq ,"Predictors of depression controlling for retrosp
 
 ### Sample pandemic only, no explanatory variable)
 
-```{r forest plot by sample no explan gad, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by sample no explan gad, fig.height=40, fig.width=60, dpi=120}
 
 lm.forest(plot.dat.noexplan.sample.gad  ,"Predictors of anxiety across samples")
 
 ```
 
 
-```{r forest plot by sample no explan phq, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by sample no explan phq, fig.height=40, fig.width=60, dpi=120}
 
 lm.forest(plot.dat.noexplan.sample.phq  ,"Predictors of depression across samples")
 
 ```
 
 
-```{r forest plot by sample no explan pcl, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by sample no explan pcl, fig.height=40, fig.width=60, dpi=120}
 
 lm.forest(plot.dat.noexplan.sample.pcl  ,"Predictors of symptoms of PTSD across samples")
 
