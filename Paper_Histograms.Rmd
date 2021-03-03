@@ -1,0 +1,1355 @@
+---
+title: "Placeholder"
+author: "Steven Bright"
+date: "05/02/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Clean environment}
+
+remove(list = ls())
+
+```
+
+
+```{r Install packages}
+
+#install.packages("knitr")
+#install.packages("tidyverse")
+#install.packages("ggpubr")
+#install.packages("cowplot")
+#install.packages("gridExtra")
+#install.packages("grid")
+
+```
+
+# Set up 
+ 
+```{r read in data} 
+
+# Read in data
+library(knitr)
+library(tidyverse)
+library(ggpubr)
+library(cowplot)
+library(gridExtra)
+library(grid)
+
+# get file info
+source("../PANCHANGE_raw_path.R")
+
+alldat <- readRDS(file = paste0(data_path, "/four_cohorts_variables_exclusion.rds"))
+
+```
+
+
+```{r Colour palettes: COPING}
+
+COPINGpalette2 <- c("#78D9C5",
+                    "#F5BE5E")
+
+COPINGpalette3 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9")
+
+COPINGpalette4 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73")
+
+COPINGpalette5 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73", 
+                    "#FFED98")
+
+COPINGpalette6 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73",
+                    "#FFED98",
+                    "#BFD2EB")
+
+COPINGpalette7 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73", 
+                    "#FFED98",
+                    "#BFD2EB", 
+                    "#808080")
+
+COPINGpalette9 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73", 
+                    "#FFED98",
+                    "#BFD2EB", 
+                    "#808080",
+                    "#cccccc",
+                    "3B47DA")
+
+COPINGpalette11 <- c("#78D9C5",
+                    "#F5BE5E",
+                    "#EEB6E9",
+                    "#DBDB73", 
+                    "#FFED98",
+                    "#BFD2EB", 
+                    "#808080",
+                    "#cccccc",
+                    "3B47DA",
+                    "#b7dee8",
+                    "#F567F3")
+
+COPINGpaletteGRAD <- c("#F5BE5E",
+                       "#FFD284",
+                       "#FFEED1",
+                       "#B5B5B5",
+                       "#DEFFF8",
+                       "#94F6E1",
+                       "#78D9C5")
+
+COPINGNeuCenterpalette <- c("#78D9C5",
+                            "#808080",
+                            "#F5BE5E")
+
+RAMPworseGRADpalette <- c("#78D9C5",
+                          "#FFEED1",
+                          "#F5BE5E",
+                          "#FFB1B5")
+GLADpalette = c("#efc00b", 
+                "#b7dee8")  
+```
+
+
+# Impute and subset data
+
+Impute retrospective scores if no change reported
+
+```{r impute retro}
+
+# impute retro for those who did not change
+
+alldat$gad.sum_score_retro <- ifelse(alldat$gad.pandemic_felt_feelings == "No different", alldat$gad.sum_score_base,alldat$gad.sum_score_retro)
+
+alldat$phq.sum_score_retro <- ifelse(alldat$phq.pandemic_felt_feelings == "No different", alldat$phq.sum_score_base,alldat$phq.sum_score_retro)
+
+```
+
+
+subsample for retro-baseline analysis
+exclude those who do not have complete responses for both baseline and retrospective
+in addition to those already excluded for NA in age, gender and MH diagnosis.
+
+RETROSPECTIVE
+```{r subset retrospective data }
+
+dat.retro <- alldat %>%
+  filter(
+    ((data_group_gad == "Baseline and retrospective data" |
+        data_group_gad == "All prepandemic, baseline and retrospective data") |
+       (data_group_phq == "Baseline and retrospective data" |
+          data_group_phq == "All prepandemic, baseline and retrospective data") |
+        (data_group_pcl == "Baseline data only" |
+           data_group_pcl == "Baseline and retrospective data" |
+            data_group_pcl == "Prepandemic and baseline data" |
+      data_group_pcl == "All prepandemic, baseline and retrospective data"))
+  )
+
+dim(dat.retro)
+
+```
+
+
+subsample for prepan-baseline analysis
+exclude those who do not have complete responses for both baseline and prepandemic
+in addition to those already excluded for NA in age, gender and MH diagnosis.
+
+PREPANDEMIC
+```{r subset prepandemic}
+
+dat.prepan <- alldat %>%
+  filter(
+    ((data_group_gad == "Prepandemic and baseline data" |
+        data_group_gad == "All prepandemic, baseline and retrospective data") |
+       (data_group_phq == "Prepandemic and baseline data" |
+          data_group_phq == "All prepandemic, baseline and retrospective data") |
+       (data_group_pcl == "Prepandemic and baseline data" |
+          data_group_pcl == "All prepandemic, baseline and retrospective data") ) &
+      prepandemic_march_1_numeric == 1 # Exclude participants that signed up after the 1. March
+  )
+
+dim(dat.prepan)
+
+```
+
+
+Subset by study
+
+```{r subset by study}
+
+## Subset samples by study
+
+GLAD.prepan <- dat.prepan %>%
+  filter(Sample == "GLAD")
+
+NBR.prepan <- dat.prepan %>%
+  filter(Sample == "NBR" | 
+           Sample == "EDGI")
+
+RAMP.prepan <- dat.prepan %>%
+  filter(Sample == "RAMP")
+
+### retro
+GLAD.retro <- dat.retro %>%
+  filter(Sample == "GLAD")
+
+NBR.retro <- dat.retro %>%
+  filter(Sample == "NBR" | 
+           Sample == "EDGI")
+
+RAMP.retro <- dat.retro %>%
+  filter(Sample == "RAMP")
+
+```
+
+#Histograms
+
+```{r Create GLAD/EDGI prepan subset for prepan plots}
+
+GLAD.prepan_with_EDGI <- dat.prepan %>% 
+  filter(Sample == "GLAD" |
+           Sample == "EDGI")
+
+#Check that it worked
+
+GLAD.prepan_with_EDGI %>% 
+  group_by(Sample) %>% 
+  summarise(N = n())
+
+```
+
+```{r Create NBR/EDGI labelled sample variable for retro plots}
+
+#Merge GLAD and EDGI Samples into one sample
+
+dat.retro <- dat.retro %>% 
+  mutate(Sample_plot = 
+           case_when(
+             dat.retro$Sample == "GLAD" ~ "GLAD",
+             dat.retro$Sample == "EDGI" ~ "NBR/EDGI",
+             dat.retro$Sample == "NBR" ~ "NBR/EDGI",
+             dat.retro$Sample == "RAMP" ~ "RAMP"
+           ))
+
+#Check that it worked
+
+dat.retro %>% 
+  group_by(Sample_plot) %>% 
+  summarise(N = n())
+
+```
+
+##Sign-up histogram
+
+```{r Get GLAD/EDGI participant sign-up data}
+
+#Visualise some dates when participants completed the questionnaire
+head(dat.retro$startDate.coping, 10)
+
+#Divide the data by sign up per month and summarise the amount of pt's completing the survey that month
+
+dat.retro_april_sign_up <- dat.retro[str_detect(dat.retro$startDate.coping, "-04-"), ] %>% 
+  select(Sample_plot, startDate.coping) %>%
+  group_by(Sample_plot) %>% 
+  summarise(April = n())
+
+dat.retro_may_sign_up <- dat.retro[str_detect(dat.retro$startDate.coping, "-05-"), ] %>% 
+  select(Sample_plot, startDate.coping) %>% 
+  group_by(Sample_plot) %>% 
+  summarise(May = n())
+
+dat.retro_june_sign_up <- dat.retro[str_detect(dat.retro$startDate.coping, "-06-"), ] %>% 
+  select(Sample_plot, startDate.coping) %>% 
+  group_by(Sample_plot) %>% 
+  summarise(June = n())
+
+dat.retro_july_sign_up <- dat.retro[str_detect(dat.retro$startDate.coping, "-07-"), ] %>% 
+  select(Sample_plot, startDate.coping) %>% 
+  group_by(Sample_plot) %>% 
+  summarise(July = n())
+
+dat.retro_august_sign_up <- dat.retro[str_detect(dat.retro$startDate.coping, "-08-"), ] %>%
+  select(Sample_plot, startDate.coping) %>% 
+  group_by(Sample_plot) %>% 
+  summarise(August = n())
+
+dat.retro_september_sign_up <- dat.retro[str_detect(dat.retro$startDate.coping, "-09-"), ] %>% 
+  select(Sample_plot, startDate.coping) %>% 
+  group_by(Sample_plot) %>% 
+  summarise(September = n())
+
+```
+
+
+```{r Add extra rows to sign_up tibbles with only two samples}
+
+sign_up_NBR_empty_row_April <- tibble(
+  Sample_plot = "NBR/EDGI",
+  April = 0
+)
+
+sign_up_NBR_empty_row_September <- tibble(
+  Sample_plot = "NBR/EDGI",
+  September = 0
+)
+
+dat.retro_april_sign_up <- dat.retro_april_sign_up %>% 
+  rbind(sign_up_NBR_empty_row_April)
+
+dat.retro_september_sign_up <- dat.retro_september_sign_up %>% 
+  rbind(sign_up_NBR_empty_row_September)
+
+```
+
+
+```{r Collapse July to September sign ups together}
+
+dat.retro_july_sep_sign_up <- dat.retro_july_sign_up %>% 
+  left_join(dat.retro_august_sign_up,
+            by = "Sample_plot")
+
+dat.retro_july_sep_sign_up <- dat.retro_july_sep_sign_up %>% 
+  left_join(dat.retro_september_sign_up,
+            by = "Sample_plot")
+
+dat.retro_july_sep_sign_up <- dat.retro_july_sep_sign_up %>% 
+  group_by(Sample_plot) %>% 
+  mutate("July - September" = 
+           July + August + September) %>% 
+  select(Sample_plot, "July - September")
+
+```
+
+
+```{r Left_join sign-up per month by sampple tibs and tidy}
+
+#Merge results into one tibble
+
+dat.retro_sign_up <- dat.retro_april_sign_up %>% 
+  left_join(dat.retro_may_sign_up,
+            by = "Sample_plot")
+
+dat.retro_sign_up <- dat.retro_sign_up %>% 
+  left_join(dat.retro_june_sign_up,
+            by = "Sample_plot")
+
+dat.retro_sign_up <- dat.retro_sign_up %>% 
+  left_join(dat.retro_july_sep_sign_up,
+            by = "Sample_plot")
+
+#Gather the variables
+dat.retro_sign_up <- dat.retro_sign_up %>% 
+  gather(key = "month",
+         value = "n",
+         c(-Sample_plot))
+
+dat.retro_sign_up$month <- factor(dat.retro_sign_up$month,
+                                  levels = c("April", "May", "June", "July - September"))
+
+```
+
+
+```{r Plot sign up per month by sample}
+
+dat.retro_sign_up %>% 
+  ggplot(aes(x = month, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  labs(x = "Month of sign up",
+       y = "N participants") +
+  theme(legend.position = "top",
+        legend.title = element_blank(),
+        axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black")) +
+  scale_y_continuous(breaks = seq(0, 15000, by = 2500)) +
+  geom_text(aes(label = n),
+            size = 3,
+            position = position_dodge(width=0.9), 
+            vjust=-0.25)
+
+```
+
+
+##Gender
+###Prepan
+
+```{r GLAD/EDGI gender prepan}
+
+GLAD.prepan_with_EDGI %>%
+  ggplot(aes(x = Gender_collapsed)) +
+  geom_bar(fill = COPINGpalette3) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "",
+       y = "N participants")
+  
+```
+
+###Retrospective
+
+```{r GLAD/EDGI gender retro}
+
+GLAD.retro %>%
+  ggplot(aes(x = Gender_collapsed)) +
+  geom_bar(fill = COPINGpalette3) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "Gender distribution of the GLAD/EDGI retro cohort",
+       subtitle = paste("N =", dim(GLAD.retro)[1]),
+       x = "",
+       y = "N participants")
+
+```
+
+```{r NBR gender retro}
+
+NBR.retro %>%
+  ggplot(aes(x = Gender_collapsed)) +
+  geom_bar(fill = COPINGpalette3) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "Gender distribution of the NBR retro cohort",
+       subtitle = paste("N =", dim(NBR.retro)[1]),
+       x = "",
+       y = "N participants")
+
+```
+
+```{r RAMP gender retro}
+
+RAMP.retro %>%
+  ggplot(aes(x = Gender_collapsed)) +
+  geom_bar(fill = COPINGpalette3) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "Gender distribution of the RAMP retro cohort",
+       subtitle = paste("N =", dim(RAMP.retro)[1]),
+       x = "",
+       y = "N participants")
+
+```
+
+
+```{r Retro gender together}
+
+retro_gender_plot <- dat.retro %>% 
+  ggplot(aes(x = Gender_collapsed, fill = Sample_plot)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "Participant Gender",
+       y = "N participants") +
+  theme(legend.position = "bottom") + 
+  theme(legend.title = element_blank()) +
+  theme(axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black"))
+
+```
+
+##Age
+###Prepan
+
+```{r GLAD/EDGI age prepan}
+
+GLAD.prepan_with_EDGI %>% 
+  ggplot(aes(x = age_category_collapsed)) +
+  geom_bar(fill = COPINGpalette9) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "",
+       y = "")
+
+```
+
+###Retro
+
+```{r GLAD/EDGI NBR and RAMP age}
+
+retro_age_plot <- dat.retro %>% 
+  ggplot(aes(x = age_category_collapsed, fill = Sample_plot)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "Age (years)",
+       y = "N participants") +
+  theme(legend.position = "bottom") + 
+  theme(legend.title = element_blank()) +
+  theme(axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black"))
+
+```
+
+##Ethinicity
+###Prepan
+
+```{r GLAD/EDGI ethnicity prepan}
+
+GLAD.prepan_ethnicity_plot <- GLAD.prepan_with_EDGI %>% 
+  mutate(Ethnicity_collapsed = 
+           fct_recode(Ethnicity_collapsed,
+             "White" = "European",
+             "Asian or Asian British" = "Asian or Asian British",
+             "Black or Black British" = "African or African British",
+             "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+             "Other" = "Other"
+           ))
+
+GLAD.prepan_ethnicity_plot %>% 
+  ggplot(aes(x = Ethnicity_collapsed)) +
+  geom_bar(fill = COPINGpalette6) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "",
+       y = "N participants") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2))
+
+```
+
+###Retro
+
+```{r GLAD/EDGI NBR and RAMP ethnicity data prep}
+
+dat.retro_ethnicity_plot <- dat.retro %>% 
+  mutate(Ethnicity_collapsed = 
+           fct_recode(Ethnicity_collapsed,
+             "White" = "European",
+             "Asian or Asian British" = "Asian or Asian British",
+             "Black or Black British" = "African or African British",
+             "Mixed or multiple ethnic origins" = "Mixed or multiple ethnic origins",
+             "Other" = "Other"
+           ))
+
+dat.retro_ethnicity_white <- dat.retro_ethnicity_plot %>% 
+  group_by(Sample_plot, Ethnicity_collapsed) %>% 
+  summarise(n = n()) %>% 
+  drop_na() %>% 
+  filter(Ethnicity_collapsed == "White")
+
+dat.retro_ethnicity_non_white <- dat.retro_ethnicity_plot %>% 
+  group_by(Sample_plot, Ethnicity_collapsed) %>% 
+  summarise(n = n()) %>% 
+  drop_na() %>% 
+  filter(Ethnicity_collapsed != "White")
+
+```
+
+
+```{r Plot ethnicity graphs then merge}
+
+retro_ethnicity_white <- dat.retro_ethnicity_white %>% 
+  ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "",
+       x = "Ethnic origin",
+       y = "N participants") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme(legend.position = "bottom") + 
+  theme(legend.title = element_blank()) +
+  geom_text(aes(label = n), 
+            position = position_dodge(width=0.9), 
+            vjust=-0.25) +
+  theme(axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black"))
+
+#Graph 2
+retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>% 
+  ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "",
+       x = "Ethnic origin",
+       y = "N participants") +
+theme(axis.text.x = element_text(angle = 45, 
+                                 vjust = 0.5,
+                                 size = 8)) +
+  theme(legend.position = "bottom") + 
+  theme(legend.title = element_blank()) +
+  geom_text(aes(label = n),
+            size = 3,
+            position = position_dodge(width=0.9), 
+            vjust=-0.25) +
+     scale_y_continuous(expand = expansion(mult = c(0.1, 0.2)))  +
+  theme(axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black"))
+
+retro_ethnicity_plot <- plot_grid(retro_ethnicity_white, retro_ethnicity_non_white, labels = "")
+
+```
+
+##Employment
+###Prepan
+
+```{r GLAD/EDGI employment prepan}
+
+GLAD.prepan_with_EDGI %>% 
+  ggplot(aes(x = employment_prior_covid)) +
+  geom_bar(fill = COPINGpalette6) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "",
+       y = "")
+
+```
+
+###Retro
+
+```{r GLAD/EDGI NBR and RAMP retro employment}
+
+dat.retro_employment_plot <- dat.retro %>% 
+  group_by(Sample_plot, employment_prior_covid) %>% 
+  summarise(n = n()) %>% 
+  drop_na()
+
+retro_employ_plot <- dat.retro_employment_plot %>% 
+  ggplot(aes(x = employment_prior_covid, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "Employment status",
+       y = "N participants") +
+  theme(legend.position = "bottom") + 
+  theme(legend.title = element_blank()) +
+  scale_y_continuous(breaks = seq(0, 6000, by = 1000)) +
+  theme(axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black"))
+
+```
+
+##Diagnoses
+
+```{r Collapse personality disorder clusters for prepan data}
+
+GLAD.prepan_with_EDGI <- GLAD.prepan_with_EDGI %>% 
+  mutate(personality_disorder_numeric =
+           case_when(
+             personality_cluster_a_numeric == 1 | personality_cluster_b_numeric == 1 | personality_cluster_c_numeric == 1 ~ 1,
+             personality_cluster_a_numeric == 0 & personality_cluster_b_numeric == 0 & personality_cluster_c_numeric == 0 ~ 0
+           ))
+
+#Check that it worked
+head(GLAD.prepan$personality_cluster_a_numeric, 15)
+head(GLAD.prepan$personality_cluster_b_numeric, 15)
+head(GLAD.prepan$personality_cluster_c_numeric, 15)
+head(GLAD.prepan$personality_disorder_numeric, 15)
+
+```
+
+```{r Collapse personality disorder clusters for retro data}
+
+dat.retro <- dat.retro %>% 
+  mutate(personality_disorder_numeric =
+           case_when(
+             personality_cluster_a_numeric == 1 | personality_cluster_b_numeric == 1 | personality_cluster_c_numeric == 1 ~ 1,
+             personality_cluster_a_numeric == 0 & personality_cluster_b_numeric == 0 & personality_cluster_c_numeric == 0 ~ 0
+           ))
+
+#Check that it worked
+head(dat.retro$personality_cluster_a_numeric, 15)
+head(dat.retro$personality_cluster_b_numeric, 15)
+head(dat.retro$personality_cluster_c_numeric, 15)
+head(dat.retro$personality_disorder_numeric, 15)
+
+```
+###Prepan
+####Get positive diagnoses
+
+```{r Get depression positive for GLAD/EDGI}
+
+GLAD.prepan_mdd_positive <- GLAD.prepan_with_EDGI %>%
+  select(depressive_disorders_numeric) %>% 
+  filter(depressive_disorders_numeric == 1)
+  
+GLAD.prepan_mdd_positive <- GLAD.prepan_mdd_positive %>% 
+  summarise("Depressive disorders" = n())
+
+```
+
+```{r Get anxiety positive for GLAD/EDGI}
+
+GLAD.prepan_anxi_positive <- GLAD.prepan_with_EDGI %>%
+  select(anxiety_disorders_numeric) %>% 
+  filter(anxiety_disorders_numeric == 1)
+  
+GLAD.prepan_anxi_positive <- GLAD.prepan_anxi_positive %>% 
+  summarise("Anxiety disorders" = n())
+
+```
+
+```{r Get eating disorders positive for GLAD/EDGI}
+
+GLAD.prepan_ED_positive <- GLAD.prepan_with_EDGI %>%
+  select(eating_disorders_numeric) %>% 
+  filter(eating_disorders_numeric == 1)
+  
+GLAD.prepan_ED_positive <- GLAD.prepan_ED_positive %>% 
+  summarise("Eating disorders" = n())
+
+```
+
+```{r Get OCDs positive for GLAD/EDGI}
+
+GLAD.prepan_OCD_positive <- GLAD.prepan_with_EDGI %>%
+  select(obsessive_compulsive_disorders_numeric) %>% 
+  filter(obsessive_compulsive_disorders_numeric == 1)
+  
+GLAD.prepan_OCD_positive <- GLAD.prepan_OCD_positive %>% 
+  summarise("OCDs" = n())
+
+```
+
+```{r Get psychosis positive for GLAD/EDGI}
+
+GLAD.prepan_psychosis_positive <- GLAD.prepan_with_EDGI %>%
+  select(psychotic_disorders_numeric) %>% 
+  filter(psychotic_disorders_numeric == 1)
+  
+GLAD.prepan_psychosis_positive <- GLAD.prepan_psychosis_positive %>% 
+  summarise("Psychotic disorders" = n())
+
+```
+
+```{r Get ASD positive for GLAD/EDGI}
+
+GLAD.prepan_ASD_positive <- GLAD.prepan_with_EDGI %>%
+  select(autism_spectrum_disorder_numeric) %>% 
+  filter(autism_spectrum_disorder_numeric == 1)
+  
+GLAD.prepan_ASD_positive <- GLAD.prepan_ASD_positive %>% 
+  summarise("ASD" = n())
+
+```
+
+```{r Get ADHD positive for GLAD/EDGI}
+
+GLAD.prepan_ADHD_positive <- GLAD.prepan_with_EDGI %>%
+  select(mhd.attention_deficit_hyperactivity_disorder_numeric) %>% 
+  filter(mhd.attention_deficit_hyperactivity_disorder_numeric == 1)
+  
+GLAD.prepan_ADHD_positive <- GLAD.prepan_ADHD_positive %>% 
+  summarise("ADHD" = n())
+
+```
+
+```{r Get Personality Disorders positive for GLAD/EDGI}
+
+GLAD.prepan_PD_positive <- GLAD.prepan_with_EDGI %>%
+  select(personality_disorder_numeric) %>% 
+  filter(personality_disorder_numeric == 1)
+  
+GLAD.prepan_PD_positive <- GLAD.prepan_PD_positive %>% 
+  summarise("Personality disorders" = n())
+
+```
+
+```{r Get Bipolar Disorders positive for GLAD/EDGI}
+
+GLAD.prepan_BD_positive <- GLAD.prepan_with_EDGI %>%
+  select(mhd.mania_hypomania_bipolar_or_manicdepression_numeric) %>% 
+  filter(mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1)
+  
+GLAD.prepan_BD_positive <- GLAD.prepan_BD_positive %>% 
+  summarise("Bipolar disorders" = n())
+
+```
+
+```{r Get PTSD positive for GLAD/EDGI}
+
+GLAD.prepan_PTSD_positive <- GLAD.prepan_with_EDGI %>%
+  select(mhd.posttraumatic_stress_disorder_ptsd_numeric) %>% 
+  filter(mhd.posttraumatic_stress_disorder_ptsd_numeric == 1)
+  
+GLAD.prepan_PTSD_positive <- GLAD.prepan_PTSD_positive %>% 
+  summarise("PTSD" = n())
+
+```
+
+```{r Get control positive for GLAD/EDGI}
+
+GLAD.prepan_control_positive <- GLAD.prepan_with_EDGI %>%
+  select(control_numeric) %>% 
+  filter(control_numeric == 1)
+  
+GLAD.prepan_control_positive <- GLAD.prepan_control_positive %>% 
+  summarise("No diagnosis" = n())
+
+```
+
+####Merge and clean the data
+
+```{r Combine the positive diagnoses for GLAD/EDGI prepan}
+
+GLAD.prepan_positive_diagnosis_GLADEDGI <- GLAD.prepan_mdd_positive %>% 
+  cbind(GLAD.prepan_anxi_positive,
+        GLAD.prepan_ED_positive,
+        GLAD.prepan_OCD_positive,
+        GLAD.prepan_psychosis_positive,
+        GLAD.prepan_ASD_positive,
+        GLAD.prepan_ADHD_positive,
+        GLAD.prepan_PD_positive,
+        GLAD.prepan_BD_positive,
+        GLAD.prepan_PTSD_positive,
+        GLAD.prepan_control_positive)
+
+head(GLAD.prepan_positive_diagnosis_GLADEDGI)
+
+```
+
+```{r Re-organise the positive diagnosis GLAD/EDGI prepan}
+
+GLAD.prepan_positive_diagnosis_GLADEDGI <- GLAD.prepan_positive_diagnosis_GLADEDGI %>% 
+  gather('Depressive disorders', 'Anxiety disorders', 'Eating disorders', 'OCDs', 'Psychotic disorders', 'ASD', 'ADHD', 'Personality disorders', 'Bipolar disorders', 'PTSD', 'No diagnosis', key = "Diagnosis", value = positive_n)
+
+head(GLAD.prepan_positive_diagnosis_GLADEDGI, 9)
+
+```
+
+#####Plot positive diagnosis prepan
+
+```{r Plot GLAD/EDGI prepan positive diagnosis}
+
+GLAD.prepan_positive_diagnosis_GLADEDGI %>% 
+  ggplot(aes(x = reorder(Diagnosis, -positive_n), y = positive_n)) +
+  geom_bar(stat = "identity", fill = COPINGpalette11) + 
+  scale_fill_manual(values = COPINGpalette11) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "Mental health diagnoses of the GLAD/EDGI prepan cohort",
+       subtitle = paste("N =", dim(GLAD.retro)[1]),
+         x = "",
+       y = "") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme(legend.position = "top") + 
+  theme(legend.title = element_blank())
+
+```
+
+
+###Retro
+####Get positive diagnoses
+
+```{r Get MDD positive by sample}
+
+dat.retro_mdd_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(depressive_disorders_numeric) %>% 
+  filter(depressive_disorders_numeric == 1)
+  
+dat.retro_mdd_by_sample <- dat.retro_mdd_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("Depressive disorders" = n())
+
+```
+
+
+```{r Get anxiety positive by sample}
+
+dat.retro_anxi_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(anxiety_disorders_numeric) %>% 
+  filter(anxiety_disorders_numeric == 1)
+  
+dat.retro_anxi_by_sample <- dat.retro_anxi_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("Anxiety disorders" = n())
+
+```
+
+```{r Get eating disorder positive by sample}
+
+dat.retro_ED_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(eating_disorders_numeric) %>% 
+  filter(eating_disorders_numeric == 1)
+  
+dat.retro_ED_by_sample <- dat.retro_ED_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("Eating disorders" = n())
+
+```
+
+
+```{r Get OCDs positive by sample}
+
+dat.retro_OCD_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(obsessive_compulsive_disorders_numeric) %>% 
+  filter(obsessive_compulsive_disorders_numeric == 1)
+  
+dat.retro_OCD_by_sample <- dat.retro_OCD_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("OCDRs" = n())
+
+```
+
+```{r Get psychotic disorder positive by sample}
+
+dat.retro_psychosis_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(psychotic_disorders_numeric) %>% 
+  filter(psychotic_disorders_numeric == 1)
+  
+dat.retro_psychosis_by_sample <- dat.retro_psychosis_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("Psychotic disorders" = n())
+
+```
+
+```{r Get ASD positive by sample}
+
+dat.retro_ASD_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(autism_spectrum_disorder_numeric) %>% 
+  filter(autism_spectrum_disorder_numeric == 1)
+  
+dat.retro_ASD_by_sample <- dat.retro_ASD_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("ASD" = n())
+
+```
+
+```{r Get ADHD positive by sample}
+
+dat.retro_ADHD_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(mhd.attention_deficit_hyperactivity_disorder_numeric) %>% 
+  filter(mhd.attention_deficit_hyperactivity_disorder_numeric == 1)
+  
+dat.retro_ADHD_by_sample <- dat.retro_ADHD_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("ADHD" = n())
+
+```
+
+```{r Get personality disorders positive by sample}
+
+dat.retro_PD_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(personality_disorder_numeric) %>% 
+  filter(personality_disorder_numeric == 1)
+  
+dat.retro_PD_by_sample <- dat.retro_PD_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("Personality disorders" = n())
+
+```
+
+```{r Get Bipolar disorders positive by sample}
+
+dat.retro_BD_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(mhd.mania_hypomania_bipolar_or_manicdepression_numeric) %>% 
+  filter(mhd.mania_hypomania_bipolar_or_manicdepression_numeric == 1)
+  
+dat.retro_BD_by_sample <- dat.retro_BD_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("Bipolar disorders" = n())
+
+```
+
+```{r Get PTSD positive by sample}
+
+dat.retro_PTSD_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(mhd.posttraumatic_stress_disorder_ptsd_numeric) %>% 
+  filter(mhd.posttraumatic_stress_disorder_ptsd_numeric == 1)
+  
+dat.retro_PTSD_by_sample <- dat.retro_PTSD_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("PTSD" = n())
+
+```
+
+```{r Get control positive by sample}
+
+dat.retro_control_by_sample <- dat.retro %>%
+  group_by(Sample_plot) %>% 
+  select(control_numeric) %>% 
+  filter(control_numeric == 1)
+  
+dat.retro_control_by_sample <- dat.retro_control_by_sample %>% 
+  group_by(Sample_plot) %>% 
+  summarise("No diagnosis" = n())
+
+```
+####Merge and clean the data
+
+```{r Merge the positive sample/diagnosis tibbles}
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_mdd_by_sample,
+                                                    dat.retro_anxi_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_ED_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_OCD_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_psychosis_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_ASD_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_ADHD_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_PD_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_BD_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_PTSD_by_sample,
+                                                    by = "Sample_plot")
+
+dat.retro_positive_diagnosis_by_sample <- left_join(dat.retro_positive_diagnosis_by_sample,
+                                                    dat.retro_control_by_sample,
+                                                    by = "Sample_plot")
+
+head(dat.retro_positive_diagnosis_by_sample)
+
+```
+
+
+```{r Re-organise the positive diagnosis by sample tib}
+
+dat.retro_positive_diagnosis_by_sample <- dat.retro_positive_diagnosis_by_sample %>% 
+  gather('Depressive disorders', 'Anxiety disorders', 'Eating disorders', 'OCDRs', 'Psychotic disorders', 'ASD', 'ADHD', 'Personality disorders', 'Bipolar disorders', 'PTSD', 'No diagnosis', key = "Diagnosis", value = positive_n)
+
+head(dat.retro_positive_diagnosis_by_sample, 9)
+
+```
+
+####Plot diagnosis
+
+```{r GLAD/EDGI NBR and RAMP retro diagnosis}
+
+retro_diagnosis_plot <- dat.retro_positive_diagnosis_by_sample %>% 
+  ggplot(aes(x = reorder(Diagnosis, -positive_n, sum), y = positive_n, fill = Sample_plot)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "Mental health diagnosis",
+       y = "N participants") +
+  ylim(0, 20000) +
+  theme(axis.text.x = element_text(angle = 70, vjust = 0.5)) +
+  theme(legend.position = "top") + 
+  theme(legend.title = element_blank()) +
+  geom_text(aes(label = stat(y), group = Diagnosis),
+            stat = "summary",
+            fun = sum,
+            vjust = -1,
+            colour = "black") +
+  theme(axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black"))
+
+```
+
+#Plot Graphs together
+
+Note: I'm modifying the original retro plots to make them easier to merge together
+
+##Age gender and employ
+
+```{r Plot age gender and employ histograms together}
+
+arranged_gender_plot <- retro_gender_plot +
+  theme(legend.position = "none") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2),
+                   expand = expansion(mult = c(0.3, 0.4)))
+
+arranged_employ_plot <- retro_employ_plot +
+  theme(legend.position = "none") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2))
+
+#Combine retro age, gender and employ together
+ggarrange(retro_age_plot, 
+          ggarrange(arranged_gender_plot, arranged_employ_plot, ncol = 2), 
+          nrow = 2,
+          common.legend = TRUE)
+
+```
+
+##Age gender and employ with gender labelled
+
+```{r Add labels to gender retro and plot with gender and employ}
+
+dat.retro_gender_distribution <- dat.retro %>% 
+  group_by(Gender_collapsed, Sample_plot) %>% 
+  summarise(n = n())
+
+labelled_arranged_gender_plot <- dat.retro_gender_distribution %>% 
+  ggplot(aes(x = Gender_collapsed, y = n, fill = Sample_plot)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "Participant Gender",
+       y = "N participants") +
+  theme(legend.position = "none") + 
+  theme(legend.title = element_blank()) +
+  geom_text(aes(label = n),
+            size = 3,
+            position = position_dodge(width=0.9), 
+            vjust=-0.25) +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2),
+                   expand = expansion(mult = c(0.3, 0.4))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1)))
+
+#Combine retro age, gender and employ together
+ggarrange(retro_age_plot, 
+          ggarrange(labelled_arranged_gender_plot, arranged_employ_plot, ncol = 2), 
+          nrow = 2,
+          common.legend = TRUE)
+
+```
+
+##Age gender employ and ethnicity
+
+```{r Tidy the ethnicity graphs}
+
+arranged_retro_ethnicity_white <- dat.retro_ethnicity_white %>% 
+  ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "",
+       x = "Ethnic origin",
+       y = "N participants") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme(legend.position = "none") + 
+  theme(legend.title = element_blank()) +
+  theme(axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black"))# +
+#  geom_text(aes(label = n),
+#            size = 3,
+#            position = position_dodge(width=0.9), 
+#            vjust=-0.25)
+
+#Graph 2
+arranged_retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>% 
+  ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "",
+       x = "Ethnic origin",
+       y = "N participants") +
+  theme(legend.position = "bottom") +
+  theme(legend.title = element_blank()) +
+  #theme(legend.title = element_blank()) +
+  geom_text(aes(label = n),
+            size = 3,
+            position = position_dodge(width=0.9), 
+            vjust=-0.25) +
+     scale_y_continuous(expand = expansion(mult = c(0.1, 0.2))) +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme(axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black"))
+
+#arranged_retro_ethnicity_plot <- plot_grid(arranged_retro_ethnicity_white, arranged_retro_ethnicity_non_white, labels = "")
+
+```
+
+
+```{r Tidy the age gender and employ graphs}
+
+arranged_retro_age_plot <- dat.retro %>% 
+  ggplot(aes(x = age_category_collapsed, fill = Sample_plot)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "Age (years)",
+       y = "N participants") +
+  theme(legend.position = "none") + 
+  theme(legend.title = element_blank()) +
+  theme(axis.text.x = element_text(angle = 70, vjust = 0.5)) +
+  theme(axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black"))
+
+dat.retro_gender_male_female <- dat.retro_gender_distribution %>% 
+  filter(Gender_collapsed != "Non-binary/Self-defined")
+
+arranged_collapsed_gender_plot <- dat.retro_gender_male_female %>% 
+  ggplot(aes(x = Gender_collapsed, y = n, fill = Sample_plot)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "Participant Gender",
+       y = "N participants",
+       caption = "Non-binary/Self-defined
+         GLAD/EDGI (243); NBR (39); RAMP (92)") +
+  theme(legend.position = "none") + 
+  theme(legend.title = element_blank())  +
+  theme(axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black"))
+
+arranged_employ_plot <- dat.retro_employment_plot %>% 
+  ggplot(aes(x = employment_prior_covid, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "Employment status",
+       y = "N participants") +
+  theme(legend.position = "none") + 
+  theme(legend.title = element_blank()) +
+  scale_y_continuous(breaks = seq(0, 6000, by = 1000)) +
+  scale_x_discrete(guide = guide_axis(n.dodge = 3),
+                   expand = expansion(mult = c(0.2, 0.3))) +
+  theme(axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black"))
+
+```
+
+
+```{r Plot age gender employ and ethnicity together}
+
+retro_matrix <- matrix(c(1, 2, 3, 4, 5, 5), nrow = 2, byrow = TRUE)
+
+grid.arrange(arranged_collapsed_gender_plot, arranged_retro_age_plot, arranged_employ_plot,
+          arranged_retro_ethnicity_white, arranged_retro_ethnicity_non_white,
+          layout_matrix = retro_matrix, 
+          nrow = 2)
+
+```
+
+
+```{r Gender age ethnicity employ retro graph with plot caption}
+
+#Remake gender plot without caption
+
+arranged_collapsed_gender_plot <- dat.retro_gender_male_female %>% 
+  ggplot(aes(x = Gender_collapsed, y = n, fill = Sample_plot)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(x = "Participant Gender",
+       y = "N participants") +
+  theme(legend.position = "none") + 
+  theme(legend.title = element_blank())  +
+  theme(axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black"))
+
+```
+
+```{r Recode ethnicity levels and re-create non-white plot}
+
+levels(dat.retro_ethnicity_non_white$Ethnicity_collapsed)
+
+dat.retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>% 
+  mutate(Ethnicity_collapsed = 
+           fct_recode(Ethnicity_collapsed,
+                       "Mixed or multiple origins" = "Mixed or multiple ethnic origins"))
+
+arranged_retro_ethnicity_non_white <- dat.retro_ethnicity_non_white %>% 
+  ggplot(aes(x = Ethnicity_collapsed, y = n, fill = Sample_plot)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = COPINGpalette3) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  labs(title = "",
+       x = "Ethnic origin",
+       y = "N participants") +
+  theme(legend.position = "bottom") +
+  theme(legend.title = element_blank()) +
+  geom_text(aes(label = n),
+            size = 3,
+            position = position_dodge(width=0.9), 
+            vjust=-0.25) +
+     scale_y_continuous(expand = expansion(mult = c(0.1, 0.2))) +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  theme(axis.text.x = element_text(colour = "black"),
+        axis.text.y = element_text(colour = "black")) +
+  theme(legend.justification=c(1,0), legend.position=c(1, 0.95)) +
+  guides(fill = guide_legend(
+    nrow = 1,
+    override.aes = list(size = 4)
+  ))
+
+```
+
+
+```{r See non-binary/self-defined pt's by sample for caption}
+
+dat.retro %>% 
+  group_by(Sample_plot, Gender_collapsed) %>% 
+  summarise(n = n())
+
+```
+
+
+
+```{r plot age gender ethnicity and employ with plot caption}
+
+grid.arrange(arranged_collapsed_gender_plot, arranged_retro_age_plot, arranged_employ_plot,
+          arranged_retro_ethnicity_white, arranged_retro_ethnicity_non_white,
+          layout_matrix = retro_matrix, 
+          nrow = 2,
+          #heights=c(1, 1.2),
+          bottom = textGrob("Non-binary/Self-defined: GLAD (247); NBR/EDGI (41); RAMP (92)", x = 1,
+                            hjust = 1,
+                            gp = gpar(fontface = 3L, fontsize = 9)))
+
+```
+
