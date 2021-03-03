@@ -113,22 +113,22 @@ Subset by study
 ## Subset samples by study
 
 GLAD.prepan <- dat.prepan %>%
-  filter(Sample == "GLAD" | 
-           Sample == "EDGI")
+  filter(Sample == "GLAD")
 
 NBR.prepan <- dat.prepan %>%
-  filter(Sample == "NBR")
+  filter(Sample == "NBR" | 
+           Sample == "EDGI")
 
 RAMP.prepan <- dat.prepan %>%
   filter(Sample == "RAMP")
 
 ### retro
 GLAD.retro <- dat.retro %>%
-  filter(Sample == "GLAD" | 
-           Sample == "EDGI")
+  filter(Sample == "GLAD")
 
 NBR.retro <- dat.retro %>%
-  filter(Sample == "NBR")
+  filter(Sample == "NBR" | 
+           Sample == "EDGI")
 
 RAMP.retro <- dat.retro %>%
   filter(Sample == "RAMP")
@@ -359,9 +359,9 @@ apply(vars, 2, function(x) list(describe(x)))
 retrospective
 ```{r means etc by sample retro}
 dat.retro %>%
-  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+  mutate(sample = case_when(Sample == "GLAD" ~ "GLAD",
                             Sample == "RAMP" ~ "RAMP",
-                            Sample == "NBR" ~ "NBR")) %>%
+                            Sample == "NBR" | Sample == "EDGI" ~ "NBR")) %>%
   group_by(sample) %>%
   summarize(m.gad.base = mean(gad.sum_score_base, na.rm = TRUE),
             sd.gad.base = sd(gad.sum_score_base, na.rm = TRUE),
@@ -387,9 +387,9 @@ dat.retro %>%
 prepandemic
 ```{r means etc by sample prepan}
 dat.prepan %>%
-  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+  mutate(sample = case_when(Sample == "GLAD" ~ "GLAD",
                             Sample == "RAMP" ~ "RAMP",
-                            Sample == "NBR" ~ "NBR")) %>%
+                            Sample == "NBR" | Sample == "EDGI" ~ "NBR")) %>%
   group_by(sample) %>%
   summarize(m.gad.base = mean(gad.sum_score_base, na.rm = TRUE),
             sd.gad.base = sd(gad.sum_score_base, na.rm = TRUE),
@@ -452,9 +452,9 @@ Retrospective GAD
 ```{r ttest average by sample retro gad}
 
 dat.retro %>%
-  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+  mutate(sample = case_when(Sample == "GLAD"  ~ "GLAD",
                             Sample == "RAMP" ~ "RAMP",
-                            Sample == "NBR" ~ "NBR")) %>%
+                            Sample == "NBR" | Sample == "EDGI" ~ "NBR")) %>%
   select(gad.sum_score_base,gad.sum_score_retro, sample) %>%
   gather(key = variable, value = value, -sample) %>% 
   group_by(sample,variable) %>% 
@@ -471,9 +471,9 @@ dat.retro %>%
 Retrospective PHQ
 ```{r ttest average by sample retro phq}
 dat.retro %>%
-  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+  mutate(sample = case_when(Sample == "GLAD" ~ "GLAD",
                             Sample == "RAMP" ~ "RAMP",
-                            Sample == "NBR" ~ "NBR")) %>%
+                            Sample == "NBR"| Sample == "EDGI" ~ "NBR")) %>%
   select(phq.sum_score_base,phq.sum_score_retro, sample) %>%
   gather(key = variable, value = value, -sample) %>% 
   group_by(sample,variable) %>% 
@@ -489,9 +489,9 @@ dat.retro %>%
 Prepandemic GAD
 ```{r ttest average by sample prepan gad}
 dat.prepan %>%
-  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+  mutate(sample = case_when(Sample == "GLAD" ~ "GLAD",
                             Sample == "RAMP" ~ "RAMP",
-                            Sample == "NBR" ~ "NBR")) %>%
+                            Sample == "NBR" | Sample == "EDGI" ~ "NBR")) %>%
   select(gad.sum_score_base,gad.sum_score_prepan, sample) %>%
   gather(key = variable, value = value, -sample) %>% 
   group_by(sample,variable) %>% 
@@ -507,9 +507,9 @@ dat.prepan %>%
 Prepandemic PHQ
 ```{r ttest average by sample prepan phq}
 dat.prepan %>%
-  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+  mutate(sample = case_when(Sample == "GLAD"  ~ "GLAD",
                             Sample == "RAMP" ~ "RAMP",
-                            Sample == "NBR" ~ "NBR")) %>%
+                            Sample == "NBR" | Sample == "EDGI" ~ "NBR")) %>%
   select(phq.sum_score_base,phq.sum_score_prepan, sample) %>%
   gather(key = variable, value = value, -sample) %>% 
   group_by(sample,variable) %>% 
@@ -525,9 +525,9 @@ Prepandemic PCL
 ```{r ttest average by sample prepan pcl}
 
 dat.prepan %>%
-  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD",
+  mutate(sample = case_when(Sample == "GLAD" ~ "GLAD",
                             Sample == "RAMP" ~ "RAMP",
-                            Sample == "NBR" ~ "NBR")) %>%
+                            Sample == "NBR"| Sample == "EDGI"  ~ "NBR")) %>%
   select(pcl.sum_score_base,pcl.sum_score_prepan, sample) %>%
   gather(key = variable, value = value, -sample) %>% 
   group_by(sample,variable) %>% 
