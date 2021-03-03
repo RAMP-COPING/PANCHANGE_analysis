@@ -849,7 +849,7 @@ dat.long.gad.sum %>%
 
 ```
 
-```{r gad.sum violin plot Sample GLAD EDGI combined, fig.height=14, fig.width=8, dpi=300}
+```{r gad.sum violin plot Sample NBR EDGI combined, fig.height=14, fig.width=8, dpi=300}
 dat.long.gad.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point,
             "Prepandemic" = "prepan",
@@ -862,10 +862,9 @@ dat.long.gad.sum %>%
             "Prepandemic")
          ) %>%
    mutate(Sample_combined = case_when(
-     Sample == "GLAD" ~ "GLAD and EDGI",
-     Sample == "EDGI" ~ "GLAD and EDGI",
-     Sample == "NBR" ~ "NBR",
-     Sample == "RAMP" ~ "RAMP",)
+     Sample == "GLAD" ~ "GLAD",
+     Sample == "NBR" |  Sample == "EDGI" ~ "NBR and EDGI",
+     Sample == "RAMP" ~ "RAMP")
          ) %>%
   ggplot(mapping = aes(
     x = Time_point_reordered,
@@ -1421,10 +1420,9 @@ dat.long.phq.sum %>%
                                             "Prepandemic")
   ) %>%
    mutate(Sample_combined = case_when(
-     Sample == "GLAD" ~ "GLAD and EDGI",
-     Sample == "EDGI" ~ "GLAD and EDGI",
-     Sample == "NBR" ~ "NBR",
-     Sample == "RAMP" ~ "RAMP",)
+     Sample == "GLAD" ~ "GLAD",
+     Sample == "NBR" |  Sample == "EDGI" ~ "NBR and EDGI",
+     Sample == "RAMP" ~ "RAMP")
          ) %>%
   ggplot(mapping = aes(
     x = Time_point_reordered,
@@ -1975,11 +1973,10 @@ dat.long.ocir.sum %>%
                                             "Retrospective",
                                             "Prepandemic")
   ) %>%
-   mutate(Sample_combined = case_when(
-     Sample == "GLAD" ~ "GLAD and EDGI",
-     Sample == "EDGI" ~ "GLAD and EDGI",
-     Sample == "NBR" ~ "NBR",
-     Sample == "RAMP" ~ "RAMP",)
+     mutate(Sample_combined = case_when(
+     Sample == "GLAD" ~ "GLAD",
+     Sample == "NBR" |  Sample == "EDGI" ~ "NBR and EDGI",
+     Sample == "RAMP" ~ "RAMP")
          ) %>%
   ggplot(mapping = aes(
     x = Time_point_reordered,
@@ -2327,9 +2324,9 @@ dat.long.pcl.sum %>%
 ```{r pcl.sum violin plot sample}
 dat.long.pcl.sum %>%
   filter(Time_point != "retro") %>%
-  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD and EDGI",
+  mutate(sample = case_when(Sample == "GLAD" ~ "GLAD",
                             Sample == "RAMP" ~ "RAMP",
-                            Sample == "NBR" ~ "NBR")) %>% 
+                            Sample == "NBR" | Sample == "EDGI" ~ "NBR")) %>% 
   mutate(Time_point_renamed = fct_recode(Time_point,
                                          "Prepandemic" = "prepan",
                                          "Baseline" = "base")
@@ -8644,11 +8641,11 @@ pcl.lm.noexplan <-  lm(formula = pcl.sum_score_base.glmformula,
 ```{r subset data for forests into samples}
 
 dat.retro.glad <- dat.retro %>%
-  filter(Sample == "GLAD" | 
-           Sample == "EDGI")
+  filter(Sample == "GLAD" )
 
 dat.retro.nbr <- dat.retro %>%
-  filter(Sample == "NBR")
+  filter(Sample == "NBR"| 
+           Sample == "EDGI")
 
 dat.retro.ramp <- dat.retro %>%
   filter(Sample == "RAMP")
@@ -8902,6 +8899,44 @@ lm.forest(plot.dat.noexplan.sample.pcl  ,"Predictors of symptoms of PTSD across 
 
 ```
 
+# Retrospective regression models by sample
+
+## GLAD
+```{r gad employment prior covid sensitivity model1b sum_score retro by sample glad}
+# Regression coefficients
+gad_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro.glad")
+kable(gad_retro_model1b_explan_estimates)
+gad_retro_model1b_explan_estimates
+
+
+```
+
+## NBR
+```{r gad employment prior covid sensitivity model1b sum_score retro by sample nbr}
+# Regression coefficients
+gad_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro.nbr")
+kable(gad_retro_model1b_explan_estimates)
+gad_retro_model1b_explan_estimates
+
+
+```
+
+## RAMP
+```{r gad employment prior covid sensitivity model1b sum_score retro by sample ramp}
+# Regression coefficients
+gad_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro.ramp")
+kable(gad_retro_model1b_explan_estimates)
+gad_retro_model1b_explan_estimates
+
+
+```
+
 
 # frequencies and descriptives in exclusion data
 
@@ -9087,8 +9122,7 @@ Notes: We use the default (Welch's) t-test (to account for non equal variance)
 ```{r t tests }
 
 datgladedgi <- dat.retro %>%
-  filter(Sample == "GLAD" |
-           Sample == "EDGI") 
+  filter(Sample == "GLAD") 
 
 t.test(datgladedgi$phq.sum_score_base,
        datgladedgi$phq.sum_score_retro,
