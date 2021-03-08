@@ -7,7 +7,7 @@ output:
   html_document:
     df_print: paged
     toc: yes
-    toc_depth: 2
+    toc_depth: 3
     toc_float:
       collapsed: false
     number_sections: false
@@ -416,6 +416,41 @@ dat.prepan %>%
 ```
 
 
+### change scores
+
+#### Retrospective
+```{r means etc change overall retro}
+
+vars <- dat.retro %>%
+  select(gad.sum_score_base,gad.sum_score_retro,
+         phq.sum_score_base,phq.sum_score_retro) %>%
+  mutate(gad.retro.change = gad.sum_score_base - gad.sum_score_retro,
+         phq.retro.change = phq.sum_score_base - phq.sum_score_retro) %>%
+  select(gad.retro.change,
+         phq.retro.change)
+
+
+apply(vars, 2, function(x) list(describe(x)))
+
+```
+
+#### Prepandemic
+```{r means etc change overall prepan}
+
+vars <- dat.prepan %>%
+  select(gad.sum_score_base,gad.sum_score_prepan,
+         phq.sum_score_base,phq.sum_score_prepan,
+         pcl.sum_score_base,pcl.sum_score_prepan) %>%
+  mutate(gad.prepan.change = gad.sum_score_base - gad.sum_score_prepan,
+         phq.prepan.change = phq.sum_score_base - phq.sum_score_prepan,
+         pcl.prepan.change = pcl.sum_score_base - pcl.sum_score_prepan) %>%
+  select(gad.prepan.change,
+         phq.prepan.change,
+         pcl.prepan.change)
+
+apply(vars, 2, function(x) list(describe(x)))
+
+```
 
 ## T tests 
 
@@ -540,3 +575,7 @@ dat.prepan %>%
 
 
 ```
+
+
+
+
