@@ -2919,7 +2919,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Final paper detail checks and analyses</h1>
 <h4 class="author">Kirstin L Purves</h4>
-<h4 class="date">08 March, 2021</h4>
+<h4 class="date">09 March, 2021</h4>
 
 </div>
 
@@ -4181,26 +4181,28 @@ div.tocify {
 <h3>change scores</h3>
 <div id="retrospective" class="section level4">
 <h4>Retrospective</h4>
+<p>GLAD only</p>
 <div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1"></a>vars &lt;-<span class="st"> </span>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb84-2"><a href="#cb84-2"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_retro,</span>
-<span id="cb84-3"><a href="#cb84-3"></a>         phq.sum_score_base,phq.sum_score_retro) <span class="op">%&gt;%</span></span>
-<span id="cb84-4"><a href="#cb84-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">gad.retro.change =</span> gad.sum_score_base <span class="op">-</span><span class="st"> </span>gad.sum_score_retro,</span>
-<span id="cb84-5"><a href="#cb84-5"></a>         <span class="dt">phq.retro.change =</span> phq.sum_score_base <span class="op">-</span><span class="st"> </span>phq.sum_score_retro) <span class="op">%&gt;%</span></span>
-<span id="cb84-6"><a href="#cb84-6"></a><span class="st">  </span><span class="kw">select</span>(gad.retro.change,</span>
-<span id="cb84-7"><a href="#cb84-7"></a>         phq.retro.change)</span>
-<span id="cb84-8"><a href="#cb84-8"></a></span>
+<span id="cb84-2"><a href="#cb84-2"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb84-3"><a href="#cb84-3"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_retro,</span>
+<span id="cb84-4"><a href="#cb84-4"></a>         phq.sum_score_base,phq.sum_score_retro) <span class="op">%&gt;%</span></span>
+<span id="cb84-5"><a href="#cb84-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">gad.retro.change =</span> gad.sum_score_base <span class="op">-</span><span class="st"> </span>gad.sum_score_retro,</span>
+<span id="cb84-6"><a href="#cb84-6"></a>         <span class="dt">phq.retro.change =</span> phq.sum_score_base <span class="op">-</span><span class="st"> </span>phq.sum_score_retro) <span class="op">%&gt;%</span></span>
+<span id="cb84-7"><a href="#cb84-7"></a><span class="st">  </span><span class="kw">select</span>(gad.retro.change,</span>
+<span id="cb84-8"><a href="#cb84-8"></a>         phq.retro.change)</span>
 <span id="cb84-9"><a href="#cb84-9"></a></span>
-<span id="cb84-10"><a href="#cb84-10"></a><span class="kw">apply</span>(vars, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="kw">list</span>(<span class="kw">describe</span>(x)))</span></code></pre></div>
+<span id="cb84-10"><a href="#cb84-10"></a></span>
+<span id="cb84-11"><a href="#cb84-11"></a><span class="kw">apply</span>(vars, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="kw">list</span>(<span class="kw">describe</span>(x)))</span></code></pre></div>
 <pre><code>## $gad.retro.change
 ## $gad.retro.change[[1]]
 ##    vars     n mean   sd median trimmed  mad min max range skew kurtosis   se
-## X1    1 34324 1.97 4.24      0    1.53 1.48 -21  21    42  0.8     2.84 0.02
+## X1    1 12597 2.34 4.89      1    2.14 2.97 -21  21    42 0.26     1.54 0.04
 ## 
 ## 
 ## $phq.retro.change
 ## $phq.retro.change[[1]]
-##    vars     n mean   sd median trimmed  mad min max range skew kurtosis   se
-## X1    1 34199  2.4 4.64      0    1.93 1.48 -24  27    51 0.83     2.92 0.03</code></pre>
+##    vars     n mean  sd median trimmed  mad min max range skew kurtosis   se
+## X1    1 12562 2.72 5.2      1    2.52 2.97 -23  27    50 0.26     1.63 0.05</code></pre>
 </div>
 <div id="prepandemic" class="section level4">
 <h4>Prepandemic</h4>

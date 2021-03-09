@@ -419,9 +419,11 @@ dat.prepan %>%
 ### change scores
 
 #### Retrospective
+GLAD only
 ```{r means etc change overall retro}
 
 vars <- dat.retro %>%
+  filter(Sample == "GLAD") %>%
   select(gad.sum_score_base,gad.sum_score_retro,
          phq.sum_score_base,phq.sum_score_retro) %>%
   mutate(gad.retro.change = gad.sum_score_base - gad.sum_score_retro,
