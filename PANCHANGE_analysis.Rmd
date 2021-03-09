@@ -8794,6 +8794,13 @@ plot.dat.disorder <- rbind(gad.lm.for.plot,
                                   phq.lm.for.plot,
                                   pcl.lm.for.plot)
 
+plot.dat.disorder <- plot.dat.disorder %>%
+  mutate(RowLabels = recode(RowLabels,
+                            `PCL.prepandemic` = "PCL total prepandemic",
+                            `PHQ.prepandemic` = "PHQ total prepandemic",
+                            `GAD.prepandemic` = "GAD total prepandemic"
+                            ))
+
 # by sample
 
 plot.dat.noexplan.sample.gad <- rbind(gad.lm.for.plot.GLAD,
