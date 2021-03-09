@@ -8239,9 +8239,9 @@ lmoutput_format <- function(lmobject, explan_var, group, dfname){
                              "Black or Black British",
                              "Other",
                              "Key worker",
-                             "Unemployed",
-                             "Student",
                              "Retired",
+                             "Student",
+                             "Unemployed",
                              "Time")
   ## categories to facet on  
   categories <- c("Intercept",
@@ -8409,9 +8409,9 @@ lmoutput_format_noexplan <- function(lmobject,  group, dfname){
                              "Black",
                              "Other",
                              "Key worker",
-                             "Unemployed",
-                             "Student",
                              "Retired",
+                             "Student",
+                             "Unemployed",
                              "Time between lockdown and baseline")
   ## categories to facet on  
   categories <- c("Intercept",
