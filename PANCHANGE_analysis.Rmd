@@ -8563,11 +8563,11 @@ dat.retro$PCL.retrospective <- dat.retro$pcl.sum_score_retro
 
 lin_preds <- c("time_diff_coping_lockdown_march_23",
                "GAD.prepandemic",
-               "PHQ.prepandemic",
                "PCL.prepandemic",
+               "PHQ.prepandemic",
                "GAD.retrospective",
-               "PHQ.retrospective",
-               "PCL.retrospective"
+               "PCL.retrospective",
+               "PHQ.retrospective"
                )
 
 dat.prepan[(names(dat.prepan) %in% lin_preds)] <- apply(dat.prepan[(names(dat.prepan) %in% lin_preds)],2,scale)
