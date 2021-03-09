@@ -8746,12 +8746,12 @@ lmoutput_format_noexplan(pcl.lm.noexplan,"RAMP", "pcl.lm.for.plot.RAMP")
 ```{r merge datasets for different combinations}
 # Disorder groups
 plot.dat.disorder.prepan <- rbind(gad.prepan.lm.for.plot,
-                                  phq.prepan.lm.for.plot,
-                                  pcl.prepan.lm.for.plot)
+                                  pcl.prepan.lm.for.plot,
+                                  phq.prepan.lm.for.plot)
 
 plot.dat.disorder.retro <- rbind(gad.retro.lm.for.plot,
-                                  phq.retro.lm.for.plot,
-                                  pcl.retro.lm.for.plot)
+                                  pcl.retro.lm.for.plot,
+                                 phq.retro.lm.for.plot)
 
 # Disorder groups: No PCL
 
@@ -8794,12 +8794,7 @@ plot.dat.disorder <- rbind(gad.lm.for.plot,
                                   phq.lm.for.plot,
                                   pcl.lm.for.plot)
 
-plot.dat.disorder <- plot.dat.disorder %>%
-  mutate(RowLabels = recode(RowLabels,
-                            `PCL.prepandemic` = "PCL total prepandemic",
-                            `PHQ.prepandemic` = "PHQ total prepandemic",
-                            `GAD.prepandemic` = "GAD total prepandemic"
-                            ))
+
 
 # by sample
 
@@ -8814,6 +8809,14 @@ plot.dat.noexplan.sample.phq <- rbind(phq.lm.for.plot.GLAD,
 plot.dat.noexplan.sample.pcl <- rbind(pcl.lm.for.plot.GLAD,
                              pcl.lm.for.plot.NBR,
                              pcl.lm.for.plot.RAMP)
+
+
+plot.dat.disorder.prepan <- plot.dat.disorder.prepan %>%
+  mutate(RowLabels = recode(RowLabels,
+                            `PCL.prepandemic` = "PCL total prepandemic",
+                            `PHQ.prepandemic` = "PHQ total prepandemic",
+                            `GAD.prepandemic` = "GAD total prepandemic"))
+
 
 ```
 
