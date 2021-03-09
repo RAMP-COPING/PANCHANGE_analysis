@@ -8818,6 +8818,13 @@ plot.dat.disorder.prepan <- plot.dat.disorder.prepan %>%
                             `GAD.prepandemic` = "GAD total prepandemic"))
 
 
+plot.dat.disorder.retro <- plot.dat.disorder.retro %>%
+  mutate(RowLabels = recode(RowLabels,
+                            `PCL.retrospective` = "PCL total retrospective",
+                            `PHQ.retrospective` = "PHQ total retrospective",
+                            `GAD.retrospective` = "GAD total retrospective"))
+
+
 ```
 
 
