@@ -913,7 +913,7 @@ dat.retro_OCD_by_sample <- dat.retro %>%
   
 dat.retro_OCD_by_sample <- dat.retro_OCD_by_sample %>% 
   group_by(Sample_plot) %>% 
-  summarise("OCDRs" = n())
+  summarise("OCRDs" = n())
 
 ```
 
@@ -1059,7 +1059,7 @@ head(dat.retro_positive_diagnosis_by_sample)
 ```{r Re-organise the positive diagnosis by sample tib}
 
 dat.retro_positive_diagnosis_by_sample <- dat.retro_positive_diagnosis_by_sample %>% 
-  gather('Depressive disorders', 'Anxiety disorders', 'Eating disorders', 'OCDRs', 'Psychotic disorders', 'ASD', 'ADHD', 'Personality disorders', 'Bipolar disorders', 'PTSD', 'No diagnosis', key = "Diagnosis", value = positive_n)
+  gather('Depressive disorders', 'Anxiety disorders', 'Eating disorders', 'OCRDs', 'Psychotic disorders', 'ASD', 'ADHD', 'Personality disorders', 'Bipolar disorders', 'PTSD', 'No diagnosis', key = "Diagnosis", value = positive_n)
 
 head(dat.retro_positive_diagnosis_by_sample, 9)
 
