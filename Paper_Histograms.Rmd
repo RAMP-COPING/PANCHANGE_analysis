@@ -1345,11 +1345,7 @@ dat.retro %>%
 grid.arrange(arranged_collapsed_gender_plot, arranged_retro_age_plot, arranged_employ_plot,
           arranged_retro_ethnicity_white, arranged_retro_ethnicity_non_white,
           layout_matrix = retro_matrix, 
-          nrow = 2,
-          #heights=c(1, 1.2),
-          bottom = textGrob("Non-binary/Self-defined: GLAD (247); NBR/EDGI (41); RAMP (92)", x = 1,
-                            hjust = 1,
-                            gp = gpar(fontface = 3L, fontsize = 9)))
+          nrow = 2)
 
 ```
 
