@@ -1288,7 +1288,8 @@ arranged_collapsed_gender_plot <- dat.retro_gender_male_female %>%
   theme(legend.position = "none") + 
   theme(legend.title = element_blank())  +
   theme(axis.text.x = element_text(colour = "black"),
-        axis.text.y = element_text(colour = "black"))
+        axis.text.y = element_text(colour = "black")) +
+  geom_text(x = Inf, y = Inf, label = "2", hjust = 1, vjust = 1)
 
 ```
 
