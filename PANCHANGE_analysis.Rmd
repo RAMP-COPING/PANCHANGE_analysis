@@ -849,7 +849,7 @@ dat.long.gad.sum %>%
 
 ```
 
-```{r gad.sum violin plot Sample GLAD EDGI combined, fig.height=14, fig.width=8, dpi=300}
+```{r gad.sum violin plot Sample NBR EDGI combined, fig.height=14, fig.width=8, dpi=300}
 dat.long.gad.sum %>%
   mutate(Time_point_renamed = fct_recode(Time_point,
             "Prepandemic" = "prepan",
@@ -862,10 +862,9 @@ dat.long.gad.sum %>%
             "Prepandemic")
          ) %>%
    mutate(Sample_combined = case_when(
-     Sample == "GLAD" ~ "GLAD and EDGI",
-     Sample == "EDGI" ~ "GLAD and EDGI",
-     Sample == "NBR" ~ "NBR",
-     Sample == "RAMP" ~ "RAMP",)
+     Sample == "GLAD" ~ "GLAD",
+     Sample == "NBR" |  Sample == "EDGI" ~ "NBR and EDGI",
+     Sample == "RAMP" ~ "RAMP")
          ) %>%
   ggplot(mapping = aes(
     x = Time_point_reordered,
@@ -1421,10 +1420,9 @@ dat.long.phq.sum %>%
                                             "Prepandemic")
   ) %>%
    mutate(Sample_combined = case_when(
-     Sample == "GLAD" ~ "GLAD and EDGI",
-     Sample == "EDGI" ~ "GLAD and EDGI",
-     Sample == "NBR" ~ "NBR",
-     Sample == "RAMP" ~ "RAMP",)
+     Sample == "GLAD" ~ "GLAD",
+     Sample == "NBR" |  Sample == "EDGI" ~ "NBR and EDGI",
+     Sample == "RAMP" ~ "RAMP")
          ) %>%
   ggplot(mapping = aes(
     x = Time_point_reordered,
@@ -1975,11 +1973,10 @@ dat.long.ocir.sum %>%
                                             "Retrospective",
                                             "Prepandemic")
   ) %>%
-   mutate(Sample_combined = case_when(
-     Sample == "GLAD" ~ "GLAD and EDGI",
-     Sample == "EDGI" ~ "GLAD and EDGI",
-     Sample == "NBR" ~ "NBR",
-     Sample == "RAMP" ~ "RAMP",)
+     mutate(Sample_combined = case_when(
+     Sample == "GLAD" ~ "GLAD",
+     Sample == "NBR" |  Sample == "EDGI" ~ "NBR and EDGI",
+     Sample == "RAMP" ~ "RAMP")
          ) %>%
   ggplot(mapping = aes(
     x = Time_point_reordered,
@@ -2327,9 +2324,9 @@ dat.long.pcl.sum %>%
 ```{r pcl.sum violin plot sample}
 dat.long.pcl.sum %>%
   filter(Time_point != "retro") %>%
-  mutate(sample = case_when(Sample == "GLAD" | Sample == "EDGI" ~ "GLAD and EDGI",
+  mutate(sample = case_when(Sample == "GLAD" ~ "GLAD",
                             Sample == "RAMP" ~ "RAMP",
-                            Sample == "NBR" ~ "NBR")) %>% 
+                            Sample == "NBR" | Sample == "EDGI" ~ "NBR")) %>% 
   mutate(Time_point_renamed = fct_recode(Time_point,
                                          "Prepandemic" = "prepan",
                                          "Baseline" = "base")
@@ -8238,47 +8235,47 @@ lmoutput_format <- function(lmobject, explan_var, group, dfname){
                              "71-75",
                              "76+",
                              "Mixed or multiple ethnicities",
-                             "Asian",
-                             "Black",
+                             "Asian or Asian British",
+                             "Black or Black British",
                              "Other",
                              "Key worker",
-                             "Unemployed",
-                             "Student",
                              "Retired",
-                             "Time between lockdown and baseline")
+                             "Student",
+                             "Unemployed",
+                             "Time")
   ## categories to facet on  
   categories <- c("Intercept",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Gender (Reference male)",
-                  "Gender (Reference male)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Ethnicity (Reference White)",
-                  "Ethnicity (Reference White)",
-                  "Ethnicity (Reference White)",
-                  "Ethnicity (Reference White)",
-                  "Employment (Reference employed)",
-                  "Employment (Reference employed)",
-                  "Employment (Reference employed)",
-                  "Employment (Reference employed)",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Gender",
+                  "Gender",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Employment",
+                  "Employment",
+                  "Employment",
+                  "Employment",
                   "Other")
   
   ## Disorder dimension  
@@ -8412,9 +8409,9 @@ lmoutput_format_noexplan <- function(lmobject,  group, dfname){
                              "Black",
                              "Other",
                              "Key worker",
-                             "Unemployed",
-                             "Student",
                              "Retired",
+                             "Student",
+                             "Unemployed",
                              "Time between lockdown and baseline")
   ## categories to facet on  
   categories <- c("Intercept",
@@ -8566,11 +8563,11 @@ dat.retro$PCL.retrospective <- dat.retro$pcl.sum_score_retro
 
 lin_preds <- c("time_diff_coping_lockdown_march_23",
                "GAD.prepandemic",
-               "PHQ.prepandemic",
                "PCL.prepandemic",
+               "PHQ.prepandemic",
                "GAD.retrospective",
-               "PHQ.retrospective",
-               "PCL.retrospective"
+               "PCL.retrospective",
+               "PHQ.retrospective"
                )
 
 dat.prepan[(names(dat.prepan) %in% lin_preds)] <- apply(dat.prepan[(names(dat.prepan) %in% lin_preds)],2,scale)
@@ -8644,11 +8641,11 @@ pcl.lm.noexplan <-  lm(formula = pcl.sum_score_base.glmformula,
 ```{r subset data for forests into samples}
 
 dat.retro.glad <- dat.retro %>%
-  filter(Sample == "GLAD" | 
-           Sample == "EDGI")
+  filter(Sample == "GLAD" )
 
 dat.retro.nbr <- dat.retro %>%
-  filter(Sample == "NBR")
+  filter(Sample == "NBR"| 
+           Sample == "EDGI")
 
 dat.retro.ramp <- dat.retro %>%
   filter(Sample == "RAMP")
@@ -8749,12 +8746,12 @@ lmoutput_format_noexplan(pcl.lm.noexplan,"RAMP", "pcl.lm.for.plot.RAMP")
 ```{r merge datasets for different combinations}
 # Disorder groups
 plot.dat.disorder.prepan <- rbind(gad.prepan.lm.for.plot,
-                                  phq.prepan.lm.for.plot,
-                                  pcl.prepan.lm.for.plot)
+                                  pcl.prepan.lm.for.plot,
+                                  phq.prepan.lm.for.plot)
 
 plot.dat.disorder.retro <- rbind(gad.retro.lm.for.plot,
-                                  phq.retro.lm.for.plot,
-                                  pcl.retro.lm.for.plot)
+                                  pcl.retro.lm.for.plot,
+                                 phq.retro.lm.for.plot)
 
 # Disorder groups: No PCL
 
@@ -8797,6 +8794,8 @@ plot.dat.disorder <- rbind(gad.lm.for.plot,
                                   phq.lm.for.plot,
                                   pcl.lm.for.plot)
 
+
+
 # by sample
 
 plot.dat.noexplan.sample.gad <- rbind(gad.lm.for.plot.GLAD,
@@ -8811,96 +8810,228 @@ plot.dat.noexplan.sample.pcl <- rbind(pcl.lm.for.plot.GLAD,
                              pcl.lm.for.plot.NBR,
                              pcl.lm.for.plot.RAMP)
 
+
+plot.dat.disorder.prepan <- plot.dat.disorder.prepan %>%
+  mutate(RowLabels = recode(RowLabels,
+                            `PCL.prepandemic` = "PCL total prepandemic",
+                            `PHQ.prepandemic` = "PHQ total prepandemic",
+                            `GAD.prepandemic` = "GAD total prepandemic"))
+
+
+plot.dat.disorder.retro <- plot.dat.disorder.retro %>%
+  mutate(RowLabels = recode(RowLabels,
+                            `PCL.retrospective` = "PCL total retrospective",
+                            `PHQ.retrospective` = "PHQ total retrospective",
+                            `GAD.retrospective` = "GAD total retrospective"))
+
+
 ```
 
 
 ## Forest plots
 ### disorder
-```{r forest plot by disorder prepan, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by disorder prepan, fig.height=70, fig.width=55, dpi=120}
 
 lm.forest(plot.dat.disorder.prepan,"Predictors of pandemic symptoms controlling for prepandemic symptoms")
 
 ```
 
-```{r forest plot by disorder retro, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by disorder retro, fig.height=70, fig.width=55, dpi=120}
 
 lm.forest(plot.dat.disorder.retro,"Predictors of pandemic symptoms controlling for retrospective symptoms")
 
 ```
 ### disorder (no explan)
 
-```{r forest plot by disorder no explan, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by disorder no explan, fig.height=70, fig.width=55, dpi=120}
 
-lm.forest(plot.dat.disorder,"Predictors of pandemic symptoms")
+#lm.forest(plot.dat.disorder,"Predictors of pandemic symptoms")
 
 ```
 
 ### disorder (no PCL)
-```{r forest plot by disorder prepan no pcl, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by disorder prepan no pcl, fig.height=70, fig.width=55, dpi=120}
 
-lm.forest(plot.dat.disorder.prepan.gadphq,"Predictors of pandemic symptoms controlling for prepandemic symptoms")
+#lm.forest(plot.dat.disorder.prepan.gadphq,"Predictors of pandemic symptoms controlling for prepandemic symptoms")
 
 ```
 
-```{r forest plot by disorder retro no pcl, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by disorder retro no pcl, fig.height=70, fig.width=55, dpi=120}
 
-lm.forest(plot.dat.disorder.retro.gadphq,"Predictors of pandemic symptoms controlling for retrospective symptoms")
+#lm.forest(plot.dat.disorder.retro.gadphq,"Predictors of pandemic symptoms controlling for retrospective symptoms")
 
 ```
 
 ### time point 
-```{r forest plot by time point gad, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by time point gad, fig.height=70, fig.width=55, dpi=120}
 
-lm.forest(plot.dat.time.gad,"Predictors of anxiety during pandemic controlling for retrospective or prepandemic symptoms")
-
-```
-
-```{r forest plot by time point phq, fig.height=30, fig.width=50, dpi=120}
-
-lm.forest(plot.dat.time.phq,"Predictors of depression during pandemic controlling for retrospective or prepandemic symptoms")
+#lm.forest(plot.dat.time.gad,"Predictors of anxiety during pandemic controlling for retrospective or prepandemic symptoms")
 
 ```
 
-```{r forest plot by time point pcl, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by time point phq, fig.height=70, fig.width=55, dpi=120}
 
-lm.forest(plot.dat.time.phq,"Predictors of PTSD during pandemic controlling for retrospective or prepandemic symptoms")
+#lm.forest(plot.dat.time.phq,"Predictors of depression during pandemic controlling for retrospective or prepandemic symptoms")
+
+```
+
+```{r forest plot by time point pcl, fig.height=70, fig.width=55, dpi=120}
+
+#lm.forest(plot.dat.time.phq,"Predictors of PTSD during pandemic controlling for retrospective or prepandemic symptoms")
 
 ```
 ### Sample (retrospective only)
 
-```{r forest plot by sample retro only gad, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by sample retro only gad, fig.height=70, fig.width=55, dpi=120}
 
-lm.forest(plot.dat.sample.gad ,"Predictors of anxiety controlling for retrospective symptoms across samples")
+#lm.forest(plot.dat.sample.gad ,"Predictors of anxiety controlling for retrospective symptoms across samples")
 
 ```
 
-```{r forest plot by sample retro only phq, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by sample retro only phq, fig.height=70, fig.width=55, dpi=120}
 
-lm.forest(plot.dat.sample.phq ,"Predictors of depression controlling for retrospective symptoms across samples")
+#lm.forest(plot.dat.sample.phq ,"Predictors of depression controlling for retrospective symptoms across samples")
 
 ```
 
 ### Sample pandemic only, no explanatory variable)
 
-```{r forest plot by sample no explan gad, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by sample no explan gad, fig.height=70, fig.width=55, dpi=120}
 
-lm.forest(plot.dat.noexplan.sample.gad  ,"Predictors of anxiety across samples")
-
-```
-
-
-```{r forest plot by sample no explan phq, fig.height=30, fig.width=50, dpi=120}
-
-lm.forest(plot.dat.noexplan.sample.phq  ,"Predictors of depression across samples")
+#lm.forest(plot.dat.noexplan.sample.gad  ,"Predictors of anxiety across samples")
 
 ```
 
 
-```{r forest plot by sample no explan pcl, fig.height=30, fig.width=50, dpi=120}
+```{r forest plot by sample no explan phq, fig.height=70, fig.width=55, dpi=120}
 
-lm.forest(plot.dat.noexplan.sample.pcl  ,"Predictors of symptoms of PTSD across samples")
+#lm.forest(plot.dat.noexplan.sample.phq  ,"Predictors of depression across samples")
 
 ```
+
+
+```{r forest plot by sample no explan pcl, fig.height=70, fig.width=55, dpi=120}
+
+#lm.forest(plot.dat.noexplan.sample.pcl  ,"Predictors of symptoms of PTSD across samples")
+
+```
+
+# Retrospective regression models by sample
+
+## GAD
+
+### GLAD
+```{r gad employment prior covid sensitivity model1b sum_score retro by sample glad}
+# Regression coefficients
+gad_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro.glad")
+kable(gad_retro_model1b_explan_estimates)
+gad_retro_model1b_explan_estimates
+
+
+```
+
+### NBR
+```{r gad employment prior covid sensitivity model1b sum_score retro by sample nbr}
+# Regression coefficients
+gad_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro.nbr")
+kable(gad_retro_model1b_explan_estimates)
+gad_retro_model1b_explan_estimates
+
+
+```
+
+### RAMP
+```{r gad employment prior covid sensitivity model1b sum_score retro by sample ramp}
+# Regression coefficients
+gad_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro.ramp")
+kable(gad_retro_model1b_explan_estimates)
+gad_retro_model1b_explan_estimates
+
+
+```
+
+## PHQ
+
+### GLAD
+```{r phq employment prior covid sensitivity model1b sum_score retro by sample glad}
+# Regression coefficients
+phq_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro.glad")
+kable(phq_retro_model1b_explan_estimates)
+phq_retro_model1b_explan_estimates
+
+
+```
+
+### NBR
+```{r phq employment prior covid sensitivity model1b sum_score retro by sample nbr}
+# Regression coefficients
+phq_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro.nbr")
+kable(phq_retro_model1b_explan_estimates)
+phq_retro_model1b_explan_estimates
+
+
+```
+
+### RAMP
+```{r phq employment prior covid sensitivity model1b sum_score retro by sample ramp}
+# Regression coefficients
+phq_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro.ramp")
+kable(phq_retro_model1b_explan_estimates)
+phq_retro_model1b_explan_estimates
+
+
+```
+
+## PCL
+
+### GLAD
+```{r pcl employment prior covid sensitivity model1b sum_score retro by sample glad}
+# Regression coefficients
+pcl_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "pcl.sum_score_base",
+                                                               explan_var = "pcl.sum_score_retro",
+                                                               data_set = "dat.retro.glad")
+kable(pcl_retro_model1b_explan_estimates)
+pcl_retro_model1b_explan_estimates
+
+
+```
+
+### NBR
+```{r pcl employment prior covid sensitivity model1b sum_score retro by sample nbr}
+# Regression coefficients
+pcl_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "pcl.sum_score_base",
+                                                               explan_var = "pcl.sum_score_retro",
+                                                               data_set = "dat.retro.nbr")
+kable(pcl_retro_model1b_explan_estimates)
+pcl_retro_model1b_explan_estimates
+
+
+```
+
+### RAMP
+```{r pcl employment prior covid sensitivity model1b sum_score retro by sample ramp}
+# Regression coefficients
+pcl_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "pcl.sum_score_base",
+                                                               explan_var = "pcl.sum_score_retro",
+                                                               data_set = "dat.retro.ramp")
+kable(pcl_retro_model1b_explan_estimates)
+pcl_retro_model1b_explan_estimates
+
+
+```
+
 
 
 # frequencies and descriptives in exclusion data
@@ -9087,8 +9218,7 @@ Notes: We use the default (Welch's) t-test (to account for non equal variance)
 ```{r t tests }
 
 datgladedgi <- dat.retro %>%
-  filter(Sample == "GLAD" |
-           Sample == "EDGI") 
+  filter(Sample == "GLAD") 
 
 t.test(datgladedgi$phq.sum_score_base,
        datgladedgi$phq.sum_score_retro,

@@ -8,37 +8,42 @@ lm.forest <- function(data,title){
              aes(x =RowLabels,y = Estimate,
                  colour = Group)) +
     
-    geom_point(size = 4,
+    geom_point(size = 10,
                position = position_dodge(0.9)) +
     
     geom_hline(aes(fill=Group),
                yintercept =0, 
-               linetype=2)  +
+               linetype=2,
+               size = 3)  +
     
     xlab('Group') + 
-    ylab("Estimate (95% Confidence Interval)")  +
+    ylab("\nEstimate (95% Confidence Interval)")  +
     ggtitle(title) +
     
     geom_errorbar(aes(ymin = LowerBound,
                       ymax = UpperBound),
-                  width = .5,
-                  position = position_dodge(0.9))  + 
+                  width = 1,
+                  position = position_dodge(0.9),
+                  size = 3)  + 
     
     facet_wrap(. ~ Categories,
-               strip.position="left",nrow=5,scales = "free_y") +
+               strip.position="left",nrow=6, scales="free_y") +
     
     scale_colour_manual(values=COPINGpalette5) +
     
-    theme(plot.title=element_text(size=20,face="bold"),
-          axis.text=element_text(face="bold",size=16,),
-          legend.text=element_text(size=16,),
-          legend.title=element_text(face="bold",size=18,),
-          axis.title.x=element_text(size=28,face="bold"),
+    theme(plot.title=element_text(size=0,face="bold"),
+          axis.text=element_text(face="bold",size=60,),
+          legend.text=element_text(size=60,),
+          legend.title=element_text(face="bold",size=70,),
+          axis.title.x=element_text(size=80,face="bold"),
           axis.title.y=element_blank(),
-          strip.text.y = element_text(angle=180,face="bold",size=20),
+          strip.text.y = element_text(angle=180,face="bold",size=50),
           panel.background = element_blank(),
           strip.background = element_rect(fill = "light grey"),
           panel.border = element_rect(colour = "grey",fill = NA)) +
+    
+    guides(color = guide_legend(reverse = TRUE)) +
+    
     coord_flip()
   return(p)
   

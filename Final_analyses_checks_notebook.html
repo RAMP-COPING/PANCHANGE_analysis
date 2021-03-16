@@ -2919,7 +2919,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Final paper detail checks and analyses</h1>
 <h4 class="author">Kirstin L Purves</h4>
-<h4 class="date">18 January, 2021</h4>
+<h4 class="date">09 March, 2021</h4>
 
 </div>
 
@@ -3009,22 +3009,22 @@ div.tocify {
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co">## Subset samples by study</span></span>
 <span id="cb19-2"><a href="#cb19-2"></a></span>
 <span id="cb19-3"><a href="#cb19-3"></a>GLAD.prepan &lt;-<span class="st"> </span>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb19-4"><a href="#cb19-4"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span></span>
-<span id="cb19-5"><a href="#cb19-5"></a><span class="st">           </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span>)</span>
-<span id="cb19-6"><a href="#cb19-6"></a></span>
-<span id="cb19-7"><a href="#cb19-7"></a>NBR.prepan &lt;-<span class="st"> </span>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb19-8"><a href="#cb19-8"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span>)</span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span>)</span>
+<span id="cb19-5"><a href="#cb19-5"></a></span>
+<span id="cb19-6"><a href="#cb19-6"></a>NBR.prepan &lt;-<span class="st"> </span>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb19-7"><a href="#cb19-7"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">|</span><span class="st"> </span></span>
+<span id="cb19-8"><a href="#cb19-8"></a><span class="st">           </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span>)</span>
 <span id="cb19-9"><a href="#cb19-9"></a></span>
 <span id="cb19-10"><a href="#cb19-10"></a>RAMP.prepan &lt;-<span class="st"> </span>dat.prepan <span class="op">%&gt;%</span></span>
 <span id="cb19-11"><a href="#cb19-11"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span>)</span>
 <span id="cb19-12"><a href="#cb19-12"></a></span>
 <span id="cb19-13"><a href="#cb19-13"></a><span class="co">### retro</span></span>
 <span id="cb19-14"><a href="#cb19-14"></a>GLAD.retro &lt;-<span class="st"> </span>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb19-15"><a href="#cb19-15"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span></span>
-<span id="cb19-16"><a href="#cb19-16"></a><span class="st">           </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span>)</span>
-<span id="cb19-17"><a href="#cb19-17"></a></span>
-<span id="cb19-18"><a href="#cb19-18"></a>NBR.retro &lt;-<span class="st"> </span>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb19-19"><a href="#cb19-19"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span>)</span>
+<span id="cb19-15"><a href="#cb19-15"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span>)</span>
+<span id="cb19-16"><a href="#cb19-16"></a></span>
+<span id="cb19-17"><a href="#cb19-17"></a>NBR.retro &lt;-<span class="st"> </span>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb19-18"><a href="#cb19-18"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">|</span><span class="st"> </span></span>
+<span id="cb19-19"><a href="#cb19-19"></a><span class="st">           </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span>)</span>
 <span id="cb19-20"><a href="#cb19-20"></a></span>
 <span id="cb19-21"><a href="#cb19-21"></a>RAMP.retro &lt;-<span class="st"> </span>dat.retro <span class="op">%&gt;%</span></span>
 <span id="cb19-22"><a href="#cb19-22"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span>)</span></code></pre></div>
@@ -3044,7 +3044,7 @@ div.tocify {
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="kw">print</span>(<span class="st">&quot;NBR&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;NBR&quot;</code></pre>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">max</span>(NBR.retro<span class="op">$</span>startDate.coping)</span></code></pre></div>
-<pre><code>## [1] &quot;2020-07-14 08:28:41 UTC&quot;</code></pre>
+<pre><code>## [1] &quot;2020-08-08 09:11:32 UTC&quot;</code></pre>
 </div>
 <div id="sample-sizes" class="section level2">
 <h2>Sample sizes</h2>
@@ -4113,9 +4113,9 @@ div.tocify {
 <h3>By sample</h3>
 <p>retrospective</p>
 <div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1"></a>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb80-2"><a href="#cb80-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb80-2"><a href="#cb80-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
 <span id="cb80-3"><a href="#cb80-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb80-4"><a href="#cb80-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb80-4"><a href="#cb80-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb80-5"><a href="#cb80-5"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span></span>
 <span id="cb80-6"><a href="#cb80-6"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">m.gad.base =</span> <span class="kw">mean</span>(gad.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
 <span id="cb80-7"><a href="#cb80-7"></a>            <span class="dt">sd.gad.base =</span> <span class="kw">sd</span>(gad.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
@@ -4139,14 +4139,14 @@ div.tocify {
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["m.gad.base"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sd.gad.base"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["n.gad.base"],"name":[4],"type":["int"],"align":["right"]},{"label":["m.gad.retro"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["sd.gad.retro"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["n.gad.retro"],"name":[7],"type":["int"],"align":["right"]},{"label":["m.phq.base"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["sd.phq.base"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["n.phq.base"],"name":[10],"type":["int"],"align":["right"]},{"label":["m.phq.retro"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["sd.phq.retro"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["n.phq.retro"],"name":[13],"type":["int"],"align":["right"]},{"label":["m.pcl.base"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["sd.pcl.base"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["n.pcl.base"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"GLAD","2":"8.487143","3":"5.833004","4":"12678","5":"6.146027","6":"5.011455","7":"12662","8":"10.793103","9":"6.681408","10":"12673","11":"8.079671","12":"6.163976","13":"12627","14":"15.703853","15":"6.158049","16":"12612"},{"1":"NBR","2":"2.402108","3":"3.604230","4":"13091","5":"1.621481","6":"2.759022","7":"13072","8":"3.271747","9":"4.071723","10":"13082","11":"2.254108","12":"3.183242","13":"13022","14":"8.503436","15":"3.459269","16":"13096"},{"1":"RAMP","2":"8.255790","3":"6.115071","4":"8636","5":"5.015000","6":"4.706270","7":"8600","8":"10.240876","9":"7.024227","10":"8631","11":"6.204922","12":"5.704870","13":"8574","14":"13.719327","15":"5.540104","16":"8615"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["m.gad.base"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sd.gad.base"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["n.gad.base"],"name":[4],"type":["int"],"align":["right"]},{"label":["m.gad.retro"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["sd.gad.retro"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["n.gad.retro"],"name":[7],"type":["int"],"align":["right"]},{"label":["m.phq.base"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["sd.phq.base"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["n.phq.base"],"name":[10],"type":["int"],"align":["right"]},{"label":["m.phq.retro"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["sd.phq.retro"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["n.phq.retro"],"name":[13],"type":["int"],"align":["right"]},{"label":["m.pcl.base"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["sd.pcl.base"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["n.pcl.base"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"GLAD","2":"8.481804","3":"5.830157","4":"12613","5":"6.138525","6":"5.008117","7":"12597","8":"10.789737","9":"6.680421","10":"12608","11":"8.072998","12":"6.161598","13":"12562","14":"15.705906","15":"6.159310","16":"12547"},{"1":"NBR","2":"2.437291","3":"3.656531","4":"13156","5":"1.651062","6":"2.810045","7":"13137","8":"3.312162","9":"4.130008","10":"13147","11":"2.289448","12":"3.246762","13":"13087","14":"8.537041","15":"3.508091","16":"13161"},{"1":"RAMP","2":"8.255790","3":"6.115071","4":"8636","5":"5.015000","6":"4.706270","7":"8600","8":"10.240876","9":"7.024227","10":"8631","11":"6.204922","12":"5.704870","13":"8574","14":"13.719327","15":"5.540104","16":"8615"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>prepandemic</p>
 <div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb82-2"><a href="#cb82-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb82-2"><a href="#cb82-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
 <span id="cb82-3"><a href="#cb82-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb82-4"><a href="#cb82-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb82-4"><a href="#cb82-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb82-5"><a href="#cb82-5"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span></span>
 <span id="cb82-6"><a href="#cb82-6"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">m.gad.base =</span> <span class="kw">mean</span>(gad.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
 <span id="cb82-7"><a href="#cb82-7"></a>            <span class="dt">sd.gad.base =</span> <span class="kw">sd</span>(gad.sum_score_base, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
@@ -4173,8 +4173,67 @@ div.tocify {
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["m.gad.base"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sd.gad.base"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["n.gad.base"],"name":[4],"type":["int"],"align":["right"]},{"label":["m.gad.prepan"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["sd.gad.prepan"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["n.gad.prepan"],"name":[7],"type":["int"],"align":["right"]},{"label":["m.phq.base"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["sd.phq.base"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["n.phq.base"],"name":[10],"type":["int"],"align":["right"]},{"label":["m.phq.prepan"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["sd.phq.prepan"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["n.phq.prepan"],"name":[13],"type":["int"],"align":["right"]},{"label":["m.pcl.base"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["sd.pcl.base"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["n.pcl.base"],"name":[16],"type":["int"],"align":["right"]},{"label":["m.pcl.prepan"],"name":[17],"type":["dbl"],"align":["right"]},{"label":["sd.pcl.prepan"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["n.pcl.prepan"],"name":[19],"type":["int"],"align":["right"]}],"data":[{"1":"GLAD","2":"8.45584","3":"5.821581","4":"12149","5":"8.786303","6":"5.961433","7":"12134","8":"10.74597","9":"6.657881","10":"12144","11":"11.1775","12":"6.861061","13":"12124","14":"15.66047","15":"6.148733","16":"12058","17":"15.40852","18":"6.093661","19":"12090"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["m.gad.base"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sd.gad.base"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["n.gad.base"],"name":[4],"type":["int"],"align":["right"]},{"label":["m.gad.prepan"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["sd.gad.prepan"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["n.gad.prepan"],"name":[7],"type":["int"],"align":["right"]},{"label":["m.phq.base"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["sd.phq.base"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["n.phq.base"],"name":[10],"type":["int"],"align":["right"]},{"label":["m.phq.prepan"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["sd.phq.prepan"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["n.phq.prepan"],"name":[13],"type":["int"],"align":["right"]},{"label":["m.pcl.base"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["sd.pcl.base"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["n.pcl.base"],"name":[16],"type":["int"],"align":["right"]},{"label":["m.pcl.prepan"],"name":[17],"type":["dbl"],"align":["right"]},{"label":["sd.pcl.prepan"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["n.pcl.prepan"],"name":[19],"type":["int"],"align":["right"]}],"data":[{"1":"GLAD","2":"8.45087","3":"5.819401","4":"12121","5":"8.78477","6":"5.960451","7":"12108","8":"10.74455","9":"6.657399","10":"12116","11":"11.17705","12":"6.858317","13":"12098","14":"15.66160","15":"6.150003","16":"12030","17":"15.40458","18":"6.093077","19":"12062"},{"1":"NBR","2":"10.60714","3":"6.459786","4":"28","5":"9.50000","6":"6.488451","7":"26","8":"11.35714","9":"6.961345","10":"28","11":"11.38462","12":"8.193055","13":"26","14":"15.17857","15":"5.657205","16":"28","17":"17.10714","18":"6.220273","19":"28"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
+</div>
+</div>
+<div id="change-scores" class="section level3">
+<h3>change scores</h3>
+<div id="retrospective" class="section level4">
+<h4>Retrospective</h4>
+<p>GLAD only</p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1"></a>vars &lt;-<span class="st"> </span>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb84-2"><a href="#cb84-2"></a><span class="st">  </span><span class="kw">filter</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb84-3"><a href="#cb84-3"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_retro,</span>
+<span id="cb84-4"><a href="#cb84-4"></a>         phq.sum_score_base,phq.sum_score_retro) <span class="op">%&gt;%</span></span>
+<span id="cb84-5"><a href="#cb84-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">gad.retro.change =</span> gad.sum_score_base <span class="op">-</span><span class="st"> </span>gad.sum_score_retro,</span>
+<span id="cb84-6"><a href="#cb84-6"></a>         <span class="dt">phq.retro.change =</span> phq.sum_score_base <span class="op">-</span><span class="st"> </span>phq.sum_score_retro) <span class="op">%&gt;%</span></span>
+<span id="cb84-7"><a href="#cb84-7"></a><span class="st">  </span><span class="kw">select</span>(gad.retro.change,</span>
+<span id="cb84-8"><a href="#cb84-8"></a>         phq.retro.change)</span>
+<span id="cb84-9"><a href="#cb84-9"></a></span>
+<span id="cb84-10"><a href="#cb84-10"></a></span>
+<span id="cb84-11"><a href="#cb84-11"></a><span class="kw">apply</span>(vars, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="kw">list</span>(<span class="kw">describe</span>(x)))</span></code></pre></div>
+<pre><code>## $gad.retro.change
+## $gad.retro.change[[1]]
+##    vars     n mean   sd median trimmed  mad min max range skew kurtosis   se
+## X1    1 12597 2.34 4.89      1    2.14 2.97 -21  21    42 0.26     1.54 0.04
+## 
+## 
+## $phq.retro.change
+## $phq.retro.change[[1]]
+##    vars     n mean  sd median trimmed  mad min max range skew kurtosis   se
+## X1    1 12562 2.72 5.2      1    2.52 2.97 -23  27    50 0.26     1.63 0.05</code></pre>
+</div>
+<div id="prepandemic" class="section level4">
+<h4>Prepandemic</h4>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1"></a>vars &lt;-<span class="st"> </span>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb86-2"><a href="#cb86-2"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_prepan,</span>
+<span id="cb86-3"><a href="#cb86-3"></a>         phq.sum_score_base,phq.sum_score_prepan,</span>
+<span id="cb86-4"><a href="#cb86-4"></a>         pcl.sum_score_base,pcl.sum_score_prepan) <span class="op">%&gt;%</span></span>
+<span id="cb86-5"><a href="#cb86-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">gad.prepan.change =</span> gad.sum_score_base <span class="op">-</span><span class="st"> </span>gad.sum_score_prepan,</span>
+<span id="cb86-6"><a href="#cb86-6"></a>         <span class="dt">phq.prepan.change =</span> phq.sum_score_base <span class="op">-</span><span class="st"> </span>phq.sum_score_prepan,</span>
+<span id="cb86-7"><a href="#cb86-7"></a>         <span class="dt">pcl.prepan.change =</span> pcl.sum_score_base <span class="op">-</span><span class="st"> </span>pcl.sum_score_prepan) <span class="op">%&gt;%</span></span>
+<span id="cb86-8"><a href="#cb86-8"></a><span class="st">  </span><span class="kw">select</span>(gad.prepan.change,</span>
+<span id="cb86-9"><a href="#cb86-9"></a>         phq.prepan.change,</span>
+<span id="cb86-10"><a href="#cb86-10"></a>         pcl.prepan.change)</span>
+<span id="cb86-11"><a href="#cb86-11"></a></span>
+<span id="cb86-12"><a href="#cb86-12"></a><span class="kw">apply</span>(vars, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="kw">list</span>(<span class="kw">describe</span>(x)))</span></code></pre></div>
+<pre><code>## $gad.prepan.change
+## $gad.prepan.change[[1]]
+##    vars     n  mean   sd median trimmed  mad min max range  skew kurtosis   se
+## X1    1 12126 -0.33 5.48      0   -0.26 4.45 -21  21    42 -0.13     0.79 0.05
+## 
+## 
+## $phq.prepan.change
+## $phq.prepan.change[[1]]
+##    vars     n  mean   sd median trimmed  mad min max range  skew kurtosis   se
+## X1    1 12111 -0.43 5.79      0   -0.34 4.45 -25  24    49 -0.15     0.96 0.05
+## 
+## 
+## $pcl.prepan.change
+## $pcl.prepan.change[[1]]
+##    vars     n mean   sd median trimmed  mad min max range  skew kurtosis   se
+## X1    1 11991 0.22 5.69      0    0.26 4.45 -23  24    47 -0.07     0.67 0.05</code></pre>
 </div>
 </div>
 </div>
@@ -4184,7 +4243,7 @@ div.tocify {
 <div id="average-scores" class="section level3">
 <h3>Average scores</h3>
 <p>Prepandemic</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>gad.sum_score_base,dat.prepan<span class="op">$</span>gad.sum_score_prepan, <span class="dt">paired =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>gad.sum_score_base,dat.prepan<span class="op">$</span>gad.sum_score_prepan, <span class="dt">paired =</span> T)</span></code></pre></div>
 <pre><code>## 
 ##  Paired t-test
 ## 
@@ -4196,7 +4255,7 @@ div.tocify {
 ## sample estimates:
 ## mean of the differences 
 ##              -0.3318489</code></pre>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>phq.sum_score_base,dat.prepan<span class="op">$</span>phq.sum_score_prepan, <span class="dt">paired =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>phq.sum_score_base,dat.prepan<span class="op">$</span>phq.sum_score_prepan, <span class="dt">paired =</span> T)</span></code></pre></div>
 <pre><code>## 
 ##  Paired t-test
 ## 
@@ -4208,7 +4267,7 @@ div.tocify {
 ## sample estimates:
 ## mean of the differences 
 ##               -0.428536</code></pre>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>pcl.sum_score_base,dat.prepan<span class="op">$</span>pcl.sum_score_prepan, <span class="dt">paired =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>pcl.sum_score_base,dat.prepan<span class="op">$</span>pcl.sum_score_prepan, <span class="dt">paired =</span> T)</span></code></pre></div>
 <pre><code>## 
 ##  Paired t-test
 ## 
@@ -4221,7 +4280,7 @@ div.tocify {
 ## mean of the differences 
 ##               0.2234176</code></pre>
 <p>Retrospective (no retrospective ratings for PCL)</p>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1"></a><span class="kw">t.test</span>(dat.retro<span class="op">$</span>gad.sum_score_base,dat.retro<span class="op">$</span>gad.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1"></a><span class="kw">t.test</span>(dat.retro<span class="op">$</span>gad.sum_score_base,dat.retro<span class="op">$</span>gad.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
 <pre><code>## 
 ##  Paired t-test
 ## 
@@ -4233,7 +4292,7 @@ div.tocify {
 ## sample estimates:
 ## mean of the differences 
 ##                1.972964</code></pre>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1"></a><span class="kw">t.test</span>(dat.retro<span class="op">$</span>phq.sum_score_base,dat.retro<span class="op">$</span>phq.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1"></a><span class="kw">t.test</span>(dat.retro<span class="op">$</span>phq.sum_score_base,dat.retro<span class="op">$</span>phq.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
 <pre><code>## 
 ##  Paired t-test
 ## 
@@ -4246,7 +4305,7 @@ div.tocify {
 ## mean of the differences 
 ##                2.403257</code></pre>
 <p>Prepandemic compared to retrospective (no retrospective ratings for PCL)</p>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>gad.sum_score_prepan,dat.prepan<span class="op">$</span>gad.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>gad.sum_score_prepan,dat.prepan<span class="op">$</span>gad.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
 <pre><code>## 
 ##  Paired t-test
 ## 
@@ -4258,7 +4317,7 @@ div.tocify {
 ## sample estimates:
 ## mean of the differences 
 ##                2.692676</code></pre>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>phq.sum_score_prepan,dat.prepan<span class="op">$</span>phq.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1"></a><span class="kw">t.test</span>(dat.prepan<span class="op">$</span>phq.sum_score_prepan,dat.prepan<span class="op">$</span>phq.sum_score_retro, <span class="dt">paired =</span> T)</span></code></pre></div>
 <pre><code>## 
 ##  Paired t-test
 ## 
@@ -4274,103 +4333,103 @@ div.tocify {
 <div id="average-scores-by-sample" class="section level3">
 <h3>Average scores by sample</h3>
 <p>Retrospective GAD</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1"></a>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb98-2"><a href="#cb98-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
-<span id="cb98-3"><a href="#cb98-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb98-4"><a href="#cb98-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb98-5"><a href="#cb98-5"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_retro, sample) <span class="op">%&gt;%</span></span>
-<span id="cb98-6"><a href="#cb98-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb98-7"><a href="#cb98-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb98-8"><a href="#cb98-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
-<span id="cb98-9"><a href="#cb98-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
-<span id="cb98-10"><a href="#cb98-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb98-11"><a href="#cb98-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>p.value,</span>
-<span id="cb98-12"><a href="#cb98-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>statistic,</span>
-<span id="cb98-13"><a href="#cb98-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>parameter)</span></code></pre></div>
-<pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["gad.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["gad.sum_score_retro"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [12,689]>","3":"<dbl [12,689]>","4":"1.697661e-251","5":"34.26858","6":"24784.78"},{"1":"NBR","2":"<dbl [13,096]>","3":"<dbl [13,096]>","4":"1.707595e-85","5":"19.67215","6":"24508.74"},{"1":"RAMP","2":"<dbl [8,641]>","3":"<dbl [8,641]>","4":"4.550009e-318","5":"38.99902","6":"16204.97"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-<p>Retrospective PHQ</p>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1"></a>dat.retro <span class="op">%&gt;%</span></span>
-<span id="cb100-2"><a href="#cb100-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
-<span id="cb100-3"><a href="#cb100-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb100-4"><a href="#cb100-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb100-5"><a href="#cb100-5"></a><span class="st">  </span><span class="kw">select</span>(phq.sum_score_base,phq.sum_score_retro, sample) <span class="op">%&gt;%</span></span>
-<span id="cb100-6"><a href="#cb100-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb100-7"><a href="#cb100-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb100-8"><a href="#cb100-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
-<span id="cb100-9"><a href="#cb100-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
-<span id="cb100-10"><a href="#cb100-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb100-11"><a href="#cb100-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>p.value,</span>
-<span id="cb100-12"><a href="#cb100-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>statistic,</span>
-<span id="cb100-13"><a href="#cb100-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>parameter)</span></code></pre></div>
-<pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["phq.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["phq.sum_score_retro"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [12,689]>","3":"<dbl [12,689]>","4":"8.546078e-242","5":"33.57463","6":"25149.63"},{"1":"NBR","2":"<dbl [13,096]>","3":"<dbl [13,096]>","4":"5.310669e-111","5":"22.50084","6":"24715.54"},{"1":"RAMP","2":"<dbl [8,641]>","3":"<dbl [8,641]>","4":"0.000000e+00","5":"41.38098","6":"16550.19"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-<p>Prepandemic GAD</p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb102-2"><a href="#cb102-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb102-2"><a href="#cb102-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span>  <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
 <span id="cb102-3"><a href="#cb102-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb102-4"><a href="#cb102-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb102-5"><a href="#cb102-5"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
+<span id="cb102-4"><a href="#cb102-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb102-5"><a href="#cb102-5"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_retro, sample) <span class="op">%&gt;%</span></span>
 <span id="cb102-6"><a href="#cb102-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb102-7"><a href="#cb102-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb102-8"><a href="#cb102-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
 <span id="cb102-9"><a href="#cb102-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
 <span id="cb102-10"><a href="#cb102-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb102-11"><a href="#cb102-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>p.value,</span>
-<span id="cb102-12"><a href="#cb102-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>statistic,</span>
-<span id="cb102-13"><a href="#cb102-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
+<span id="cb102-11"><a href="#cb102-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>p.value,</span>
+<span id="cb102-12"><a href="#cb102-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>statistic,</span>
+<span id="cb102-13"><a href="#cb102-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_retro))<span class="op">$</span>parameter)</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["gad.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["gad.sum_score_prepan"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [12,157]>","3":"<dbl [12,157]>","4":"1.247492e-05","5":"-4.370023","6":"24265.87","_row":"t"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["gad.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["gad.sum_score_retro"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [12,624]>","3":"<dbl [12,624]>","4":"6.122940e-251","5":"34.23147","6":"24656.41"},{"1":"NBR","2":"<dbl [13,161]>","3":"<dbl [13,161]>","4":"1.800570e-84","5":"19.54995","6":"24674.02"},{"1":"RAMP","2":"<dbl [8,641]>","3":"<dbl [8,641]>","4":"4.550009e-318","5":"38.99902","6":"16204.97"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>Prepandemic PHQ</p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb104-2"><a href="#cb104-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<p>Retrospective PHQ</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1"></a>dat.retro <span class="op">%&gt;%</span></span>
+<span id="cb104-2"><a href="#cb104-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
 <span id="cb104-3"><a href="#cb104-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb104-4"><a href="#cb104-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb104-5"><a href="#cb104-5"></a><span class="st">  </span><span class="kw">select</span>(phq.sum_score_base,phq.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
+<span id="cb104-4"><a href="#cb104-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span><span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb104-5"><a href="#cb104-5"></a><span class="st">  </span><span class="kw">select</span>(phq.sum_score_base,phq.sum_score_retro, sample) <span class="op">%&gt;%</span></span>
 <span id="cb104-6"><a href="#cb104-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb104-7"><a href="#cb104-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb104-8"><a href="#cb104-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
 <span id="cb104-9"><a href="#cb104-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
 <span id="cb104-10"><a href="#cb104-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb104-11"><a href="#cb104-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>p.value,</span>
-<span id="cb104-12"><a href="#cb104-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>statistic,</span>
-<span id="cb104-13"><a href="#cb104-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
+<span id="cb104-11"><a href="#cb104-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>p.value,</span>
+<span id="cb104-12"><a href="#cb104-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>statistic,</span>
+<span id="cb104-13"><a href="#cb104-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_retro))<span class="op">$</span>parameter)</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["phq.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["phq.sum_score_prepan"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [12,157]>","3":"<dbl [12,157]>","4":"6.67032e-07","5":"-4.972043","6":"24241.64","_row":"t"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["phq.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["phq.sum_score_retro"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [12,624]>","3":"<dbl [12,624]>","4":"2.979411e-241","5":"33.53770","6":"25019.56"},{"1":"NBR","2":"<dbl [13,161]>","3":"<dbl [13,161]>","4":"4.132591e-109","5":"22.30210","6":"24896.20"},{"1":"RAMP","2":"<dbl [8,641]>","3":"<dbl [8,641]>","4":"0.000000e+00","5":"41.38098","6":"16550.19"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>Prepandemic PCL</p>
+<p>Prepandemic GAD</p>
 <div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
-<span id="cb106-2"><a href="#cb106-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb106-2"><a href="#cb106-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
 <span id="cb106-3"><a href="#cb106-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
-<span id="cb106-4"><a href="#cb106-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb106-5"><a href="#cb106-5"></a><span class="st">  </span><span class="kw">select</span>(pcl.sum_score_base,pcl.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
+<span id="cb106-4"><a href="#cb106-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb106-5"><a href="#cb106-5"></a><span class="st">  </span><span class="kw">select</span>(gad.sum_score_base,gad.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
 <span id="cb106-6"><a href="#cb106-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb106-7"><a href="#cb106-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb106-8"><a href="#cb106-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
 <span id="cb106-9"><a href="#cb106-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
 <span id="cb106-10"><a href="#cb106-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb106-11"><a href="#cb106-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>p.value,</span>
-<span id="cb106-12"><a href="#cb106-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>statistic,</span>
-<span id="cb106-13"><a href="#cb106-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
+<span id="cb106-11"><a href="#cb106-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>p.value,</span>
+<span id="cb106-12"><a href="#cb106-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>statistic,</span>
+<span id="cb106-13"><a href="#cb106-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(gad.sum_score_base), <span class="kw">unlist</span>(gad.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
 <pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["pcl.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["pcl.sum_score_prepan"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [12,157]>","3":"<dbl [12,157]>","4":"0.001385229","5":"3.198083","6":"24142.72","_row":"t"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["gad.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["gad.sum_score_prepan"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [12,129]>","3":"<dbl [12,129]>","4":"1.029834e-05","5":"-4.4117445","6":"24211.84692"},{"1":"NBR","2":"<dbl [28]>","3":"<dbl [28]>","4":"5.328681e-01","5":"0.6278489","6":"51.66949"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Prepandemic PHQ</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb108-2"><a href="#cb108-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span>  <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb108-3"><a href="#cb108-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
+<span id="cb108-4"><a href="#cb108-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span> <span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span> <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb108-5"><a href="#cb108-5"></a><span class="st">  </span><span class="kw">select</span>(phq.sum_score_base,phq.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
+<span id="cb108-6"><a href="#cb108-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb108-7"><a href="#cb108-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb108-8"><a href="#cb108-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb108-9"><a href="#cb108-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
+<span id="cb108-10"><a href="#cb108-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb108-11"><a href="#cb108-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>p.value,</span>
+<span id="cb108-12"><a href="#cb108-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>statistic,</span>
+<span id="cb108-13"><a href="#cb108-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(phq.sum_score_base), <span class="kw">unlist</span>(phq.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
+<pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["phq.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["phq.sum_score_prepan"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [12,129]>","3":"<dbl [12,129]>","4":"6.440372e-07","5":"-4.97884757","6":"24188.43786"},{"1":"NBR","2":"<dbl [28]>","3":"<dbl [28]>","4":"9.894984e-01","5":"-0.01322921","6":"49.25702"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Prepandemic PCL</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1"></a>dat.prepan <span class="op">%&gt;%</span></span>
+<span id="cb110-2"><a href="#cb110-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">case_when</span>(Sample <span class="op">==</span><span class="st"> &quot;GLAD&quot;</span> <span class="op">~</span><span class="st"> &quot;GLAD&quot;</span>,</span>
+<span id="cb110-3"><a href="#cb110-3"></a>                            Sample <span class="op">==</span><span class="st"> &quot;RAMP&quot;</span> <span class="op">~</span><span class="st"> &quot;RAMP&quot;</span>,</span>
+<span id="cb110-4"><a href="#cb110-4"></a>                            Sample <span class="op">==</span><span class="st"> &quot;NBR&quot;</span><span class="op">|</span><span class="st"> </span>Sample <span class="op">==</span><span class="st"> &quot;EDGI&quot;</span>  <span class="op">~</span><span class="st"> &quot;NBR&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb110-5"><a href="#cb110-5"></a><span class="st">  </span><span class="kw">select</span>(pcl.sum_score_base,pcl.sum_score_prepan, sample) <span class="op">%&gt;%</span></span>
+<span id="cb110-6"><a href="#cb110-6"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> variable, <span class="dt">value =</span> value, <span class="op">-</span>sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb110-7"><a href="#cb110-7"></a><span class="st">  </span><span class="kw">group_by</span>(sample,variable) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb110-8"><a href="#cb110-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">list</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb110-9"><a href="#cb110-9"></a><span class="st">  </span><span class="kw">spread</span>(variable,value) <span class="op">%&gt;%</span></span>
+<span id="cb110-10"><a href="#cb110-10"></a><span class="st">  </span><span class="kw">group_by</span>(sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb110-11"><a href="#cb110-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>p.value,</span>
+<span id="cb110-12"><a href="#cb110-12"></a>         <span class="dt">t_value =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>statistic,</span>
+<span id="cb110-13"><a href="#cb110-13"></a>         <span class="dt">df =</span> <span class="kw">t.test</span>(<span class="kw">unlist</span>(pcl.sum_score_base), <span class="kw">unlist</span>(pcl.sum_score_prepan))<span class="op">$</span>parameter)</span></code></pre></div>
+<pre><code>## `summarise()` regrouping output by &#39;sample&#39; (override with `.groups` argument)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["pcl.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["pcl.sum_score_prepan"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [12,129]>","3":"<dbl [12,129]>","4":"0.001121978","5":"3.258399","6":"24086.55711"},{"1":"NBR","2":"<dbl [28]>","3":"<dbl [28]>","4":"0.230184131","5":"-1.213719","6":"53.52103"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -4423,7 +4482,7 @@ $(document).ready(function ()  {
 
     // establish options
     var options = {
-      selectors: "h1,h2",
+      selectors: "h1,h2,h3",
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
