@@ -8692,8 +8692,8 @@ lmoutput_format(gad.retro.lm,"GAD.retrospective","GAD-7", "gad.retro.lm.for.plot
 lmoutput_format(phq.prepan.lm,"PHQ.prepandemic","PHQ-9", "phq.prepan.lm.for.plot")
 lmoutput_format(phq.retro.lm,"PHQ.retrospective","PHQ-9", "phq.retro.lm.for.plot")
 
-lmoutput_format(pcl.prepan.lm,"PCL.prepandemic","PCL", "pcl.prepan.lm.for.plot")
-lmoutput_format(pcl.retro.lm,"PCL.retrospective","PCL", "pcl.retro.lm.for.plot")
+lmoutput_format(pcl.prepan.lm,"PCL.prepandemic","PCL-6", "pcl.prepan.lm.for.plot")
+lmoutput_format(pcl.retro.lm,"PCL.retrospective","PCL-6", "pcl.retro.lm.for.plot")
 
 # prepandemic and retrospective, grouped by time point
 lmoutput_format(gad.prepan.lm,"GAD.prepandemic","Prepandemic", "gad.prepan.lm.for.plot.timegroup")
@@ -8724,7 +8724,7 @@ lmoutput_format(phq.retro.lm.ramp,"PHQ.retrospective","RAMP", "phq.retro.lm.for.
 # grouped by disorder measure
 lmoutput_format_noexplan(gad.lm.noexplan,"GAD-7", "gad.lm.for.plot")
 lmoutput_format_noexplan(phq.lm.noexplan,"PHQ-9", "phq.lm.for.plot")
-lmoutput_format_noexplan(pcl.lm.noexplan,"PCL", "pcl.lm.for.plot")
+lmoutput_format_noexplan(pcl.lm.noexplan,"PCL-6", "pcl.lm.for.plot")
 
 
 # Grouped by sample
