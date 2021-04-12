@@ -620,7 +620,7 @@ GLAD.base.GAD10 / GLAD.base
 ```{r GLAD prop PHQ >10 prepandemic}
 
 GLAD.prepan.PHQ9 <-  GLAD.prepan %>%
-  filter(phq.sum_score_prepan >=9) %>%
+  filter(phq.sum_score_prepan >=10) %>%
   count()
 
 GLAD.base <-  GLAD.prepan %>%
@@ -638,7 +638,7 @@ GLAD.prepan.PHQ9 / GLAD.base
 ```{r GLAD prop PHQ >10 pandemic baseline}
 
 GLAD.base.PHQ9 <-  GLAD.prepan %>%
-  filter(phq.sum_score_base >=9) %>%
+  filter(phq.sum_score_base >=10) %>%
   count()
 
 GLAD.base <-  GLAD.prepan %>%
