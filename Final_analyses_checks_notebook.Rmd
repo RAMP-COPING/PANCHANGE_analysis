@@ -43,7 +43,7 @@ library(ggpubr)
 source("/Users/kirstin/Dropbox/SGDP/RAMP/Projects/PANCHANGE/PANCHANGE_raw_path.R")
 
 
-alldat <-  readRDS(file = paste0(data_path, "/four_cohorts_variables_exclusion.rds"))
+alldat <-  readRDS(file = paste0(data_path, "four_cohorts_variables_exclusion.rds"))
 
 ```
 
@@ -580,4 +580,142 @@ dat.prepan %>%
 
 
 
+# change in thresholds in GLAD only
+
+##1. Proportion scoring ≥10 on GAD-7 prepandemic     
+
+```{r GLAD prop GAD >10 prepandemic}
+
+GLAD.prepan.GAD10 <-  GLAD.prepan %>%
+  filter(gad.sum_score_prepan >=10) %>%
+  count()
+
+GLAD.base <-  GLAD.prepan %>%
+  filter(!is.na(gad.sum_score_prepan)) %>%
+  count()
+
+print("proportion of GLAD sample with a GAD 7 score >= 10 prepandemic (i.e. and GLAD baseline)")
+GLAD.prepan.GAD10 / GLAD.base
+
+```
+
+## 2. Proportion scoring ≥10 on GAD-7 current/baseline   
+
+```{r GLAD prop GAD >10 pandemic baseline}
+
+GLAD.base.GAD10 <-  GLAD.prepan %>%
+  filter(gad.sum_score_base >=10) %>%
+  count()
+
+GLAD.base <-  GLAD.prepan %>%
+  filter(!is.na(gad.sum_score_base)) %>%
+  count()
+
+print("proportion of GLAD sample with a GAD 7 score >= 10 at the pandemic baseline")
+GLAD.base.GAD10 / GLAD.base
+
+```
+## 3. Proportion scoring ≥ 10 on PHQ-9 prepandemic    
+
+```{r GLAD prop PHQ >10 prepandemic}
+
+GLAD.prepan.PHQ9 <-  GLAD.prepan %>%
+  filter(phq.sum_score_prepan >=9) %>%
+  count()
+
+GLAD.base <-  GLAD.prepan %>%
+  filter(!is.na(phq.sum_score_prepan)) %>%
+  count()
+
+print("proportion of GLAD sample with a PHQ 9 score >= 10 at the pandemic baseline")
+GLAD.prepan.PHQ9 / GLAD.base
+
+```
+
+## 4. Proportion scoring ≥ 10 on PHQ-9 current/baseline     
+
+
+```{r GLAD prop PHQ >10 pandemic baseline}
+
+GLAD.base.PHQ9 <-  GLAD.prepan %>%
+  filter(phq.sum_score_base >=9) %>%
+  count()
+
+GLAD.base <-  GLAD.prepan %>%
+  filter(!is.na(phq.sum_score_base)) %>%
+  count()
+
+print("proportion of GLAD sample with a PHQ 9 score >= 10 at the pandemic baseline")
+GLAD.base.PHQ9 / GLAD.base
+
+```
+## 5. Proportion scoring ≥ 14 on PCL-6 prepandemic 
+
+```{r GLAD prop PCL >14 pre pandemic}
+
+GLAD.prepan.PCL <-  GLAD.prepan %>%
+  filter(pcl.sum_score_prepan >=14) %>%
+  count()
+
+GLAD.base <-  GLAD.prepan %>%
+  filter(!is.na(pcl.sum_score_prepan)) %>%
+  count()
+
+print("proportion of GLAD sample with a PCL score >= 14 at the pandemic baseline")
+GLAD.prepan.PCL / GLAD.base
+
+```
+
+## 6. Proportion scoring ≥ 14 on PCL-6 current/baseline     
+
+```{r GLAD prop PCL >14 pandemic baseline}
+
+GLAD.base.PCL <-  GLAD.prepan %>%
+  filter(pcl.sum_score_base >=14) %>%
+  count()
+
+GLAD.base <-  GLAD.prepan %>%
+  filter(!is.na(pcl.sum_score_base)) %>%
+  count()
+
+print("proportion of GLAD sample with a PCL score >= 14 at the pandemic baseline")
+GLAD.base.PCL / GLAD.base
+
+```
+
+
+## RAMP PCL endorsement rate at pandemic baseline
+
+```{r}
+
+RAMP.retro.PCL <-  RAMP.retro %>%
+  filter(pcl.sum_score_base >=14) %>%
+  count()
+
+RAMP.base <-  RAMP.retro %>%
+  filter(!is.na(pcl.sum_score_base)) %>%
+  count()
+
+print("proportion of RAMP sample with a PCL score >= 14 at the pandemic baseline")
+RAMP.retro.PCL / RAMP.base
+
+
+```
+
+## NBR PCL endorsement rate at pandemic baseline
+
+```{r}
+
+NBR.retro.PCL <-  NBR.retro %>%
+  filter(pcl.sum_score_base >=14) %>%
+  count()
+
+NBR.base <-  NBR.retro %>%
+  filter(!is.na(pcl.sum_score_base)) %>%
+  count()
+
+print("proportion of NBR sample with a PCL score >= 14 at the pandemic baseline")
+NBR.retro.PCL / NBR.base
+
+```
 

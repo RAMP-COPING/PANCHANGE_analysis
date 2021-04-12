@@ -2919,7 +2919,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Final paper detail checks and analyses</h1>
 <h4 class="author">Kirstin L Purves</h4>
-<h4 class="date">09 March, 2021</h4>
+<h4 class="date">12 April, 2021</h4>
 
 </div>
 
@@ -2965,7 +2965,7 @@ div.tocify {
 <span id="cb13-5"><a href="#cb13-5"></a><span class="kw">source</span>(<span class="st">&quot;/Users/kirstin/Dropbox/SGDP/RAMP/Projects/PANCHANGE/PANCHANGE_raw_path.R&quot;</span>)</span>
 <span id="cb13-6"><a href="#cb13-6"></a></span>
 <span id="cb13-7"><a href="#cb13-7"></a></span>
-<span id="cb13-8"><a href="#cb13-8"></a>alldat &lt;-<span class="st">  </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="kw">paste0</span>(data_path, <span class="st">&quot;/four_cohorts_variables_exclusion.rds&quot;</span>))</span></code></pre></div>
+<span id="cb13-8"><a href="#cb13-8"></a>alldat &lt;-<span class="st">  </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="kw">paste0</span>(data_path, <span class="st">&quot;four_cohorts_variables_exclusion.rds&quot;</span>))</span></code></pre></div>
 </div>
 <div id="impute-and-subset-data" class="section level1">
 <h1>Impute and subset data</h1>
@@ -4432,6 +4432,159 @@ div.tocify {
 {"columns":[{"label":["sample"],"name":[1],"type":["chr"],"align":["left"]},{"label":["pcl.sum_score_base"],"name":[2],"type":["list"],"align":["right"]},{"label":["pcl.sum_score_prepan"],"name":[3],"type":["list"],"align":["right"]},{"label":["p_value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t_value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"GLAD","2":"<dbl [12,129]>","3":"<dbl [12,129]>","4":"0.001121978","5":"3.258399","6":"24086.55711"},{"1":"NBR","2":"<dbl [28]>","3":"<dbl [28]>","4":"0.230184131","5":"-1.213719","6":"53.52103"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+</div>
+</div>
+</div>
+<div id="change-in-thresholds-in-glad-only" class="section level1">
+<h1>change in thresholds in GLAD only</h1>
+<p>##1. Proportion scoring ≥10 on GAD-7 prepandemic</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1"></a>GLAD.prepan.GAD10 &lt;-<span class="st">  </span>GLAD.prepan <span class="op">%&gt;%</span></span>
+<span id="cb112-2"><a href="#cb112-2"></a><span class="st">  </span><span class="kw">filter</span>(gad.sum_score_prepan <span class="op">&gt;=</span><span class="dv">10</span>) <span class="op">%&gt;%</span></span>
+<span id="cb112-3"><a href="#cb112-3"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb112-4"><a href="#cb112-4"></a></span>
+<span id="cb112-5"><a href="#cb112-5"></a>GLAD.base &lt;-<span class="st">  </span>GLAD.prepan <span class="op">%&gt;%</span></span>
+<span id="cb112-6"><a href="#cb112-6"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(gad.sum_score_prepan)) <span class="op">%&gt;%</span></span>
+<span id="cb112-7"><a href="#cb112-7"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb112-8"><a href="#cb112-8"></a></span>
+<span id="cb112-9"><a href="#cb112-9"></a><span class="kw">print</span>(<span class="st">&quot;proportion of GLAD sample with a GAD 7 score &gt;= 10 prepandemic (i.e. and GLAD baseline)&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;proportion of GLAD sample with a GAD 7 score &gt;= 10 prepandemic (i.e. and GLAD baseline)&quot;</code></pre>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1"></a>GLAD.prepan.GAD10 <span class="op">/</span><span class="st"> </span>GLAD.base</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["n"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.4062603"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div id="proportion-scoring-10-on-gad-7-currentbaseline" class="section level2">
+<h2>2. Proportion scoring ≥10 on GAD-7 current/baseline</h2>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1"></a>GLAD.base.GAD10 &lt;-<span class="st">  </span>GLAD.prepan <span class="op">%&gt;%</span></span>
+<span id="cb115-2"><a href="#cb115-2"></a><span class="st">  </span><span class="kw">filter</span>(gad.sum_score_base <span class="op">&gt;=</span><span class="dv">10</span>) <span class="op">%&gt;%</span></span>
+<span id="cb115-3"><a href="#cb115-3"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb115-4"><a href="#cb115-4"></a></span>
+<span id="cb115-5"><a href="#cb115-5"></a>GLAD.base &lt;-<span class="st">  </span>GLAD.prepan <span class="op">%&gt;%</span></span>
+<span id="cb115-6"><a href="#cb115-6"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(gad.sum_score_base)) <span class="op">%&gt;%</span></span>
+<span id="cb115-7"><a href="#cb115-7"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb115-8"><a href="#cb115-8"></a></span>
+<span id="cb115-9"><a href="#cb115-9"></a><span class="kw">print</span>(<span class="st">&quot;proportion of GLAD sample with a GAD 7 score &gt;= 10 at the pandemic baseline&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;proportion of GLAD sample with a GAD 7 score &gt;= 10 at the pandemic baseline&quot;</code></pre>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1"></a>GLAD.base.GAD10 <span class="op">/</span><span class="st"> </span>GLAD.base</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["n"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.3885818"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="proportion-scoring-10-on-phq-9-prepandemic" class="section level2">
+<h2>3. Proportion scoring ≥ 10 on PHQ-9 prepandemic</h2>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1"></a>GLAD.prepan.PHQ9 &lt;-<span class="st">  </span>GLAD.prepan <span class="op">%&gt;%</span></span>
+<span id="cb118-2"><a href="#cb118-2"></a><span class="st">  </span><span class="kw">filter</span>(phq.sum_score_prepan <span class="op">&gt;=</span><span class="dv">9</span>) <span class="op">%&gt;%</span></span>
+<span id="cb118-3"><a href="#cb118-3"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb118-4"><a href="#cb118-4"></a></span>
+<span id="cb118-5"><a href="#cb118-5"></a>GLAD.base &lt;-<span class="st">  </span>GLAD.prepan <span class="op">%&gt;%</span></span>
+<span id="cb118-6"><a href="#cb118-6"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(phq.sum_score_prepan)) <span class="op">%&gt;%</span></span>
+<span id="cb118-7"><a href="#cb118-7"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb118-8"><a href="#cb118-8"></a></span>
+<span id="cb118-9"><a href="#cb118-9"></a><span class="kw">print</span>(<span class="st">&quot;proportion of GLAD sample with a PHQ 9 score &gt;= 10 at the pandemic baseline&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;proportion of GLAD sample with a PHQ 9 score &gt;= 10 at the pandemic baseline&quot;</code></pre>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1"></a>GLAD.prepan.PHQ9 <span class="op">/</span><span class="st"> </span>GLAD.base</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["n"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.5959663"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="proportion-scoring-10-on-phq-9-currentbaseline" class="section level2">
+<h2>4. Proportion scoring ≥ 10 on PHQ-9 current/baseline</h2>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1"></a>GLAD.base.PHQ9 &lt;-<span class="st">  </span>GLAD.prepan <span class="op">%&gt;%</span></span>
+<span id="cb121-2"><a href="#cb121-2"></a><span class="st">  </span><span class="kw">filter</span>(phq.sum_score_base <span class="op">&gt;=</span><span class="dv">9</span>) <span class="op">%&gt;%</span></span>
+<span id="cb121-3"><a href="#cb121-3"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb121-4"><a href="#cb121-4"></a></span>
+<span id="cb121-5"><a href="#cb121-5"></a>GLAD.base &lt;-<span class="st">  </span>GLAD.prepan <span class="op">%&gt;%</span></span>
+<span id="cb121-6"><a href="#cb121-6"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(phq.sum_score_base)) <span class="op">%&gt;%</span></span>
+<span id="cb121-7"><a href="#cb121-7"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb121-8"><a href="#cb121-8"></a></span>
+<span id="cb121-9"><a href="#cb121-9"></a><span class="kw">print</span>(<span class="st">&quot;proportion of GLAD sample with a PHQ 9 score &gt;= 10 at the pandemic baseline&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;proportion of GLAD sample with a PHQ 9 score &gt;= 10 at the pandemic baseline&quot;</code></pre>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1"></a>GLAD.base.PHQ9 <span class="op">/</span><span class="st"> </span>GLAD.base</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["n"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.5729614"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="proportion-scoring-14-on-pcl-6-prepandemic" class="section level2">
+<h2>5. Proportion scoring ≥ 14 on PCL-6 prepandemic</h2>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1"></a>GLAD.prepan.PCL &lt;-<span class="st">  </span>GLAD.prepan <span class="op">%&gt;%</span></span>
+<span id="cb124-2"><a href="#cb124-2"></a><span class="st">  </span><span class="kw">filter</span>(pcl.sum_score_prepan <span class="op">&gt;=</span><span class="dv">14</span>) <span class="op">%&gt;%</span></span>
+<span id="cb124-3"><a href="#cb124-3"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb124-4"><a href="#cb124-4"></a></span>
+<span id="cb124-5"><a href="#cb124-5"></a>GLAD.base &lt;-<span class="st">  </span>GLAD.prepan <span class="op">%&gt;%</span></span>
+<span id="cb124-6"><a href="#cb124-6"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(pcl.sum_score_prepan)) <span class="op">%&gt;%</span></span>
+<span id="cb124-7"><a href="#cb124-7"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb124-8"><a href="#cb124-8"></a></span>
+<span id="cb124-9"><a href="#cb124-9"></a><span class="kw">print</span>(<span class="st">&quot;proportion of GLAD sample with a PCL score &gt;= 14 at the pandemic baseline&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;proportion of GLAD sample with a PCL score &gt;= 14 at the pandemic baseline&quot;</code></pre>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1"></a>GLAD.prepan.PCL <span class="op">/</span><span class="st"> </span>GLAD.base</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["n"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.5638368"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="proportion-scoring-14-on-pcl-6-currentbaseline" class="section level2">
+<h2>6. Proportion scoring ≥ 14 on PCL-6 current/baseline</h2>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1"></a>GLAD.base.PCL &lt;-<span class="st">  </span>GLAD.prepan <span class="op">%&gt;%</span></span>
+<span id="cb127-2"><a href="#cb127-2"></a><span class="st">  </span><span class="kw">filter</span>(pcl.sum_score_base <span class="op">&gt;=</span><span class="dv">14</span>) <span class="op">%&gt;%</span></span>
+<span id="cb127-3"><a href="#cb127-3"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb127-4"><a href="#cb127-4"></a></span>
+<span id="cb127-5"><a href="#cb127-5"></a>GLAD.base &lt;-<span class="st">  </span>GLAD.prepan <span class="op">%&gt;%</span></span>
+<span id="cb127-6"><a href="#cb127-6"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(pcl.sum_score_base)) <span class="op">%&gt;%</span></span>
+<span id="cb127-7"><a href="#cb127-7"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb127-8"><a href="#cb127-8"></a></span>
+<span id="cb127-9"><a href="#cb127-9"></a><span class="kw">print</span>(<span class="st">&quot;proportion of GLAD sample with a PCL score &gt;= 14 at the pandemic baseline&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;proportion of GLAD sample with a PCL score &gt;= 14 at the pandemic baseline&quot;</code></pre>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1"></a>GLAD.base.PCL <span class="op">/</span><span class="st"> </span>GLAD.base</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["n"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.5784705"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="ramp-pcl-endorsement-rate-at-pandemic-baseline" class="section level2">
+<h2>RAMP PCL endorsement rate at pandemic baseline</h2>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1"></a>RAMP.retro.PCL &lt;-<span class="st">  </span>RAMP.retro <span class="op">%&gt;%</span></span>
+<span id="cb130-2"><a href="#cb130-2"></a><span class="st">  </span><span class="kw">filter</span>(pcl.sum_score_base <span class="op">&gt;=</span><span class="dv">14</span>) <span class="op">%&gt;%</span></span>
+<span id="cb130-3"><a href="#cb130-3"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb130-4"><a href="#cb130-4"></a></span>
+<span id="cb130-5"><a href="#cb130-5"></a>RAMP.base &lt;-<span class="st">  </span>RAMP.retro <span class="op">%&gt;%</span></span>
+<span id="cb130-6"><a href="#cb130-6"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(pcl.sum_score_base)) <span class="op">%&gt;%</span></span>
+<span id="cb130-7"><a href="#cb130-7"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb130-8"><a href="#cb130-8"></a></span>
+<span id="cb130-9"><a href="#cb130-9"></a><span class="kw">print</span>(<span class="st">&quot;proportion of RAMP sample with a PCL score &gt;= 14 at the pandemic baseline&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;proportion of RAMP sample with a PCL score &gt;= 14 at the pandemic baseline&quot;</code></pre>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1"></a>RAMP.retro.PCL <span class="op">/</span><span class="st"> </span>RAMP.base</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["n"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.4459663"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="nbr-pcl-endorsement-rate-at-pandemic-baseline" class="section level2">
+<h2>NBR PCL endorsement rate at pandemic baseline</h2>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1"></a>NBR.retro.PCL &lt;-<span class="st">  </span>NBR.retro <span class="op">%&gt;%</span></span>
+<span id="cb133-2"><a href="#cb133-2"></a><span class="st">  </span><span class="kw">filter</span>(pcl.sum_score_base <span class="op">&gt;=</span><span class="dv">14</span>) <span class="op">%&gt;%</span></span>
+<span id="cb133-3"><a href="#cb133-3"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb133-4"><a href="#cb133-4"></a></span>
+<span id="cb133-5"><a href="#cb133-5"></a>NBR.base &lt;-<span class="st">  </span>NBR.retro <span class="op">%&gt;%</span></span>
+<span id="cb133-6"><a href="#cb133-6"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(pcl.sum_score_base)) <span class="op">%&gt;%</span></span>
+<span id="cb133-7"><a href="#cb133-7"></a><span class="st">  </span><span class="kw">count</span>()</span>
+<span id="cb133-8"><a href="#cb133-8"></a></span>
+<span id="cb133-9"><a href="#cb133-9"></a><span class="kw">print</span>(<span class="st">&quot;proportion of NBR sample with a PCL score &gt;= 14 at the pandemic baseline&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;proportion of NBR sample with a PCL score &gt;= 14 at the pandemic baseline&quot;</code></pre>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1"></a>NBR.retro.PCL <span class="op">/</span><span class="st"> </span>NBR.base</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["n"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.08593572"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
 </div>
 </div>
