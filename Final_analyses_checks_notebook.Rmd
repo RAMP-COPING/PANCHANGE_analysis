@@ -719,3 +719,20 @@ NBR.retro.PCL / NBR.base
 
 ```
 
+## NBR sample composition
+
+check ascertyainment of NBR group
+
+```{r NBR ascertainment read in}
+
+nbr_extra <- read_csv(nbrpath)
+
+```
+
+```{r nbr cohort}
+
+nbr_extra %>%
+  freq(cohort)
+```
+
+
