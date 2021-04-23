@@ -4223,7 +4223,7 @@ model2b.explan.reg.stats <- function(outcome, explan_var, data_set) {
 # GAD baseline, not controlling for prior symptoms
 ### Model 0a: Disorder_hierarchical, Unadjusted
 
-#SB Hashing out this chunk of code as it is not included in our final analysis and is currently breaking the code.
+
 ```{r gad model0a absolute whole sample}
 # Regression coefficients
 gad_baseline_model0a_estimates <- model0a.estimates(outcome = "gad.sum_score_base",
@@ -4574,7 +4574,6 @@ gad_prepan_model1b_explan_reg_stats <- model1b.explan.reg.stats(outcome = "gad.s
 kable(gad_prepan_model1b_explan_reg_stats)
 gad_prepan_model1b_explan_reg_stats
 ```
-##KT
 
 # GAD retro
 ## Regression: Change scores
@@ -9227,5 +9226,88 @@ t.test(datgladedgi$phq.sum_score_base,
 t.test(datgladedgi$gad.sum_score_base,
        datgladedgi$gad.sum_score_retro,
        paired=T)
+
+```
+
+## Sensitivity: retrospective regression (excluding NBR)
+
+retrospective dataset, dropping NBR (which includes edgi)
+```{r make no nbr dat}
+
+dat.retro.noNBR <- dat.retro %>%
+  filter(Sample != "NBR" & 
+           Sample != "EDGI")
+
+```
+
+### GAD
+#### Original
+```{r retro original gad}
+
+gad_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(gad_retro_model1b_explan_estimates)
+gad_retro_model1b_explan_estimates
+
+```
+
+#### sensitivity
+```{r retro sensitivty no NBR gad}
+
+gad_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "gad.sum_score_base",
+                                                               explan_var = "gad.sum_score_retro",
+                                                               data_set = "dat.retro.noNBR")
+kable(gad_retro_model1b_explan_estimates)
+gad_retro_model1b_explan_estimates
+
+```
+
+
+
+### PHQ
+#### Original
+```{r retro original phq}
+
+phq_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(phq_retro_model1b_explan_estimates)
+phq_retro_model1b_explan_estimates
+
+```
+
+#### sensitivity
+```{r retro sensitivty no NBR phq}
+
+phq_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "phq.sum_score_base",
+                                                               explan_var = "phq.sum_score_retro",
+                                                               data_set = "dat.retro.noNBR")
+kable(phq_retro_model1b_explan_estimates)
+phq_retro_model1b_explan_estimates
+
+```
+
+
+### PCL
+#### Original
+```{r retro original pcl}
+
+pcl_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "pcl.sum_score_base",
+                                                               explan_var = "pcl.sum_score_retro",
+                                                               data_set = "dat.retro")
+kable(pcl_retro_model1b_explan_estimates)
+pcl_retro_model1b_explan_estimates
+
+```
+
+#### sensitivity
+```{r retro sensitivty no NBR pcl}
+
+pcl_retro_model1b_explan_estimates <- model1b.explan.estimates(outcome = "pcl.sum_score_base",
+                                                               explan_var = "pcl.sum_score_retro",
+                                                               data_set = "dat.retro.noNBR")
+kable(pcl_retro_model1b_explan_estimates)
+pcl_retro_model1b_explan_estimates
 
 ```
