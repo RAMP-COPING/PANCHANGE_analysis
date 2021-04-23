@@ -259,6 +259,15 @@ dat.retro %>%
   freq(obsessive_compulsive_disorders) 
 
 ```
+### Psychosis + Bipolar
+
+
+```{r retro freq table diagnosis psychotic and bipolar disorders}
+dat.retro %>%
+  group_by(Sample) %>%
+  freq(bipolar_and_schizophrenia) 
+
+```
 
 ### Psychosis
 ```{r retro freq table diagnosis psychotic disorders}
