@@ -6,7 +6,6 @@ lm.forest <- function(data,title,pointsize=10,linesize=3,errorsize=3,
                       colourpal=COPINGpalette5,lowlim=-3,uplim=4,dodge=0.5)
   
   {
-
   p = ggplot(data=data,
              aes(x =RowLabels,y = Estimate,
                  colour = Group)) +
