@@ -1,22 +1,21 @@
 # Function to create forest plots with different grouping sets using formatted data
 # KLPurves
 
-
-lm.forest <- function(data,title){
+lm.forest <- function(data,title,pointsize=10,linesize=3,errorsize=3,axistext=60,axistitle=80,legtitle=70,stripsize=50,colourpal=COPINGpalette5){
   
   p = ggplot(data=data,
              aes(x =RowLabels,y = Estimate,
                  colour = Group)) +
     
-    geom_point(size = 10,
+    geom_point(size = pointsize,
                position = position_dodge(0.9)) +
     
     geom_hline(aes(fill=Group),
-               yintercept =0, 
+               yintercept =0,
                linetype=2,
-               size = 3)  +
+               size = linesize)  +
     
-    xlab('Group') + 
+    xlab('Group') +
     ylab("\nEstimate (95% Confidence Interval)")  +
     ggtitle(title) +
     
@@ -24,27 +23,33 @@ lm.forest <- function(data,title){
                       ymax = UpperBound),
                   width = 1,
                   position = position_dodge(0.9),
-                  size = 3)  + 
+                  size = errorsize)  +
     
-    facet_wrap(. ~ Categories,
-               strip.position="left",nrow=6, scales="free_y") +
+    #facet_wrap(. ~ Categories,
+    #           strip.position="left",nrow=6, scales="free_y") +
     
-    scale_colour_manual(values=COPINGpalette5) +
+    facet_grid(. ~ Categories, strip.position="left", drop = TRUE) +
     
-    theme(plot.title=element_text(size=0,face="bold"),
-          axis.text=element_text(face="bold",size=60,),
-          legend.text=element_text(size=60,),
-          legend.title=element_text(face="bold",size=70,),
-          axis.title.x=element_text(size=80,face="bold"),
+    scale_colour_manual(values=colourpal) +
+    
+    theme(plot.title=element_blank(), #element_text(size=0,face="bold"),
+          axis.text=element_text(face="bold",size=axistext,),
+          legend.text=element_text(size=axistext,),
+          legend.title=element_text(face="bold",size=legtitle,),
+          legend.position = "none",
+          axis.title.x=element_blank(), #element_text(size=axistitle,face="bold"),
           axis.title.y=element_blank(),
-          strip.text.y = element_text(angle=180,face="bold",size=50),
+          strip.text.y = element_text(angle=180,face="bold",size=stripsize),
           panel.background = element_blank(),
           strip.background = element_rect(fill = "light grey"),
           panel.border = element_rect(colour = "grey",fill = NA)) +
-    
-    guides(color = guide_legend(reverse = TRUE)) +
-    
+    # guides(color = guide_legend(reverse = TRUE)) +
     coord_flip()
   return(p)
   
 }
+
+
+
+
+

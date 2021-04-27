@@ -61,7 +61,7 @@ Install packages (if they are not available in your version of R)
 #install.packages("ggpubr")
 ```
 
-Load packages
+#Load packages
 ```{r Load packages}
 library(knitr)
 library(summarytools)
@@ -72,6 +72,8 @@ library(patchwork)
 library(broom)
 library(tidyverse)
 library(ggpubr)
+library(cowplot)
+
 
 
 ```
@@ -8414,36 +8416,36 @@ lmoutput_format_noexplan <- function(lmobject,  group, dfname){
                              "Time between lockdown and baseline")
   ## categories to facet on  
   categories <- c("Intercept",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Pre-existing mental health (Reference controls)",
-                  "Gender (Reference male)",
-                  "Gender (Reference male)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Age (Reference 26-35)",
-                  "Ethnicity (Reference White)",
-                  "Ethnicity (Reference White)",
-                  "Ethnicity (Reference White)",
-                  "Ethnicity (Reference White)",
-                  "Employment (Reference employed)",
-                  "Employment (Reference employed)",
-                  "Employment (Reference employed)",
-                  "Employment (Reference employed)",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Pre-existing mental health",
+                  "Gender",
+                  "Gender",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Age",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Ethnicity",
+                  "Employment",
+                  "Employment",
+                  "Employment",
+                  "Employment",
                   "Other")
   
   ## Disorder dimension  
@@ -8828,16 +8830,93 @@ plot.dat.disorder.retro <- plot.dat.disorder.retro %>%
 
 
 ## Forest plots
+
+### palette
+
+```{r palette for forest}
+
+forestpal <- c("#993955","#2E5077","#E6C229")
+
+```
 ### disorder
+title: Predictors of pandemic symptoms controlling for prepandemic symptoms
 ```{r forest plot by disorder prepan, fig.height=70, fig.width=55, dpi=120}
 
-lm.forest(plot.dat.disorder.prepan,"Predictors of pandemic symptoms controlling for prepandemic symptoms")
+plot_text_size=60
+
+plot_grid(
+  plot_grid(
+    lm.forest(plot.dat.disorder.prepan %>% filter(Categories=="Pre-existing mental health"), title="",colourpal=forestpal),
+    lm.forest(plot.dat.disorder.prepan %>% filter(Categories=="Gender"), title="",colourpal=forestpal),
+    lm.forest(plot.dat.disorder.prepan %>% filter(Categories=="Age"), title="",colourpal=forestpal),
+    lm.forest(plot.dat.disorder.prepan %>% filter(Categories=="Ethnicity"), title="",colourpal=forestpal),
+    lm.forest(plot.dat.disorder.prepan %>% filter(Categories=="Employment"), title="",colourpal=forestpal),
+    lm.forest(plot.dat.disorder.prepan %>% filter(Categories=="Other"), title="",colourpal=forestpal) +
+      theme(
+        axis.title.x = element_text(size = plot_text_size),
+        axis.text.x = element_text(size = plot_text_size)),
+    
+    
+    align = "v",
+    nrow = 6,
+    rel_heights = c(15/36, 2/36, 8/36, 4/36, 5/36, 2/36),
+    hjust = c(0,0,0,0,0,0),
+    vjust = c(2,0,0,0,0,0)
+  ),
+  as_ggplot(cowplot::get_legend(
+    lm.forest(data %>% filter(Categories=="Other"), title="") +
+      theme(legend.position = c(0.65,0.5),
+            legend.direction = "horizontal",
+            legend.box = "horizontal",
+            legend.box.just = "centre",
+            legend.title = element_blank(),
+            legend.text = element_text(size = plot_text_size)) +
+      guides(color = guide_legend(order = 1, reverse = T))
+  )),
+  ncol= 1,
+  nrow = 2,
+  rel_heights = c(1, 0.05)
+)
 
 ```
 
+Predictors of pandemic symptoms controlling for retrospective symptoms
 ```{r forest plot by disorder retro, fig.height=70, fig.width=55, dpi=120}
 
-lm.forest(plot.dat.disorder.retro,"Predictors of pandemic symptoms controlling for retrospective symptoms")
+plot_grid(
+  plot_grid(
+    lm.forest(plot.dat.disorder.retro %>% filter(Categories=="Preexisting mental health"), title="",colourpal=forestpal),
+    lm.forest(plot.dat.disorder.retro %>% filter(Categories=="Gender"), title="",colourpal=forestpal),
+    lm.forest(plot.dat.disorder.retro %>% filter(Categories=="Age"), title="",colourpal=forestpal),
+    lm.forest(plot.dat.disorder.retro %>% filter(Categories=="Ethnicity"), title="",colourpal=forestpal),
+    lm.forest(plot.dat.disorder.retro %>% filter(Categories=="Employment"), title="",colourpal=forestpal),
+    lm.forest(plot.dat.disorder.retro %>% filter(Categories=="Other"), title="",colourpal=forestpal) +
+      theme(
+        axis.title.x = element_text(size = plot_text_size),
+        axis.text.x = element_text(size = plot_text_size)),
+    
+    
+    align = "v",
+    nrow = 6,
+    rel_heights = c(15/36, 2/36, 8/36, 4/36, 5/36, 2/36),
+    hjust = c(0,0,0,0,0,0),
+    vjust = c(2,0,0,0,0,0)
+  ),
+  as_ggplot(cowplot::get_legend(
+    lm.forest(data %>% filter(Categories=="Other"), title="") +
+      theme(legend.position = c(0.65,0.5),
+            legend.direction = "horizontal",
+            legend.box = "horizontal",
+            legend.box.just = "centre",
+            legend.title = element_blank(),
+            legend.text = element_text(size = plot_text_size)) +
+      guides(color = guide_legend(order = 1, reverse = T))
+  )),
+  ncol= 1,
+  nrow = 2,
+  rel_heights = c(1, 0.05)
+)
+
 
 ```
 ### disorder (no explan)
