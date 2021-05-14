@@ -20,7 +20,7 @@ The project uses data from the [Repeated Assessment of Mental health during a Pa
 * Age
 * Ethnicity (if sufficiently powered to do so)
 * Keyworker / vulnerable individual status
-* COVID-19 status (did they become ill, are they at the time or response)
+
 
 ## Project details
 
