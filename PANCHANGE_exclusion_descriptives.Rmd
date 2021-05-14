@@ -32,6 +32,8 @@ knitr::opts_chunk$set(echo = FALSE,
                       cache=FALSE)
 
 
+knitr::opts_chunk$set(fig.path="figures/")
+
 options(bitmapType = 'quartz') # to render fonts better
 ```
 
@@ -170,7 +172,7 @@ source("../PANCHANGE_raw_path.R")
 ```{r read in data}
 dat.raw <- readRDS(file = paste0(data_path, "four_cohorts_variables.rds"))
 dim(dat.raw)
-colnames(dat.raw)
+
 ```
 
 ## Important vectors with collections of columns
@@ -261,7 +263,7 @@ Individuals with NAs for age/gender have already been excluded in pre-processing
 ```{r Exclusion criteria for PANCHANGE}
 dat <- dat.raw %>%
   filter( # Participants should have responded to the mental health diagnosis (MHD) questionnaire
-  !is.na(depressive_disorders) &
+  (!is.na(depressive_disorders) &
  !is.na(anxiety_disorders) &
   !is.na(eating_disorders) &
   !is.na(obsessive_compulsive_disorders) &
@@ -271,7 +273,8 @@ dat <- dat.raw %>%
   !is.na(autism_spectrum_disorder) &
   !is.na(mhd.attention_deficit_hyperactivity_disorder) &
   !is.na(mhd.personality_disorder) &
-  !is.na(control)
+  !is.na(control)) |
+  !is.na(DidNotRespondMHD)
   ) %>% 
  filter(
    !is.na(data_group_gad) & # Participants should have answered at least the GAD, the PHQ, or the PCL once
@@ -285,6 +288,149 @@ dat <- dat.raw %>%
 dim(dat.raw)
 dim(dat)
 nrow(dat.raw)-nrow(dat)
+```
+
+# frequencies and descriptives in exclusion data
+
+### pandemic change gad
+
+```{r freq table gad perceived change}
+dat %>%
+  group_by(Sample) %>%
+  freq(gad.pandemic_felt_feelings)
+
+```
+### pandemic change phq
+
+```{r freq table phq perceived change}
+
+dat %>%
+  group_by(Sample) %>%
+  freq(phq.pandemic_felt_feelings)
+
+```
+
+### Ethnicity
+```{r freq table ethnicity}
+dat %>%
+  group_by(Sample) %>%
+  freq(Ethnicity_collapsed) 
+```
+### Gender
+```{r freq table gender}
+dat %>%
+  group_by(Sample) %>%
+  freq(Gender_collapsed) 
+```
+### age categorical
+```{r freq table age collapsed}
+dat %>%
+  group_by(Sample) %>%
+  freq(age_category_collapsed) 
+```
+### Employment
+
+```{r freq table employment collapsed}
+dat %>%
+  group_by(Sample) %>%
+  freq(employment_prior_covid) 
+```
+
+### anxiety disorders
+```{r freq table diagnosis anxiety}
+dat %>%
+  group_by(Sample) %>%
+  freq(anxiety_disorders) 
+```
+
+### Depressive disorders
+```{r freq table diagnosis depression}
+dat %>%
+  group_by(Sample) %>%
+  freq(depressive_disorders) 
+```
+### Depression and anxiety
+```{r freq table diagnosis depression and anxiety}
+dat %>%
+  group_by(Sample) %>%
+  freq(depression_and_anxiety) 
+```
+### Eating disorders
+```{r freq table diagnosis eating disorder}
+dat %>%
+  group_by(Sample) %>%
+  freq(eating_disorders) 
+
+```
+### OCD
+```{r freq table diagnosis obsessive compulsive disorders}
+dat %>%
+  group_by(Sample) %>%
+  freq(obsessive_compulsive_disorders) 
+
+```
+
+### Psychosis
+```{r freq table diagnosis psychotic disorders}
+dat %>%
+  group_by(Sample) %>%
+  freq(psychotic_disorders) 
+
+```
+
+### Bipolar
+```{r freq table diagnosis bipolar}
+dat %>%
+  group_by(Sample) %>%
+  freq(mhd.mania_hypomania_bipolar_or_manicdepression) 
+
+```
+
+### PTSD
+```{r freq table diagnosis PTSD}
+dat %>%
+  group_by(Sample) %>%
+  freq(mhd.posttraumatic_stress_disorder_ptsd) 
+
+```
+
+### ASD
+
+```{r freq table diagnosis ASD}
+dat %>%
+  group_by(Sample) %>%
+  freq(autism_spectrum_disorder) 
+
+```
+
+### ADHD
+```{r freq table diagnosis ADHD}
+dat %>%
+  group_by(Sample) %>%
+  freq(mhd.attention_deficit_hyperactivity_disorder) 
+
+```
+
+### Personality disorders
+```{r freq table diagnosis personality disorder}
+dat %>%
+  group_by(Sample) %>%
+  freq(mhd.personality_disorder) 
+
+```
+
+### Controls 
+```{r freq table diagnosis control}
+dat %>%
+  group_by(Sample) %>%
+  freq(control) 
+```
+
+### Dont know or prefer not to say
+```{r freq table diagnosis prefer not to say}
+dat %>%
+  group_by(Sample) %>%
+  freq(DidNotRespondMHD) 
 ```
 
 # Data availability per questionnaire GAD, PHQ, PCL, and OCI-R

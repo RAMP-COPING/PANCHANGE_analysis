@@ -32,6 +32,8 @@ knitr::opts_chunk$set(echo = FALSE,
                       cache=FALSE)
 
 
+knitr::opts_chunk$set(fig.path="figures/")
+
 options(bitmapType = 'quartz') # to render fonts better
 ```
 
@@ -169,7 +171,6 @@ source("../PANCHANGE_raw_path.R")
 ```{r read in data}
 dat <- readRDS(file = paste0(data_path, "/four_cohorts.rds"))
 dim(dat)
-colnames(dat)
 ```
 
 
@@ -377,7 +378,7 @@ dat <- dat %>%
              Ethnicity_numeric == 2 ~ 1, #Mixed or multiple ethnic origins 
              Ethnicity_numeric == 3 ~ 2, #Asian or Asian British
              Ethnicity_numeric == 4 ~ 3, #African or African British
-             Ethnicity_numeric == 5 ~ 3, #Arab - combined with African/African British
+             Ethnicity_numeric == 5 ~ 4, #Arab - combined with African/African British
              Ethnicity_numeric == 6 ~ 4  #Other ethnic group
            )
   )
@@ -396,6 +397,24 @@ dat <- dat %>%
 
 dat %>%
   freq(Ethnicity_collapsed)
+```
+
+## Employment
+Adjust so employed category is keyworker vs non keyworker
+
+```{r adjust employment prior covid category}
+
+dat <- 
+  dat %>%
+  mutate(employment_prior_covid_2 =  
+           case_when(dat$employment_prior_covid == "Employed" & key_worker == "Key worker" ~ "Key worker",
+                     dat$employment_prior_covid == "Employed" & key_worker == "No key worker" ~ "Employed",
+                    dat$employment_prior_covid == "Unemployed" ~ "Unemployed",
+                     dat$employment_prior_covid == "Student" ~ "Student",
+                    dat$employment_prior_covid == "Retired" ~ "Retired"))
+
+dat$employment_prior_covid <- dat$employment_prior_covid_2
+
 ```
 
 
@@ -694,6 +713,40 @@ dat <- dat %>%
 
 dat %>%
   freq(prepandemic_9_months)
+```
+## create a variable for chose not to respond to the Mental health questions
+
+```{r choce not to respond MHD}
+
+dat <- dat %>%
+  mutate(DidNotRespondMHD  = 
+           case_when(
+             (is.na(depressive_disorders) &
+ is.na(anxiety_disorders) &
+  is.na(eating_disorders) &
+  is.na(obsessive_compulsive_disorders) &
+ is.na(psychotic_disorders) &
+  is.na(mhd.mania_hypomania_bipolar_or_manicdepression) &
+  is.na(mhd.posttraumatic_stress_disorder_ptsd) &    
+  is.na(autism_spectrum_disorder) &
+  is.na(mhd.attention_deficit_hyperactivity_disorder) &
+  is.na(mhd.personality_disorder) &
+  is.na(control)) ~ "Prefer not to say", 
+ TRUE ~ "Responded to MHD"))
+
+
+dat <- dat %>%
+  mutate(DidNotRespondMHD = recode_factor(DidNotRespondMHD, 
+                "Prefer not to say" ="Prefer not to say",
+                "Responded to MHD" ="Responded to MHD"))
+
+```
+
+## create factor comparing prefer not to say to controls
+
+```{r prefer not to say to controls}
+
+
 ```
 
 ##Export data
